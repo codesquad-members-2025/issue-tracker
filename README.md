@@ -39,8 +39,8 @@
 
 ## 📋 Template
 
-| 항목               | 링크                                          |
-|------------------|---------------------------------------------|
-| 📌 IssueTemplate | [Issue 템플릿](./.github/ISSUE_TEMPLATE)       |
-| 🐛 PR Template   | [PR 템플릿](./.github/pull_request_template)   |
+| 항목               | 링크                                           |
+|------------------|----------------------------------------------|
+| 📌 IssueTemplate | [Issue 템플릿](./.github/ISSUE_TEMPLATE)        |
+| 🐛 PR Template   | [PR 템플릿](./.github/pull_request_template.md) |
 
