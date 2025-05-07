@@ -1,5 +1,6 @@
 # issue-tracker
 2025 마스터즈 팀 프로젝트 이슈 트래커
+텍스트
 
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=shark&height=280&text=🎯%20Issue%20Tracker&reversal=true&textBg=false&fontAlign=50&animation=twinkling&rotate=0&fontSize=80&fontAlignY=35&desc=Team03&descAlignY=50&descAlign=78.5&theme=radical"/>
