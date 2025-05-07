@@ -25,13 +25,17 @@
 </br></br>
 
 
-## 👋🏻 Team02
+## 👋🏻 Team03
 
-|         [상추](https://github.com/parksangchu)         |              [짜왕](https://github.com/zzawang)   |       [본](https://github.com/ryudb0)            |           [우디](https://github.com/minjeongHEO)      |    
-| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://avatars.githubusercontent.com/u/142131857?v=4 " width=180> | <img src="https://avatars.githubusercontent.com/u/103445254?v=4" width=180> | <img src="https://avatars.githubusercontent.com/u/122335103?v=4" width=180> | <img src="https://avatars.githubusercontent.com/u/96780693?v=4" width=180> |
-|  Backend | Backend | Backend | Frontend           |
-| 피할 수 없으면 즐겨라 | 일요일은 내가 짜왕 요리사 | 같이 가! | 가만 놔두면 다 해결 돼... |
+<div align="center">
+
+| [MUD](https://github.com/jang-jinuk) | [JOHNNIE](https://github.com/dongchan0105) | [MILO](https://github.com/y-minion) |
+| :---------------------------------: | :--------------------------------------: | :--------------------------------: |
+| <img src="https://avatars.githubusercontent.com/u/143267143?v=4" width=180> | <img src="https://avatars.githubusercontent.com/u/158487744?v=4" width=180> | <img src="https://avatars.githubusercontent.com/u/183694465?v=4" width=180> |
+| Frontend | Backend | Frontend |
+| 보령머드 축제 놀러오세요 | 모든 소년 소녀들 | 퉁 퉁 퉁 퉁 퉁 사후르~ |
+
+</div>
 
 </br></br>
 
