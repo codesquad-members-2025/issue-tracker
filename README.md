@@ -17,7 +17,7 @@
 -->
 
 <div align="center">
-    💡<a href="https://zzawang.notion.site/Issue-Tracker-e29fa70664d949d2872b472f750c1b8b?pvs=4" target="_blank">팀 노션</a> <br>
+    💡<a href="https://flint-baritone-8be.notion.site/Issue-Tracker-1ec75c9287fa8069bca8c520db98204f?pvs=4" target="_blank">팀 노션</a> <br>
     🗓️<a href="https://github.com/orgs/codesquad-masters2024-team02/projects/1" target="_blank">프로젝트 일정 관리</a> <br>
     🎨<a href="https://www.figma.com/file/Mx4mDJGfRZZ5wdoBWFw5UX/FE_%EC%9D%B4%EC%8A%88%ED%8A%B8%EB%9E%98%EC%BB%A4?type=design&node-id=89-0&mode=design&t=RkLy4JuP9ULHv12v-0" target="_blank">디자인</a> 
 </div>
