@@ -32,7 +32,7 @@
 | [MUD](https://github.com/jang-jinuk) | [JOHNNIE](https://github.com/dongchan0105) | [MILO](https://github.com/y-minion) |
 | :---------------------------------: | :--------------------------------------: | :--------------------------------: |
 | <img src="https://avatars.githubusercontent.com/u/143267143?v=4" width=180> | <img src="https://avatars.githubusercontent.com/u/158487744?v=4" width=180> | <img src="https://avatars.githubusercontent.com/u/183694465?v=4" width=180> |
-| Frontend | Backend | Frontend |
+| Backend | Backend | Frontend |
 | 보령머드 축제 놀러오세요 | 모든 소년 소녀들 | 퉁 퉁 퉁 퉁 퉁 사후르~ |
 
 </div>
