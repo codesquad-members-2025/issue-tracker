@@ -3,3 +3,5 @@
 
 저장소 링크
 https://github.com/codesquad-masters2025-team04/issue-tracker
+
+![erd.png](docs/erd.png)
