@@ -102,7 +102,6 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # vitepress build output
 **/.vitepress/dist
@@ -134,3 +133,50 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+
+### Gradle ###
+.gradle/
+build/
+.gradle-cache/
+!gradle/wrapper/gradle-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+### Node.js ###
+dist/
+
+### Cursor IDE ###
+.cursor/
+
+### Docs ###
+docs/
+*.pdf
+*.docx
+
+### OS / System ###
+.DS_Store
+Thumbs.db
+
+### Env / Secrets ###
+.env.*
+*.keystore
+
+### Editor / Misc ###
+.vscode/
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log.*
+
