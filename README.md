@@ -1,4 +1,5 @@
 # issue-tracker
+
 2025 마스터즈 팀 프로젝트 이슈 트래커
 텍스트
 
@@ -24,16 +25,15 @@
 
 </br></br>
 
-
 ## 👋🏻 Team03
 
 <div align="center">
 
-| [MUD](https://github.com/jang-jinuk) | [JOHNNIE](https://github.com/dongchan0105) | [MILO](https://github.com/y-minion) |
-| :---------------------------------: | :--------------------------------------: | :--------------------------------: |
+|                    [MUD](https://github.com/jang-jinuk)                     |                 [JOHNNIE](https://github.com/dongchan0105)                  |                     [MILO](https://github.com/y-minion)                     |
+| :-------------------------------------------------------------------------: | :-------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
 | <img src="https://avatars.githubusercontent.com/u/143267143?v=4" width=180> | <img src="https://avatars.githubusercontent.com/u/158487744?v=4" width=180> | <img src="https://avatars.githubusercontent.com/u/183694465?v=4" width=180> |
-| Backend | Backend | Frontend |
-| 보령머드 축제 놀러오세요 | 모든 소년 소녀들 | 퉁 퉁 퉁 퉁 퉁 사후르~ |
+|                                   Backend                                   |                                   Backend                                   |                                  Frontend                                   |
+|                          보령머드 축제 놀러오세요                           |                              모든 소년 소녀들                               |                           퉁 퉁 퉁 퉁 퉁 사후르~                            |
 
 </div>
 
@@ -43,39 +43,45 @@
 
 ![구조도](https://github.com/codesquad-masters2024-team02/issue-tracker/assets/103445254/e1b4c873-427f-4149-a436-790c647702ff)
 
-
 </br></br>
 
 ## ⚒️ TechStack
+
 ### Front-End
-* HTML
-* CSS
-* JavaScript
-* React
-* Vite
+
+- HTML
+- CSS
+- JavaScript
+- React
+- Zustand + Immer
+- React-router-dom
+- Vite
 
 ### Back-End
-* Java
-* SpringBoot
-* Spring Data JDBC
-* MySQL
-* Redis
-* Oauth2.0
+
+- Java
+- SpringBoot
+- Spring Data JDBC
+- MySQL
+- Redis
+- Oauth2.0
 
 ### Infra
-* GitHub Actions
-* Nginx
-* Docker
-* AWS
-  * S3
-  * EC2
-  * Route53
-  * CloudFront
+
+- GitHub Actions
+- Nginx
+- Docker
+- AWS
+  - S3
+  - EC2
+  - Route53
+  - CloudFront
 
 ### Communication
-* GitHub
-* Slack
-* Notion
+
+- GitHub
+- Slack
+- Notion
 
 </br></br>
 
