@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from './styles/foundation';
 import GlobalStyle from './styles/GlobalStyle';
 import AppRouter from './routes/AppRouter';
-import CheckBox from './base-ui/utils/CheckBox';
+import IssueTitle from './base-ui/utils/IssueTitle';
 
 function App() {
   //추후에 zustand로 테마 상태 관리 예정
