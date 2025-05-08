@@ -12,7 +12,9 @@ function App() {
   return (
     <ThemeProvider theme={IsDark ? darkTheme : lightTheme}>
       <GlobalStyle />
-      <AppRouter />
+      {/* base-ui 컴포넌트 테스트 위치 */}
+
+      {/* <AppRouter /> */}
     </ThemeProvider>
   );
 }
