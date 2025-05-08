@@ -19,8 +19,7 @@
 
 <div align="center">
     💡<a href="https://flint-baritone-8be.notion.site/Issue-Tracker-1ec75c9287fa8069bca8c520db98204f?pvs=4" target="_blank">팀 노션</a> <br>
-    🗓️<a href="https://github.com/orgs/codesquad-masters2024-team02/projects/1" target="_blank">프로젝트 일정 관리</a> <br>
-    🎨<a href="https://www.figma.com/file/Mx4mDJGfRZZ5wdoBWFw5UX/FE_%EC%9D%B4%EC%8A%88%ED%8A%B8%EB%9E%98%EC%BB%A4?type=design&node-id=89-0&mode=design&t=RkLy4JuP9ULHv12v-0" target="_blank">디자인</a> 
+
 </div>
 
 </br></br>
@@ -36,12 +35,6 @@
 |                          보령머드 축제 놀러오세요                           |                              모든 소년 소녀들                               |                           퉁 퉁 퉁 퉁 퉁 사후르~                            |
 
 </div>
-
-</br></br>
-
-## 🏗️ 시스템 아키텍쳐
-
-![구조도](https://github.com/codesquad-masters2024-team02/issue-tracker/assets/103445254/e1b4c873-427f-4149-a436-790c647702ff)
 
 </br></br>
 
@@ -63,7 +56,6 @@
 - SpringBoot
 - Spring Data JDBC
 - MySQL
-- Redis
 - Oauth2.0
 
 ### Infra
@@ -75,7 +67,7 @@
   - S3
   - EC2
   - Route53
-  - CloudFront
+
 
 ### Communication
 
@@ -85,11 +77,6 @@
 
 </br></br>
 
-## 🛢️ ERD
-
-![erd](https://github.com/codesquad-masters2024-team02/issue-tracker/assets/103445254/b3f5147f-24db-4f23-9460-e5e79511893d)
-
-</br></br>
 
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=shark&height=280&theme=radical&section=footer" />
