@@ -7,6 +7,7 @@ Hoon, Yoon, Zeeto, Kaydeen
 
 ## 브랜치 구조
 
+<pre>
 main  
 ├── dev-frontend  
 │   ├── feature/login-ui  
@@ -22,3 +23,4 @@ main
     ├── feature/label-crud  
     ├── feature/milestone-crud  
     └── ...  
+</pre>
