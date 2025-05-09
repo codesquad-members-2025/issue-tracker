@@ -9,5 +9,5 @@
 | 1팀  |      |             |
 | 2팀  |      |             |
 | 3팀  |      |             |
-| 4팀  |      |             |
+| 4팀  | 빙빙, 브리, 지초     | https://github.com/codesquad-masters2025-team04/issue-tracker |
 | 5팀  |      |             |
