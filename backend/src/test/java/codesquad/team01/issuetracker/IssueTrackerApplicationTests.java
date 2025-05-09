@@ -1,4 +1,4 @@
-package com.issue_tracker.backend;
+package codesquad.team01.issuetracker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

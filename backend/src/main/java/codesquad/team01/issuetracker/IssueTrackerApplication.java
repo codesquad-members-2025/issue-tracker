@@ -1,4 +1,4 @@
-package com.issue_tracker.backend;
+package codesquad.team01.issuetracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
