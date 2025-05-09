@@ -18,11 +18,11 @@
 
 ```
 main                ← 최종 배포 브랜치
-└─ dev-be           ← 전체 기능 통합 브랜치
-├─ be/CS-11/feature-auth
-└─ be/CS-12/feature-auth/signup
+├─ dev-be           ← 전체 기능 통합 브랜치
+│  ├─ be/CS-11/feature-auth/login
+│  └─ be/CS-12/feature-auth/signup
 └─ dev-fe
-└─ fe/CS-15/feature-login-ui
+    └─ fe/CS-15/feature-auth/login-ui
 ```
 
 ## 커밋 메시지 규칙
