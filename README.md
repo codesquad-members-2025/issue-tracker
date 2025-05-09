@@ -10,9 +10,9 @@
 
 
 ## 링크
-Github 링크 : https://github.com/codesquad-masters2025-team05/issue-tracker.git  
-Jira 링크 : https://jqk1797.atlassian.net/jira/software/projects/CS/summary?atlOrigin=eyJpIjoiZWNkM2RjNjUyMmJlNDcyMjkwYjFhNTAxOGViMDk1NTciLCJwIjoiaiJ9  
-Notion 링크 : https://flowery-unicorn-313.notion.site/CodeSquard-team05-1909003424f180438a2dd668361f3bf4?pvs=4  
+- [Github 링크](https://github.com/codesquad-masters2025-team05/issue-tracker.git)  
+- [Jira 링크](https://jqk1797.atlassian.net/jira/software/projects/CS/summary?atlOrigin=eyJpIjoiZWNkM2RjNjUyMmJlNDcyMjkwYjFhNTAxOGViMDk1NTciLCJwIjoiaiJ9)  
+- [Notion 링크](https://flowery-unicorn-313.notion.site/CodeSquard-team05-1909003424f180438a2dd668361f3bf4?pvs=4)  
 
 ## 브랜치 구조
 
@@ -112,7 +112,7 @@ main                ← 최종 배포 브랜치
 - 화내지 말기
 - 경청하기
 - 긍정적으로 받아들이기
-- 
+
 ## 코딩 컨벤션 & 테스트
 
 ### 🧑‍💻 백엔드 코딩 컨벤션 & 테스트 작성 원칙 (Java + Spring, TDD)
@@ -140,7 +140,7 @@ main                ← 최종 배포 브랜치
 
 ```java
 if (user != null) {
-userService.save(user);
+  userService.save(user);
 }
 ```
 
@@ -201,14 +201,14 @@ userService.save(user);
 ```java
 @Test
 void saveArticle_유효한요청_성공저장() {
-// given
-ArticleRequest request = new ArticleRequest("제목", "내용");
-
-// when
-Article saved = articleService.save(request);
-
-// then
-assertThat(saved.getTitle()).isEqualTo("제목");
+    // given
+    ArticleRequest request = new ArticleRequest("제목", "내용");
+    
+    // when
+    Article saved = articleService.save(request);
+    
+    // then
+    assertThat(saved.getTitle()).isEqualTo("제목");
 }
 
 ```
@@ -265,7 +265,7 @@ assertThat(saved.getTitle()).isEqualTo("제목");
 
 ```tsx
 if (isLoading) {
-return <Spinner />;
+    return <Spinner />;
 }
 
 ```
@@ -286,13 +286,13 @@ import { useState } from 'react';
 import { Button } from '@/shared/ui';
 
 interface Props {
-userId: string;
+    userId: string;
 }
 
 const UserCard = ({ userId }: Props) => {
-const [active, setActive] = useState(false);
+    const [active, setActive] = useState(false);
 
-return <Button onClick={() => setActive(!active)}>Toggle</Button>;
+    return <Button onClick={() => setActive(!active)}>Toggle</Button>;
 };
 
 ```
@@ -307,7 +307,7 @@ return <Button onClick={() => setActive(!active)}>Toggle</Button>;
 
 ```tsx
 const sum = (a: number, b: number) => {
-return a + b;
+    return a + b;
 };
 
 ```
