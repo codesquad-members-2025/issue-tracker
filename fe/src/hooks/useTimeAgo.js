@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function useTimeAgo(inputTime) {
   const [gapTime, setGapTime] = useState(() => getTimeDifferenceLabel(inputTime)); //함수 지연 실행 (성능 향상 효과)
