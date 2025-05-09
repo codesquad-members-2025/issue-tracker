@@ -80,3 +80,4 @@ CREATE TABLE issue_assignee (
                                 CONSTRAINT fk_issue_assignee_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id),
                                 CONSTRAINT fk_issue_assignee_user FOREIGN KEY (assignee_id) REFERENCES user(user_id)
 );
+
