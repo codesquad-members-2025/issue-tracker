@@ -1,0 +1,60 @@
+.issueTableContainer {
+  min-width: 1280px;
+  border: 1px solid var(--neutral-border-default);
+}
+
+.IssueViewControls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 64px;
+  background-color: var(--neutral-surface-default);
+  padding: 0 32px;
+  border-bottom: 1px solid var(--neutral-border-default);
+}
+
+.issueTabs {
+  display: flex;
+  gap: 24px;
+  padding-left: 32px;
+  height: 100%;
+}
+
+.selectedTab {
+  font: var(--selected-bold16);
+  color: var(--neutral-text-strong);
+}
+
+.selectedTab .openIssueIcon {
+  background-color: var(--neutral-text-strong);
+}
+
+.selectedTab .closedIssueIcon {
+  background-color: var(--neutral-text-strong);
+}
+
+.tabButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.openIssueIcon {
+  width: 16px;
+  height: 16px;
+  mask-image: url("../../assets/icons/alertCircle.svg");
+  mask-size: cover;
+  mask-repeat: no-repeat;
+  background-color: var(--neutral-text-default);
+}
+
+.closedIssueIcon {
+  width: 16px;
+  height: 16px;
+  width: 16px;
+  height: 16px;
+  mask-image: url("../../assets/icons/archive.svg");
+  mask-size: cover;
+  mask-repeat: no-repeat;
+  background-color: var(--neutral-text-default);
+}
