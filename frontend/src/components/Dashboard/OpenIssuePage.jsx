@@ -11,7 +11,6 @@ function OpenIssuePage(isOpen) {
     fetch("http://localhost:3000/api/issues")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setIssues(data.issues);
       })
       .catch((error) => {
@@ -20,31 +19,35 @@ function OpenIssuePage(isOpen) {
   }, [isOpen]);
 
   return (
-    <div className={styles.openIssuePageContainer}>
+    <div className={styles.issueListContainer}>
       {issues.map((issue) => (
-        <div className={styles.mainInfo} key={issue.id}>
-          <button className={styles.checkbox} />
-          <div className={styles.issueItem}>
-            <div className={styles.issueDetails}>
-              <div className={styles.issueIcon}></div>
-              <div className={styles.issueTitle}>{issue.title}</div>
-              <div className={styles.issueLabel}>{issue.labels[0].name}</div>
-            </div>
-            <div className={styles.issueMetaInfo}>
-              <div>#{issue.id}</div>
-              <div>
-                {issue.author.nickname},{" "}
-                {new Date(issue.createAt).toLocaleString()}
+        <div className={styles.IssueContainer} key={issue.id}>
+          <div className={styles.mainInfo} key={issue.id}>
+            <button className={styles.checkbox} />
+            <div className={styles.issueItem}>
+              <div className={styles.issueDetails}>
+                <div className={styles.issueIcon}></div>
+                <div className={styles.issueTitle}>{issue.title}</div>
+                <div className={styles.issueLabel}>{issue.labels[0].name}</div>
               </div>
-              <div className={styles.milestone}>
-                <div className={styles.milestoneIcon} alt="milestone" />
-                <div>{issue.milestone.title}</div>
+              <div className={styles.issueMetaInfo}>
+                <div>#{issue.id}</div>
+                <div>
+                  {new Date(issue.createdAt).toLocaleString()},{" "}
+                  {issue.author.nickname}
+                  {"님에 의해 작성되었습니다"}
+                </div>
+                <div className={styles.milestone}>
+                  <div className={styles.milestoneIcon} alt="milestone" />
+                  <div>{issue.milestone.title}</div>
+                </div>
               </div>
             </div>
           </div>
+
+          <div className={styles.userImage} />
         </div>
       ))}
-      <div className={styles.userImage} />
     </div>
   );
 }

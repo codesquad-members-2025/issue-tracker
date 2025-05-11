@@ -1,10 +1,16 @@
-.openIssuePageContainer {
+.issueListContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--neutral-surface-strong);
+}
+
+.IssueContainer {
   height: 96px;
   padding: 0 54px 0 32px;
-  background-color: var(--neutral-surface-strong);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid var(--neutral-border-default);
 }
 
 .mainInfo {
