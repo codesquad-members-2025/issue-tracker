@@ -1,6 +1,6 @@
 /*
-- 입력 : 체크박스의 활성화, 비활성화 여부를 입력 받는다.
-- 출력: 입력 값에 따라 활성화(= 파란 체크박스), 비활성화 (= 하얀 체크박스) svg를 렌더링한다.
+- 입력 : 체크박스의 활성화 여부(isActive), 체크박스 svg 렌더링 종류를(isDisabled) 입력 받는다.
+- 출력: 입력 값에 따라 활성화(= 파란 체크박스 -> + or - ), 비활성화 (= 하얀 체크박스) svg를 렌더링한다.
 */
 import styled from 'styled-components';
 import { getBorder } from '@/styles/foundation/border';
@@ -16,54 +16,50 @@ const Container = styled.button`
   align-items: center;
 `;
 
-function getCheckBox(isDisAble, isActive) {
-  if (isDisAble) {
-    return (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect x="0.5" y="0.5" width="15" height="15" rx="1.5" fill="#007AFF" stroke="#007AFF" />
-        <path
-          d="M6 8H10"
-          stroke="#FEFEFE"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  } else if (isActive) {
-    return (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect x="0.5" y="0.5" width="15" height="15" rx="1.5" fill="#007AFF" stroke="#007AFF" />
-        <path
-          d="M10.6667 6L7 9.67333L5 7.67333"
-          stroke="#FEFEFE"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  } else {
-    return null;
-  }
+function ActiveCheckIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.5" y="0.5" width="15" height="15" rx="1.5" fill="#007AFF" stroke="#007AFF" />
+      <path
+        d="M10.6667 6L7 9.67333L5 7.67333"
+        stroke="#FEFEFE"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
-export default function CheckBox({ isDisAble, isActive, onClick }) {
+function DisabledCheckIcon() {
   return (
-    <Container $isActive={isActive} onClick={onClick}>
-      {isActive ? getCheckBox(isDisAble, isActive) : null}
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.5" y="0.5" width="15" height="15" rx="1.5" fill="#007AFF" stroke="#007AFF" />
+      <path
+        d="M6 8H10"
+        stroke="#FEFEFE"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon({ isDisabled }) {
+  return isDisabled ? <DisabledCheckIcon /> : <ActiveCheckIcon />;
+}
+
+export default function CheckBox({ isDisabled, isActive, onClick }) {
+  return (
+    <Container
+      role="checkbox"
+      aria-checked={isActive}
+      aria-disabled={isDisabled}
+      $isActive={isActive}
+      onClick={onClick}
+    >
+      {isActive && <CheckIcon isDisabled={isDisabled} />}
     </Container>
   );
 }
