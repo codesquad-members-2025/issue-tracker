@@ -61,10 +61,19 @@
   color: var(--neutral-text-weak);
 }
 
-.issueIcon {
+.openIssueIcon {
   width: 16px;
   height: 16px;
   mask-image: url("../../assets/icons/alertCircle.svg");
+  mask-size: cover;
+  mask-repeat: no-repeat;
+  background-color: rgba(0, 122, 255, 1);
+}
+
+.closedIssueIcon {
+  width: 16px;
+  height: 16px;
+  mask-image: url("../../assets/icons/archive.svg");
   mask-size: cover;
   mask-repeat: no-repeat;
   background-color: rgba(0, 122, 255, 1);

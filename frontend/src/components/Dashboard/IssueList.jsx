@@ -1,14 +1,23 @@
-import styles from "./OpenIssuePage.module.css";
+import styles from "./IssueList.module.css";
 import { useEffect, useState } from "react";
 
-function OpenIssuePage(isOpen) {
+const getIssueIconByStatus = (status) => {
+  // 이슈 상태에 따라 아이콘을 반환하는 함수
+  if (status) {
+    return <div className={styles.openIssueIcon}></div>;
+  } else {
+    return <div className={styles.closedIssueIcon}></div>;
+  }
+};
+
+function OpenIssuePage({ isOpen }) {
   const [issues, setIssues] = useState([]);
 
   // useEffect를 사용하여 컴포넌트가 마운트될 때 API 호출
   // GET 요청을 통해 이슈 데이터를 가져옴
   // isOpen이 변경될 때마다 API 호출
   useEffect(() => {
-    fetch("http://localhost:3000/api/issues")
+    fetch(`http://localhost:3000/api/issues?is_open=${isOpen}`)
       .then((response) => response.json())
       .then((data) => {
         setIssues(data.issues);
@@ -26,9 +35,21 @@ function OpenIssuePage(isOpen) {
             <button className={styles.checkbox} />
             <div className={styles.issueItem}>
               <div className={styles.issueDetails}>
-                <div className={styles.issueIcon}></div>
+                {getIssueIconByStatus(isOpen)}
                 <div className={styles.issueTitle}>{issue.title}</div>
-                <div className={styles.issueLabel}>{issue.labels[0].name}</div>
+
+                {issue.labels.map((label) => (
+                  <div
+                    className={styles.issueLabel}
+                    key={label.id}
+                    style={{
+                      backgroundColor: label.color,
+                      marginRight: "4px",
+                    }}
+                  >
+                    {label.name}
+                  </div>
+                ))}
               </div>
               <div className={styles.issueMetaInfo}>
                 <div>#{issue.id}</div>
