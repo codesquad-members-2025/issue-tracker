@@ -42,7 +42,7 @@ function IssueTable() {
       </div>
 
       <div className={styles.issueListContainer}>
-        {isOpen === "open" && <OpenIssuePage />}
+        {isOpen === "open" && <OpenIssuePage isOpen={isOpen} />}
         {isOpen === "closed" && <ClosedIssuePage />}
       </div>
     </div>
