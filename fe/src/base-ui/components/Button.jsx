@@ -14,6 +14,17 @@ const GhostButton = styled.button`
 
   &:hover {
     color: ${({ theme }) => theme.text.strong};
+    ${typography.selected.bold16}
+    svg {
+      path {
+        stroke: ${({ theme }) => theme.text.strong};
+      }
+    }
+  }
+
+  svg path {
+    stroke: ${({ theme }) => theme.text.default};
+    transition: stroke 0.2s ease;
   }
 
   &:disabled {
@@ -22,4 +33,4 @@ const GhostButton = styled.button`
   }
 `;
 
-export default GhostButton;
+export { GhostButton };
