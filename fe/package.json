@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "create-branch": "./create-branch.sh"
+    "create-branch": "sh ./create-branch.sh"
   },
   "dependencies": {
     "immer": "^10.1.1",
