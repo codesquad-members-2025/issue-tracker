@@ -16,8 +16,12 @@ function OpenIssuePage({ isOpen }) {
   // useEffect를 사용하여 컴포넌트가 마운트될 때 API 호출
   // GET 요청을 통해 이슈 데이터를 가져옴
   // isOpen이 변경될 때마다 API 호출
+
+  // 환경변수를 사용하여 API URL을 설정
+  const apiUrl = "http://localhost:3000";
+
   useEffect(() => {
-    fetch(`http://localhost:3000/api/issues?is_open=${isOpen}`)
+    fetch(`${apiUrl}/api/issues?is_open=${isOpen}`)
       .then((response) => response.json())
       .then((data) => {
         setIssues(data.issues);
