@@ -41,4 +41,14 @@ public class JWTUtil {
                 .compact();
     }
 
+    /*
+    JWT Refresh Token을 생성합니다.
+     */
+    public String createRefreshToken() {
+        return Jwts.builder()
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
+                .signWith(Keys.hmacShaKeyFor(refreshSecretKey.getBytes(UTF_8)))
+                .compact();
+    }
 }
