@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jwt:
+    access-key: ${SPRING_JWT_ACCESS_KEY}
+    refresh-key: ${SPRING_JWT_REFRESH_KEY}
