@@ -21,21 +21,16 @@
 			"recommended": true
 		}
 	},
-	"overrides": [
-		{
-			"include": ["frontend/**/*.{js,ts,jsx,tsx,css}"],
-			"javascript": {
-				"formatter": {
-					"quoteStyle": "single",
-					"jsxQuoteStyle": "single",
-					"attributePosition": "multiline"
-				}
-			},
-			"css": {
-				"formatter": {
-					"quoteStyle": "single"
-				}
-			}
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"jsxQuoteStyle": "single",
+			"attributePosition": "multiline"
 		}
-	]
+	},
+	"css": {
+		"formatter": {
+			"quoteStyle": "single"
+		}
+	}
 }
