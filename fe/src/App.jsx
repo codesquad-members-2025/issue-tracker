@@ -14,6 +14,7 @@ function App() {
       <GlobalStyle />
       {/* base-ui 컴포넌트 테스트 위치 */}
       <CheckBox isActive={true} isDisabled={true} />
+
       {/* <AppRouter /> */}
     </ThemeProvider>
   );
