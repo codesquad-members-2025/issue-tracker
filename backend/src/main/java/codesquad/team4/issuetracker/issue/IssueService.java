@@ -41,13 +41,15 @@ public class IssueService {
                    i.title,
                    u.user_id AS author_id,
                    u.nickname AS author_nickname,
+                   u.profile_image AS author_profile,
                    m.milestone_id AS milestone_id,
                    m.name AS milestone_title,
                    l.label_id AS label_id,
                    l.name AS label_name,
                    l.color AS label_color,
                    a.user_id AS assignee_id,
-                   a.nickname AS assignee_nickname
+                   a.nickname AS assignee_nickname,
+                   a.profile_image AS assignee_profile
             FROM issue i
             LEFT JOIN user u ON i.author_id = u.user_id
             LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
@@ -75,6 +77,7 @@ public class IssueService {
                             .author(IssueResponseDto.UserInfo.builder()
                                     .id((Long) row.get("author_id"))
                                     .name((String) row.get("author_nickname"))
+                                    .profileImage((String) row.get("author_profile"))
                                     .build())
                             .assignees(new ArrayList<>())
                             .labels(new ArrayList<>())
@@ -87,6 +90,7 @@ public class IssueService {
                 IssueResponseDto.UserInfo assignee = UserInfo.builder()
                         .id(assigneeId)
                         .name((String) row.get("assignee_nickname"))
+                        .profileImage((String) row.get("assignee_profile"))
                         .build();
 
                 assigneeMap.computeIfAbsent(issueId, k -> new ArrayList<>()).add(assignee);

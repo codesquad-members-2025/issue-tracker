@@ -45,6 +45,7 @@ public class IssueResponseDto {
     public static class UserInfo{
         private Long id;
         private String name;
+        private String profileImage;
     }
 
     @AllArgsConstructor

@@ -16,6 +16,7 @@ public class User {
     private Long id;
     private String email;
     private String nickname;
+    private String profileImage;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
