@@ -5,11 +5,14 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.annotation.Id;
 
 @Getter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Issue {
     @Id
     private Long id;
@@ -20,5 +23,6 @@ public class Issue {
     private final Long userId;
     private final Long milestoneId;
     private final boolean isOpen;
-    private final LocalDateTime createdAt;
+
+    private LocalDateTime createdAt;
 }
