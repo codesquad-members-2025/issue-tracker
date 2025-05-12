@@ -41,15 +41,6 @@ public class JdbcTemplatesLabelRepository implements LabelRepository {
     }
 
     @Override
-    public void attachLabelToIssue(Long issueId, Long labelId) {
-        String sql = "INSERT INTO issue_labels (issue_id, label_id) VALUES (:issueId, :labelId)";
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("issueId", issueId)
-                .addValue("labelId", labelId);
-        template.update(sql, params);
-    }
-
-    @Override
     public List<Label> findByIssueId(Long issueId) {
         String sql = """
                 SELECT l.* FROM labels l
@@ -59,7 +50,24 @@ public class JdbcTemplatesLabelRepository implements LabelRepository {
         return template.query(sql, Map.of("issueId", issueId), labelRowMapper());
     }
 
+    @Override
+    public void update(Long labelId, LabelUpdateDto updateDto) {
+        String sql = "UPDATE labels SET name = :name, description = :description, color = :color, createdAt = :createdAt WHERE id = :id";
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("name", updateDto.getName())
+                .addValue("description", updateDto.getDescription())
+                .addValue("color", updateDto.getColor())
+                .addValue("createdAt", updateDto.getCreatedAt())
+                .addValue("id", labelId);
+        template.update(sql, param);
+    }
 
+    @Override
+    public void deleteById(Long labelId) {
+        String sql = "DELETE FROM labels WHERE id = :id";
+        Map<String, Object> param = Map.of("id", labelId);
+        template.update(sql, param);
+    }
 
     private RowMapper<Label> labelRowMapper(){
         return BeanPropertyRowMapper.newInstance(Label.class);

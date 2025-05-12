@@ -1,11 +1,8 @@
 package CodeSquad.IssueTracker.issue;
 
-import CodeSquad.IssueTracker.label.Label;
-import CodeSquad.IssueTracker.label.LabelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,7 +10,6 @@ import java.util.Optional;
 public class IssueService {
 
     private final IssueRepository issueRepository;
-    private final LabelRepository labelRepository;
 
     public Issue save(Issue issue){
         return issueRepository.save(issue);

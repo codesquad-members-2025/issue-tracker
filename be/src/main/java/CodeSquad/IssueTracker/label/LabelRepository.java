@@ -10,6 +10,8 @@ public interface LabelRepository {
 
     List<Label> findByIssueId(Long issueId);
 
-    void attachLabelToIssue(Long issueId, Long labelId);
+    void update(Long labelId, LabelUpdateDto updateParam);
+
+    void deleteById(Long labelId);
 
 }

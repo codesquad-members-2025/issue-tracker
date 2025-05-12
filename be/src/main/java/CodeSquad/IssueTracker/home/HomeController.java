@@ -1,7 +1,11 @@
 package CodeSquad.IssueTracker.home;
 
+import CodeSquad.IssueTracker.home.dto.HomeResponseDto;
 import CodeSquad.IssueTracker.issue.Issue;
 import CodeSquad.IssueTracker.issue.IssueService;
+import CodeSquad.IssueTracker.label.LabelService;
+import CodeSquad.IssueTracker.milestone.MilestoneService;
+import CodeSquad.IssueTracker.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     private final IssueService issueService;
+    private final LabelService labelService;
+    private final MilestoneService milestoneService;
+    private final UserService userService;
 
     @GetMapping("/")
-    public String home(Model model){
-        Iterable<Issue> issues = issueService.findAll();
-        model.addAttribute("issues", issues);
-        return "home/index";
+    public HomeResponseDto home() {
+        return new HomeResponseDto(
+                issueService.findAll(),
+                labelService.findAll(),
+                milestoneService.findAll(),
+                userService.findAll()
+        );
     }
 
 

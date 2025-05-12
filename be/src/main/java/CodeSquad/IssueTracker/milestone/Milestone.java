@@ -1,4 +1,4 @@
-package CodeSquad.IssueTracker.mileStone;
+package CodeSquad.IssueTracker.milestone;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

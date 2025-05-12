@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,6 +48,19 @@ public class JdbcTemplatesUserRepository implements UserRepository{
         Number key = jdbcInsert.executeAndReturnKey(param);
         user.setId(key.longValue());
         return user;
+    }
+
+    @Override
+    public List<User> findAll() {
+        String sql = "SELECT * FROM users";
+        return template.query(sql, userRowMapper());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM users WHERE id = :id";
+        Map<String, Object> param = Map.of("id", id);
+        template.update(sql, param);
     }
 
     private RowMapper<User> userRowMapper(){

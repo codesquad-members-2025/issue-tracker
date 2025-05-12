@@ -1,5 +1,4 @@
--- 1. 외래 키 검사 끄기
-SET FOREIGN_KEY_CHECKS = 0;
+
 
 -- 2. 기존 테이블 삭제 (의존 순서 고려)
 DROP TABLE IF EXISTS issue_label;
@@ -10,8 +9,7 @@ DROP TABLE IF EXISTS labels;
 DROP TABLE IF EXISTS milestones;
 DROP TABLE IF EXISTS users;
 
--- 3. 외래 키 검사 다시 켜기
-SET FOREIGN_KEY_CHECKS = 1;
+
 
 -- 4. 테이블 생성
 
