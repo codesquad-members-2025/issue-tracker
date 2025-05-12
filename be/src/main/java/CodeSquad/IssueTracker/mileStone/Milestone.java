@@ -1,27 +1,20 @@
-package CodeSquad.IssueTracker.issue;
+package CodeSquad.IssueTracker.mileStone;
 
-import CodeSquad.IssueTracker.label.Label;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-@Table("issues")
-public class Issue {
+@Table("milestones")
+public class Milestone {
     @Id
-    private Long issueId;
-    private String title;
-    private String content;
-    private String imageUrl;
-    private Long authorId;
     private Long milestoneId;
+    private String name;
+    private String description;
+    private LocalDateTime endDate;
     private Boolean isOpen;
-    private Long commentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
-
-

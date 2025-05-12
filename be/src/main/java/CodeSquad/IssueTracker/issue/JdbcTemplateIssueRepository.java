@@ -7,12 +7,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class JdbcTemplateIssueRepository implements IssueRepository{
 
     private final NamedParameterJdbcTemplate template;
@@ -29,13 +31,13 @@ public class JdbcTemplateIssueRepository implements IssueRepository{
     public Issue save(Issue issue) {
         SqlParameterSource param = new BeanPropertySqlParameterSource(issue);
         Number key = jdbcInsert.executeAndReturnKey(param);
-        issue.setId(key.longValue());
+        issue.setIssueId((key.longValue()));
         return issue;
     }
 
     @Override
     public void update(Long issueId, IssueUpdateDto updateParam) {
-        String sql = "UPDATE issues SET title = :title, isOpen = :isOpen, timestamp = :timestamp, assigneeId = :assigneeId, milestoneId = :milestoneId WHERE id = :id";
+        String sql = "UPDATE issues SET title = :title, is_Open = :isOpen, timestamp = :timestamp, assignee_Id = :assigneeId, milestone_Id = :milestoneId WHERE id = :id" ;
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("title",updateParam.getTitle())
                 .addValue("isOpen",updateParam.getIsOpen())
