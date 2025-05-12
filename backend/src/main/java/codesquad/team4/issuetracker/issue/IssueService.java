@@ -7,8 +7,6 @@ import codesquad.team4.issuetracker.entity.IssueLabel;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.LabelInfo;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.UserInfo;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import java.time.LocalDateTime;
