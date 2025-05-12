@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "./IssueTable.module.css";
 import "../../styles/tokens.css";
 import checkBoxInitialIcon from "../../assets/icons/checkBoxInitial.svg";
+import { API_URL } from "../../constants/link";
 
 import IssueList from "./IssueList";
 
@@ -16,6 +17,18 @@ const getStyleTab = (state, isOpen) => {
 
 function IssueTable() {
   const [isOpen, setIsOpen] = useState(true);
+  const [issueCount, setIssueCount] = useState(0);
+  useEffect(() => {
+    fetch(`${API_URL}/api/issues/count`)
+      .then((response) => response.json())
+      .then((data) => {
+        setIssueCount(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching issue count data:", error);
+      });
+  }, []);
+
   return (
     <div className={styles.issueTableContainer}>
       <div className={styles.IssueViewControls}>
@@ -28,21 +41,19 @@ function IssueTable() {
             onClick={() => setIsOpen(true)}
           >
             <div className={styles.openIssueIcon}></div>
-            열린 이슈
+            열린 이슈({issueCount.open_count})
           </button>
           <button
             className={`${getStyleTab(false, isOpen)} ${styles.tabButton}`}
             onClick={() => setIsOpen(false)}
           >
             <div className={styles.closedIssueIcon}></div>
-            닫힌 이슈
+            닫힌 이슈({issueCount.closed_count})
           </button>
         </div>
       </div>
 
       <div className={styles.issueListContainer}>
-        {/* {isOpen === true && <OpenIssuePage isOpen={isOpen} />}
-        {isOpen === false && <ClosedIssuePage />} */}
         <IssueList isOpen={isOpen} />
       </div>
     </div>

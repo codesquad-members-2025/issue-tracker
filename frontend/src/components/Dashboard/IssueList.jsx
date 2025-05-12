@@ -1,5 +1,6 @@
 import styles from "./IssueList.module.css";
 import { useEffect, useState } from "react";
+import { API_URL } from "../../constants/link";
 
 const getIssueIconByStatus = (status) => {
   // 이슈 상태에 따라 아이콘을 반환하는 함수
@@ -10,18 +11,14 @@ const getIssueIconByStatus = (status) => {
   }
 };
 
-function OpenIssuePage({ isOpen }) {
+function IssueList({ isOpen }) {
   const [issues, setIssues] = useState([]);
 
   // useEffect를 사용하여 컴포넌트가 마운트될 때 API 호출
   // GET 요청을 통해 이슈 데이터를 가져옴
   // isOpen이 변경될 때마다 API 호출
-
-  // 환경변수를 사용하여 API URL을 설정
-  const apiUrl = "http://localhost:3000";
-
   useEffect(() => {
-    fetch(`${apiUrl}/api/issues?is_open=${isOpen}`)
+    fetch(`${API_URL}/api/issues?is_open=${isOpen}`)
       .then((response) => response.json())
       .then((data) => {
         setIssues(data.issues);
@@ -77,4 +74,4 @@ function OpenIssuePage({ isOpen }) {
   );
 }
 
-export default OpenIssuePage;
+export default IssueList;
