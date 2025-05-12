@@ -1,4 +1,4 @@
-package com.team5.issue_tracker.issue;
+package com.team5.issue_tracker.issue.domain;
 
 import java.time.LocalDateTime;
 

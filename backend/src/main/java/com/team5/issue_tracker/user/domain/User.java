@@ -1,4 +1,4 @@
-package com.team5.issue_tracker.user;
+package com.team5.issue_tracker.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
