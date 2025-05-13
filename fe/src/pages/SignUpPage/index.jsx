@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import MainTitle from '@/base-ui/main-layout/MainTitle';
+import Logo from '@/base-ui/loginPage/Logo';
 import InputForm from '@/utils/InputForm';
 import SubButton from '@/base-ui/loginPage/SubButton';
 
@@ -27,7 +27,7 @@ export default function SignUpPage() {
   }
   return (
     <Container>
-      <MainTitle />
+      <Logo />
       <InputForm mainButtonLabel={mainButtonLabel} />
       <SubButton buttonLabelText={buttonLabelText} onClick={moveToLogIn} />
     </Container>

@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import MainTitle from '@/base-ui/main-layout/MainTitle';
+import Logo from '@/base-ui/loginPage/Logo';
 import GitHubLoginButton from '@/base-ui/loginPage/GitHubLoginButton';
 import OrLabel from '@/base-ui/loginPage/OrLabel';
 import InputForm from '@/utils/InputForm';
 import SubButton from '@/base-ui/loginPage/SubButton';
+import ToggleTheme from '@/base-ui/utils/ToggleTheme';
 
 const Container = styled.div`
   display: flex;
@@ -29,7 +30,8 @@ export default function LoginPage() {
   }
   return (
     <Container>
-      <MainTitle />
+      <ToggleTheme />
+      <Logo />
       <GitHubLoginButton />
       <OrLabel />
       <InputForm mainButtonLabel={mainButtonLabel} />
