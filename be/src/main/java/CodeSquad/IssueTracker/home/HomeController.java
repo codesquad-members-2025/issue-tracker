@@ -18,19 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class HomeController {
 
-    private final IssueService issueService;
-    private final LabelService labelService;
-    private final MilestoneService milestoneService;
-    private final UserService userService;
+    private final HomeService homeService;
 
     @GetMapping("/")
     public HomeResponseDto home() {
-        return new HomeResponseDto(
-                issueService.findAll(),
-                labelService.findAll(),
-                milestoneService.findAll(),
-                userService.findAll()
-        );
+        return homeService.getHomeData();
     }
 
 
