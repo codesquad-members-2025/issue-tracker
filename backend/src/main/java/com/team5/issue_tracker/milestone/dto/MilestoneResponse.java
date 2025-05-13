@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MilestoneResponse {
   private Long id;
-  private String title;
+  private String name;
 }

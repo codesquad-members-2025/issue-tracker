@@ -33,7 +33,7 @@ public class IssueQueryRepository{
                 u.username,
                 u.image_url,
                 m.id AS milestone_id,
-                m.title AS milestone_title,
+                m.name AS milestone_title,
                 (SELECT COUNT(*) FROM comment c WHERE c.issue_id = i.id) AS comments_count
             FROM issue i
             JOIN user u ON i.user_id = u.id
@@ -87,7 +87,7 @@ public class IssueQueryRepository{
             SELECT il.issue_id, l.id AS label_id, l.name, l.color
             FROM issue_label il
             JOIN label l ON il.label_id = l.id
-            WHERE il.issue_id IN (:issueIs)
+            WHERE il.issue_id IN (:issueIds)
             """;
 
     MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);

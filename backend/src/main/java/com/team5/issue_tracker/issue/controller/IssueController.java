@@ -1,6 +1,7 @@
 package com.team5.issue_tracker.issue.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.team5.issue_tracker.common.dto.ApiResponse;
@@ -16,6 +17,7 @@ public class IssueController {
   private final IssueService issueService;
   private final IssueQueryService issueQueryService;
 
+  @GetMapping
   public ResponseEntity<ApiResponse<IssuePageResponse>> getAllIssues() {
     return ResponseEntity.ok(ApiResponse.success(issueQueryService.getIssuePage()));
   }
