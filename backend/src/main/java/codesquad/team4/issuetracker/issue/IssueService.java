@@ -76,7 +76,7 @@ public class IssueService {
                             .title((String) row.get("title"))
                             .author(IssueResponseDto.UserInfo.builder()
                                     .id((Long) row.get("author_id"))
-                                    .name((String) row.get("author_nickname"))
+                                    .nickname((String) row.get("author_nickname"))
                                     .profileImage((String) row.get("author_profile"))
                                     .build())
                             .assignees(new ArrayList<>())
@@ -89,7 +89,7 @@ public class IssueService {
             if (assigneeId != null) {
                 IssueResponseDto.UserInfo assignee = UserInfo.builder()
                         .id(assigneeId)
-                        .name((String) row.get("assignee_nickname"))
+                        .nickname((String) row.get("assignee_nickname"))
                         .profileImage((String) row.get("assignee_profile"))
                         .build();
 

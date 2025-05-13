@@ -44,7 +44,7 @@ public class IssueResponseDto {
     @Builder
     public static class UserInfo{
         private Long id;
-        private String name;
+        private String nickname;
         private String profileImage;
     }
 
