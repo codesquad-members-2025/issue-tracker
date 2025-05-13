@@ -7,10 +7,12 @@ API를 호출해서 데이터를 가져오는 커스텀 훅을 만든다.
 2. 반환 : 서버 응답값(response), isLoading, error 데이터 통신 상태를 반환한다.
 */
 import { useState, useEffect, useCallback } from 'react';
+import { useErrorStore } from '@/stores/errorStore';
 
 export default function useDataFetch({ apiUrl, optionObj = null, immediate = true }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null); -> 에러 전용 스토어로 대체
+  const setError = useErrorStore((state) => state.setError);
   const [response, setResponse] = useState(null);
 
   const fetchData = useCallback(
@@ -24,7 +26,7 @@ export default function useDataFetch({ apiUrl, optionObj = null, immediate = tru
         if (data.success === false) throw new Error(`아이디 또는 비밀번호가 틀렸습니다.`);
         setResponse(data);
       } catch (err) {
-        setError(err);
+        setError(`login`, err);
       } finally {
         setIsLoading(false);
       }
@@ -36,5 +38,5 @@ export default function useDataFetch({ apiUrl, optionObj = null, immediate = tru
     if (immediate) fetchData();
   }, [fetchData, immediate]);
 
-  return { response, error, isLoading, refetch: fetchData };
+  return { response, isLoading, refetch: fetchData };
 }

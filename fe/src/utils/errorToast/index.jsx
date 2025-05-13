@@ -1,23 +1,24 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { ProgressBar } from './ProgressBar';
+import { useErrorStore } from '@/stores/errorStore';
 
 export default function ErrorToast() {
-  const [isVisible, setIsVisible] = useState(false);
+  const clearError = useErrorStore((state) => state.clearError);
+  const errorType = useErrorStore((state) => state.type);
+  const errorMessage = useErrorStore((state) => state.errorMessage);
 
-  function showToast() {
-    setIsVisible(true);
-    setTimeout(() => setIsVisible(false), 4000);
-  }
+  useEffect(() => {
+    setTimeout(() => clearError(), 4000);
+  }, [errorType]);
 
   return (
     <>
-      <StyledButton onClick={showToast}>Show Toast</StyledButton>
-      {isVisible && (
+      {errorType && (
         <ToastWrapper>
           <ContentsWrapper>
-            <ToastTitle>오류 발생</ToastTitle>
-            <ToastDescription>요청 처리에 실패했습니다.</ToastDescription>
+            <ToastTitle>{`에러 발생 ErrorType:${errorType}`}</ToastTitle>
+            <ToastDescription>{errorMessage}</ToastDescription>
           </ContentsWrapper>
           <ProgressBar />
         </ToastWrapper>
@@ -25,18 +26,6 @@ export default function ErrorToast() {
     </>
   );
 }
-
-const StyledButton = styled.button`
-  padding: 8px 16px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background: #f2f2f2;
-  }
-`;
 
 const ToastWrapper = styled.div`
   position: fixed;

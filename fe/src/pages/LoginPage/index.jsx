@@ -11,7 +11,6 @@ import useDataFetch from '@/hooks/useDataFetch';
 import { LOGIN_API } from '@/api/login';
 import tokenDecoder from '@/utils/token/decoder';
 import { useUserStore } from '@/stores/userStore';
-import ErrorToast from '@/utils/errorToast';
 
 const Container = styled.div`
   display: flex;
@@ -25,7 +24,7 @@ const Container = styled.div`
 export default function LoginPage() {
   const [Id, setId] = useState('');
   const [pw, setPw] = useState('');
-  const { response, error, isLoading, refetch } = useDataFetch({
+  const { response, isLoading, refetch } = useDataFetch({
     apiUrl: LOGIN_API,
     immediate: false,
   });
@@ -58,7 +57,6 @@ export default function LoginPage() {
   return (
     <Container>
       {isLoading && <h1>로딩중입니다.</h1>}
-      {error && <alert>{error}</alert>}
       <ToggleTheme />
       <Logo />
       <GitHubLoginButton />
@@ -70,7 +68,6 @@ export default function LoginPage() {
         onSubmit={onSubmit}
       />
       <SubButton buttonLabelText={buttonLabelText} onClick={moveToSignUp} />
-      <ErrorToast />
     </Container>
   );
 }
