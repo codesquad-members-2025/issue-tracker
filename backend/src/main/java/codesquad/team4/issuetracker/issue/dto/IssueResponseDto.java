@@ -52,6 +52,6 @@ public class IssueResponseDto {
     @Builder
     public static class CreateIssueDto {
         private Long id;
-        private String messqge;
+        private String message;
     }
 }
