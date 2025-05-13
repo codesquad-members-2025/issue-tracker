@@ -23,7 +23,7 @@ public class JdbcTemplatesLabelRepository implements LabelRepository {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("labels")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("label_id");
     }
 
     @Override
@@ -52,20 +52,20 @@ public class JdbcTemplatesLabelRepository implements LabelRepository {
 
     @Override
     public void update(Long labelId, LabelUpdateDto updateDto) {
-        String sql = "UPDATE labels SET name = :name, description = :description, color = :color, createdAt = :createdAt WHERE id = :id";
+        String sql = "UPDATE labels SET name = :name, description = :description, color = :color, created_at = :created_at WHERE label_id = :label_id";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("name", updateDto.getName())
                 .addValue("description", updateDto.getDescription())
                 .addValue("color", updateDto.getColor())
-                .addValue("createdAt", updateDto.getCreatedAt())
-                .addValue("id", labelId);
+                .addValue("created_at", updateDto.getCreatedAt())
+                .addValue("label_id", labelId);
         template.update(sql, param);
     }
 
     @Override
     public void deleteById(Long labelId) {
-        String sql = "DELETE FROM labels WHERE id = :id";
-        Map<String, Object> param = Map.of("id", labelId);
+        String sql = "DELETE FROM labels WHERE label_id = :label_id";
+        Map<String, Object> param = Map.of("label_id", labelId);
         template.update(sql, param);
     }
 
