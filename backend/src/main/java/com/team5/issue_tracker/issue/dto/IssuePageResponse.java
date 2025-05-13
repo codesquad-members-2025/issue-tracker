@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IssueListPageResponse {
+public class IssuePageResponse {
   private Long total;
   private Long page;
   private Long perPage;
-  private List<IssueListItemResponse> issues;
+  private List<IssueSummaryResponse> issues;
 }

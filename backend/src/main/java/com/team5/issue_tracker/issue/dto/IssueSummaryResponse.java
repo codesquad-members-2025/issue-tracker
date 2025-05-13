@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IssueListItemResponse {
+public class IssueSummaryResponse {
   private Long id;
   private String title;
   private boolean isOpen;
   private List<LabelResponse> labels;
   private AuthorResponse author;
   private MilestoneResponse milestone;
-  private LocalDateTime createAt;
+  private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private Long commentsCount;
 }

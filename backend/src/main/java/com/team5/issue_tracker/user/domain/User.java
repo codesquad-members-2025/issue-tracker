@@ -1,13 +1,9 @@
 package com.team5.issue_tracker.user.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 @Getter
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -16,4 +12,10 @@ public class User {
     private final String username;
     private final String email;
     private final String password;
+
+    public User(String username, String email, String password) {
+      this.username = username;
+      this.email = email;
+      this.password = password;
+  }
 }

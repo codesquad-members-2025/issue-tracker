@@ -1,18 +1,10 @@
 package com.team5.issue_tracker.issue.domain;
 
 import java.time.LocalDateTime;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.annotation.Id;
 
 @Getter
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class Issue {
     @Id
     private Long id;
@@ -25,4 +17,15 @@ public class Issue {
     private final boolean isOpen;
 
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+  public Issue(String title, String body, String imageUrl,
+      Long userId, Long milestoneId, boolean isOpen) {
+    this.title = title;
+    this.body = body;
+    this.imageUrl = imageUrl;
+    this.userId = userId;
+    this.milestoneId = milestoneId;
+    this.isOpen = isOpen;
+  }
 }

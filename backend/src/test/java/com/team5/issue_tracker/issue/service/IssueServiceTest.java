@@ -2,18 +2,17 @@ package com.team5.issue_tracker.issue.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import org.springframework.test.util.ReflectionTestUtils;
 import com.team5.issue_tracker.common.dto.ApiResponse;
 import com.team5.issue_tracker.issue.domain.Issue;
-import com.team5.issue_tracker.issue.dto.IssueListItemResponse;
-import com.team5.issue_tracker.issue.dto.IssueListPageResponse;
+import com.team5.issue_tracker.issue.dto.IssueSummaryResponse;
+import com.team5.issue_tracker.issue.dto.IssuePageResponse;
 import com.team5.issue_tracker.issue.repository.IssueRepository;
 import com.team5.issue_tracker.label.dto.LabelResponse;
 import com.team5.issue_tracker.label.service.LabelService;
@@ -47,8 +46,13 @@ public class IssueServiceTest {
   @DisplayName("모든 이슈 리스트를 반환한다.")
   void getIssueListPage_모든_이슈_반환() {
     // given
-    Issue issue1 = new Issue(1L, "제목1", "본문", null, 1L, 1L, true, LocalDateTime.now());
-    Issue issue2 = new Issue(2L, "제목2", "본문", null, 1L, 1L, true, LocalDateTime.now());
+    Issue issue1 = new Issue("제목1", "본문", null, 1L, 1L, true);
+    ReflectionTestUtils.setField(issue1, "id", 1L);
+    ReflectionTestUtils.setField(issue1, "createdAt", LocalDateTime.now());
+    Issue issue2 = new Issue("제목2", "본문", null, 1L, 1L, true);
+    ReflectionTestUtils.setField(issue2, "id", 2L);
+    ReflectionTestUtils.setField(issue2, "createdAt", LocalDateTime.now());
+
     AuthorResponse authorResponse1 = new AuthorResponse(1L, "작성자1", "작성자 이메일");
     AuthorResponse authorResponse2 = new AuthorResponse(2L, "작성자2", "작성자 이메일");
     LabelResponse labelResponse1 = new LabelResponse(1L, "라벨1", "라벨 설명");
@@ -65,13 +69,13 @@ public class IssueServiceTest {
     when(milestoneService.getMilestoneResponseById(2L)).thenReturn(milestoneResponse2);
 
     // when
-    ApiResponse<IssueListPageResponse> result = issueService.getIssueListPage();
+    ApiResponse<IssuePageResponse> result = issueService.getIssueListPage();
 
     // then
     assertThat(result.isSuccess()).isTrue();
     assertThat(result.getData().getTotal()).isEqualTo(2);
 
-    List<IssueListItemResponse> issues = result.getData().getIssues();
+    List<IssueSummaryResponse> issues = result.getData().getIssues();
     assertThat(issues).hasSize(2);
     assertThat(issues.get(0).getId()).isEqualTo(1L);
     assertThat(issues.get(0).getTitle()).isEqualTo("제목1");
