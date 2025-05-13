@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.label;
 
-import codesquad.team4.issuetracker.label.dto.LabelCountDto;
+import codesquad.team4.issuetracker.label.dto.LabelFilterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LabelController {
     private final LabelService labelService;
 
-    @GetMapping("/count")
-    public ResponseEntity<LabelCountDto> getLabelCount() {
-        LabelCountDto result = labelService.getLabelCount();
+    @GetMapping("/filter")
+    public ResponseEntity<LabelFilterDto> getFilterLabels() {
+        LabelFilterDto result = labelService.getFilterLabels();
         return ResponseEntity.ok(result);
     }
 
