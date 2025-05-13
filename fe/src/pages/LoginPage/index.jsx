@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '@/base-ui/loginPage/Logo';
 import GitHubLoginButton from '@/base-ui/loginPage/GitHubLoginButton';
@@ -6,6 +7,11 @@ import OrLabel from '@/base-ui/loginPage/OrLabel';
 import InputForm from '@/utils/InputForm';
 import SubButton from '@/base-ui/loginPage/SubButton';
 import ToggleTheme from '@/base-ui/utils/ToggleTheme';
+import useDataFetch from '@/hooks/useDataFetch';
+import { LOGIN_API } from '@/api/login';
+import tokenDecoder from '@/utils/token/decoder';
+import { useUserStore } from '@/stores/userStore';
+import ErrorToast from '@/utils/errorToast';
 
 const Container = styled.div`
   display: flex;
@@ -17,31 +23,54 @@ const Container = styled.div`
 `;
 
 export default function LoginPage() {
+  const [Id, setId] = useState('');
+  const [pw, setPw] = useState('');
+  const { response, error, isLoading, refetch } = useDataFetch({
+    apiUrl: LOGIN_API,
+    immediate: false,
+  });
+  const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
   const mainButtonLabel = '아이디로 로그인';
   const buttonLabelText = '회원가입';
   function onSubmit(event) {
     event.preventDefault();
-    //서버 통신 로직
+    refetch({
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: Id, password: pw }),
+    });
   }
 
   function moveToSignUp() {
     navigate('/signUp');
   }
+
+  useEffect(() => {
+    if (response && response.token) {
+      const token = response.token;
+      const { userId, imgUrl } = tokenDecoder(token);
+      setUser(userId, imgUrl, token);
+      localStorage.setItem('token', token);
+      navigate('/');
+    }
+  }, [response]);
   return (
     <Container>
+      {isLoading && <h1>로딩중입니다.</h1>}
+      {error && <alert>{error}</alert>}
       <ToggleTheme />
       <Logo />
       <GitHubLoginButton />
       <OrLabel />
-      <InputForm mainButtonLabel={mainButtonLabel} />
+      <InputForm
+        setId={setId}
+        setPw={setPw}
+        mainButtonLabel={mainButtonLabel}
+        onSubmit={onSubmit}
+      />
       <SubButton buttonLabelText={buttonLabelText} onClick={moveToSignUp} />
+      <ErrorToast />
     </Container>
   );
 }
-
-/*
-유틸에서 인풋 컴포넌트 사용할때 상황에 맞게 회원가입 navlink 컴포넌트 사용필요
-
-<SubButton NavLink="/signUp">회원가입</SubButton>;
-*/

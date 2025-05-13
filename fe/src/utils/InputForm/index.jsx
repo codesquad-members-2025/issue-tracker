@@ -49,10 +49,7 @@ const ErrorMessage = styled.p`
   margin-top: 0.25rem;
 `;
 
-export default function InputForm({ mainButtonLabel, onSubmit, error = null }) {
-  const [Id, setId] = useState('');
-  const [pw, setPw] = useState('');
-
+export default function InputForm({ setId, setPw, mainButtonLabel, onSubmit, error = null }) {
   return (
     <>
       <StyledForm onSubmit={onSubmit}>
@@ -62,7 +59,6 @@ export default function InputForm({ mainButtonLabel, onSubmit, error = null }) {
             id="Id"
             type="text"
             placeholder="아이디"
-            value={Id}
             onChange={(e) => setId(e.target.value)}
             aria-describedby="Id-description Id-error"
             aria-invalid={!!error}
@@ -71,9 +67,8 @@ export default function InputForm({ mainButtonLabel, onSubmit, error = null }) {
 
         <StyledInput
           id="pw"
-          type="text"
+          type="password"
           placeholder="비밀번호"
-          value={pw}
           onChange={(e) => setPw(e.target.value)}
           aria-describedby="pw-description pw-error"
           aria-invalid={!!error}

@@ -2,7 +2,7 @@ import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from './styles/foundation';
 import GlobalStyle from './styles/GlobalStyle';
 import AppRouter from './routes/AppRouter';
-import { useUiStore } from './base-ui/stores/uiStore';
+import { useUiStore } from './stores/uiStore';
 
 function App() {
   const isDark = useUiStore((state) => state.isDarkMode);
