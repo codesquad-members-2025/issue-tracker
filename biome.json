@@ -24,8 +24,7 @@
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "single",
-			"jsxQuoteStyle": "single",
-			"attributePosition": "multiline"
+			"jsxQuoteStyle": "single"
 		}
 	},
 	"css": {
