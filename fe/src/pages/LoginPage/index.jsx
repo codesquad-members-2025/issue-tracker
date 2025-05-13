@@ -1,30 +1,41 @@
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import MainTitle from '@/base-ui/main-layout/MainTitle';
+import GitHubLoginButton from '@/base-ui/loginPage/GitHubLoginButton';
+import OrLabel from '@/base-ui/loginPage/OrLabel';
+import InputForm from '@/utils/InputForm';
+import SubButton from '@/base-ui/loginPage/SubButton';
 
-const SubButton = styled.button`
-  ${typography.available.medium16};
-  width: 320px;
-  height: 40px;
-  background-color: ${({ theme }) => theme.surface.default};
-  color: ${({ theme }) => theme.text.default};
-  border: none;
-  border-radius: 16px;
-  cursor: pointer;
-  &:hover {
-    background-color: ${({ theme }) => theme.surface.bold};
-  }
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
 `;
+
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const mainButtonLabel = '아이디로 로그인';
+  const buttonLabelText = '회원가입';
   function onSubmit(event) {
     event.preventDefault();
-    const validationError = validateUsername(Id);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-    setError('');
+    //서버 통신 로직
   }
-  return;
+
+  function signUpHandler() {
+    navigate('/signUp');
+  }
+  return (
+    <Container>
+      <MainTitle />
+      <GitHubLoginButton />
+      <OrLabel />
+      <InputForm mainButtonLabel={mainButtonLabel} />
+      <SubButton buttonLabelText={buttonLabelText} onClick={signUpHandler} />
+    </Container>
+  );
 }
 
 /*

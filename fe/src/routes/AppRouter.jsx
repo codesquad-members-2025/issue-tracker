@@ -1,5 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginPage from '@/pages/LoginPage';
+import SignUpPage from '@/pages/SignUpPage';
+import PrivateRoute from '@/pages/PrivateRoute';
 import MainLayout from '@/pages/MainLayout';
+import IssueListPage from '@/pages/IssueListPage';
+import NewIssuePage from '@/pages/NewIssuePage';
+import LabelPage from '@/pages/LabelPage';
+import MilestonePage from '@/pages/MilestonePage';
+import IssueDetailPage from '@/pages/IssueDetailPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 export default function AppRouter() {
   return (
