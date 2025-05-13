@@ -14,3 +14,19 @@ spring:
     init:
       mode: never
       schema-locations: classpath:schema.sql
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2  # 버킷의 리전
+    s3:
+      bucket: bbz-issuetracker-bucket   # 버킷 이름
+    stack:
+      auto: false
+
+logging:
+  level:
+    root: INFO
