@@ -34,4 +34,8 @@ public class Issue extends BaseEntity {
     @Column("file_path")
     private String filePath;
 
+    public boolean isClosed() {
+        return Boolean.TRUE.equals(isClosed);
+    }
+
 }
