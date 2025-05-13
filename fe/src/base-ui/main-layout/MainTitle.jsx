@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const Logo = styled.svg`
   color: ${({ theme }) => theme.text.strong};
+  margin-bottom: 64px;
 `;
 
 export default function MainTitle() {

@@ -1,15 +1,13 @@
-import { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from './styles/foundation';
 import GlobalStyle from './styles/GlobalStyle';
 import AppRouter from './routes/AppRouter';
+import { useUiStore } from './base-ui/stores/uiStore';
 
 function App() {
-  //추후에 zustand로 테마 상태 관리 예정
-  const [IsDark, setIsDark] = useState(false);
-
+  const isDark = useUiStore((state) => state.isDarkMode);
   return (
-    <ThemeProvider theme={IsDark ? darkTheme : lightTheme}>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
       <GlobalStyle />
       {/* base-ui 컴포넌트 테스트 위치 */}
       <AppRouter />
