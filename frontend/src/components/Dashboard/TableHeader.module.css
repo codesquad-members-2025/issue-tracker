@@ -24,3 +24,13 @@
   gap: 24px;
   padding-left: 32px;
 }
+
+.filterBar {
+  display: flex;
+  gap: 32px;
+}
+
+.filterTabWrapper {
+  position: relative;
+  display: inline-block;
+}
