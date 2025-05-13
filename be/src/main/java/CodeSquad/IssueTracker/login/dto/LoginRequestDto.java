@@ -1,4 +1,4 @@
-package CodeSquad.IssueTracker.login;
+package CodeSquad.IssueTracker.login.dto;
 
 import lombok.*;
 import jakarta.validation.constraints.NotBlank;
