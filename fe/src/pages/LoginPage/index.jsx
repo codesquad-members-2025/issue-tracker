@@ -27,6 +27,7 @@ export default function LoginPage() {
   const { response, isLoading, refetch } = useDataFetch({
     apiUrl: LOGIN_API,
     immediate: false,
+    fetchType: 'Login',
   });
   const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();

@@ -9,7 +9,12 @@ API를 호출해서 데이터를 가져오는 커스텀 훅을 만든다.
 import { useState, useEffect, useCallback } from 'react';
 import { useErrorStore } from '@/stores/errorStore';
 
-export default function useDataFetch({ apiUrl, optionObj = null, immediate = true }) {
+export default function useDataFetch({
+  apiUrl,
+  optionObj = null,
+  immediate = true,
+  fetchType = 'unknown',
+}) {
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState(null); -> 에러 전용 스토어로 대체
   const setError = useErrorStore((state) => state.setError);
@@ -23,10 +28,10 @@ export default function useDataFetch({ apiUrl, optionObj = null, immediate = tru
         const res = await fetch(apiUrl, option);
         if (!res.ok) throw new Error(`오류: ${res.status}`);
         const data = await res.json();
-        if (data.success === false) throw new Error(`아이디 또는 비밀번호가 틀렸습니다.`);
+        if (data.success === false) throw new Error(data.message || '요청 실패');
         setResponse(data);
       } catch (err) {
-        setError(`login`, err);
+        setError(fetchType, err);
       } finally {
         setIsLoading(false);
       }
