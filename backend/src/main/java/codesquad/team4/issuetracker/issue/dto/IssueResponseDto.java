@@ -37,23 +37,6 @@ public class IssueResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class LabelInfo{
-        private Long id;
-        private String name;
-        private String color;
-    }
-    @AllArgsConstructor
-    @Getter
-    @Builder
-    public static class UserInfo{
-        private Long id;
-        private String nickname;
-        private String profileImage;
-    }
-
-    @AllArgsConstructor
-    @Getter
-    @Builder
     public static class CreateIssueDto {
         private Long id;
         private String message;
