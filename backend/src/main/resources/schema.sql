@@ -36,6 +36,7 @@ CREATE TABLE issue (
                        image_url VARCHAR(255),
                        author_id BIGINT NOT NULL,
                        milestone_id BIGINT,
+                       comment_id BIGINT,
                        is_open BOOLEAN DEFAULT true,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

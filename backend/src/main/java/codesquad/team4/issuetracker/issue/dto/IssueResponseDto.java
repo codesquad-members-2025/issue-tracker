@@ -46,4 +46,12 @@ public class IssueResponseDto {
         private Long id;
         private String name;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class CreateIssueDto {
+        private Long id;
+        private String message;
+    }
 }

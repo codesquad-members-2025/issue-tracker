@@ -1,22 +1,37 @@
 package codesquad.team4.issuetracker.issue;
 
+import codesquad.team4.issuetracker.entity.Issue;
+import codesquad.team4.issuetracker.entity.Issue.IssueBuilder;
+import codesquad.team4.issuetracker.entity.IssueAssignee;
+import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.LabelInfo;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.UserInfo;
+import codesquad.team4.issuetracker.label.IssueLabelRepository;
+import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class IssueService {
+    private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
 
     private final JdbcTemplate jdbcTemplate;
+    private final IssueRepository issueRepository;
+    private final IssueLabelRepository issueLabelRepository;
+    private final IssueAssigneeRepository issueAssigneeRepository;
 
     public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
         int offset = Math.max(0, (page - 1) * size);
@@ -115,6 +130,53 @@ public class IssueService {
                 .size(size)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
+                .build();
+    }
+
+    @Transactional
+    public CreateIssueDto createIssue(IssueRequestDto.CreateIssueDto request, String uploadUrl) {
+        IssueBuilder issueBuilder = Issue.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .imageUrl(uploadUrl)
+                .isOpen(true)
+                .authorId(request.getAuthorId())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now());
+
+        Optional.ofNullable(request.getMilestoneId())
+                .ifPresent(issueBuilder::milestoneId);
+
+        Issue issue = issueBuilder.build();
+        Issue savedIssue = issueRepository.save(issue);
+
+        Long issueId = savedIssue.getId();
+
+        for (Long labelId : Optional.ofNullable(request.getLabelId()).orElse(List.of())) {
+            IssueLabel issueLabel = IssueLabel.builder()
+                    .issueId(issueId)
+                    .labelId(labelId)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+
+            issueLabelRepository.save(issueLabel);
+        }
+
+        for (Long assigneeId : Optional.ofNullable(request.getAssigneeId()).orElse(List.of())) {
+            IssueAssignee issueAssignee = IssueAssignee.builder()
+                    .issueId(issueId)
+                    .assigneeId(assigneeId)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+
+            issueAssigneeRepository.save(issueAssignee);
+        }
+
+        return IssueResponseDto.CreateIssueDto.builder()
+                .id(issueId)
+                .message(CREATE_ISSUE)
                 .build();
     }
 }
