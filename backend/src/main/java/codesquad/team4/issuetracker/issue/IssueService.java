@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.user.dto.UserDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -64,8 +67,8 @@ public class IssueService {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, isOpen, size, offset);
 
         Map<Long, IssueResponseDto.IssueInfo.IssueInfoBuilder> issueMap = new LinkedHashMap<>();
-        Map<Long, List<IssueResponseDto.UserInfo>> assigneeMap = new HashMap<>();
-        Map<Long, List<IssueResponseDto.LabelInfo>> labelMap = new HashMap<>();
+        Map<Long, List<UserDto.UserInfo>> assigneeMap = new HashMap<>();
+        Map<Long, List<LabelDto.LabelInfo>> labelMap = new HashMap<>();
 
         for (Map<String, Object> row : rows) {
             Long issueId = (Long) row.get("issue_id");
@@ -74,7 +77,7 @@ public class IssueService {
                     IssueResponseDto.IssueInfo.builder()
                             .id(issueId)
                             .title((String) row.get("title"))
-                            .author(IssueResponseDto.UserInfo.builder()
+                            .author(UserDto.UserInfo.builder()
                                     .id((Long) row.get("author_id"))
                                     .nickname((String) row.get("author_nickname"))
                                     .profileImage((String) row.get("author_profile"))
@@ -87,7 +90,7 @@ public class IssueService {
 
             Long assigneeId = (Long) row.get("assignee_id");
             if (assigneeId != null) {
-                IssueResponseDto.UserInfo assignee = UserInfo.builder()
+                UserDto.UserInfo assignee = UserDto.UserInfo.builder()
                         .id(assigneeId)
                         .nickname((String) row.get("assignee_nickname"))
                         .profileImage((String) row.get("assignee_profile"))
@@ -99,7 +102,7 @@ public class IssueService {
 
             Long labelId = (Long) row.get("label_id");
             if (labelId != null) {
-                IssueResponseDto.LabelInfo label = LabelInfo.builder()
+                LabelDto.LabelInfo label = LabelDto.LabelInfo.builder()
                         .id(labelId)
                         .name((String) row.get("label_name"))
                         .color((String) row.get("label_color"))

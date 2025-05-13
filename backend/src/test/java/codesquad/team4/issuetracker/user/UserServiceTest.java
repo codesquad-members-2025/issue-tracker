@@ -1,7 +1,6 @@
 package codesquad.team4.issuetracker.user;
 
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
-import codesquad.team4.issuetracker.user.dto.UserFilterDto;
+import codesquad.team4.issuetracker.user.dto.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,13 +30,13 @@ public class UserServiceTest {
     void 유저_필터링_정보_조회() {
         // given
         String sql = "SELECT user_id, nickname, profile_image FROM user";
-        List<IssueResponseDto.UserInfo> mockUsers = List.of(
-                IssueResponseDto.UserInfo.builder()
+        List<UserDto.UserInfo> mockUsers = List.of(
+                UserDto.UserInfo.builder()
                         .id(1L)
                         .nickname("user1")
                         .profileImage("image.com/a.jpg")
                         .build(),
-                IssueResponseDto.UserInfo.builder()
+                UserDto.UserInfo.builder()
                         .id(2L)
                         .nickname("user2")
                         .profileImage("image.com/b.jpg")
@@ -47,7 +46,7 @@ public class UserServiceTest {
                 .willReturn(mockUsers);
 
         // when
-        UserFilterDto result = userService.getFilterUsers();
+        UserDto.UserFilter result = userService.getFilterUsers();
 
         // then
         assertThat(result.getUsers()).hasSize(2);

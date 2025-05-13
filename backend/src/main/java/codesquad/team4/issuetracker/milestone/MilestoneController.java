@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.milestone;
 
-import codesquad.team4.issuetracker.milestone.dto.MilestoneFilterDto;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +14,8 @@ public class MilestoneController {
     private final MilestoneService milestoneService;
 
     @GetMapping("/filter")
-    public ResponseEntity<MilestoneFilterDto> getFilterMilestones() {
-        MilestoneFilterDto result = milestoneService.getFilterMilestones();
+    public ResponseEntity<MilestoneDto.MilestoneFilter> getFilterMilestones() {
+        MilestoneDto.MilestoneFilter result = milestoneService.getFilterMilestones();
         return ResponseEntity.ok(result);
     }
 

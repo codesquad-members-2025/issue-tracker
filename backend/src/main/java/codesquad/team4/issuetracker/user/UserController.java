@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.user;
 
-import codesquad.team4.issuetracker.user.dto.UserFilterDto;
+import codesquad.team4.issuetracker.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +14,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/filter")
-    public ResponseEntity<UserFilterDto> getFilterUsers() {
-        UserFilterDto result = userService.getFilterUsers();
+    public ResponseEntity<UserDto.UserFilter> getFilterUsers() {
+        UserDto.UserFilter result = userService.getFilterUsers();
         return ResponseEntity.ok(result);
     }
 

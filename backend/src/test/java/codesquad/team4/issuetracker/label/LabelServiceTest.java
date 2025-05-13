@@ -1,7 +1,7 @@
 package codesquad.team4.issuetracker.label;
 
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
-import codesquad.team4.issuetracker.label.dto.LabelFilterDto;
+import codesquad.team4.issuetracker.label.dto.LabelDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,13 +32,13 @@ public class LabelServiceTest {
         // given
         String sql = "SELECT label_id, name, color FROM label";
 
-        List<IssueResponseDto.LabelInfo> mockLabels = List.of(
-                IssueResponseDto.LabelInfo.builder()
+        List<LabelDto.LabelInfo> mockLabels = List.of(
+                LabelDto.LabelInfo.builder()
                         .id(1L)
                         .name("bug")
                         .color("qww11")
                         .build(),
-                IssueResponseDto.LabelInfo.builder()
+                LabelDto.LabelInfo.builder()
                         .id(2L)
                         .name("refactor")
                         .color("qq2q11")
@@ -48,7 +48,7 @@ public class LabelServiceTest {
         given(jdbcTemplate.query(eq(sql), any(RowMapper.class))).willReturn(mockLabels);
 
         // when
-        LabelFilterDto result = labelService.getFilterLabels();
+        LabelDto.LabelFilter result = labelService.getFilterLabels();
 
         // then
         assertThat(result.getLabels()).hasSize(2);

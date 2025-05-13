@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.milestone;
 
-import codesquad.team4.issuetracker.milestone.dto.MilestoneFilterDto;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,12 +30,12 @@ public class MilestoneServiceTest {
         // given
         String sql = "SELECT milestone_id, name FROM milestone";
 
-        List<MilestoneFilterDto.MilestoneInfo> mockMilestones = List.of(
-                MilestoneFilterDto.MilestoneInfo.builder()
+        List<MilestoneDto.MilestoneInfo> mockMilestones = List.of(
+                MilestoneDto.MilestoneInfo.builder()
                         .id(1L)
                         .name("week1")
                         .build(),
-                MilestoneFilterDto.MilestoneInfo.builder()
+                MilestoneDto.MilestoneInfo.builder()
                         .id(2L)
                         .name("week2")
                         .build()
@@ -44,7 +44,7 @@ public class MilestoneServiceTest {
         given(jdbcTemplate.query(eq(sql), any(RowMapper.class))).willReturn(mockMilestones);
 
         // when
-        MilestoneFilterDto result = milestoneService.getFilterMilestones();
+        MilestoneDto.MilestoneFilter result = milestoneService.getFilterMilestones();
 
         // then
         assertThat(result.getMilestones()).hasSize(2);
