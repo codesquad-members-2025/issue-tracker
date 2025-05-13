@@ -7,8 +7,6 @@ import codesquad.team4.issuetracker.entity.IssueLabel;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.LabelInfo;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.UserInfo;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import java.time.LocalDateTime;
@@ -17,6 +15,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.user.dto.UserDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,13 +43,15 @@ public class IssueService {
                    i.title,
                    u.user_id AS author_id,
                    u.nickname AS author_nickname,
+                   u.profile_image AS author_profile,
                    m.milestone_id AS milestone_id,
                    m.name AS milestone_title,
                    l.label_id AS label_id,
                    l.name AS label_name,
                    l.color AS label_color,
                    a.user_id AS assignee_id,
-                   a.nickname AS assignee_nickname
+                   a.nickname AS assignee_nickname,
+                   a.profile_image AS assignee_profile
             FROM issue i
             LEFT JOIN user u ON i.author_id = u.user_id
             LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
@@ -62,8 +66,8 @@ public class IssueService {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, isOpen, size, offset);
 
         Map<Long, IssueResponseDto.IssueInfo.IssueInfoBuilder> issueMap = new LinkedHashMap<>();
-        Map<Long, List<IssueResponseDto.UserInfo>> assigneeMap = new HashMap<>();
-        Map<Long, List<IssueResponseDto.LabelInfo>> labelMap = new HashMap<>();
+        Map<Long, List<UserDto.UserInfo>> assigneeMap = new HashMap<>();
+        Map<Long, List<LabelDto.LabelInfo>> labelMap = new HashMap<>();
 
         for (Map<String, Object> row : rows) {
             Long issueId = (Long) row.get("issue_id");
@@ -72,9 +76,10 @@ public class IssueService {
                     IssueResponseDto.IssueInfo.builder()
                             .id(issueId)
                             .title((String) row.get("title"))
-                            .author(IssueResponseDto.UserInfo.builder()
+                            .author(UserDto.UserInfo.builder()
                                     .id((Long) row.get("author_id"))
-                                    .name((String) row.get("author_nickname"))
+                                    .nickname((String) row.get("author_nickname"))
+                                    .profileImage((String) row.get("author_profile"))
                                     .build())
                             .assignees(new ArrayList<>())
                             .labels(new ArrayList<>())
@@ -84,9 +89,10 @@ public class IssueService {
 
             Long assigneeId = (Long) row.get("assignee_id");
             if (assigneeId != null) {
-                IssueResponseDto.UserInfo assignee = UserInfo.builder()
+                UserDto.UserInfo assignee = UserDto.UserInfo.builder()
                         .id(assigneeId)
-                        .name((String) row.get("assignee_nickname"))
+                        .nickname((String) row.get("assignee_nickname"))
+                        .profileImage((String) row.get("assignee_profile"))
                         .build();
 
                 assigneeMap.computeIfAbsent(issueId, k -> new ArrayList<>()).add(assignee);
@@ -95,7 +101,7 @@ public class IssueService {
 
             Long labelId = (Long) row.get("label_id");
             if (labelId != null) {
-                IssueResponseDto.LabelInfo label = LabelInfo.builder()
+                LabelDto.LabelInfo label = LabelDto.LabelInfo.builder()
                         .id(labelId)
                         .name((String) row.get("label_name"))
                         .color((String) row.get("label_color"))

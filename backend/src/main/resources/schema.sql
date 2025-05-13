@@ -3,6 +3,7 @@ CREATE TABLE user (
                       user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
                       email_id VARCHAR(255) NOT NULL UNIQUE,
                       nickname VARCHAR(255) NOT NULL,
+                      profile_image VARCHAR(255),
                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

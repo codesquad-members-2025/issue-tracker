@@ -1,6 +1,6 @@
-package codesquad.team4.issuetracker.label;
+package codesquad.team4.issuetracker.user;
 
-import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/labels")
-public class LabelController {
-    private final LabelService labelService;
+@RequestMapping("/api/users")
+public class UserController {
+    private final UserService userService;
 
     @GetMapping("/filter")
-    public ResponseEntity<LabelDto.LabelFilter> getFilterLabels() {
-        LabelDto.LabelFilter result = labelService.getFilterLabels();
+    public ResponseEntity<UserDto.UserFilter> getFilterUsers() {
+        UserDto.UserFilter result = userService.getFilterUsers();
         return ResponseEntity.ok(result);
     }
 
