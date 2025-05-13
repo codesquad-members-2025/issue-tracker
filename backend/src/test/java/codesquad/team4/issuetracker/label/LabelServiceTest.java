@@ -1,9 +1,7 @@
 package codesquad.team4.issuetracker.label;
 
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
-import codesquad.team4.issuetracker.label.dto.LabelCountDto;
 import codesquad.team4.issuetracker.label.dto.LabelFilterDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -53,10 +51,11 @@ public class LabelServiceTest {
         LabelFilterDto result = labelService.getFilterLabels();
 
         // then
-        Assertions.assertThat(result.getLabels()).hasSize(2);
-        Assertions.assertThat(result.getLabels().get(0).getId()).isEqualTo(1L);
-        Assertions.assertThat(result.getLabels().get(0).getName()).isEqualTo("bug");
-        Assertions.assertThat(result.getLabels().get(0).getColor()).isEqualTo("qww11");
+        assertThat(result.getLabels()).hasSize(2);
+        assertThat(result.getCount()).isEqualTo(2);
+        assertThat(result.getLabels().get(0).getId()).isEqualTo(1L);
+        assertThat(result.getLabels().get(0).getName()).isEqualTo("bug");
+        assertThat(result.getLabels().get(0).getColor()).isEqualTo("qww11");
     }
 
 }

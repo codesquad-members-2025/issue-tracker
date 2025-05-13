@@ -1,7 +1,6 @@
 package codesquad.team4.issuetracker.label;
 
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
-import codesquad.team4.issuetracker.label.dto.LabelCountDto;
 import codesquad.team4.issuetracker.label.dto.LabelFilterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
