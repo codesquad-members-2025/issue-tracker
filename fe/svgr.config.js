@@ -8,13 +8,18 @@ export default {
     '#000': 'currentColor',
     '#000000': 'currentColor',
     black: 'currentColor',
+    '#4E4B66': 'currentColor',
   },
   svgoConfig: {
     plugins: [
       {
-        name: 'removeAttrs',
+        name: 'preset-default',
         params: {
-          attrs: '(stroke|fill)', // 기존 fill/stroke 제거
+          overrides: {
+            removeAttrs: {
+              attrs: '(fill|stroke)',
+            },
+          },
         },
       },
     ],
