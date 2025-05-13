@@ -1,5 +1,5 @@
 import * as S from './ToggleTheme.styles';
-import { useUiStore } from '@/base-ui/stores/uiStore';
+import { useUiStore } from '@/stores/uiStore';
 //lightTheme or darkTheme
 export default function ToggleTheme() {
   const theme = useUiStore((state) => state.isDarkMode);

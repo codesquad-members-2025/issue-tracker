@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useUiStore } from '../stores/uiStore';
+import { useUiStore } from '../../stores/uiStore';
 
 const TitleLogo = styled.svg`
   margin-bottom: 64px;

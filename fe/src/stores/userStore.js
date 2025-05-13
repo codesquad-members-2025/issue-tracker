@@ -5,7 +5,7 @@ export const useUserStore = create(
   immer((set) => ({
     userId: null,
     imgUrl: null,
-    accessToken: null,
+    accessToken: '임의 토큰',
 
     resetUser: () =>
       set((state) => {
