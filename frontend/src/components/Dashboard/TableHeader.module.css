@@ -1,0 +1,26 @@
+.tableHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+}
+
+.issueViewControls {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--neutral-surface-default);
+  align-items: center;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  background-image: url("../../assets/icons/checkBoxInitial.svg");
+}
+
+.issueTabs {
+  display: flex;
+  gap: 24px;
+  padding-left: 32px;
+}
