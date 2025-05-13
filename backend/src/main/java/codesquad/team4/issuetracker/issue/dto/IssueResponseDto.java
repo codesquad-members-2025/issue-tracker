@@ -46,4 +46,16 @@ public class IssueResponseDto {
         private Long id;
         private String name;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class CreateIssueDto{
+        private String title;
+        private String content;
+        private Long authorId;
+        private List<Long> assigneeId;
+        private List<Long> labelId;
+        private Long milestoneId;
+    }
 }
