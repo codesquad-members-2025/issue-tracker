@@ -1,12 +1,17 @@
 package codesquad.team01.issuetracker.issue.domain;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
-@Table("issue")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Table("Issue")
+@Builder
 public class Issue {
 
     @Id
@@ -15,31 +20,29 @@ public class Issue {
     private String title;
     private String content;
 
-    @Column("is_open")
-    private boolean isOpen;
+    @Builder.Default
+    private boolean isOpen = true;
 
-    @Column("created_id")
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column("updated_at")
-    private LocalDateTime updatedAt;
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @Column("creator_id")
-    private Long creatorId;
+    private LocalDateTime closedAt;
 
-    @Column("milestone_id")
+    private Long writerId;
+
     private Long milestoneId;
 
-    protected Issue() {}
-
-    public Issue(Long id, String title, String content, boolean isOpen, LocalDateTime createdAt, LocalDateTime updatedAt, Long creatorId, Long milestoneId) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.isOpen = isOpen;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.creatorId = creatorId;
-        this.milestoneId = milestoneId;
+    public static Issue createIssue(String title,
+                                    String content,
+                                    Long writerId
+                                    ) {
+        return Issue.builder()
+                .title(title)
+                .content(content)
+                .writerId(writerId)
+                .build();
     }
 }
