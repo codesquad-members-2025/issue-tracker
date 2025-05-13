@@ -24,7 +24,7 @@ export default function LoginPage() {
     //서버 통신 로직
   }
 
-  function signUpHandler() {
+  function moveToSignUp() {
     navigate('/signUp');
   }
   return (
@@ -33,7 +33,7 @@ export default function LoginPage() {
       <GitHubLoginButton />
       <OrLabel />
       <InputForm mainButtonLabel={mainButtonLabel} />
-      <SubButton buttonLabelText={buttonLabelText} onClick={signUpHandler} />
+      <SubButton buttonLabelText={buttonLabelText} onClick={moveToSignUp} />
     </Container>
   );
 }
