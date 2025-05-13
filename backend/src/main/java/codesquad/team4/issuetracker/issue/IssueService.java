@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class IssueService {
+    private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
 
     private final JdbcTemplate jdbcTemplate;
     private final IssueRepository issueRepository;
@@ -175,7 +176,7 @@ public class IssueService {
 
         return IssueResponseDto.CreateIssueDto.builder()
                 .id(issueId)
-                .message("이슈가 생성되었습니다")
+                .message(CREATE_ISSUE)
                 .build();
     }
 }
