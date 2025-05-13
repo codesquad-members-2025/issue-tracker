@@ -14,7 +14,7 @@ public class IssueQueryBuilder {
     private final List<String> where;
 
     public IssueQueryBuilder() {
-        this.sql = new StringBuilder("SELECT DISTINCT i.* FROM issue i");
+        this.sql = new StringBuilder("SELECT DISTINCT i.* FROM Issue i");
         this.params = new MapSqlParameterSource();
         this.where = new ArrayList<>();
     }
