@@ -50,12 +50,8 @@ public class IssueResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class CreateIssueDto{
-        private String title;
-        private String content;
-        private Long authorId;
-        private List<Long> assigneeId;
-        private List<Long> labelId;
-        private Long milestoneId;
+    public static class CreateIssueDto {
+        private Long id;
+        private String messqge;
     }
 }
