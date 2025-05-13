@@ -14,7 +14,7 @@ public class IssueQueryService {
     this.issueQueryRepository = issueQueryRepository;
   }
 
-  public IssuePageResponse getIssueList() {
+  public IssuePageResponse getIssuePage() {
     List<IssueSummaryResponse> issueSummaries = issueQueryRepository.findAllIssues();
     return new IssuePageResponse((long) issueSummaries.size(), 0L, (long) issueSummaries.size(),
         issueSummaries);
