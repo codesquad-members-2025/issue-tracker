@@ -1,10 +1,9 @@
 package codesquad.team4.issuetracker.issue;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.Matchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
@@ -15,7 +14,6 @@ import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @ExtendWith(MockitoExtension.class)
 public class IssueServiceTest {
@@ -72,7 +69,7 @@ public class IssueServiceTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        when(issueRepository.save(Mockito.any(Issue.class))).thenReturn(issue);
+        given(issueRepository.save(Mockito.any(Issue.class))).willReturn(issue);
 
         // when
         CreateIssueDto response = issueService.createIssue(requestDto, uploadUrl);
@@ -108,7 +105,7 @@ public class IssueServiceTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        when(issueRepository.save(Mockito.any(Issue.class))).thenReturn(issue);
+        given(issueRepository.save(Mockito.any(Issue.class))).willReturn(issue);
 
         // when
         CreateIssueDto response = issueService.createIssue(requestDto, uploadUrl);
