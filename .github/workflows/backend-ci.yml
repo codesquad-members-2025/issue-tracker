@@ -1,0 +1,31 @@
+name: Backend CI
+
+on:
+  pull_request:
+    branches:
+      - be
+    paths:
+      - 'backend/**'
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Build and Run Tests
+        run: ./gradlew build --no-daemon
