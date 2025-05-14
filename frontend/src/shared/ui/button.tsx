@@ -39,6 +39,11 @@ const buttonVariants = cva(
 					'disabled:opacity-[var(--opacity-disabled)]',
 					'disabled:pointer-events-none',
 				],
+				theme: [
+					'bg-[var(--neutral-surface-default)]',
+					'text-[var(--neutral-text-default)]',
+					'active:opacity-[var(--opacity-press)]',
+				],
 			},
 			size: {
 				lg: [
