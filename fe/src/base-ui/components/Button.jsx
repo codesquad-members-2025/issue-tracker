@@ -1,13 +1,12 @@
 // components/ui/Button.jsx
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { typography } from '@/styles/foundation';
 
-const GhostButton = styled.button`
+const ghostButtonStyle = css`
   ${typography.available.medium16}
   all: unset;
   display: flex;
   align-items: center;
-  padding: 4px 0px;
   background-color: transparent;
   color: ${({ theme }) => theme.text.default};
   cursor: pointer;
@@ -33,4 +32,8 @@ const GhostButton = styled.button`
   }
 `;
 
-export { GhostButton };
+const GhostButton = styled.button`
+  ${ghostButtonStyle}
+`;
+
+export { GhostButton, ghostButtonStyle };

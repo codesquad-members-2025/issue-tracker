@@ -24,9 +24,7 @@ const Container = styled.div`
 export default function LoginPage() {
   const [Id, setId] = useState('');
   const [pw, setPw] = useState('');
-  const { response, isLoading, refetch } = useDataFetch({
-    apiUrl: LOGIN_API,
-    immediate: false,
+  const { response, isLoading, fetchData } = useDataFetch({
     fetchType: 'Login',
   });
   const setUser = useUserStore((state) => state.setUser);
@@ -35,7 +33,7 @@ export default function LoginPage() {
   const buttonLabelText = '회원가입';
   function onSubmit(event) {
     event.preventDefault();
-    refetch({
+    fetchData(LOGIN_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ loginId: Id, password: pw }),
