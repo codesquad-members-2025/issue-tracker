@@ -18,4 +18,12 @@ public class IssueRequestDto {
         private List<Long> labelId;
         private Long milestoneId;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class BulkUpdateIssueStatusDto {
+        private List<Long> issuesId;
+        private boolean isOpen;
+    }
 }
