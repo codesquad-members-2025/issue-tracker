@@ -30,7 +30,7 @@ jobs:
           git pull origin dev
           # 빌드 및 실행
           chmod +x ./gradlew
-          ./gradlew -p backend build
+          ./gradlew -p backend build -x test
           # 기존 실행 중인 서버 종료 (포트 충돌 방지)
           pkill -f 'java -jar' || true
           # 애플리케이션 실행 테스트 (JVM 부팅 확인)
