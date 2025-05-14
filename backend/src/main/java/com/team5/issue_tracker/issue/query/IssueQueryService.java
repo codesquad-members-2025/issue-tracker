@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class IssueQueryService {
-  IssueQueryRepository issueQueryRepository;
+  private final IssueQueryRepository issueQueryRepository;
 
   public IssueQueryService(IssueQueryRepository issueQueryRepository) {
     this.issueQueryRepository = issueQueryRepository;
