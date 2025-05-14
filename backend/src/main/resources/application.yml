@@ -2,20 +2,13 @@ spring:
   application:
     name: issue-tracker
 
+  profiles:
+    active: dev  # 운영 배포 시에는 환경변수로 prod 지정
+
   datasource:
-    url: jdbc:mysql://localhost:3306/issue_tracker
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 logging:
-  level:
-    root: info
-    com.team5: debug  # 패키지별로 로그 수준 조절
-
-  file:
-    name: logs/app.log   # 로그 저장 경로 및 파일명
-
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
