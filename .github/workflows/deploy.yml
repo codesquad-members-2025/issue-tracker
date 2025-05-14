@@ -26,6 +26,7 @@ jobs:
           # 프로젝트 디렉토리로 이동
           cd ~/issue-tracker  # EC2에 clone해둔 경로
           # 최신 코드 가져오기
+          git checkout dev 
           git pull origin dev
           # 빌드 및 실행
           ./gradlew build
