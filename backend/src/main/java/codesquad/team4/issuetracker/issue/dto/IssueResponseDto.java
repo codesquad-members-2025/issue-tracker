@@ -41,4 +41,12 @@ public class IssueResponseDto {
         private Long id;
         private String message;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class BulkUpdateIssueStatusDto {
+        private List<Long> issuesId;
+        private String message;
+    }
 }
