@@ -86,8 +86,10 @@ public class IssueService {
                                     .build())
                             .assignees(new ArrayList<>())
                             .labels(new ArrayList<>())
-                            .milestoneId((Long) row.get("milestone_id"))
-                            .milestoneTitle((String) row.get("milestone_title"))
+                            .milestone(IssueResponseDto.MilestoneInfo.builder()
+                                    .id((Long) row.get("milestone_id"))
+                                    .title((String) row.get("milestone_title"))
+                                    .build())
             );
 
             Long assigneeId = (Long) row.get("assignee_id");
