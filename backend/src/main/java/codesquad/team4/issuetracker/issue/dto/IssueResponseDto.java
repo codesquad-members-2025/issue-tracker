@@ -13,7 +13,7 @@ public class IssueResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class IssueListDto{
+    public static class IssueListDto {
         private List<IssueInfo> issues;
         private Integer page;
         private Integer size;
@@ -24,14 +24,22 @@ public class IssueResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class IssueInfo{
+    public static class IssueInfo {
         private Long id;
         private String title;
         private UserDto.UserInfo author;
         private List<LabelDto.LabelInfo> labels;
         private List<UserDto.UserInfo> assignees;
-        private Long milestoneId;
-        private String milestoneTitle;
+        private MilestoneInfo milestone;
+        private String createdAt;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class MilestoneInfo {
+        private Long id;
+        private String title;
     }
 
     @AllArgsConstructor
