@@ -17,13 +17,24 @@ import IssueListPage from '@/pages/issues/IssueListPage';
 
 import IssueCreateModal from '@/features/issues/create/ui/IssueCreateModal';
 
+import AuthGuard from '@/shared/auth/AuthGuard';
+
 const router = createBrowserRouter([
 	{
 		element: <NoHeaderLayout />,
-		children: [{ path: '/login', element: <LoginPage /> }],
+		children: [
+			{
+				path: '/login',
+				element: <LoginPage />,
+			},
+		],
 	},
 	{
-		element: <AppLayout />,
+		element: (
+			<AuthGuard>
+				<AppLayout />
+			</AuthGuard>
+		),
 		children: [
 			{ path: '/', element: <Navigate to='/issues' replace /> },
 			{
