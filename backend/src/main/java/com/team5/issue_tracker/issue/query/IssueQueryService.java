@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import com.team5.issue_tracker.issue.dto.IssuePageResponse;
 import com.team5.issue_tracker.issue.dto.IssueSummaryResponse;
+import com.team5.issue_tracker.user.dto.UserPageResponse;
+import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,5 +24,12 @@ public class IssueQueryService {
     List<IssueSummaryResponse> issueSummaries = issueQueryRepository.findAllIssues();
     return new IssuePageResponse((long) issueSummaries.size(), 0L, (long) issueSummaries.size(),
         issueSummaries);
+  }
+
+  public UserPageResponse getIssueAuthors() {
+    log.debug("전체 작성자 조회 요청");
+    List<UserSummaryResponse> authorSummaries = issueQueryRepository.findDistinctAuthors();
+    return new UserPageResponse((long) authorSummaries.size(), 0L, (long) authorSummaries.size(),
+        authorSummaries);
   }
 }

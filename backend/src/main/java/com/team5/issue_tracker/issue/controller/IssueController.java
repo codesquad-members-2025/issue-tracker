@@ -8,6 +8,8 @@ import com.team5.issue_tracker.common.dto.ApiResponse;
 import com.team5.issue_tracker.issue.dto.IssuePageResponse;
 import com.team5.issue_tracker.issue.query.IssueQueryService;
 import com.team5.issue_tracker.issue.service.IssueService;
+import com.team5.issue_tracker.user.dto.UserPageResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,5 +25,11 @@ public class IssueController {
   public ResponseEntity<ApiResponse<IssuePageResponse>> getAllIssues() {
     log.info("GET /api/issues 요청");
     return ResponseEntity.ok(ApiResponse.success(issueQueryService.getIssuePage()));
+  }
+
+  @GetMapping("/authors")
+  public ResponseEntity<ApiResponse<UserPageResponse>> getAllAuthors() {
+    log.info("GET /api/issues/authors 요청");
+    return ResponseEntity.ok(ApiResponse.success(issueQueryService.getIssueAuthors()));
   }
 }

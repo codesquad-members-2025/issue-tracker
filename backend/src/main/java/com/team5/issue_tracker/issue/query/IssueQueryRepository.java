@@ -109,4 +109,20 @@ public class IssueQueryRepository {
             ), Collectors.toList())
         ));
   }
+
+  public List<UserSummaryResponse> findDistinctAuthors() {
+    String authorSql = """
+        SELECT DISTINCT u.id, u.username, u.imageUrl
+        FROM issue i
+        JOIN user u ON i.user_id = u.id
+        """;
+
+    return jdbcTemplate.query(authorSql, (rs, rowNum) ->
+        new UserSummaryResponse(
+            rs.getLong("id"),
+            rs.getString("username"),
+            rs.getString("imageUrl")
+        )
+    );
+  }
 }
