@@ -2,6 +2,7 @@ package codesquad.team4.issuetracker.issue;
 
 import codesquad.team4.issuetracker.aws.S3FileService;
 import codesquad.team4.issuetracker.exception.FileUploadException;
+import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -99,4 +102,55 @@ class IssueControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("파일 업로드에 실패했습니다."));
     }
+
+    @Test
+    @DisplayName("이슈 상태를 일괄 변경할 수 있다")
+    void bulkUpdateIssueStatus_success() throws Exception {
+        // given
+        IssueRequestDto.BulkUpdateIssueStatusDto requestDto = IssueRequestDto.BulkUpdateIssueStatusDto.builder()
+                .issuesId(List.of(1L, 2L, 3L))
+                .isOpen(false)
+                .build();
+
+        IssueResponseDto.BulkUpdateIssueStatusDto responseDto = IssueResponseDto.BulkUpdateIssueStatusDto.builder()
+                .issuesId(List.of(1L, 2L, 3L))
+                .message("이슈 상태가 변경되었습니다.")
+                .build();
+
+        given(issueService.bulkUpdateIssueStatus(any())).willReturn(responseDto);
+
+        // when & then
+        mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch("/api/issues/status")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.issuesId[0]").value(1))
+                .andExpect(jsonPath("$.issuesId[1]").value(2))
+                .andExpect(jsonPath("$.issuesId[2]").value(3))
+                .andExpect(jsonPath("$.message").value("이슈 상태가 변경되었습니다."));
+    }
+
+    @Test
+    @DisplayName("일부 이슈 ID가 존재하지 않으면 BadRequest를 반환한다")
+    void bulkUpdateIssueStatus_failure() throws Exception {
+        // given
+        IssueRequestDto.BulkUpdateIssueStatusDto requestDto = IssueRequestDto.BulkUpdateIssueStatusDto.builder()
+                .issuesId(List.of(1L, 999L))
+                .isOpen(false)
+                .build();
+
+        given(issueService.bulkUpdateIssueStatus(any()))
+                .willThrow(new IssueStatusUpdateException("일부 이슈 ID가 존재하지 않습니다."));
+
+        // when & then
+        mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch("/api/issues/status")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("일부 이슈 ID가 존재하지 않습니다."));
+    }
+
+
 }
