@@ -5,4 +5,5 @@ import java.util.List;
 public interface IssueImageRepository {
     IssueImage save(IssueImage image);
     List<IssueImage> findByIssueId(Long issueId);
+    void deleteByIssueId(Long issueId);
 }

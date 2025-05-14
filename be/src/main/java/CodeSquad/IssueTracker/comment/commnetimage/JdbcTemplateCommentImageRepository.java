@@ -1,6 +1,5 @@
-package CodeSquad.IssueTracker.issue.issueimage;
+package CodeSquad.IssueTracker.comment.commnetimage;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -11,45 +10,44 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
-public class JdbcTemplateIssueImageRepository implements IssueImageRepository {
+public class JdbcTemplateCommentImageRepository implements CommentImageRepository{
+
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcTemplateIssueImageRepository(DataSource dataSource) {
+    public JdbcTemplateCommentImageRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("issue_images")
+                .withTableName("comment_images")
                 .usingGeneratedKeyColumns("id");
     }
 
     @Override
-    public IssueImage save(IssueImage image) {
-        SqlParameterSource param = new BeanPropertySqlParameterSource(image);
+    public CommentImage save(CommentImage commentImage) {
+        SqlParameterSource param = new BeanPropertySqlParameterSource(commentImage);
         Number key = jdbcInsert.executeAndReturnKey(param);
-        image.setId(key.longValue());
-        return image;
-    }
-
-    @Override
-    public List<IssueImage> findByIssueId(Long issueId) {
-        String sql = "SELECT * FROM issue_images WHERE issue_id = :issueId";
-        MapSqlParameterSource param = new MapSqlParameterSource("issueId", issueId);
-        return template.query(sql, param, issueImageRowMapper());
+        commentImage.setId(key.longValue());
+        return commentImage;
     }
 
     @Override
     public void deleteByIssueId(Long issueId) {
-        String sql = "DELETE FROM issue_images WHERE issue_id = :issueId";
+        String sql = "DELETE FROM comment_images WHERE issue_id = :issueId";
         MapSqlParameterSource param = new MapSqlParameterSource("issueId", issueId);
         template.update(sql, param);
     }
 
-    private RowMapper<IssueImage> issueImageRowMapper() {
-        return BeanPropertyRowMapper.newInstance(IssueImage.class);
+    @Override
+    public CommentImage findByIssueId(Long issueId) {
+        String sql = "SELECT * FROM comment_images WHERE issue_id = :issueId";
+        MapSqlParameterSource param = new MapSqlParameterSource("issueId", issueId);
+        return template.queryForObject(sql, param, commentImageRowMapper());
+    }
+
+    private RowMapper<CommentImage> commentImageRowMapper() {
+        return BeanPropertyRowMapper.newInstance(CommentImage.class);
     }
 }
