@@ -1,14 +1,16 @@
+import { IssueFilter } from '@/features/issues/ui/IssueFilter';
+import { IssueSearch } from '@/features/issues/ui/IssueSearch';
 import type { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 
 const IssueListPage: FC = () => {
 	return (
 		<>
-			<div>
-				<h1>이슈 목록</h1>
-				{/* TODO: 이슈 목록 컴포넌트 구현 */}
-			</div>
 			<Outlet />
+			<div className='flex'>
+				<IssueFilter />
+				<IssueSearch />
+			</div>
 		</>
 	);
 };
