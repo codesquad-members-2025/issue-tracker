@@ -112,7 +112,7 @@ public class IssueQueryRepository {
 
   public List<UserSummaryResponse> findDistinctAuthors() {
     String authorSql = """
-        SELECT DISTINCT u.id, u.username, u.imageUrl
+        SELECT DISTINCT u.id, u.username, u.image_url
         FROM issue i
         JOIN user u ON i.user_id = u.id
         """;
@@ -121,7 +121,7 @@ public class IssueQueryRepository {
         new UserSummaryResponse(
             rs.getLong("id"),
             rs.getString("username"),
-            rs.getString("imageUrl")
+            rs.getString("image_url")
         )
     );
   }
