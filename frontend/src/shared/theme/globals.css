@@ -2,6 +2,12 @@
 @import 'tw-animate-css';
 
 @layer base {
+	html,
+	body {
+		background-color: var(--neutral-surface-default);
+		color: var(--neutral-text-default);
+		transition: background-color 0.3s, color 0.3s;
+	}
 	:root {
 		/* Grayscale */
 		--color-grayscale-50: #fefefe;

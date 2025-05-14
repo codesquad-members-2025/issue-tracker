@@ -40,8 +40,8 @@ const buttonVariants = cva(
 					'disabled:pointer-events-none',
 				],
 				theme: [
-					'bg-[var(--neutral-surface-default)]',
-					'text-[var(--neutral-text-default)]',
+					'bg-[var(--neutral-text-strong)]',
+					'text-[var(--neutral-surface-strong)]',
 					'active:opacity-[var(--opacity-press)]',
 				],
 			},
