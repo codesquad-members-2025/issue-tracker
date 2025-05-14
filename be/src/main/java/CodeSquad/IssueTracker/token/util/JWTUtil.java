@@ -1,5 +1,6 @@
-package CodeSquad.IssueTracker.user;
+package CodeSquad.IssueTracker.token.util;
 
+import CodeSquad.IssueTracker.user.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class JWTUtil {
     private final String accessSecretKey;
     private final String refreshSecretKey;
-    private static final String CLAIM_USERNAME = "userName";
+    private static final String CLAIM_LOGIN_ID = "loginId";
     private static final String CLAIM_IMG_URL = "imgUrl";
 
     public JWTUtil(
@@ -24,8 +25,8 @@ public class JWTUtil {
         this.refreshSecretKey = refreshSecretKey;
     }
 
-    private final long ACCESS_EXPIRATION_TIME = 3600000;
-    private final long REFRESH_EXPIRATION_TIME = 86400000;
+    public static final long ACCESS_EXPIRATION_TIME = 3600000;
+    public static final long REFRESH_EXPIRATION_TIME = 86400000;
 
     /*
     JWT Access Token을 생성합니다.(페이로드에 유저 이름과 프로필 사진 링크 정보를 포함)
@@ -33,7 +34,7 @@ public class JWTUtil {
     public String createAccessToken(User loginUser, String imgUrl) {
         return Jwts.builder()
                 .subject(loginUser.getLoginId())
-                .claim(CLAIM_USERNAME, loginUser.getUserName())
+                .claim(CLAIM_LOGIN_ID, loginUser.getLoginId())
                 .claim(CLAIM_IMG_URL, imgUrl)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
