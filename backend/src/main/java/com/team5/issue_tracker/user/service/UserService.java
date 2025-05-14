@@ -1,11 +1,11 @@
 package com.team5.issue_tracker.user.service;
 
 import org.springframework.stereotype.Service;
-import com.team5.issue_tracker.user.dto.AuthorResponse;
+import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
 @Service
 public class UserService {
-  public AuthorResponse getAuthorResponseById(Long id) {
-    return new AuthorResponse(id, "authorName","authorImageUrl");
+  public UserSummaryResponse getAuthorResponseById(Long id) {
+    return new UserSummaryResponse(id, "authorName", "authorImageUrl");
   }
 }
