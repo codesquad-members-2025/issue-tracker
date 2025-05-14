@@ -29,6 +29,7 @@ jobs:
           git checkout dev 
           git pull origin dev
           # 빌드 및 실행
+          chmod +x ./gradlew
           ./gradlew build
           # 기존 실행 중인 서버 종료 (포트 충돌 방지)
           pkill -f 'java -jar' || true
