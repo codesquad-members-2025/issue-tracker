@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.aws;
 
-import static codesquad.team4.issuetracker.issue.IssueController.FILE_UPLOAD_FAILED;
+import codesquad.team4.issuetracker.exception.ExceptionMessage;
 
 import codesquad.team4.issuetracker.exception.FileUploadException;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class S3FileService {
                         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(f.getInputStream(), f.getSize()));
                     } catch (IOException e) {
                         log.error("파일 업로드 중 오류 발생: {}", e.getMessage(), e);
-                        throw new FileUploadException(FILE_UPLOAD_FAILED, e);
+                        throw new FileUploadException(ExceptionMessage.FILE_UPLOAD_FAILED, e);
                     }
 
                     log.info("S3 업로드 성공");
