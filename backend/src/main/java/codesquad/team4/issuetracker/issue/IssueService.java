@@ -4,9 +4,10 @@ import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.Issue.IssueBuilder;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
+import codesquad.team4.issuetracker.exception.ExceptionMessage;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import java.time.LocalDateTime;
@@ -19,7 +20,8 @@ import java.util.Optional;
 
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
-import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IssueService {
     private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
+    private static final String UPDATE_ISSUESTATUS = "이슈 상태가 변경되었습니다.";
 
     private final JdbcTemplate jdbcTemplate;
     private final IssueRepository issueRepository;
@@ -140,7 +143,7 @@ public class IssueService {
     }
 
     @Transactional
-    public CreateIssueDto createIssue(IssueRequestDto.CreateIssueDto request, String uploadUrl) {
+    public IssueResponseDto.CreateIssueDto createIssue(IssueRequestDto.CreateIssueDto request, String uploadUrl) {
         IssueBuilder issueBuilder = Issue.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -185,5 +188,41 @@ public class IssueService {
                 .message(CREATE_ISSUE)
                 .build();
     }
+
+    @Transactional
+    public IssueResponseDto.BulkUpdateIssueStatusDto bulkUpdateIssueStatus(IssueRequestDto.BulkUpdateIssueStatusDto request) {
+        List<Long> issueIds = request.getIssuesId();
+        boolean isOpen = request.isOpen();
+
+        if (issueIds == null || issueIds.isEmpty()) {
+            throw new IssueStatusUpdateException(ExceptionMessage.NO_ISSUE_IDS);
+        }
+
+        // 요청받은 id 개수랑 DB에서 가져온 ID 개수 비교
+        String placeholders = issueIds.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(", "));
+        String countSql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (" + placeholders + ")";
+        Integer count = jdbcTemplate.queryForObject(countSql, Integer.class, issueIds.toArray());
+
+        if (count == null || count != issueIds.size()) {
+            throw new IssueStatusUpdateException(ExceptionMessage.ISSUE_IDS_NOT_FOUND); //todo 나중에 여기에 존재하지 않는 id 가 정확히 몇번인지 추가해주기
+        }
+
+
+        String updateSql = "UPDATE issue SET is_open = ? WHERE issue_id IN (" + placeholders + ")";
+        List<Object> params = new ArrayList<>();
+        params.add(isOpen);
+        params.addAll(issueIds);
+
+        jdbcTemplate.update(updateSql, params.toArray());
+
+        return IssueResponseDto.BulkUpdateIssueStatusDto.builder()
+                .issuesId(issueIds)
+                .message(UPDATE_ISSUESTATUS)
+                .build();
+
+    }
+
 }
 
