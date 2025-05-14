@@ -1,59 +1,121 @@
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type * as React from 'react';
+import * as React from 'react';
 
 import { cn } from '@/shared/utils/shadcn-utils';
 
 const buttonVariants = cva(
-	'tw-inline-flex tw-items-center tw-justify-center tw-gap-2 tw-whitespace-nowrap tw-rounded-md tw-text-sm tw-font-medium tw-transition-all disabled:tw-pointer-events-none disabled:tw-opacity-50 [&_svg]:tw-pointer-events-none [&_svg:not([class*=size-])]:tw-size-4 tw-shrink-0 [&_svg]:tw-shrink-0 tw-outline-none focus-visible:tw-border-ring focus-visible:tw-ring-ring/50 focus-visible:tw-ring-[3px] aria-invalid:tw-ring-destructive/20 dark:aria-invalid:tw-ring-destructive/40 aria-invalid:tw-border-destructive',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium outline-none transition-all',
 	{
 		variants: {
 			variant: {
-				default:
-					'tw-bg-primary tw-text-primary-foreground tw-shadow-xs hover:tw-bg-primary/90',
-				destructive:
-					'tw-bg-destructive tw-text-white tw-shadow-xs hover:tw-bg-destructive/90 focus-visible:tw-ring-destructive/20 dark:focus-visible:tw-ring-destructive/40 dark:tw-bg-destructive/60',
-				outline:
-					'tw-border tw-bg-background tw-shadow-xs hover:tw-bg-accent hover:tw-text-accent-foreground dark:tw-bg-input/30 dark:tw-border-input dark:hover:tw-bg-input/50',
-				secondary:
-					'tw-bg-secondary tw-text-secondary-foreground tw-shadow-xs hover:tw-bg-secondary/80',
-				ghost:
-					'hover:tw-bg-accent hover:tw-text-accent-foreground dark:hover:tw-bg-accent/50',
-				link: 'tw-text-primary tw-underline-offset-4 hover:tw-underline',
+				contained: [
+					// 배경 · 텍스트 · 그림자 · 상태별 불투명도
+					'bg-[var(--brand-surface-default)]',
+					'text-[var(--brand-text-default)]',
+					'shadow-[var(--shadow-light)]',
+					'hover:opacity-[var(--opacity-hover)]',
+					'active:opacity-[var(--opacity-press)]',
+					'disabled:opacity-[var(--opacity-disabled)]',
+					'disabled:pointer-events-none',
+				],
+				outline: [
+					'bg-transparent',
+					'[border:var(--border-default)_var(--brand-border-default)]',
+					'text-[var(--color-accent-blue)]',
+					'hover:bg-[var(--color-accent-blue)]',
+					'hover:text-[var(--color-grayscale-50)]',
+					'hover:opacity-[var(--opacity-hover)]',
+					'active:opacity-[var(--opacity-press)]',
+					'disabled:opacity-[var(--opacity-disabled)]',
+					'disabled:pointer-events-none',
+				],
+				ghost: [
+					'bg-transparent',
+					'text-[var(--neutral-text-default)]',
+					'hover:bg-[var(--color-accent-blue)/10]',
+					'hover:opacity-[var(--opacity-hover)]',
+					'active:bg-[var(--color-accent-blue)/20]',
+					'disabled:opacity-[var(--opacity-disabled)]',
+					'disabled:pointer-events-none',
+				],
 			},
 			size: {
-				default: 'tw-h-9 tw-px-4 tw-py-2 has-[>svg]:tw-px-3',
-				sm: 'tw-h-8 tw-rounded-md tw-gap-1.5 tw-px-3 has-[>svg]:tw-px-2.5',
-				lg: 'tw-h-10 tw-rounded-md tw-px-6 has-[>svg]:tw-px-4',
-				icon: 'tw-size-9',
+				lg: [
+					'w-[240px] h-[56px] px-[24px]',
+					'font-[var(--font-display-medium-20)]',
+					'rounded-[var(--radius-large)]',
+				],
+				md: [
+					'w-[184px] h-[48px] px-[24px]',
+					'font-[var(--font-display-medium-16)]',
+					'rounded-[var(--radius-medium)]',
+				],
+				sm: [
+					'w-[128px] h-[40px] px-[16px]',
+					'font-[var(--font-display-medium-12)]',
+					'rounded-[var(--radius-medium)]',
+				],
+			},
+			pattern: {
+				text: [], // 텍스트 전용
+				'icon-text': [], // gap-2 로 아이콘+텍스트 같이 사용
+			},
+			animation: {
+				none: [],
+				grow: ['transform', 'transition-transform', 'hover:scale-105'],
+				pop: [
+					'transform',
+					'transition-transform',
+					'hover:-translate-y-1',
+					'hover:scale-105',
+				],
 			},
 		},
 		defaultVariants: {
-			variant: 'default',
-			size: 'default',
+			variant: 'contained',
+			size: 'md',
+			pattern: 'text',
+			animation: 'none',
 		},
 	},
 );
 
-function Button({
-	className,
-	variant,
-	size,
-	asChild = false,
-	...props
-}: React.ComponentProps<'button'> &
-	VariantProps<typeof buttonVariants> & {
-		asChild?: boolean;
-	}) {
-	const Comp = asChild ? Slot : 'button';
-
-	return (
-		<Comp
-			data-slot='button'
-			className={cn(buttonVariants({ variant, size, className }))}
-			{...props}
-		/>
-	);
+export interface ButtonProps
+	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+		VariantProps<typeof buttonVariants> {
+	/**
+	 * asChild = true 이면 Radix Slot을 통해 Link 등 커스텀 컴포넌트에 스타일 전파
+	 */
+	asChild?: boolean;
 }
 
-export { Button, buttonVariants };
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+	(
+		{
+			variant,
+			size,
+			pattern,
+			animation,
+			asChild = false,
+			className,
+			children,
+			...props
+		},
+		ref,
+	) => {
+		const Comp = asChild ? Slot : 'button';
+		return (
+			<Comp
+				ref={ref}
+				className={cn(
+					buttonVariants({ variant, size, pattern, animation, className }),
+				)}
+				{...props}
+			>
+				{children}
+			</Comp>
+		);
+	},
+);
+Button.displayName = 'Button';

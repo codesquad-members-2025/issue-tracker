@@ -1,37 +1,67 @@
 export type ThemeVariables = Record<string, string>;
 
 export const lightTheme: ThemeVariables = {
-	'--color-text-weak': 'var(--color-grayscale-600)',
-	'--color-text-default': 'var(--color-grayscale-700)',
-	'--color-text-strong': 'var(--color-grayscale-900)',
-	'--color-surface-default': 'var(--color-grayscale-100)',
-	'--color-surface-bold': 'var(--color-grayscale-200)',
-	'--color-border-default': 'var(--color-grayscale-300)',
-	'--color-border-active': 'var(--color-grayscale-900)',
+	// Neutral Text
+	'--neutral-text-weak': 'var(--color-grayscale-600)',
+	'--neutral-text-default': 'var(--color-grayscale-700)',
+	'--neutral-text-strong': 'var(--color-grayscale-900)',
 
-	'--color-brand-text-weak': 'var(--color-accent-blue)',
-	'--color-brand-surface': 'var(--color-grayscale-50)',
-	'--color-brand-border': 'var(--color-accent-blue)',
+	// Neutral Surface
+	'--neutral-surface-default': 'var(--color-grayscale-100)',
+	'--neutral-surface-bold': 'var(--color-grayscale-200)',
+	'--neutral-surface-strong': 'var(--color-grayscale-50)',
 
-	'--color-danger-text': 'var(--color-accent-red)',
-	'--color-danger-surface': 'var(--color-accent-red)',
-	'--color-danger-border': 'var(--color-accent-red)',
+	// Neutral Border
+	'--neutral-border-default': 'var(--color-grayscale-300)',
+	'--neutral-border-active': 'var(--color-grayscale-900)',
+
+	// Brand (Accent Blue)
+	'--brand-text-weak': 'var(--color-accent-blue)',
+	'--brand-text-default': 'var(--color-grayscale-50)',
+	'--brand-surface-weak': 'var(--color-grayscale-50)',
+	'--brand-surface-default': 'var(--color-accent-blue)',
+	'--brand-border-default': 'var(--color-accent-blue)',
+
+	// Danger (Accent Red)
+	'--danger-text-default': 'var(--color-accent-red)',
+	'--danger-surface-default': 'var(--color-accent-red)',
+	'--danger-border-default': 'var(--color-accent-red)',
+
+	// Palette Shortcuts
+	'--palette-blue': 'var(--color-accent-blue)',
+	'--palette-navy': 'var(--color-accent-navy)',
+	'--palette-red': 'var(--color-accent-red)',
 };
 
 export const darkTheme: ThemeVariables = {
-	'--color-text-weak': 'var(--color-grayscale-500)',
-	'--color-text-default': 'var(--color-grayscale-400)',
-	'--color-text-strong': 'var(--color-grayscale-50)',
-	'--color-surface-default': 'var(--color-grayscale-900)',
-	'--color-surface-bold': 'var(--color-grayscale-700)',
-	'--color-border-default': 'var(--color-grayscale-600)',
-	'--color-border-active': 'var(--color-grayscale-300)',
+	// Neutral Text
+	'--neutral-text-weak': 'var(--color-grayscale-500)',
+	'--neutral-text-default': 'var(--color-grayscale-400)',
+	'--neutral-text-strong': 'var(--color-grayscale-50)',
 
-	'--color-brand-text-weak': 'var(--color-accent-blue)',
-	'--color-brand-surface': 'var(--color-grayscale-900)',
-	'--color-brand-border': 'var(--color-accent-blue)',
+	// Neutral Surface
+	'--neutral-surface-default': 'var(--color-grayscale-900)',
+	'--neutral-surface-bold': 'var(--color-grayscale-700)',
+	'--neutral-surface-strong': 'var(--color-grayscale-800)',
 
-	'--color-danger-text': 'var(--color-accent-red)',
-	'--color-danger-surface': 'var(--color-accent-red)',
-	'--color-danger-border': 'var(--color-accent-red)',
+	// Neutral Border
+	'--neutral-border-default': 'var(--color-grayscale-600)',
+	'--neutral-border-active': 'var(--color-grayscale-300)',
+
+	// Brand (Accent Blue)
+	'--brand-text-weak': 'var(--color-accent-blue)',
+	'--brand-text-default': 'var(--color-grayscale-50)',
+	'--brand-surface-weak': 'var(--color-grayscale-900)',
+	'--brand-surface-default': 'var(--color-accent-blue)',
+	'--brand-border-default': 'var(--color-accent-blue)',
+
+	// Danger (Accent Red)
+	'--danger-text-default': 'var(--color-accent-red)',
+	'--danger-surface-default': 'var(--color-accent-red)',
+	'--danger-border-default': 'var(--color-accent-red)',
+
+	// Palette Shortcuts
+	'--palette-blue': 'var(--color-accent-blue)',
+	'--palette-navy': 'var(--color-accent-navy)',
+	'--palette-red': 'var(--color-accent-red)',
 };
