@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.issue;
 
+import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;

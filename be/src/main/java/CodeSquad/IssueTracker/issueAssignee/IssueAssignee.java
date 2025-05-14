@@ -1,4 +1,4 @@
-package CodeSquad.IssueTracker.issue.issueAssignee;
+package CodeSquad.IssueTracker.issueAssignee;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

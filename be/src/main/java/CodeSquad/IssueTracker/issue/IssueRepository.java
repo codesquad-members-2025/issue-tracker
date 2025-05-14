@@ -1,5 +1,7 @@
 package CodeSquad.IssueTracker.issue;
 
+import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
+
 import java.util.List;
 import java.util.Optional;
 
