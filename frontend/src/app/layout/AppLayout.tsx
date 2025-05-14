@@ -1,11 +1,17 @@
 import Header from '@/widgets/header/Header';
 import { Outlet } from 'react-router-dom';
+import Container from './Container';
 
 const AppLayout = () => (
 	<>
-		<Header />
+		<Container>
+			<Header />
+		</Container>
+
 		<main>
-			<Outlet />
+			<Container>
+				<Outlet />
+			</Container>
 		</main>
 	</>
 );
