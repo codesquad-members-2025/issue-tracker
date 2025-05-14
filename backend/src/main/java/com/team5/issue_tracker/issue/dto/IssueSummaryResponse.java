@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.team5.issue_tracker.label.dto.LabelResponse;
 import com.team5.issue_tracker.milestone.dto.MilestoneResponse;
-import com.team5.issue_tracker.user.dto.AuthorResponse;
+import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class IssueSummaryResponse {
   private String title;
   private boolean isOpen;
   private List<LabelResponse> labels;
-  private AuthorResponse author;
+  private UserSummaryResponse author;
   private MilestoneResponse milestone;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
