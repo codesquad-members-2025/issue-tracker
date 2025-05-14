@@ -9,7 +9,12 @@ export default function ErrorToast() {
   const errorMessage = useErrorStore((state) => state.errorMessage);
 
   useEffect(() => {
-    setTimeout(() => clearError(), 4000);
+    if (!errorType) return; //errorType 이 null 일 경우 종료.
+    const timer = setTimeout(() => {
+      clearError();
+    }, 4000);
+
+    return () => clearTimeout(timer);
   }, [errorType]);
 
   return (

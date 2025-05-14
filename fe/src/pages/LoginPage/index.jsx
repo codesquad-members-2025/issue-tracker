@@ -38,7 +38,7 @@ export default function LoginPage() {
     refetch({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: Id, password: pw }),
+      body: JSON.stringify({ loginId: Id, password: pw }),
     });
   }
 
@@ -47,8 +47,8 @@ export default function LoginPage() {
   }
 
   useEffect(() => {
-    if (response && response.token) {
-      const token = response.token;
+    if (response && response.accessToken) {
+      const token = response.accessToken;
       const { userId, imgUrl } = tokenDecoder(token);
       setUser(userId, imgUrl, token);
       localStorage.setItem('token', token);
@@ -67,6 +67,7 @@ export default function LoginPage() {
         setPw={setPw}
         mainButtonLabel={mainButtonLabel}
         onSubmit={onSubmit}
+        isDisabled={isLoading}
       />
       <SubButton buttonLabelText={buttonLabelText} onClick={moveToSignUp} />
     </Container>

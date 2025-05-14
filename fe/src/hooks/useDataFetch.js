@@ -26,12 +26,12 @@ export default function useDataFetch({
       try {
         const option = newOptionObj ? newOptionObj : optionObj;
         const res = await fetch(apiUrl, option);
-        if (!res.ok) throw new Error(`오류: ${res.status}`);
+        if (!res.ok) throw new Error(`오류: ${res.message}`);
         const data = await res.json();
         if (data.success === false) throw new Error(data.message || '요청 실패');
         setResponse(data);
       } catch (err) {
-        setError(fetchType, err);
+        setError(fetchType, err.message);
       } finally {
         setIsLoading(false);
       }
