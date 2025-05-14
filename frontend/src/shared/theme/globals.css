@@ -6,9 +6,11 @@
 	body {
 		background-color: var(--neutral-surface-default);
 		color: var(--neutral-text-default);
-		transition: background-color 0.3s, color 0.3s;
+		transition: var(--theme-transition);
 	}
 	:root {
+		--theme-transition: none;
+
 		/* Grayscale */
 		--color-grayscale-50: #fefefe;
 		--color-grayscale-100: #f7f7fc;

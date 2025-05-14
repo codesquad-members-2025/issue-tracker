@@ -38,6 +38,21 @@ function getInitialTheme(): keyof typeof themesMap {
 }
 
 /**
+ * 테마를 설정하고 localStorage에 저장하며 CSS 변수 주입
+ * @param name - 적용할 테마 이름 (예: 'light', 'dark')
+ */
+function setThemeAtLocalStorage(name: keyof typeof themesMap) {
+	if (!themeNames.includes(name)) {
+		console.warn(`'${name}'은 유효한 테마가 아닙니다.`);
+		return;
+	}
+
+	localStorage.setItem('theme', name);
+
+	applyCssVariables(themesMap[name]);
+}
+
+/**
  * CSS 변수 주입
  * document.documentElement에 모두 setProperty
  */
@@ -47,4 +62,25 @@ function applyCssVariables(vars: ThemeVariables) {
 	}
 }
 
-export { themesMap, themeNames, getInitialTheme, applyCssVariables };
+/**
+ * theme-toggle 애니메이션을 잠깐 켜고, 완료 후 다시 끄는 헬퍼
+ * @param durationMs 토글 애니메이션 지속 시간 (ms)
+ */
+function flashThemeTransition(durationMs = 300) {
+	const style = document.documentElement.style;
+	// 1) 켜기
+	style.setProperty('--theme-transition', 'background-color 0.3s, color 0.3s');
+	// 2) duration 뒤에 다시 끄기
+	setTimeout(() => {
+		style.setProperty('--theme-transition', 'none');
+	}, durationMs);
+}
+
+export {
+	themesMap,
+	themeNames,
+	getInitialTheme,
+	applyCssVariables,
+	setThemeAtLocalStorage,
+	flashThemeTransition,
+};

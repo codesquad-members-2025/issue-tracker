@@ -1,12 +1,7 @@
 import AppRouter from './providers/Router';
-import ThemeProvider from './providers/ThemeProvider';
 
 const App = () => {
-	return (
-		<ThemeProvider>
-			<AppRouter />
-		</ThemeProvider>
-	);
+	return <AppRouter />;
 };
 
 export default App;

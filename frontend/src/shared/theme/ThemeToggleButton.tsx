@@ -1,17 +1,17 @@
+import { useThemeStore } from '@/shared/theme/useThemeStore';
 import { Button } from '@/shared/ui/button';
-import { useThemeStore } from './store';
 
 export function ThemeToggleButton() {
-	const { themeName, cycleTheme } = useThemeStore();
+	const { theme, cycleTheme } = useThemeStore();
 
 	return (
 		<Button
 			variant='theme'
 			size='sm'
-			onClick={cycleTheme}
+			onClick={() => cycleTheme()}
 			aria-label='Toggle theme'
 		>
-			Theme {themeName}
+			Theme {theme}
 		</Button>
 	);
 }
