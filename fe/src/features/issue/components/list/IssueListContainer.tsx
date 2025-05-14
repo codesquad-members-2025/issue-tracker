@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import { type IssueStatus } from '../../types/issue';
+import useIssues from '../../hooks/useIssues';
+import usePreviousWhen from '@/shared/hooks/usePreviousWhen';
+import { buildIssueQuery } from '../../utils';
 import IssueListHeader from './IssueListHeader';
 import IssueListContent from './IssueListContent';
-import ISSUES_MOCK from '@/mocks/issuesMock'; //TODO fetch 기능 생성후 변경
 
 interface IssueListContainerProps {
   selected: IssueStatus;
@@ -10,18 +12,41 @@ interface IssueListContainerProps {
 }
 
 export default function IssueListContainer({
-  onChangeTab,
   selected,
+  onChangeTab,
 }: IssueListContainerProps) {
+  const query = buildIssueQuery(selected);
+  const { data: issues, isFetching, isError, error } = useIssues(query);
+
+  const prevIssues = usePreviousWhen(issues?.issues ?? [], !isFetching);
+  const prevOpenCount = usePreviousWhen(issues?.openCount ?? 0, !isFetching);
+  const prevCloseCount = usePreviousWhen(issues?.closeCount ?? 0, !isFetching);
+
+  const displayIssues = isFetching ? prevIssues : (issues?.issues ?? []);
+  const displayOpenCount = isFetching
+    ? prevOpenCount
+    : (issues?.openCount ?? 0);
+  const displayCloseCount = isFetching
+    ? prevCloseCount
+    : (issues?.closeCount ?? 0);
+
+  if (isError) {
+    console.error('[이슈 목록 로딩 에러]', error);
+  }
+
   return (
     <Container>
       <IssueListHeader
         selected={selected}
         onChangeTab={onChangeTab}
-        openCount={ISSUES_MOCK.openCount}
-        closeCount={ISSUES_MOCK.closeCount}
+        openCount={displayOpenCount}
+        closeCount={displayCloseCount}
       />
-      <IssueListContent issues={ISSUES_MOCK.issues} />
+      <IssueListContent
+        issues={displayIssues}
+        isFetching={isFetching}
+        isError={isError}
+      />
     </Container>
   );
 }

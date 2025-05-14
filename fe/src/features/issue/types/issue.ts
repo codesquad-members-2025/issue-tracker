@@ -18,3 +18,9 @@ export interface Issue {
   updatedAt: string | null;
   assigneesProfileImages: string[];
 }
+
+export interface IssuesResponse {
+  issues: Issue[];
+  openCount: number;
+  closeCount: number;
+}

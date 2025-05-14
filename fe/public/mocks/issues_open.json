@@ -1,0 +1,53 @@
+{
+  "openCount": 3,
+  "closeCount": 5,
+  "issues": [
+    {
+      "id": 101,
+      "author": "준수",
+      "title": "로그인 버튼이 작동하지 않음",
+      "labels": [
+        {
+          "id": 1,
+          "name": "bug",
+          "color": "#ff0000",
+          "description": "심각한 버그"
+        }
+      ],
+      "milestone": "v2.0 출시",
+      "isClosed": false,
+      "createdAt": "2025-05-12T09:00:00Z",
+      "updatedAt": "2025-05-13T12:00:00Z",
+      "assigneesProfileImages": ["https://picsum.photos/id/101/100/100"]
+    },
+    {
+      "id": 102,
+      "author": "혜린",
+      "title": "모바일 화면 깨짐 현상",
+      "labels": [
+        {
+          "id": 2,
+          "name": "UI",
+          "color": "#00aaff",
+          "description": "UI 관련 이슈"
+        }
+      ],
+      "milestone": null,
+      "isClosed": false,
+      "createdAt": "2025-05-10T15:30:00Z",
+      "updatedAt": null,
+      "assigneesProfileImages": []
+    },
+    {
+      "id": 103,
+      "author": "진혁",
+      "title": "다크모드 전환 시 글자 안 보임",
+      "labels": [],
+      "milestone": null,
+      "isClosed": false,
+      "createdAt": "2025-04-30T08:20:00Z",
+      "updatedAt": "2025-05-01T10:10:00Z",
+      "assigneesProfileImages": ["https://picsum.photos/id/103/100/100"]
+    }
+  ]
+}
