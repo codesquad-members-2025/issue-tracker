@@ -1,6 +1,43 @@
 spring:
+  config:
+    activate:
+      on-profile: local
   datasource:
-    url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul
-    username: root
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:h2:mem:issueTracker;MODE=MYSQL;NON_KEYWORDS=USER"
+    username: "sa"
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+---
+  spring:
+    config:
+      activate:
+        on-profile: dev
+    datasource:
+      url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul
+      username: root
+      password:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+  cloud:
+    aws:
+      s3:
+        bucket: my-issue-image-bucket
+      region:
+        static: ap-northeast-2
+      credentials:
+        access-key: YOUR_ACCESS_KEY
+        secret-key: YOUR_SECRET_KEY //todo 버킷만들고 채울것 보안도 생각해 볼 것
+
