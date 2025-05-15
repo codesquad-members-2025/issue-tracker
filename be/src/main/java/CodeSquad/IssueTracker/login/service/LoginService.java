@@ -6,7 +6,7 @@ import CodeSquad.IssueTracker.login.exception.PasswordMismatchException;
 import CodeSquad.IssueTracker.login.exception.UserNotFoundException;
 import CodeSquad.IssueTracker.jwt.util.JWTUtil;
 import CodeSquad.IssueTracker.user.User;
-import CodeSquad.IssueTracker.user.repository.JdbcTemplatesUserRepository;
+import CodeSquad.IssueTracker.user.JdbcTemplatesUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

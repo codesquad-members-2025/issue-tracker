@@ -1,6 +1,5 @@
-package CodeSquad.IssueTracker.user.repository;
+package CodeSquad.IssueTracker.user;
 
-import CodeSquad.IssueTracker.user.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,4 @@
-package CodeSquad.IssueTracker.user.repository;
-
-import CodeSquad.IssueTracker.user.User;
+package CodeSquad.IssueTracker.user;
 
 import java.util.Optional;
 
