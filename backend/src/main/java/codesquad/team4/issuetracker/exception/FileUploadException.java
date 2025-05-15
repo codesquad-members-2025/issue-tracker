@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.exception;
 
-public class FileUploadException extends RuntimeException{
+public class FileUploadException extends RuntimeException {
     public FileUploadException(String message) {
         super(message);
     }
