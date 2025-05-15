@@ -101,3 +101,7 @@
   text-align: center;
   border-radius: var(--radius-large);
 }
+
+.errorInput {
+  border: 1px solid red;
+}

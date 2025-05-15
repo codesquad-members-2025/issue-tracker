@@ -44,6 +44,10 @@ function WriteIssue({ setWriteIssue }) {
   const [selectedcancelButton, setselectedcancelButton] = useState(false);
   const [file, setFile] = useState([]);
   const [activeFilter, setActiveFilter] = useState(null);
+  const [errorFields, setErrorFields] = useState({
+    title: false,
+    content: false,
+  });
 
   const handleClickcancelButton = (isSelected) => {
     setselectedcancelButton(isSelected);
@@ -67,6 +71,20 @@ function WriteIssue({ setWriteIssue }) {
     );
   }
 
+  const handleSubmit = () => {
+    const hasTitle = title.trim() !== "";
+    const hasContent = content.trim() !== "";
+
+    setErrorFields({
+      title: !hasTitle,
+      content: !hasContent,
+    });
+
+    if (!hasTitle || !hasContent) return;
+
+    handleClick(title, content, file, setWriteIssue);
+  };
+
   return (
     <>
       <div className={styles.writeIssueContainer}>
@@ -80,14 +98,18 @@ function WriteIssue({ setWriteIssue }) {
               <input
                 type="text"
                 placeholder="제목"
-                className={styles.issueTitleInput}
+                className={`${styles.issueTitleInput} ${
+                  errorFields.title ? styles.errorInput : ""
+                }`}
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
             <div className={styles.issueContentInputContainter}>
               <textarea
                 placeholder="코멘트를 입력하세요"
-                className={styles.issueContentInput}
+                className={`${styles.issueContentInput} ${
+                  errorFields.content ? styles.errorInput : ""
+                }`}
                 onChange={(e) => setContent(e.target.value)}
               />
               <input type="file" multiple onChange={handleFileChange} />
@@ -126,14 +148,8 @@ function WriteIssue({ setWriteIssue }) {
             작성 취소
           </button>
           <button
-            className={styles.submitButton}
-            onClick={() => {
-              if (!title.trim() || !content.trim()) {
-                alert("제목과 코멘트를 모두 입력해주세요.");
-                return;
-              }
-              handleClick(title, content, file, setWriteIssue);
-            }}
+            className={`${styles.submitButton} ${styles.disabledButton}`}
+            onClick={handleSubmit}
           >
             완료
           </button>
