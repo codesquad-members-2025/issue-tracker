@@ -28,7 +28,7 @@ async function realGetJSON<T>(path: string): Promise<T> {
  */
 async function mockGetJSON<T>(path: string): Promise<T> {
 	// 예시: '/api/issues' 요청 시 issueFixtures에서 정의한 mock 데이터를 반환
-	if (path === '/issues') {
+	if (path === '/api/issues') {
 		const { mockIssueListResponse } = await import(
 			'@/entities/issue/issueFixtures'
 		);
