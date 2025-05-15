@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.issue.dto;
 
+import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import java.util.List;
 
 import codesquad.team4.issuetracker.label.dto.LabelDto;
@@ -30,16 +31,8 @@ public class IssueResponseDto {
         private UserDto.UserInfo author;
         private List<LabelDto.LabelInfo> labels;
         private List<UserDto.UserInfo> assignees;
-        private MilestoneInfo milestone;
+        private MilestoneDto.MilestoneInfo milestone;
         private String createdAt;
-    }
-
-    @AllArgsConstructor
-    @Getter
-    @Builder
-    public static class MilestoneInfo {
-        private Long id;
-        private String title;
     }
 
     @AllArgsConstructor
