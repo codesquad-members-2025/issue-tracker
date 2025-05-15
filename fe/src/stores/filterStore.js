@@ -1,4 +1,9 @@
-// fe/src/stores/filterStore.js
+/*
+- 유저가 필터 적용시  항상 이 스토어를 통해 필터 적용(바로 쿼리 적용을 하는게 아니라 한번에 입력을 받은뒤.
+서버에 데이터 요청을 할때 이 스토어의 상태를 기준으로 요청을 한다)
+- 현재 필터 상황 이 스토어에서 확인 가능
+*/
+
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 

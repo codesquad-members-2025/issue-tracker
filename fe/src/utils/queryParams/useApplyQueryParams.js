@@ -7,7 +7,7 @@ export function useApplyQueryParams() {
   const navigate = useNavigate();
 
   return (filterObject) => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(); //Url전용 객체로 변환
 
     Object.entries(filterObject).forEach(([key, value]) => {
       if (Array.isArray(value)) {

@@ -1,3 +1,5 @@
+// 필터 상태의 객체를 입력 받음
+
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
 
@@ -21,7 +23,6 @@ const FilterText = styled.span`
   }
 `;
 
-// 필터 상태의 객체를 입력 받음
 export function FilterSearchField({ selectedFilters }) {
   const arr = Object.entries(selectedFilters).reduce((acc, [key, value], idx, arr) => {
     const isLast = idx === arr.length - 1;

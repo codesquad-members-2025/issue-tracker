@@ -7,6 +7,7 @@
 import styled from 'styled-components';
 import { FilterSearchField } from '@/base-ui/issueListPage/mainPageHeaderTap/FilteredTab';
 import { DropdownMenuTemplate } from '@/utils/dropDown/DropdownMenuTemplate';
+import useFilterStore from '@/stores/filterStore';
 
 const Container = styled.div`
   border: 1px solid ${({ theme }) => theme.border.default};
@@ -17,15 +18,53 @@ const Container = styled.div`
     $isActive ? theme.surface.strong : theme.surface.bold};
 `;
 
-export default function FilterBar() {
-  const isActive = selectedFilters.length > 0;
+function getMenuItems(filteredObj, setFilter) {
+  const issueFilterItems = [
+    {
+      label: '열린 이슈',
+      isSelected: filteredObj.isOpen,
+      onClick: () => setFilter('isOpen', true),
+    },
+    {
+      label: '내가 작성한 이슈',
+      isSelected: false,
+      onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
+    },
+    {
+      label: '나에게 할당된 이슈',
+      isSelected: false,
+      onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
+    },
+    {
+      label: '내가 댓글을 남긴 이슈',
+      isSelected: false,
+      onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
+    },
+    {
+      label: '닫힌 이슈',
+      isSelected: !filteredObj.isOpen,
+      onClick: () => setFilter('isOpen', false),
+    },
+  ];
 
-  function menuItems(selectedFilters) {}
+  return issueFilterItems;
+}
+
+export default function FilterBar() {
+  const filteredObj = useFilterStore((state) => state.selectedFilters);
+  const isActive = Object.keys(filteredObj).length > 0;
+  const setFilter = useFilterStore((state) => state.setFilter);
+  const items = getMenuItems(filteredObj, setFilter);
 
   return (
     <Container $isActive={isActive}>
-      <DropdownMenuTemplate triggerLabel="필터" menuWidth="240px" label={'이슈 필터'} />
-      <FilterSearchField />
+      <DropdownMenuTemplate
+        triggerLabel="필터"
+        menuWidth="240px"
+        label={'이슈 필터'}
+        items={items}
+      />
+      <FilterSearchField selectedFilters={filteredObj} />
     </Container>
   );
 }
