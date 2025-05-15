@@ -18,7 +18,7 @@ const globalStyle = (theme: Theme) => css`
     align-items: stretch;
     justify-content: flex-start;
     font-family: ${theme.typography.fontFamily};
-    background-color: ${theme.surfaceColor.strong};
+    background-color: ${theme.surfaceColor.default};
     color: ${theme.textColor.strong};
 
     transition:
