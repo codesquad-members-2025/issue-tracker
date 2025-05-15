@@ -39,18 +39,19 @@ function IssueList({ isOpen }) {
                 {getIssueIconByStatus(isOpen)}
                 <div className={styles.issueTitle}>{issue.title}</div>
 
-                {issue.labels.map((label) => (
-                  <div
-                    className={styles.issueLabel}
-                    key={label.id}
-                    style={{
-                      backgroundColor: label.color,
-                      marginRight: "4px",
-                    }}
-                  >
-                    {label.name}
-                  </div>
-                ))}
+                {issue.labels &&
+                  issue.labels.map((label) => (
+                    <div
+                      className={styles.issueLabel}
+                      key={label.id}
+                      style={{
+                        backgroundColor: label.color,
+                        marginRight: "4px",
+                      }}
+                    >
+                      {label.name}
+                    </div>
+                  ))}
               </div>
               <div className={styles.issueMetaInfo}>
                 <div>#{issue.id}</div>
@@ -60,8 +61,12 @@ function IssueList({ isOpen }) {
                   {"님에 의해 작성되었습니다"}
                 </div>
                 <div className={styles.milestone}>
-                  <div className={styles.milestoneIcon} alt="milestone" />
-                  <div>{issue.milestone.title}</div>
+                  {issue.milestone !== null && (
+                    <>
+                      <div className={styles.milestoneIcon} alt="milestone" />
+                      <div>{issue.milestone.title}</div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

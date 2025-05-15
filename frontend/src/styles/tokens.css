@@ -1,5 +1,5 @@
 :root {
-  /* === Color === */
+  /* === Coolr === */
   --grayscale-50: #fefefe;
   --grayscale-100: #f7f7fc;
   --grayscale-200: #eff0f6;
@@ -32,9 +32,9 @@
   --brand-surface-weak: var(--grayscale-50);
   --brand-surface-default: var(--accent-blue);
   --brand-border-default: var(--accent-blue);
-  --brand-text-default: var(--accent-red);
-  --brand-surface-default: var(--accent-red);
-  --brand-border-default: var(--accent-red);
+  --danger-text-default: var(--accent-red);
+  --danger-surface-default: var(--accent-red);
+  --danger-border-default: var(--accent-red);
 
   --palette-blue: var(--accent-blue);
   --palette-navy: var(--accent-navy);
@@ -46,7 +46,7 @@
 
   /* === Typography === */
 
-  --display-blod32: 700 32px/48px "Pretendard Variable";
+  --display-bold32: 700 32px/48px "Pretendard Variable";
   --display-bold20: 700 20px/32px "Pretendard Variable";
   --display-bold16: 700 16px/24px "Pretendard Variable";
   --display-bold12: 700 12px/16px "Pretendard Variable";

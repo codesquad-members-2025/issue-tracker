@@ -1,0 +1,8 @@
+.writeIssueButton {
+  width: 128px;
+  height: 40px;
+  background-color: var(--brand-surface-default);
+  color: var(--brand-text-default);
+  border-radius: var(--radius-medium);
+  text-align: center;
+}

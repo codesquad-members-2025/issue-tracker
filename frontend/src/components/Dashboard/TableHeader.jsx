@@ -39,7 +39,9 @@ function TableHeader({ isOpen, setIsOpen, issueCount }) {
               filterName={name}
               onClick={() => handleFilterClick(name)}
             />
-            {activeFilter === name && <PopupList filterName={name} />}
+            {activeFilter === name && (
+              <PopupList filterName={name} actionLocation={"filterBar"} />
+            )}
           </div>
         ))}
       </div>
