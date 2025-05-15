@@ -6,6 +6,7 @@ import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
+import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
@@ -23,7 +24,6 @@ import codesquad.team4.issuetracker.user.dto.UserDto;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -192,5 +192,15 @@ public class IssueService {
 
     }
 
+    public IssueCountDto getIssueCounts() {
+        //// 쿼리 결과가 null일 경우 NPE 방지를 위해 int 대신 Integer 사용 -> queryForObject(...)가 null반환 할 수 있음
+        Integer openCount = issueDao.countIssuesByOpenStatus(true);
+        Integer closedCount = issueDao.countIssuesByOpenStatus(false);
+
+        return IssueCountDto.builder()
+                .openCount(openCount)
+                .closedCount(closedCount)
+                .build();
+    }
 }
 

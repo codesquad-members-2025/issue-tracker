@@ -23,7 +23,6 @@ public class IssueController {
     private static final String ISSUE_DIRECTORY = "issues/";
 
     private final IssueService issueService;
-    private final IssueCountService issueCountService;
     private final S3FileService s3FileService;
 
     @GetMapping("")
@@ -36,7 +35,7 @@ public class IssueController {
 
     @GetMapping("/count")
     public ResponseEntity<IssueCountDto> showIssueCount() {
-        IssueCountDto result = issueCountService.getIssueCounts();
+        IssueCountDto result = issueService.getIssueCounts();
         return ResponseEntity.ok(result);
     }
 

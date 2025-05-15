@@ -59,9 +59,9 @@
             return jdbcTemplate.queryForObject(countSql, Integer.class, issueIds.toArray());
         }
 
-        public void updateIssueStatus(String placeholders, List<Object> params) {
+        public int updateIssueStatus(String placeholders, List<Object> params) {
             String updateSql = "UPDATE issue SET is_open = ? WHERE issue_id IN (" + placeholders + ")";
 
-            jdbcTemplate.update(updateSql, params.toArray());
+            return jdbcTemplate.update(updateSql, params.toArray());
         }
     }

@@ -16,25 +16,23 @@ import static org.mockito.BDDMockito.given;
 class IssueCountServiceTest {
 
     @Mock
-    private JdbcTemplate jdbcTemplate;
+    private IssueDao issueDao;
 
     @InjectMocks
-    private IssueCountService issueCountService;
+    private IssueService issueService;
 
     @Test
     @DisplayName("이슈 상태별 개수 반환")
     void 이슈_상태별_개수_반환() {
         // given
-        given(jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM issue WHERE is_open = true", Integer.class)
+        given(issueDao.countIssuesByOpenStatus(true)
         ).willReturn(2);
 
-        given(jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM issue WHERE is_open = false", Integer.class)
+        given(issueDao.countIssuesByOpenStatus(false)
         ).willReturn(1);
 
         // when
-        IssueCountDto result = issueCountService.getIssueCounts();
+        IssueCountDto result = issueService.getIssueCounts();
 
         // then
         assertThat(result.getOpenCount()).isEqualTo(2);

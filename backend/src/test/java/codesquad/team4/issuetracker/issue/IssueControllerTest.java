@@ -32,8 +32,6 @@ class IssueControllerTest {
     @MockitoBean
     private IssueService issueService;
     @MockitoBean
-    private IssueCountService issueCountService;
-    @MockitoBean
     private S3FileService s3FileService;
 
     @Autowired
@@ -149,7 +147,7 @@ class IssueControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("일부 이슈 ID가 존재하지 않습니다."));
+                .andExpect(jsonPath("$.message").value("이슈가 존재하지 않습니다"));
     }
 
 
