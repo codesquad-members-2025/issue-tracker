@@ -1,7 +1,7 @@
 name: Deploy Spring Boot to EC2
 on:
   push:
-    branches: [ dev ]  # 원하는 브랜치로 수정
+    branches: [ dev-be ]  # 원하는 브랜치로 수정
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -26,8 +26,8 @@ jobs:
           # 프로젝트 디렉토리로 이동
           cd ~/issue-tracker  # EC2에 clone해둔 경로
           # 최신 코드 가져오기
-          git checkout dev 
-          git pull origin dev
+          git checkout dev-be 
+          git pull origin dev-be
           # 빌드 및 실행
           chmod +x ./gradlew
           ./gradlew -p backend build -x test
