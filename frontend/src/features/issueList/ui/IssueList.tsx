@@ -11,7 +11,12 @@ export function IssueList({ issues }: IssueListProps) {
 		<div className='flex flex-col rounded-2xl border border-[var(--neutral-border-default)] divide-y divide-[var(--neutral-border-default)] text-[var(--neutral-border-default)] '>
 			<IssueListHeader />
 			{issues.map((issue) => (
-				<IssueItem key={issue.id} issue={issue} />
+				<div
+					key={issue.id}
+					className={`bg-[var(--neutral-surface-strong)] ${issues.indexOf(issue) === issues.length - 1 ? 'rounded-b-2xl' : ''}`}
+				>
+					<IssueItem key={issue.id} issue={issue} />
+				</div>
 			))}
 		</div>
 	);

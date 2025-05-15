@@ -5,7 +5,7 @@ import * as React from 'react';
 import { cn } from '@/shared/utils/shadcn-utils';
 
 const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium outline-none transition-all',
+	'inline-flex items-center justify-center gap-1 whitespace-nowrap outline-none transition-all',
 	{
 		variants: {
 			variant: {
@@ -20,7 +20,7 @@ const buttonVariants = cva(
 					'disabled:pointer-events-none',
 				],
 				outline: [
-					'bg-transparent',
+					'bg-[var(--neutral-surface-default)]',
 					'[border:var(--border-default)_var(--brand-border-default)]',
 					'text-[var(--color-accent-blue)]',
 					'hover:bg-[var(--color-accent-blue)]',
@@ -31,9 +31,8 @@ const buttonVariants = cva(
 					'disabled:pointer-events-none',
 				],
 				ghost: [
-					'bg-transparent',
 					'text-[var(--neutral-text-default)]',
-					'hover:bg-[var(--color-accent-blue)/10]',
+					'hover:bg-[var(--neutral-surface-bold)]/80',
 					'hover:opacity-[var(--opacity-hover)]',
 					'active:bg-[var(--color-accent-blue)/20]',
 					'disabled:opacity-[var(--opacity-disabled)]',
