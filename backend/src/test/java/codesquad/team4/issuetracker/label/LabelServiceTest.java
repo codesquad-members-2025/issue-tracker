@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.given;
 public class LabelServiceTest {
 
     @Mock
-    JdbcTemplate jdbcTemplate;
+    LabelDao labelDao;
     @InjectMocks
     LabelService labelService;
 
@@ -45,7 +45,7 @@ public class LabelServiceTest {
                         .build()
         );
 
-        given(jdbcTemplate.query(eq(sql), any(RowMapper.class))).willReturn(mockLabels);
+        given(labelDao.findLabelForFiltering()).willReturn(mockLabels);
 
         // when
         LabelDto.LabelFilter result = labelService.getFilterLabels();
