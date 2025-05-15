@@ -44,6 +44,7 @@
   min-height: 448px;
   overflow: visible;
   border-radius: var(--radius-large);
+  background-color: var(--neutral-surface-bold);
   padding-top: 16px;
 }
 
