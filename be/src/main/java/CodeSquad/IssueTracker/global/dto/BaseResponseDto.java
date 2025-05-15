@@ -1,9 +1,12 @@
 package CodeSquad.IssueTracker.global.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResponseDto<T> {
+
     private final boolean success;
     private final String message;
     private final T data;
