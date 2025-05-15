@@ -14,7 +14,6 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class JdbcTemplateIssueImageRepository implements IssueImageRepository {
 
     private final NamedParameterJdbcTemplate template;

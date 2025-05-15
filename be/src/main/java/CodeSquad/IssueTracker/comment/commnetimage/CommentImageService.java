@@ -1,6 +1,7 @@
 package CodeSquad.IssueTracker.comment.commnetimage;
 
 import CodeSquad.IssueTracker.util.S3Uploader;
+import CodeSquad.IssueTracker.util.Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentImageService {
 
-    private final S3Uploader s3Uploader;
+    private final Uploader uploader;
     private final CommentImageRepository commentImageRepository;
 
     public void uploadAndSaveImages(Long commentId, List<MultipartFile> files) {
@@ -21,7 +22,7 @@ public class CommentImageService {
         for (MultipartFile file : files) {
             try{
 
-                String imageUrl = s3Uploader.upload(file);
+                String imageUrl = uploader.upload(file);
 
                 CommentImage commentImage = new CommentImage();
                 commentImage.setCommentId(commentId);

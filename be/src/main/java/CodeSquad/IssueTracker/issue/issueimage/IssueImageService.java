@@ -1,6 +1,6 @@
 package CodeSquad.IssueTracker.issue.issueimage;
 
-import CodeSquad.IssueTracker.util.S3Uploader;
+import CodeSquad.IssueTracker.util.Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IssueImageService {
 
-    private final S3Uploader s3Uploader;
+    private final Uploader uploader;
     private final IssueImageRepository issueImageRepository;
 
     public void uploadAndSaveImages(Long issueId, List<MultipartFile> files) {
@@ -21,7 +21,7 @@ public class IssueImageService {
         for (MultipartFile file : files) {
             try {
                 // 1. S3 업로드
-                String imageUrl = s3Uploader.upload(file);
+                String imageUrl = uploader.upload(file);
 
                 // 2. DB 저장
                 IssueImage image = new IssueImage();

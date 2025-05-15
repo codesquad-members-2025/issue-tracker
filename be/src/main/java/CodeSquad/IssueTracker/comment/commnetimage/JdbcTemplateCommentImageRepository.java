@@ -34,14 +34,14 @@ public class JdbcTemplateCommentImageRepository implements CommentImageRepositor
     }
 
     @Override
-    public void deleteByIssueId(Long issueId) {
+    public void deleteByCommentId(Long issueId) {
         String sql = "DELETE FROM comment_images WHERE issue_id = :issueId";
         MapSqlParameterSource param = new MapSqlParameterSource("issueId", issueId);
         template.update(sql, param);
     }
 
     @Override
-    public CommentImage findByIssueId(Long issueId) {
+    public CommentImage findByCommentId(Long issueId) {
         String sql = "SELECT * FROM comment_images WHERE issue_id = :issueId";
         MapSqlParameterSource param = new MapSqlParameterSource("issueId", issueId);
         return template.queryForObject(sql, param, commentImageRowMapper());
