@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LabelButton, MilestoneButton } from '@/base-ui/mainPageHeaderTap/taps';
+import { MilestoneButton, LabelButton } from '@/base-ui/issueListPage/mainPageHeaderTap/taps';
 import { radius } from '@/styles/foundation';
 
 const ButtonWrapper = styled.div`

@@ -8,7 +8,7 @@ import InputForm from '@/utils/InputForm';
 import SubButton from '@/base-ui/loginPage/SubButton';
 import ToggleTheme from '@/base-ui/utils/ToggleTheme';
 import useDataFetch from '@/hooks/useDataFetch';
-import { LOGIN_API } from '@/api/login';
+import { LOGIN_API } from '@/api/auth';
 import tokenDecoder from '@/utils/token/decoder';
 import { useUserStore } from '@/stores/userStore';
 

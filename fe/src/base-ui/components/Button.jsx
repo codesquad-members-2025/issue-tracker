@@ -1,6 +1,29 @@
 // components/ui/Button.jsx
 import styled, { css } from 'styled-components';
 import { typography } from '@/styles/foundation';
+import { radius } from '@/styles/foundation';
+
+const DefaultButton = styled.button`
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  border-radius: ${radius.medium};
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+  &:active {
+    opacity: 0.64;
+  }
+
+  &:disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+  }
+`;
 
 const ghostButtonStyle = css`
   ${typography.available.medium16}
@@ -36,4 +59,4 @@ const GhostButton = styled.button`
   ${ghostButtonStyle}
 `;
 
-export { GhostButton, ghostButtonStyle };
+export { DefaultButton, GhostButton, ghostButtonStyle };

@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { ghostButtonStyle } from '../components/Button';
+import { ghostButtonStyle } from '@/base-ui/components/Button';
 
 // 공통 버튼 스타일
 const StyledNavButton = styled(NavLink)`
