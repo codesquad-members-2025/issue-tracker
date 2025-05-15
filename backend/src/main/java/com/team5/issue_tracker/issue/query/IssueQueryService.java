@@ -3,8 +3,8 @@ package com.team5.issue_tracker.issue.query;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import com.team5.issue_tracker.issue.dto.IssuePageResponse;
-import com.team5.issue_tracker.issue.dto.IssueSummaryResponse;
+import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueSummaryResponse;
 import com.team5.issue_tracker.user.dto.UserPageResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 

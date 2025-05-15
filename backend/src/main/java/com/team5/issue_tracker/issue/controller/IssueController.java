@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.team5.issue_tracker.common.dto.ApiResponse;
-import com.team5.issue_tracker.issue.dto.IssuePageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.query.IssueQueryService;
 import com.team5.issue_tracker.issue.service.IssueService;
 import com.team5.issue_tracker.user.dto.UserPageResponse;

@@ -1,4 +1,4 @@
-package com.team5.issue_tracker.issue.dto;
+package com.team5.issue_tracker.issue.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

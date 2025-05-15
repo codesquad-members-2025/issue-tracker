@@ -1,6 +1,6 @@
 package com.team5.issue_tracker.issue.query;
 
-import com.team5.issue_tracker.issue.dto.IssueSummaryResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueSummaryResponse;
 import com.team5.issue_tracker.label.dto.LabelResponse;
 import com.team5.issue_tracker.milestone.dto.MilestoneResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
