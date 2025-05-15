@@ -1,13 +1,16 @@
 "use client";
 
 import { Global, css } from "@emotion/react";
+import reset from "emotion-reset";
 
 const base = css`
+  ${reset}
   *,
   *::before,
   *::after {
     box-sizing: border-box;
-    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+      fill 0.2s ease, stroke 0.2s ease;
   }
   html,
   body {

@@ -6,7 +6,7 @@ import styled from "@emotion/styled";
 import Logo from "@/components/Logo";
 import Profile from "@/components/Profile";
 import Button from "@/components/Button";
-import { FilterGroup, FilterDropdown } from "@/components/FilterGroup";
+import { FilterGroup, FilterDropdown } from "@components/FilterGroup";
 import IssueItem from "@/components/IssueItem";
 import ThemeToggleBtn from "@/components/ThemeToggleBtn";
 import type { Issue } from "@/types/issue";
@@ -14,8 +14,8 @@ import type { Issue } from "@/types/issue";
 const Page = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* 24px */
-  padding: 2rem; /* 32px */
+  height: 100vh;
+  padding: 0 5rem;
   background-color: ${({ theme }) => theme.colors.surface.default};
 `;
 
@@ -23,25 +23,31 @@ const TopBar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  height: 5.875rem;
+  margin-bottom: 2rem;
 `;
 
 const Toolbar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
 `;
 
 const LeftControls = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  width: 38.8vw;
   input {
+    height: 2.5rem;
     padding: 0.5rem 1rem;
     font-size: 1rem;
     border: ${({ theme }) =>
       `${theme.border.default} ${theme.colors.border.default}`};
-    border-radius: ${({ theme }) => theme.radius.medium};
-    background-color: ${({ theme }) => theme.colors.surface.strong};
+    border-radius: 0 ${({ theme }) => theme.radius.medium}
+      ${({ theme }) => theme.radius.medium} 0;
+    background-color: ${({ theme }) => theme.colors.surface.bold};
     flex: 1;
   }
 `;
@@ -57,6 +63,25 @@ const IssueList = styled.div`
   flex-direction: column;
   border-top: ${({ theme }) =>
     `${theme.border.default} ${theme.colors.border.default}`};
+`;
+
+const IssueFilterDropdown = styled(FilterDropdown)`
+  width: 8rem;
+  height: 2.5rem;
+  border-radius: ${({ theme }) => theme.radius.medium} 0 0
+    ${({ theme }) => theme.radius.medium};
+`;
+
+const LabelMoveBtn = styled(FilterDropdown)`
+  width: 10rem;
+  border-radius: ${({ theme }) => theme.radius.medium} 0 0
+    ${({ theme }) => theme.radius.medium};
+`;
+
+const MileStoneMoveBtn = styled(FilterDropdown)`
+  width: 10rem;
+  border-radius: 0 ${({ theme }) => theme.radius.medium}
+    ${({ theme }) => theme.radius.medium} 0;
 `;
 
 export default function IssuesPage() {
@@ -92,24 +117,27 @@ export default function IssuesPage() {
 
       <Toolbar>
         <LeftControls>
-          <FilterDropdown
+          <IssueFilterDropdown
             label="필터"
             onClick={() => {
               /* 팝업 열기 */
             }}
+            hasDownIcon={true}
           />
           <input type="text" placeholder="is:issue is:open" />
         </LeftControls>
         <RightControls>
           <FilterGroup>
-            <FilterDropdown
-              label="레이블(3)"
+            <LabelMoveBtn
+              label={`레이블(${3})`}
+              hasDownIcon={false}
               onClick={() => {
                 /* 레이블 팝업 */
               }}
             />
-            <FilterDropdown
-              label="마일스톤(2)"
+            <MileStoneMoveBtn
+              label={`마일스톤(${2})`}
+              hasDownIcon={false}
               onClick={() => {
                 /* 마일스톤 팝업 */
               }}

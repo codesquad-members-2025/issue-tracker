@@ -3,6 +3,11 @@ import styled from "@emotion/styled";
 import { useThemeStore } from "@/lib/useThemeStore";
 
 const ThemeToggleButton = styled.button`
+  // 중앙 정렬을 위한 작업
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
   background: none;
   border: none;
   cursor: pointer;
