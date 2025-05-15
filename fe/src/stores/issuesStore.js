@@ -4,10 +4,12 @@ import { immer } from 'zustand/middleware/immer';
 const useIssuesStore = create(
   immer((set) => ({
     issues: [],
-    issueSummary: {},
+    issueSummary: { openedIssueId: [], closedIssueId: [], openIssueNumber: 0, closeIssueNumber: 0 },
     setIssues: (issues) =>
       set((state) => {
+        if (!issues) return;
         state.issues = issues;
+        state.parseIssue();
       }),
 
     addIssue: (issue) =>

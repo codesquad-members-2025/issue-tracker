@@ -43,16 +43,16 @@ export function NavigateTabs() {
           <path
             d="M8.5 3.33337V12.6667"
             stroke="#FEFEFE"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M3.8335 8H13.1668"
             stroke="#FEFEFE"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
         <span>{buttonLabel}</span>

@@ -16,6 +16,13 @@ const Container = styled.button`
   align-items: center;
 `;
 
+const EmptyCheckBox = styled.div`
+  border: 1.6px solid ${({ theme }) => theme.border.default};
+  border-radius: 2px;
+  width: 16px;
+  height: 16px;
+`;
+
 function ActiveCheckIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -59,7 +66,7 @@ export default function CheckBox({ isDisabled, isActive, onClick }) {
       $isActive={isActive}
       onClick={onClick}
     >
-      {isActive && <CheckIcon isDisabled={isDisabled} />}
+      {isActive ? <CheckIcon isDisabled={isDisabled} /> : <EmptyCheckBox />}
     </Container>
   );
 }
