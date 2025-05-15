@@ -41,7 +41,7 @@ public class IssueServiceTest {
     private IssueAssigneeRepository issueAssigneeRepository;
 
     @Mock
-    private JdbcTemplate jdbcTemplate;
+    private IssueDao issueDao;
 
     @InjectMocks
     private IssueService issueService;
@@ -141,15 +141,13 @@ public class IssueServiceTest {
                 .build();
 
         String placeholders = "?, ?, ?";
-        String countSql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (" + placeholders + ")";
-        String updateSql = "UPDATE issue SET is_open = ? WHERE issue_id IN (" + placeholders + ")";
 
-        Object[] queryArgs = new Object[]{1L, 2L, 3L};
-        Object[] updateArgs = new Object[]{isOpen, 1L, 2L, 3L};
+        List<Long> queryArgs = List.of(1L, 2L, 3L);
+        List<Object> updateArgs = List.of(isOpen, 1L, 2L, 3L);
 
-        given(jdbcTemplate.queryForObject(eq(countSql), eq(Integer.class), eq(queryArgs)))
+        given(issueDao.countExistingIssuesByIds(queryArgs, placeholders))
                 .willReturn(3);
-        given(jdbcTemplate.update(eq(updateSql), eq(updateArgs)))
+        given(issueDao.updateIssueStatus(placeholders, updateArgs))
                 .willReturn(3);
 
         // when
@@ -174,17 +172,16 @@ public class IssueServiceTest {
                 .build();
 
         String placeholders = "?, ?, ?";
-        String countSql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (" + placeholders + ")";
-        Object[] queryArgs = new Object[]{1L, 2L, 3L};
+        List<Long> queryArgs = List.of(1L, 2L, 3L);
 
         // 일부 ID만 존재한다고 가정 (ex. 2개)
-        given(jdbcTemplate.queryForObject(eq(countSql), eq(Integer.class), eq(queryArgs)))
+        given(issueDao.countExistingIssuesByIds(queryArgs, placeholders))
                 .willReturn(2);
 
         // when & then
         assertThatThrownBy(() -> issueService.bulkUpdateIssueStatus(requestDto))
                 .isInstanceOf(IssueStatusUpdateException.class)
-                .hasMessageContaining("일부");
+                .hasMessageContaining("요청한 이슈 ID가 존재하지 않습니다.");
     }
 
 

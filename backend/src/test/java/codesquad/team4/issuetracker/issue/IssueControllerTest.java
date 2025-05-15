@@ -6,6 +6,7 @@ import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,6 @@ class IssueControllerTest {
     @MockitoBean
     private IssueService issueService;
     @MockitoBean
-    private IssueCountService issueCountService;
-    @MockitoBean
     private S3FileService s3FileService;
 
     @Autowired
@@ -57,7 +56,7 @@ class IssueControllerTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "image.png", "image/png", "image-content".getBytes());
 
-        given(s3FileService.uploadFile(any(), eq("issue/"))).willReturn("https://fake-s3-url/image.png");
+        given(s3FileService.uploadFile(any(), eq("issue/"))).willReturn(Optional.of("https://fake-s3-url/image.png"));
 
         IssueResponseDto.CreateIssueDto responseDto = IssueResponseDto.CreateIssueDto.builder()
                 .id(1L)
@@ -149,7 +148,7 @@ class IssueControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("일부 이슈 ID가 존재하지 않습니다."));
+                .andExpect(jsonPath("$.message").value("이슈가 존재하지 않습니다"));
     }
 
 
