@@ -125,11 +125,9 @@ public class IssueService {
                 .imageUrl(uploadUrl)
                 .isOpen(true)
                 .authorId(request.getAuthorId())
+                .milestoneId(request.getMilestoneId())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now());
-
-        Optional.ofNullable(request.getMilestoneId())
-                .ifPresent(issueBuilder::milestoneId);
 
         Issue issue = issueBuilder.build();
         Issue savedIssue = issueRepository.save(issue);
