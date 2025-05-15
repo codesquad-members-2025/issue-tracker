@@ -21,8 +21,6 @@ const globalStyle = (theme: Theme) => css`
     background-color: ${theme.surfaceColor.strong};
     color: ${theme.textColor.strong};
 
-    overflow: hidden;
-
     transition:
       background-color 0.2s ease,
       color 0.2s ease;
