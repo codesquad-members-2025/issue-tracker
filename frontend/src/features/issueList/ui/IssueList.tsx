@@ -1,5 +1,5 @@
-import Container from '@/app/layout/Container';
 import type { Issue } from '@/entities/issue/issue';
+import { IssueListHeader } from '../widget';
 import { IssueItem } from './IssueItem';
 
 interface IssueListProps {
@@ -8,12 +8,11 @@ interface IssueListProps {
 
 export function IssueList({ issues }: IssueListProps) {
 	return (
-		<Container>
-			<ul className='space-y-2'>
-				{issues.map((issue) => (
-					<IssueItem key={issue.id} issue={issue} />
-				))}
-			</ul>
-		</Container>
+		<div className='flex flex-col rounded-2xl border border-[var(--neutral-border-default)] divide-y divide-[var(--neutral-border-default)] text-[var(--neutral-border-default)] '>
+			<IssueListHeader />
+			{issues.map((issue) => (
+				<IssueItem key={issue.id} issue={issue} />
+			))}
+		</div>
 	);
 }

@@ -4,7 +4,7 @@ import type { FC } from 'react';
 
 const Header: FC = () => {
 	return (
-		<div className='flex items-center justify-between h-[94px]'>
+		<div className='flex flex-wrap items-center justify-between h-[94px] gap-4'>
 			<div className='flex items-center'>
 				<h1 className='text-xl font-semibold'>IssueTracker</h1>
 			</div>

@@ -30,9 +30,7 @@ const IssueListPage: FC = () => {
 				<IssueFilter />
 				<IssueSearch />
 			</div>
-			<div className='flex flex-col rounded-2xl border border-[var(--neutral-border-default)] text-[var(--neutral-border-default)]'>
-				{data && <IssueList issues={data.issues} />}
-			</div>
+			{data && <IssueList issues={data.issues} />}
 		</>
 	);
 };
