@@ -12,9 +12,11 @@ import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
+import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -43,8 +46,8 @@ public class IssueService {
         List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen, page, size);
 
         Map<Long, IssueResponseDto.IssueInfo.IssueInfoBuilder> issueMap = new LinkedHashMap<>();
-        Map<Long, List<UserDto.UserInfo>> assigneeMap = new HashMap<>();
-        Map<Long, List<LabelDto.LabelInfo>> labelMap = new HashMap<>();
+        Map<Long, Set<UserInfo>> assigneeMap = new HashMap<>();
+        Map<Long, Set<LabelDto.LabelInfo>> labelMap = new HashMap<>();
 
         for (Map<String, Object> row : rows) {
             Long issueId = (Long) row.get("issue_id");
@@ -74,7 +77,7 @@ public class IssueService {
                         .profileImage((String) row.get("assignee_profile"))
                         .build();
 
-                assigneeMap.computeIfAbsent(issueId, k -> new ArrayList<>()).add(assignee);
+                assigneeMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(assignee);
             }
 
 
@@ -86,7 +89,7 @@ public class IssueService {
                         .color((String) row.get("label_color"))
                         .build();
 
-                labelMap.computeIfAbsent(issueId, k -> new ArrayList<>()).add(label);
+                labelMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(label);
             }
         }
         List<IssueResponseDto.IssueInfo> issues = new ArrayList<>();
@@ -95,8 +98,8 @@ public class IssueService {
             Long issueId = entry.getKey();
             IssueResponseDto.IssueInfo.IssueInfoBuilder builder = entry.getValue();
 
-            builder.assignees(assigneeMap.getOrDefault(issueId, List.of()));
-            builder.labels(labelMap.getOrDefault(issueId, List.of()));
+            builder.assignees(List.copyOf(assigneeMap.getOrDefault(issueId, Set.of())));
+            builder.labels(List.copyOf(labelMap.getOrDefault(issueId, Set.of())));
 
             issues.add(builder.build());
         }
