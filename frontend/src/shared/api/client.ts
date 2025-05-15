@@ -1,11 +1,10 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api'; // 예: "https://api.example.com"
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'; // .env에서 VITE_USE_MOCK=true로 설정 시 모킹 활성화
 
 /**
  * 실제 서버와 통신하는 getJSON 함수
  */
 async function realGetJSON<T>(path: string): Promise<T> {
-	const res = await fetch(`${BASE_URL}${path}`, {
+	const res = await fetch(`${path}`, {
 		method: 'GET',
 		headers: { Accept: 'application/json' },
 	});
