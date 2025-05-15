@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL; // 예: "https://api.example.com"
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api'; // 예: "https://api.example.com"
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'; // .env에서 VITE_USE_MOCK=true로 설정 시 모킹 활성화
 
 /**
