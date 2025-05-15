@@ -33,7 +33,7 @@ public class LoginService {
     }
 
     private User getUser(String loginId) {
-        Optional<User> foundUser = userRepository.findUserByLoginId(loginId);
+        Optional<User> foundUser = userRepository.findByLoginId(loginId);
         return foundUser.orElseThrow(UserNotFoundException::new);
     }
 

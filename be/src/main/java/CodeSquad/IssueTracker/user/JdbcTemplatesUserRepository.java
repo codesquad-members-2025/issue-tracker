@@ -19,7 +19,7 @@ public class JdbcTemplatesUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserByLoginId(String loginId) {
+    public Optional<User> findByLoginId(String loginId) {
         String sql = "SELECT * FROM users WHERE login_id = ?";
         List<User> users = jdbcTemplate.query(sql, new Object[]{loginId}, new UserRowMapper());
         return users.stream().findFirst();

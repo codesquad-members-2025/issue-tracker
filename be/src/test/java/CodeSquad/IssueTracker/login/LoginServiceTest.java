@@ -50,7 +50,7 @@ class LoginServiceTest {
                 .userName("testUser")
                 .build();
 
-        Mockito.when(userRepository.findUserByLoginId(loginId)).thenReturn(Optional.of(mockUser));
+        Mockito.when(userRepository.findByLoginId(loginId)).thenReturn(Optional.of(mockUser));
         Mockito.when(jwtUtil.createAccessToken(Mockito.any(User.class), Mockito.anyString())).thenReturn(accessToken);
         Mockito.when(jwtUtil.createRefreshToken()).thenReturn(refreshToken);
 
@@ -80,7 +80,7 @@ class LoginServiceTest {
                 .userName("testUser")
                 .build();
 
-        Mockito.when(userRepository.findUserByLoginId(loginId)).thenReturn(Optional.of(mockUser));
+        Mockito.when(userRepository.findByLoginId(loginId)).thenReturn(Optional.of(mockUser));
 
         // when & then
         assertThrows(PasswordMismatchException.class, () -> loginService.login(loginRequest));
@@ -95,7 +95,7 @@ class LoginServiceTest {
 
         LoginRequestDto loginRequest = new LoginRequestDto(nonExistentLoginId, password);
 
-        Mockito.when(userRepository.findUserByLoginId(nonExistentLoginId)).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findByLoginId(nonExistentLoginId)).thenReturn(Optional.empty());
 
         // when & then
         assertThrows(UserNotFoundException.class, () -> loginService.login(loginRequest));
