@@ -1,15 +1,14 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { ThemeProvider } from "@emotion/react";
-import lightTheme from "@/styles/theme";
 import Logo from "@/components/Logo";
 import Profile from "@/components/Profile";
 import Button from "@/components/Button";
 import { FilterGroup, FilterDropdown } from "@/components/FilterGroup";
 import IssueItem from "@/components/IssueItem";
+import ThemeToggleBtn from "@/components/ThemeToggleBtn";
 import type { Issue } from "@/types/issue";
 
 const Page = styled.div`
@@ -84,54 +83,53 @@ export default function IssuesPage() {
   }, []);
 
   return (
-    <ThemeProvider theme={lightTheme}>
-      <Page>
-        <TopBar>
-          <Logo />
-          <Profile avatarUrl="https://via.placeholder.com/40" />
-        </TopBar>
+    <Page>
+      <TopBar>
+        <Logo />
+        <ThemeToggleBtn />
+        <Profile />
+      </TopBar>
 
-        <Toolbar>
-          <LeftControls>
+      <Toolbar>
+        <LeftControls>
+          <FilterDropdown
+            label="필터"
+            onClick={() => {
+              /* 팝업 열기 */
+            }}
+          />
+          <input type="text" placeholder="is:issue is:open" />
+        </LeftControls>
+        <RightControls>
+          <FilterGroup>
             <FilterDropdown
-              label="필터"
+              label="레이블(3)"
               onClick={() => {
-                /* 팝업 열기 */
+                /* 레이블 팝업 */
               }}
             />
-            <input type="text" placeholder="is:issue is:open" />
-          </LeftControls>
-          <RightControls>
-            <FilterGroup>
-              <FilterDropdown
-                label="레이블(3)"
-                onClick={() => {
-                  /* 레이블 팝업 */
-                }}
-              />
-              <FilterDropdown
-                label="마일스톤(2)"
-                onClick={() => {
-                  /* 마일스톤 팝업 */
-                }}
-              />
-            </FilterGroup>
-            <Button
+            <FilterDropdown
+              label="마일스톤(2)"
               onClick={() => {
-                /* 이슈 작성 페이지로 이동 */
+                /* 마일스톤 팝업 */
               }}
-            >
-              + 이슈 작성
-            </Button>
-          </RightControls>
-        </Toolbar>
+            />
+          </FilterGroup>
+          <Button
+            onClick={() => {
+              /* 이슈 작성 페이지로 이동 */
+            }}
+          >
+            + 이슈 작성
+          </Button>
+        </RightControls>
+      </Toolbar>
 
-        <IssueList>
-          {issues.map((issue) => (
-            <IssueItem key={issue.id} issue={issue} />
-          ))}
-        </IssueList>
-      </Page>
-    </ThemeProvider>
+      <IssueList>
+        {issues.map((issue) => (
+          <IssueItem key={issue.id} issue={issue} />
+        ))}
+      </IssueList>
+    </Page>
   );
 }
