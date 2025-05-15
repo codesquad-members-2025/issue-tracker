@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 import Logo from '@/assets/logoMedium.svg?react';
+import DarkModeToggle from './DarkModeToggle';
 
 export default function Header() {
   return (
     <Wrapper>
       <LeftSection>
         <StyledLogo />
+        <DarkModeToggle />
       </LeftSection>
       <Profile profileImageUrl="/images/sampleProfile.png" />
     </Wrapper>
