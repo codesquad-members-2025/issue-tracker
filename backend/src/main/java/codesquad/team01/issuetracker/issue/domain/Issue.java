@@ -34,15 +34,4 @@ public class Issue {
     private Long writerId;
 
     private Long milestoneId;
-
-    public static Issue createIssue(String title,
-                                    String content,
-                                    Long writerId
-                                    ) {
-        return Issue.builder()
-                .title(title)
-                .content(content)
-                .writerId(writerId)
-                .build();
-    }
 }
