@@ -26,8 +26,8 @@ public class JWTUtil {
         this.refreshSecretKey = refreshSecretKey;
     }
 
-    public static final long ACCESS_EXPIRATION_TIME = 3600000;
-    public static final long REFRESH_EXPIRATION_TIME = 86400000;
+    public static final long ACCESS_EXPIRATION_TIME = 86400000;
+    public static final long REFRESH_EXPIRATION_TIME = 2592000000L;
 
     /*
     JWT Access Token을 생성합니다.(페이로드에 유저 이름과 프로필 사진 링크 정보를 포함)
