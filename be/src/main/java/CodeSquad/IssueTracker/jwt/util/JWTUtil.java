@@ -1,7 +1,8 @@
-package CodeSquad.IssueTracker.token.util;
+package CodeSquad.IssueTracker.jwt.util;
 
+import CodeSquad.IssueTracker.jwt.exception.JwtValidationException;
 import CodeSquad.IssueTracker.user.User;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,11 +34,11 @@ public class JWTUtil {
      */
     public String createAccessToken(User loginUser, String imgUrl) {
         return Jwts.builder()
-                .subject(loginUser.getLoginId())
+                .setSubject(loginUser.getLoginId())
                 .claim(CLAIM_LOGIN_ID, loginUser.getLoginId())
                 .claim(CLAIM_IMG_URL, imgUrl)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
                 .signWith(Keys.hmacShaKeyFor(accessSecretKey.getBytes(UTF_8)))
                 .compact();
     }
@@ -47,9 +48,30 @@ public class JWTUtil {
      */
     public String createRefreshToken() {
         return Jwts.builder()
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
                 .signWith(Keys.hmacShaKeyFor(refreshSecretKey.getBytes(UTF_8)))
                 .compact();
+    }
+
+    /*
+    클라이언트가 보낸 Access Token을 검증하여 성공하면 클레임을 반환하고, 실패하면 예외를 발생시킵니다.
+     */
+    public Claims validateAccessToken(String accessToken) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(accessSecretKey.getBytes(UTF_8)))
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
+            throw new JwtValidationException("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            throw new JwtValidationException("만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            throw new JwtValidationException("지원하지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            throw new JwtValidationException("JWT 토큰이 잘못되었습니다.");
+        }
     }
 }
