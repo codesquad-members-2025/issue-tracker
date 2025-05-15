@@ -15,7 +15,7 @@ import MilestoneListPage from '@/pages/MilestoneListPage';
 import IssueDetailPage from '@/pages/issues/IssueDetailPage';
 import IssueListPage from '@/pages/issues/IssueListPage';
 
-import IssueCreateModal from '@/features/issues/create/ui/IssueCreateModal';
+import { IssueCreateModal } from '@/features/issueList/widget';
 
 import AuthGuard from '@/shared/auth/AuthGuard';
 
