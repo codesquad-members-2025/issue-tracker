@@ -18,7 +18,7 @@ public class MilestoneDao {
        return jdbcTemplate.query(sql, (rs, rowNum) ->
                 MilestoneDto.MilestoneInfo.builder()
                         .id(rs.getLong("milestone_id"))
-                        .name(rs.getString("name"))
+                        .title(rs.getString("name"))
                         .build()
         );
     }

@@ -10,6 +10,7 @@ import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class IssueService {
                                     .build())
                             .assignees(new ArrayList<>())
                             .labels(new ArrayList<>())
-                            .milestone(IssueResponseDto.MilestoneInfo.builder()
+                            .milestone(MilestoneDto.MilestoneInfo.builder()
                                     .id((Long) row.get("milestone_id"))
                                     .title((String) row.get("milestone_title"))
                                     .build())

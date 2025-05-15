@@ -3,7 +3,6 @@ package codesquad.team4.issuetracker.milestone;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto.MilestoneInfo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
