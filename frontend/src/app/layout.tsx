@@ -1,8 +1,13 @@
-import EmotionProvider from "./emotion-provider";
-import GlobalStyles from "@/styles/global-styles";
-import StyledApp from "./styled-app";
+"use client";
 
-export const metadata = { title: "Issue Tracker" };
+import EmotionProvider from "../styles/emotionProvider";
+import GlobalStyles from "@/styles/globalStyles";
+import ThemeProvider from "@/components/ThemeProvider";
+
+// export const metadata = {
+//   title: "Issue Tracker",
+//   description: "…",
+// };
 
 export default function RootLayout({
   children,
@@ -13,10 +18,10 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <EmotionProvider>
-          <StyledApp>
+          <ThemeProvider>
             <GlobalStyles />
             {children}
-          </StyledApp>
+          </ThemeProvider>
         </EmotionProvider>
       </body>
     </html>

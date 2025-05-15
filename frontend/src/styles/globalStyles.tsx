@@ -1,3 +1,5 @@
+"use client";
+
 import { Global, css } from "@emotion/react";
 
 const base = css`
