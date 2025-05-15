@@ -33,40 +33,13 @@ public class IssueService {
     private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
     private static final String UPDATE_ISSUESTATUS = "이슈 상태가 변경되었습니다.";
 
-    private final JdbcTemplate jdbcTemplate;
+    private final IssueDao issueDao;
     private final IssueRepository issueRepository;
     private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
 
     public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
-        int offset = Math.max(0, (page - 1) * size);
-
-        String sql = """
-            SELECT i.issue_id AS issue_id,
-                   i.title,
-                   u.user_id AS author_id,
-                   u.nickname AS author_nickname,
-                   u.profile_image AS author_profile,
-                   m.milestone_id AS milestone_id,
-                   m.name AS milestone_title,
-                   l.label_id AS label_id,
-                   l.name AS label_name,
-                   l.color AS label_color,
-                   a.user_id AS assignee_id,
-                   a.nickname AS assignee_nickname,
-                   a.profile_image AS assignee_profile
-            FROM issue i
-            LEFT JOIN user u ON i.author_id = u.user_id
-            LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
-            LEFT JOIN issue_label il ON i.issue_id = il.issue_id
-            LEFT JOIN label l ON il.label_id = l.label_id
-            LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
-            LEFT JOIN user a ON ia.assignee_id = a.user_id
-            WHERE i.is_open = ?
-            LIMIT ? OFFSET ?
-        """;
-
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, isOpen, size, offset);
+        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen, page, size);
 
         Map<Long, IssueResponseDto.IssueInfo.IssueInfoBuilder> issueMap = new LinkedHashMap<>();
         Map<Long, List<UserDto.UserInfo>> assigneeMap = new HashMap<>();
@@ -127,11 +100,7 @@ public class IssueService {
             issues.add(builder.build());
         }
 
-        int totalElements = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM issue WHERE is_open = ?",
-                Integer.class,
-                isOpen
-        );
+        int totalElements = issueDao.countIssuesByOpenStatus(isOpen);
 
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
@@ -200,24 +169,21 @@ public class IssueService {
             throw new IssueStatusUpdateException(ExceptionMessage.NO_ISSUE_IDS);
         }
 
-        // 요청받은 id 개수랑 DB에서 가져온 ID 개수 비교
         String placeholders = issueIds.stream()
                 .map(id -> "?")
                 .collect(Collectors.joining(", "));
-        String countSql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (" + placeholders + ")";
-        Integer count = jdbcTemplate.queryForObject(countSql, Integer.class, issueIds.toArray());
+
+        Integer count = issueDao.countExistingIssuesByIds(issueIds, placeholders);
 
         if (count == null || count != issueIds.size()) {
             throw new IssueStatusUpdateException(ExceptionMessage.ISSUE_IDS_NOT_FOUND); //todo 나중에 여기에 존재하지 않는 id 가 정확히 몇번인지 추가해주기
         }
 
 
-        String updateSql = "UPDATE issue SET is_open = ? WHERE issue_id IN (" + placeholders + ")";
         List<Object> params = new ArrayList<>();
         params.add(isOpen);
         params.addAll(issueIds);
-
-        jdbcTemplate.update(updateSql, params.toArray());
+        issueDao.updateIssueStatus(placeholders, params);
 
         return IssueResponseDto.BulkUpdateIssueStatusDto.builder()
                 .issuesId(issueIds)
