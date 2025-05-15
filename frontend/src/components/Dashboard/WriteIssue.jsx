@@ -5,24 +5,25 @@ import ControlHeader from "../ControlHeader/ControlHeader";
 import PopupList from "../common/PopupList";
 import { API_URL } from "../../constants/link";
 
-const handleClick = (title, content, file) => {
+const handleClick = (title, content, file, setWriteIssue) => {
   const issueData = {
     title: title,
     content: content,
-    author: 46,
+    authorId: 1,
   };
 
   // TODO 추후 받아온 file 처리 예정
   const fileData = file;
 
   const formData = new FormData();
-  formData.append("issue", JSON.stringify(issueData));
+  const issueBlob = new Blob([JSON.stringify(issueData)], {
+    type: "application/json",
+  });
+
+  formData.append("issue", issueBlob);
 
   if (fileData && fileData.length > 0) {
     fileData.forEach((file) => formData.append("file", file));
-  }
-  for (let [key, value] of formData.entries()) {
-    console.log(`${key}:`, value);
   }
 
   fetch(`${API_URL}/api/issues`, {
@@ -32,6 +33,8 @@ const handleClick = (title, content, file) => {
     .then((res) => res.json())
     .then((data) => console.log("서버 응답:", data))
     .catch((err) => console.error("에러:", err));
+
+  setWriteIssue(false);
 };
 
 // TODO 컴포넌트 분리
@@ -124,7 +127,13 @@ function WriteIssue({ setWriteIssue }) {
           </button>
           <button
             className={styles.submitButton}
-            onClick={() => handleClick(title, content, file)}
+            onClick={() => {
+              if (!title.trim() || !content.trim()) {
+                alert("제목과 코멘트를 모두 입력해주세요.");
+                return;
+              }
+              handleClick(title, content, file, setWriteIssue);
+            }}
           >
             완료
           </button>

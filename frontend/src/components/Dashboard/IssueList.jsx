@@ -21,7 +21,7 @@ function IssueList({ isOpen }) {
     fetch(`${API_URL}/api/issues?is_open=${isOpen}`)
       .then((response) => response.json())
       .then((data) => {
-        setIssues(data.issues);
+        setIssues(data.issues || []);
       })
       .catch((error) => {
         console.error("Error fetching issue data:", error);

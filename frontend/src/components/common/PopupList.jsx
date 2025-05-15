@@ -4,11 +4,11 @@ import checkOffIcon from "../../assets/icons/checkOffCircle.svg";
 function PopupList({ filterName, actionLocation }) {
   return (
     <div className={styles.dropdownPanel}>
-      {actionLocation === "filterBar" ? (
-        <div className={styles.dropdownPanelTitle}>{filterName} 필터</div>
-      ) : (
-        <div className={styles.dropdownPanelTitle}>{filterName} 정렬</div>
-      )}
+      <div className={styles.dropdownPanelTitle}>
+        {actionLocation === "filterBar"
+          ? `${filterName} 필터`
+          : `${filterName} 정렬`}
+      </div>
       <div className={styles.dropdownPanelOptions}>
         {actionLocation === "filterBar" ? (
           <button className={styles.option}>
