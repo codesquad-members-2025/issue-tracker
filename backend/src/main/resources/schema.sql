@@ -9,7 +9,7 @@ CREATE TABLE user (
                       id BIGINT PRIMARY KEY AUTO_INCREMENT,
                       username VARCHAR(255) NOT NULL,
                       email VARCHAR(255) NOT NULL,
-                      profile_url VARCHAR(255),
+                      image_url VARCHAR(255),
                       password VARCHAR(255) NOT NULL
 );
 CREATE TABLE issue (

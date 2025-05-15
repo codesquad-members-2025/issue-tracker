@@ -3,7 +3,7 @@ VALUES
     ('2025-06-30 23:59:59', 'v1.0 출시', '첫 버전 릴리즈 목표', true),
     ('2025-07-15 18:00:00', 'v1.1 업데이트', '버그 수정 및 기능 개선', false);
 
-INSERT INTO user (username, email, profile_url, password)
+INSERT INTO user (username, email, image_url, password)
 VALUES
     ('alice', 'alice@example.com', 'https://example.com/alice.png', 'password123'),
     ('bob', 'bob@example.com', 'https://example.com/bob.png', 'securepass');
