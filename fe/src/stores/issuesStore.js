@@ -4,7 +4,7 @@ import { immer } from 'zustand/middleware/immer';
 const useIssuesStore = create(
   immer((set) => ({
     issues: [],
-
+    issueSummary: {},
     setIssues: (issues) =>
       set((state) => {
         state.issues = issues;
@@ -32,6 +32,24 @@ const useIssuesStore = create(
     removeIssue: (id) =>
       set((state) => {
         state.issues = state.issues.filter((i) => i.id !== id);
+      }),
+
+    parseIssue: () =>
+      set((state) => {
+        const summary = state.issues.reduce(
+          (acc, { id, isOpen }) => {
+            if (isOpen) {
+              acc.openedIssueId.push(id);
+              acc.openIssueNumber += 1;
+            } else {
+              acc.closedIssueId.push(id);
+              acc.closeIssueNumber += 1;
+            }
+            return acc;
+          },
+          { openedIssueId: [], closedIssueId: [], openIssueNumber: 0, closeIssueNumber: 0 },
+        );
+        state.issueSummary = summary;
       }),
   })),
 );

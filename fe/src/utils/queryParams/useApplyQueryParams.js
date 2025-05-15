@@ -6,17 +6,17 @@ import { useNavigate } from 'react-router-dom';
 export function useApplyQueryParams() {
   const navigate = useNavigate();
 
-  return (filterObject) => {
-    const params = new URLSearchParams(); //Url전용 객체로 변환
+  const applyQueryParams = (filterObject) => {
+    const params = new URLSearchParams();
 
     Object.entries(filterObject).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.forEach((v) => params.append(key, v));
-      } else {
+      if (value !== null) {
         params.set(key, value);
       }
     });
 
     navigate({ search: `?${params.toString()}` }, { replace: true });
   };
+
+  return applyQueryParams;
 }

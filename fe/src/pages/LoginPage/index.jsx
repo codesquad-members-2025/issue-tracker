@@ -10,7 +10,7 @@ import ToggleTheme from '@/base-ui/utils/ToggleTheme';
 import useDataFetch from '@/hooks/useDataFetch';
 import { LOGIN_API } from '@/api/auth';
 import tokenDecoder from '@/utils/token/decoder';
-import { useUserStore } from '@/stores/userStore';
+import { useAuthStore } from '@/stores/authStore';
 
 const Container = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ export default function LoginPage() {
   const { response, isLoading, fetchData } = useDataFetch({
     fetchType: 'Login',
   });
-  const setUser = useUserStore((state) => state.setUser);
+  const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
   const mainButtonLabel = '아이디로 로그인';
   const buttonLabelText = '회원가입';
