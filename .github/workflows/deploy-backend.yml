@@ -2,6 +2,8 @@ name: Deploy Spring Boot to EC2
 on:
   push:
     branches: [ dev-be ]  # 원하는 브랜치로 수정
+    paths:
+      - 'backend/**'
 jobs:
   deploy:
     runs-on: ubuntu-latest
