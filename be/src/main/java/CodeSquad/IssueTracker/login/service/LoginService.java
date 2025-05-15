@@ -4,9 +4,7 @@ import CodeSquad.IssueTracker.login.dto.LoginRequestDto;
 import CodeSquad.IssueTracker.login.dto.LoginResponseDto;
 import CodeSquad.IssueTracker.login.exception.PasswordMismatchException;
 import CodeSquad.IssueTracker.login.exception.UserNotFoundException;
-import CodeSquad.IssueTracker.token.RefreshToken;
-import CodeSquad.IssueTracker.token.repository.RefreshTokenRepository;
-import CodeSquad.IssueTracker.token.util.JWTUtil;
+import CodeSquad.IssueTracker.jwt.util.JWTUtil;
 import CodeSquad.IssueTracker.user.User;
 import CodeSquad.IssueTracker.user.repository.JdbcTemplatesUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,6 @@ import java.util.Optional;
 public class LoginService {
 
     private final JdbcTemplatesUserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JWTUtil jwtUtil;
 
     /*
@@ -49,13 +46,6 @@ public class LoginService {
     private LoginResponseDto generateToken(User targetUser, String imgUrl) {
         String accessToken = jwtUtil.createAccessToken(targetUser, imgUrl);
         String refreshToken = jwtUtil.createRefreshToken();
-
-        refreshTokenRepository.save(RefreshToken.builder()
-                .loginId(targetUser.getLoginId())
-                .refreshToken(refreshToken)
-                .expiration(System.currentTimeMillis() + JWTUtil.REFRESH_EXPIRATION_TIME)
-                .build());
-
         return new LoginResponseDto(accessToken, refreshToken);
     }
 }
