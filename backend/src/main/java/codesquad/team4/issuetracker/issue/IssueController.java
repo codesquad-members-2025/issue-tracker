@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api/issues")
 public class IssueController {
+    private static final String EMPTY = "";
     private static final String ISSUE_DIRECTORY = "issues/";
 
     private final IssueService issueService;
@@ -42,11 +43,11 @@ public class IssueController {
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<IssueResponseDto.CreateIssueDto> createIssue(
             @RequestPart("issue") IssueRequestDto.CreateIssueDto request,
-            @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+            @RequestPart(value = "file", required = false) MultipartFile file) {
         String uploadUrl;
 
         try {
-            uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY);
+            uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
         } catch (FileUploadException e) {
             return ResponseEntity.badRequest().body(
                     IssueResponseDto.CreateIssueDto.builder()

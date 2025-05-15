@@ -6,6 +6,7 @@ import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ class IssueControllerTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "image.png", "image/png", "image-content".getBytes());
 
-        given(s3FileService.uploadFile(any(), eq("issue/"))).willReturn("https://fake-s3-url/image.png");
+        given(s3FileService.uploadFile(any(), eq("issue/"))).willReturn(Optional.of("https://fake-s3-url/image.png"));
 
         IssueResponseDto.CreateIssueDto responseDto = IssueResponseDto.CreateIssueDto.builder()
                 .id(1L)
