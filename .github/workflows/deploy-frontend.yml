@@ -22,7 +22,7 @@ jobs:
           npm run build
       - name: Compress Build Files
         run: |
-          zip -r frontend-build.zip frontend/dist
+          zip -r frontend-build.zip dist
       - name: Set up SSH Key
         run: |
           mkdir -p ~/.ssh
@@ -36,7 +36,7 @@ jobs:
             sudo rm -rf /var/www/issue-tracker/frontend/*
             # 압축 해제 및 복사
             unzip -o /tmp/frontend-build.zip -d /tmp/frontend-build
-            sudo cp -r /tmp/frontend-build/* /var/www/issue-tracker/frontend/
+            sudo cp -r /tmp/frontend-build/* /var/www/issue-tracker/
             # 정리
             rm -rf /tmp/frontend-build /tmp/frontend-build.zip
           EOF
