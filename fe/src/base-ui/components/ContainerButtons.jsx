@@ -9,18 +9,18 @@ const ContainerButton = styled(DefaultButton)`
 
 const LargeContainerButton = styled(ContainerButton)`
   ${typography.available.medium20}
-  width:56px;
-  height: 240px;
+  width:240px;
+  height: 56px;
 `;
 const MediumContainerButton = styled(ContainerButton)`
   ${typography.available.medium16}
-  width:48px;
-  height: 184px;
+  width:184px;
+  height: 48px;
 `;
 const SmallContainerButton = styled(ContainerButton)`
   ${typography.available.medium12}
-  width:40px;
-  height: 128px;
+  width:128px;
+  height: 40px;
 `;
 
 export { LargeContainerButton, MediumContainerButton, SmallContainerButton };

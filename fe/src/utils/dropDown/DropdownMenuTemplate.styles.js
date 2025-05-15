@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { typography } from '@/styles/foundation';
 
 export const Container = styled.div`
   position: relative;
@@ -6,11 +7,20 @@ export const Container = styled.div`
 `;
 
 export const TriggerButton = styled.button`
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  background: white;
+  ${typography.available.medium16}
+  width:80px;
+  height: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0px;
+  background: transparent;
   cursor: pointer;
-  color: black;
+  color: ${({ theme }) => theme.text.default};
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 export const Menu = styled.div`

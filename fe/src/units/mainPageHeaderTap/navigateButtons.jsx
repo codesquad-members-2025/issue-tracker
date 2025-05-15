@@ -1,6 +1,20 @@
 import styled from 'styled-components';
 import { MilestoneButton, LabelButton } from '@/base-ui/issueListPage/mainPageHeaderTap/taps';
 import { radius } from '@/styles/foundation';
+import { SmallContainerButton } from '@/base-ui/components/ContainerButtons';
+import { useNavigate } from 'react-router-dom';
+
+const Container = styled.div`
+  display: flex;
+  gap: 16px;
+`;
+
+const NewIssueButton = styled(SmallContainerButton)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+`;
 
 const ButtonWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.border.default};
@@ -10,10 +24,39 @@ const ButtonWrapper = styled.div`
 `;
 
 export function NavigateTabs() {
+  const navigate = useNavigate();
+  const buttonLabel = '이슈작성';
   return (
-    <ButtonWrapper>
-      <LabelButton number={2} />
-      <MilestoneButton number={3} />
-    </ButtonWrapper>
+    <Container>
+      <ButtonWrapper>
+        <LabelButton number={2} />
+        <MilestoneButton number={3} />
+      </ButtonWrapper>
+      <NewIssueButton onClick={() => navigate('new')}>
+        <svg
+          width="17"
+          height="16"
+          viewBox="0 0 17 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M8.5 3.33337V12.6667"
+            stroke="#FEFEFE"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M3.8335 8H13.1668"
+            stroke="#FEFEFE"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span>{buttonLabel}</span>
+      </NewIssueButton>
+    </Container>
   );
 }

@@ -4,6 +4,7 @@ import { NavigateTabs } from '@/units/mainPageHeaderTap/navigateButtons';
 import useIssuesStore from '@/stores/issuesStore';
 import useDataFetch from '@/hooks/useDataFetch';
 import { ISSUES_URL } from '@/api/issues';
+import FilterBar from '@/units/mainPageHeaderTap/FilterBar';
 
 const Container = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ export default function IssueListPage() {
   return (
     <Container>
       <NavigateTabs />
+      <FilterBar />
     </Container>
   );
 }

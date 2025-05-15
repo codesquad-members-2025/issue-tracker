@@ -5,6 +5,7 @@ import { typography } from '@/styles/foundation';
 
 const Container = styled.div`
   display: flex;
+  width: 100%;
   gap: 4px;
   height: 40px;
   padding: 8px 24px;

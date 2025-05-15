@@ -11,8 +11,10 @@ import useFilterStore from '@/stores/filterStore';
 
 const Container = styled.div`
   border: 1px solid ${({ theme }) => theme.border.default};
+  padding: 8px 24px;
   border-radius: 12px;
   display: flex;
+  align-items: center;
   width: 560px;
   background-color: ${({ theme, $isActive }) =>
     $isActive ? theme.surface.strong : theme.surface.bold};
