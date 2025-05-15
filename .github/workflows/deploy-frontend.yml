@@ -22,8 +22,7 @@ jobs:
           npm run build
       - name: Compress Build Files
         run: |
-          cd frontend/dist
-          zip -r ../frontend-build.zip dist
+          zip -r frontend-build.zip dist
       - name: Set up SSH Key
         run: |
           mkdir -p ~/.ssh
