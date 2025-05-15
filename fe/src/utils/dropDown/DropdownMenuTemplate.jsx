@@ -18,9 +18,9 @@
  *
  * ✅ 사용 예시
  * <DropdownMenuTemplate
- *   triggerLabel="담당자 필터"
- *   label="담당자 필터"
- *   items={[
+ *   triggerLabel="셀렉트 버튼 텍스트 라벨"
+ *   label="드랍다운 상위 안내 라벨"
+ *   items=[
  *     {
  *       label: '홍길동',
  *       leftSlot: <img src="/avatar.png" width={20} />,
@@ -32,7 +32,7 @@
  *       isSelected: false,
  *       onClick: () => handleClick(null)
  *     }
- *   ]}
+ *   ]
  * />
  */
 

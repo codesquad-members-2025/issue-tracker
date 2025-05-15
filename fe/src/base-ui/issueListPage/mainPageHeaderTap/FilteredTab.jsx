@@ -7,6 +7,7 @@ const Container = styled.div`
   height: 40px;
   padding: 8px 24px;
   align-items: center;
+  background-color: transparent;
 `;
 
 const FilterText = styled.span`
