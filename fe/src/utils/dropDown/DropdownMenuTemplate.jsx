@@ -18,9 +18,9 @@
  *
  * ✅ 사용 예시
  * <DropdownMenuTemplate
- *   triggerLabel="담당자 필터"
- *   label="담당자 필터"
- *   items={[
+ *   triggerLabel="셀렉트 버튼 텍스트 라벨"
+ *   label="드랍다운 상위 안내 라벨"
+ *   items=[
  *     {
  *       label: '홍길동',
  *       leftSlot: <img src="/avatar.png" width={20} />,
@@ -32,7 +32,7 @@
  *       isSelected: false,
  *       onClick: () => handleClick(null)
  *     }
- *   ]}
+ *   ]
  * />
  */
 
@@ -51,7 +51,24 @@ export function DropdownMenuTemplate({
 
   return (
     <S.Container>
-      <S.TriggerButton onClick={() => setOpen((prev) => !prev)}>{triggerLabel}</S.TriggerButton>
+      <S.TriggerButton onClick={() => setOpen((prev) => !prev)}>
+        {triggerLabel}
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4 6L8 10L12 6"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </S.TriggerButton>
 
       {open && (
         <S.Menu $width={menuWidth}>

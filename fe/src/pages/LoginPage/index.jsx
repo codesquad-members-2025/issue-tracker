@@ -8,9 +8,9 @@ import InputForm from '@/utils/InputForm';
 import SubButton from '@/base-ui/loginPage/SubButton';
 import ToggleTheme from '@/base-ui/utils/ToggleTheme';
 import useDataFetch from '@/hooks/useDataFetch';
-import { LOGIN_API } from '@/api/login';
+import { LOGIN_API } from '@/api/auth';
 import tokenDecoder from '@/utils/token/decoder';
-import { useUserStore } from '@/stores/userStore';
+import { useAuthStore } from '@/stores/authStore';
 
 const Container = styled.div`
   display: flex;
@@ -24,21 +24,19 @@ const Container = styled.div`
 export default function LoginPage() {
   const [Id, setId] = useState('');
   const [pw, setPw] = useState('');
-  const { response, isLoading, refetch } = useDataFetch({
-    apiUrl: LOGIN_API,
-    immediate: false,
+  const { response, isLoading, fetchData } = useDataFetch({
     fetchType: 'Login',
   });
-  const setUser = useUserStore((state) => state.setUser);
+  const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
   const mainButtonLabel = '아이디로 로그인';
   const buttonLabelText = '회원가입';
   function onSubmit(event) {
     event.preventDefault();
-    refetch({
+    fetchData(LOGIN_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: Id, password: pw }),
+      body: JSON.stringify({ loginId: Id, password: pw }),
     });
   }
 
@@ -47,8 +45,8 @@ export default function LoginPage() {
   }
 
   useEffect(() => {
-    if (response && response.token) {
-      const token = response.token;
+    if (response && response.accessToken) {
+      const token = response.accessToken;
       const { userId, imgUrl } = tokenDecoder(token);
       setUser(userId, imgUrl, token);
       localStorage.setItem('token', token);
@@ -67,6 +65,7 @@ export default function LoginPage() {
         setPw={setPw}
         mainButtonLabel={mainButtonLabel}
         onSubmit={onSubmit}
+        isDisabled={isLoading}
       />
       <SubButton buttonLabelText={buttonLabelText} onClick={moveToSignUp} />
     </Container>

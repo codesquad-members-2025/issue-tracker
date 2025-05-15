@@ -6,42 +6,37 @@ API를 호출해서 데이터를 가져오는 커스텀 훅을 만든다.
 1. 입력 : api, fetch 옵션 객체
 2. 반환 : 서버 응답값(response), isLoading, error 데이터 통신 상태를 반환한다.
 */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useErrorStore } from '@/stores/errorStore';
 
-export default function useDataFetch({
-  apiUrl,
-  optionObj = null,
-  immediate = true,
-  fetchType = 'unknown',
-}) {
+export default function useDataFetch({ fetchType }) {
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState(null); -> 에러 전용 스토어로 대체
   const setError = useErrorStore((state) => state.setError);
   const [response, setResponse] = useState(null);
 
   const fetchData = useCallback(
-    async (newOptionObj = null) => {
+    async (apiUrl, optionObj = null) => {
       setIsLoading(true);
       try {
-        const option = newOptionObj ? newOptionObj : optionObj;
-        const res = await fetch(apiUrl, option);
-        if (!res.ok) throw new Error(`오류: ${res.status}`);
-        const data = await res.json();
-        if (data.success === false) throw new Error(data.message || '요청 실패');
+        const res = await fetch(apiUrl, optionObj);
+        const data = await res.json(); //JSON 파싱 실패시 catch로 감 -> 서버로부터 아예 응답이 안 온 경우에 해당.
+        // 서버에서 응답이 왔을 경우?(200번대~500번대) -> 제이슨 파싱 성공  -> 아래 로직 실행
+        if (!res.ok) throw new Error(`오류: ${data.message}`);
+        if (!data.success) throw new Error(data.message || '요청 실패'); // 서버에서 응답으로 보내주는 에러 메세지 렌더링
         setResponse(data);
       } catch (err) {
-        setError(fetchType, err);
+        if (err.name === 'TypeError') {
+          setError(fetchType, '서버와 연결할 수 없습니다.'); // 네트워크 문제(서버 꺼짐, DNS 오류, CORS 실패 등)
+        } else {
+          setError(fetchType, err.message);
+        }
       } finally {
         setIsLoading(false);
       }
     },
-    [apiUrl, optionObj],
+    [fetchType],
   );
 
-  useEffect(() => {
-    if (immediate) fetchData();
-  }, [fetchData, immediate]);
-
-  return { response, isLoading, refetch: fetchData };
+  return { response, isLoading, fetchData };
 }

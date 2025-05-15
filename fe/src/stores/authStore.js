@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-export const useUserStore = create(
+export const useAuthStore = create(
   immer((set) => ({
     userId: null,
     imgUrl: null,

@@ -1,0 +1,48 @@
+{
+  "issues": [
+    {
+      "id": 1,
+      "title": "로그인 오류",
+      "isOpen": true,
+      "author": {
+        "id": 101,
+        "nickname": "devchan"
+      },
+      "assignees": [
+        { "id": 102, "nickname": "alice" },
+        { "id": 103, "nickname": "bob" }
+      ],
+      "labels": [
+        { "id": 1, "name": "bug", "color": "#ff0000" },
+        { "id": 2, "name": "urgent", "color": "#ffcc00" }
+      ],
+      "milestone": {
+        "id": 5,
+        "name": "v1.0 릴리즈"
+      },
+      "createdAt": "2025-05-12T09:00:00Z"
+    }
+    // ...다른 이슈들
+  ],
+  "users": [
+    { "id": 101, "nickname": "devchan", "email": "devchan@example.com" },
+    { "id": 102, "nickname": "alice", "email": "alice@example.com" }
+    // ...다른 유저들
+  ],
+  "labels": [
+    { "id": 1, "name": "bug", "color": "#ff0000", "description": "버그 관련" },
+    { "id": 2, "name": "feature", "color": "#00ff00", "description": "기능 요청" }
+    // ...다른 라벨들
+  ],
+  "milestones": [
+    {
+      "id": 5,
+      "name": "v1.0 릴리즈",
+      "description": "최초 버전 릴리즈",
+      "endDate": "2025-06-01T00:00:00Z",
+      "isOpen": true,
+      "percentage": 12
+    }
+    // ...다른 마일스톤들
+  ]
+}

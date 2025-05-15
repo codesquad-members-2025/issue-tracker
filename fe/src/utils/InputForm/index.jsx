@@ -8,6 +8,7 @@ err = 에러발생시 prop으로 에러문구 전달
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
+import { useErrorStore } from '@/stores/errorStore';
 
 const StyledForm = styled.form`
   display: flex;
@@ -41,26 +42,31 @@ const MainButton = styled.button`
   &:hover {
     background-color: #2563eb;
   }
+  &:disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+  }
 `;
 
-const ErrorMessage = styled.p`
-  color: ${({ theme }) => theme.danger.text};
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-`;
-
-export default function InputForm({ setId, setPw, mainButtonLabel, onSubmit, error = null }) {
+export default function InputForm({
+  setId,
+  setPw,
+  mainButtonLabel,
+  onSubmit,
+  isDisabled,
+  error = null,
+}) {
+  const errorType = useErrorStore((state) => state.type);
   return (
     <>
       <StyledForm onSubmit={onSubmit}>
         <div>
-          {error && <ErrorMessage id="Id-error">{error}</ErrorMessage>}
           <StyledInput
             id="Id"
             type="text"
             placeholder="아이디"
             onChange={(e) => setId(e.target.value)}
-            aria-describedby="Id-description Id-error"
+            aria-describedby="Id-description"
             aria-invalid={!!error}
           />
         </div>
@@ -70,11 +76,12 @@ export default function InputForm({ setId, setPw, mainButtonLabel, onSubmit, err
           type="password"
           placeholder="비밀번호"
           onChange={(e) => setPw(e.target.value)}
-          aria-describedby="pw-description pw-error"
-          aria-invalid={!!error}
+          aria-describedby="pw-description"
         />
 
-        <MainButton type="submit">{mainButtonLabel}</MainButton>
+        <MainButton type="submit" disabled={isDisabled || errorType}>
+          {mainButtonLabel}
+        </MainButton>
       </StyledForm>
     </>
   );
