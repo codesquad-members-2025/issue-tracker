@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.label;
 
+import CodeSquad.IssueTracker.label.dto.LabelUpdateDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
