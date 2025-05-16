@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import OpenIcon from '@/assets/icons/archive.svg?react';
-import ClosedIcon from '@/assets/icons/alertCircle.svg?react';
+import ClosedIcon from '@/assets/icons/archive.svg?react';
+import OpenIcon from '@/assets/icons/alertCircle.svg?react';
 
 interface TabItemProps {
   icon: React.ReactNode;
