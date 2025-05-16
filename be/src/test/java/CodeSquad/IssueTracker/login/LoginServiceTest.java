@@ -47,7 +47,7 @@ class LoginServiceTest {
                 .loginId(loginId)
                 .password(password)
                 .email("testUser@example.com")
-                .userName("testUser")
+                .nickName("testUser")
                 .build();
 
         Mockito.when(userRepository.findByLoginId(loginId)).thenReturn(Optional.of(mockUser));
@@ -77,7 +77,7 @@ class LoginServiceTest {
                 .loginId(loginId)
                 .password(correctPassword)
                 .email("testUser@example.com")
-                .userName("testUser")
+                .nickName("testUser")
                 .build();
 
         Mockito.when(userRepository.findByLoginId(loginId)).thenReturn(Optional.of(mockUser));
