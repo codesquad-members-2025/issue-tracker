@@ -63,3 +63,49 @@ src/
 ---
 
 ## 🧑‍💻 프론트엔드 
+
+### 🛠️ 기술 스택
+- React 19.1.0
+- Vite 6.3.5
+- TypeScript 5.8.3
+- Tailwind CSS 4.1.6 (shadcn/ui)
+- Biome 1.9.4 (lint & format)
+- react-router-dom 7.6.0
+- Zustand 5.0.4
+- Immer 10.1.1
+
+### 📁 프로젝트 구조
+
+```aiignore
+src/
+    └── app/
+        ├── layout/                  # AppLayout, NoHeaderLayout 등 레이아웃 컴포넌트
+        ├── providers/               # Router.tsx 등
+        ├── main.tsx                 # ReactDOM.render 진입점
+        └── App.tsx                  # 최상위 진입점 (Router 설정 등)
+    └── pages/
+        ├── IssueListPage/           # /issues
+        ├── IssueDetailPage/         # /issues/:id
+        ├── LoginPage/               # /login
+        ├── LabelListPage/           # /labels
+        └── MilestoneListPage/       # /milestones
+    └── entities/
+        ├── issue/                   # model, api, hooks, fixtures
+        ├── user/                    # model, api, hooks, fixtures
+        ├── label/                   # model, api, hooks, fixtures
+        └── milestone/               # model, api, hooks, fixtures
+    └── features/
+        ├── issueList/               # issue filters, sort, search 등 비즈니스 로직 컴포넌트
+    └── shared/
+        ├── api/                     # client.ts, types.ts, mockData.ts
+        ├── auth/                    # AuthGuard.tsx (Router에서 감쌈)
+        ├── theme/                   # Globals.css ThemeToggleButton.tsx 등 테마 정의 및 테마 변경 컴포넌트
+        ├── ui/                      # Button, CustomDropdownPanel, Input 등 재사용 컴포넌트
+        └── utils/                   # shadcn-utils, date-format, classname merge 등
+    └── widgets/
+        └── Header/                  # Header 위젯
+
+```
+
+
+---
