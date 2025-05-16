@@ -1,6 +1,7 @@
 package codesquad.team01.issuetracker.issue.api;
 
 import codesquad.team01.issuetracker.common.dto.ApiResponse;
+import codesquad.team01.issuetracker.issue.dto.IssueListResponse;
 import codesquad.team01.issuetracker.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
