@@ -17,6 +17,8 @@ const Kanban = styled.div`
   border: 1px solid ${({ theme }) => theme.border.default};
   display: flex;
   flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
 `;
 
 const KanbanHeader = styled.div`
