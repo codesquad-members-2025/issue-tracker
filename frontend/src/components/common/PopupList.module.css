@@ -1,0 +1,55 @@
+.dropdownPanel {
+  width: 240px;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  border: solid 1px var(--neutral-border-default);
+  border-radius: 16px;
+}
+
+.dropdownPanelTitle {
+  height: 32px;
+  background-color: var(--neutral-surface-default);
+  display: flex;
+  align-items: center;
+  font: var(--display-medium12);
+  color: var(--neutral-text-weak);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding-left: 16px;
+}
+
+.dropdownPanelOptions {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--neutral-surface-strong);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+.option {
+  height: 44px;
+  font: var(--available-medium16);
+  border-top: 1px solid var(--neutral-border-default);
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userInfo {
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  align-items: center;
+}
+.userImage {
+  width: 20px;
+  height: 20px;
+  background-image: url("../../assets/images/userImage.png");
+  background-size: cover;
+}
+.checkOffIcon {
+  width: 16px;
+  height: 16px;
+}

@@ -1,0 +1,15 @@
+.issueTableContainer {
+  min-width: 1280px;
+  border: 1px solid var(--neutral-border-default);
+  border-bottom: none;
+  margin-top: 24px;
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  height: 64px;
+  font: var(--available-medium16);
+  color: var(--neutral-text-default);
+  border-bottom: 1px solid var(--neutral-border-default);
+}

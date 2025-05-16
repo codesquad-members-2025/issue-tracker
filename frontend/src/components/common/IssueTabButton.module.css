@@ -1,0 +1,36 @@
+.tabButton {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.selectedTab {
+  font: var(--selected-bold16);
+  color: var(--neutral-text-strong);
+}
+
+.selectedTab .openIssueIcon {
+  background-color: var(--neutral-text-strong);
+}
+
+.selectedTab .closedIssueIcon {
+  background-color: var(--neutral-text-strong);
+}
+
+.openIssueIcon {
+  width: 16px;
+  height: 16px;
+  mask-image: url("../../assets/icons/alertCircle.svg");
+  mask-size: cover;
+  mask-repeat: no-repeat;
+  background-color: var(--neutral-text-default);
+}
+
+.closedIssueIcon {
+  width: 16px;
+  height: 16px;
+  mask-image: url("../../assets/icons/archive.svg");
+  mask-size: cover;
+  mask-repeat: no-repeat;
+  background-color: var(--neutral-text-default);
+}
