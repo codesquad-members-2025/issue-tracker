@@ -17,4 +17,5 @@ public class Milestone {
     private Boolean isOpen;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long processingRate;
 }

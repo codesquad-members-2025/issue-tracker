@@ -1,6 +1,8 @@
 package CodeSquad.IssueTracker.milestone;
 
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
+
 import java.util.List;
 import java.util.Optional;
 

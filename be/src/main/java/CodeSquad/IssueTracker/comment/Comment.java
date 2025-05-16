@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     private Long commentId;
+    private Long issueId;       // ✅ 이슈 ID: 이 댓글이 속한 이슈
     private String content;
-    private String imageUrl;
     private Long authorId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
+

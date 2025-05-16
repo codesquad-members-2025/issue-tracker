@@ -13,11 +13,9 @@ public class Issue {
     private Long issueId;
     private String title;
     private String content;
-    private String imageUrl;
     private Long authorId;
     private Long milestoneId;
     private Boolean isOpen;
-    private Long commentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -1,4 +1,4 @@
-package CodeSquad.IssueTracker.milestone;
+package CodeSquad.IssueTracker.milestone.dto;
 
 import lombok.Data;
 

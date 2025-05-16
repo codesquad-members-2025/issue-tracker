@@ -28,6 +28,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'mysql:mysql-connector-java:8.0.33'
+	implementation 'com.h2database:h2'
+	implementation("software.amazon.awssdk:s3:2.20.100")
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 

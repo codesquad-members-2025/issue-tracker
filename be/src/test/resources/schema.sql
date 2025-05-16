@@ -90,3 +90,14 @@ CREATE TABLE issue_label (
                              FOREIGN KEY (issue_id) REFERENCES issues(issue_id),
                              FOREIGN KEY (label_id) REFERENCES labels(label_id)
 );
+
+ALTER TABLE issues
+    DROP COLUMN comment_id;
+
+ALTER TABLE comments
+    ADD COLUMN issue_id BIGINT;
+
+ALTER TABLE comments
+    ADD CONSTRAINT fk_comments_issue
+        FOREIGN KEY (issue_id) REFERENCES issues(issue_id)
+            ON DELETE CASCADE;

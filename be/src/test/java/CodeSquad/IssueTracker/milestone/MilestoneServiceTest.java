@@ -2,6 +2,7 @@ package CodeSquad.IssueTracker.milestone;
 
 
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
