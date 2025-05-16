@@ -15,6 +15,7 @@ public class AuthorizationUrlBuilder {
 
     private final GithubOAuthProperties properties;
 
+    // 인증을 위한 uri 조립 후 반환
     public URI buildAuthorizeUri(HttpSession session) {
         // 랜덤값으로 state 생성 후 세션에 넣음
         String state = UUID.randomUUID().toString();

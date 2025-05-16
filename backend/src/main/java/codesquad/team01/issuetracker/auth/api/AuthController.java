@@ -20,12 +20,14 @@ public class AuthController {
     private final AuthService authService;
     private final AuthorizationUrlBuilder authorizationUrlBuilder;
 
+    // Authorization endpoint
     @GetMapping("/api/v1/oauth/github/login")
     public void redirectToGithub(HttpServletResponse response, HttpSession session) throws IOException {
         URI githubUri = authorizationUrlBuilder.buildAuthorizeUri(session);
         response.sendRedirect(githubUri.toString());
     }
 
+    // Redirect(Callback) endpoint
     @GetMapping("/api/v1/oauth/callback")
     public LoginResponse githubCallback(
             @RequestParam("code") String code,
