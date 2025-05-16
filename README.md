@@ -79,3 +79,4 @@ main
 | :--------: | :---------------------------------------------------------------------------------------------------------------: |
 |  Backlog   | [Notion Backlog](https://www.notion.so/1f100b3b8482806d89f8f4710cd95521?v=1f100b3b84828175a92d000ce39e2a75&pvs=4) |
 | API 명세서 |      [Notion API 명세서](https://unmarred-screw-441.notion.site/API-1ed00b3b848280539480e7d84518f34c?pvs=4)       |
+

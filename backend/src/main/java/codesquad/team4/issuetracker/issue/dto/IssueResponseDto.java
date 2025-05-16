@@ -1,0 +1,60 @@
+package codesquad.team4.issuetracker.issue.dto;
+
+import java.util.List;
+
+import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.user.dto.UserDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+public class IssueResponseDto {
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class IssueListDto {
+        private List<IssueInfo> issues;
+        private Integer page;
+        private Integer size;
+        private Integer totalPages;
+        private Integer totalElements;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class IssueInfo {
+        private Long id;
+        private String title;
+        private UserDto.UserInfo author;
+        private List<LabelDto.LabelInfo> labels;
+        private List<UserDto.UserInfo> assignees;
+        private MilestoneInfo milestone;
+        private String createdAt;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class MilestoneInfo {
+        private Long id;
+        private String title;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class CreateIssueDto {
+        private Long id;
+        private String message;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class BulkUpdateIssueStatusDto {
+        private List<Long> issuesId;
+        private String message;
+    }
+}
