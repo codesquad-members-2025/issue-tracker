@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: issue-tracker
+
+  profiles:
+    active: dev  # 운영 배포 시에는 환경변수로 prod 지정
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui.html
+  api-docs:
+    path: /api/v3/api-docs
+

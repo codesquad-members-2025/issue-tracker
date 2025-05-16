@@ -1,0 +1,104 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@layer base {
+	html,
+	body {
+		background-color: var(--neutral-surface-default);
+		color: var(--neutral-text-default);
+		transition: var(--theme-transition);
+	}
+	:root {
+		--theme-transition: none;
+
+		/* Grayscale */
+		--color-grayscale-50: #fefefe;
+		--color-grayscale-100: #f7f7fc;
+		--color-grayscale-200: #eff0f6;
+		--color-grayscale-300: #d9dbe9;
+		--color-grayscale-400: #bec1d5;
+		--color-grayscale-500: #a0a3bd;
+		--color-grayscale-600: #6e7191;
+		--color-grayscale-700: #4e4b66;
+		--color-grayscale-800: #2a2a44;
+		--color-grayscale-900: #14142b;
+
+		/* Accent */
+		--color-accent-blue: #007aff;
+		--color-accent-navy: #0025e6;
+		--color-accent-red: #ff3b30;
+
+		/* Radius */
+		--radius-half: 50%;
+		--radius-medium: 12px;
+		--radius-large: 16px;
+
+		/* Border widths & styles */
+		--border-width-default: 1px;
+		--border-style-default: solid;
+		--border-width-icon: 1.6px;
+		--border-style-icon: solid;
+		--border-width-dash: 1px;
+		--border-style-dash: dashed;
+
+		/* composite shorthand 변수 */
+		--border-default: var(--border-width-default) var(--border-style-default);
+		--border-icon: var(--border-width-icon) var(--border-style-icon);
+		--border-dash: var(--border-width-dash) var(--border-style-dash);
+
+		/* Opacity levels */
+		--opacity-hover: 0.8;
+		--opacity-press: 0.64;
+		--opacity-disabled: 0.32;
+		--opacity-default: 1;
+
+		/* Drop shadows */
+		--shadow-light: 0 0 8px rgba(20, 20, 43, 0.04);
+		--shadow-dark: 0 0 16px rgba(20, 20, 43, 0.8);
+
+		/* Typography */
+		--font-family-base: 'Pretendard', sans-serif;
+		--font-display-bold-32: 700 32px / 48px var(--font-family-base);
+		--font-display-bold-24: 700 24px / 36px var(--font-family-base);
+		--font-display-bold-20: 700 20px / 32px var(--font-family-base);
+		--font-display-bold-16: 700 16px / 24px var(--font-family-base);
+		--font-display-bold-12: 700 12px / 16px var(--font-family-base);
+
+		--font-display-medium-32: 500 32px / 48px var(--font-family-base);
+		--font-display-medium-24: 500 24px / 36px var(--font-family-base);
+		--font-display-medium-20: 500 20px / 32px var(--font-family-base);
+		--font-display-medium-16: 500 16px / 24px var(--font-family-base);
+		--font-display-medium-12: 500 12px / 16px var(--font-family-base);
+
+		--font-selected-bold-20: 700 20px / 32px var(--font-family-base);
+		--font-selected-bold-16: 700 16px / 24px var(--font-family-base);
+		--font-selected-bold-12: 700 12px / 16px var(--font-family-base);
+
+		--font-available-medium-20: 500 20px / 32px var(--font-family-base);
+		--font-available-medium-16: 500 16px / 24px var(--font-family-base);
+		--font-available-medium-12: 500 12px / 16px var(--font-family-base);
+	}
+}
+
+/* biome-ignore format: 이 블록은 포매팅 하지 않음 */
+@layer utilities {
+	.font-display-bold-32 { font: var(--font-display-bold-32); }
+	.font-display-bold-24 { font: var(--font-display-bold-24); }
+	.font-display-bold-20 { font: var(--font-display-bold-20); }
+	.font-display-bold-16 { font: var(--font-display-bold-16); }
+	.font-display-bold-12 { font: var(--font-display-bold-12); }
+
+	.font-display-medium-32 { font: var(--font-display-medium-32); }
+	.font-display-medium-24 { font: var(--font-display-medium-24); }
+	.font-display-medium-20 { font: var(--font-display-medium-20); }
+	.font-display-medium-16 { font: var(--font-display-medium-16); }
+	.font-display-medium-12 { font: var(--font-display-medium-12); }
+
+	.font-selected-bold-20 { font: var(--font-selected-bold-20); }
+	.font-selected-bold-16 { font: var(--font-selected-bold-16); }
+	.font-selected-bold-12 { font: var(--font-selected-bold-12); }
+
+	.font-available-medium-20 { font: var(--font-available-medium-20); }
+	.font-available-medium-16 { font: var(--font-available-medium-16); }
+	.font-available-medium-12 { font: var(--font-available-medium-12); }
+}
