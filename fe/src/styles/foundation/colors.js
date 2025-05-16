@@ -14,13 +14,27 @@ export const lightTheme = {
     active: '#14142B',
   },
   brand: {
-    weak: '#007AFF',
-    default: '#FEFEFE',
+    text: {
+      weak: '#007AFF',
+      default: '#FEFEFE',
+    },
+    surface: {
+      weak: '#FEFEFE',
+      default: '#007AFF',
+    },
+    border: {
+      default: '#007AFF',
+    },
   },
   danger: {
     text: '#FF3B30',
     surface: '#FF3B30',
     border: '#FF3B30',
+  },
+  palette: {
+    blue: `#007AFF`,
+    navy: `#0025E6`,
+    red: `#FF3B30`,
   },
 };
 
@@ -40,12 +54,26 @@ export const darkTheme = {
     active: '#D9DBE9',
   },
   brand: {
-    weak: '#007AFF',
-    default: '#FEFEFE',
+    text: {
+      weak: '#007AFF',
+      default: '#FEFEFE',
+    },
+    surface: {
+      weak: '#14142B',
+      default: '#007AFF',
+    },
+    border: {
+      default: '#007AFF',
+    },
   },
   danger: {
     text: '#FF3B30',
     surface: '#FF3B30',
     border: '#FF3B30',
+  },
+  palette: {
+    blue: `#007AFF`,
+    navy: `#0025E6`,
+    red: `#FF3B30`,
   },
 };

@@ -1,11 +1,10 @@
 package CodeSquad.IssueTracker.user;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Getter
+@Data
 @Builder
 @Table("users")
 public class User {
@@ -16,4 +15,3 @@ public class User {
     private String emailId;
     private String nickName;
 }
-
