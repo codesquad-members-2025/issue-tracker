@@ -66,8 +66,4 @@ public class JdbcTemplatesUserRepository implements UserRepository{
     private RowMapper<User> userRowMapper(){
         return BeanPropertyRowMapper.newInstance(User.class);
     }
-
-
-
-
 }
