@@ -9,7 +9,7 @@ const Container = styled.div`
 
 const Title = styled.div`
   ${typography.display.medium16}
-  color:${({ theme }) => theme.text.weak}
+  color:${({ theme }) => theme.text.weak};
 `;
 
 export default function MileStoneTitle({ mileStoneTitle }) {

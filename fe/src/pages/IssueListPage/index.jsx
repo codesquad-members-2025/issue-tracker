@@ -41,6 +41,13 @@ const HeaderRight = styled.div`
   gap: 32px;
 `;
 
+const KanbanMain = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  // 최소 높이는 설정 하지 않는다. -> 조건 만족하는 아이템이 없으면 안내 블럭을 띄워주는데 그 블럭이 최소 높이 역할.
+`;
+
 function useIssueStore() {
   const issues = useIssuesStore((state) => state.issues);
   const setIssues = useIssuesStore((state) => state.setIssues);
@@ -81,6 +88,7 @@ export default function IssueListPage() {
           </HeaderLeft>
           <HeaderRight></HeaderRight>
         </KanbanHeader>
+        <KanbanMain />
       </Kanban>
     </Container>
   );
