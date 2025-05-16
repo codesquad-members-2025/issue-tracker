@@ -2,6 +2,7 @@
   min-width: 1280px;
   border: 1px solid var(--neutral-border-default);
   border-bottom: none;
+  margin-top: 24px;
 }
 
 .tableHeader {

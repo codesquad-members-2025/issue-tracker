@@ -5,4 +5,5 @@
   color: var(--brand-text-default);
   border-radius: var(--radius-medium);
   text-align: center;
+  margin-top: 32px;
 }
