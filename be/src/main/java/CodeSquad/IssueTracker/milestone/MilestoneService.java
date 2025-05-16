@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.milestone;
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
