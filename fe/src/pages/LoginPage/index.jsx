@@ -45,8 +45,8 @@ export default function LoginPage() {
   }
 
   useEffect(() => {
-    if (response && response.accessToken) {
-      const token = response.accessToken;
+    if (response && response.data.accessToken) {
+      const token = response.data.accessToken;
       const { userId, imgUrl } = tokenDecoder(token);
       setUser(userId, imgUrl, token);
       localStorage.setItem('token', token);
