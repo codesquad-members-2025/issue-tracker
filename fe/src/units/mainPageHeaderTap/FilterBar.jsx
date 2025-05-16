@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { FilterSearchField } from '@/base-ui/issueListPage/mainPageHeaderTap/FilteredTab';
 import { DropdownMenuTemplate } from '@/utils/dropDown/DropdownMenuTemplate';
 import useFilterStore from '@/stores/filterStore';
+import { useAuthStore } from '@/stores/authStore';
 
 const Container = styled.div`
   border: 1px solid ${({ theme }) => theme.border.default};
@@ -20,7 +21,7 @@ const Container = styled.div`
     $isActive ? theme.surface.strong : theme.surface.bold};
 `;
 
-function getMenuItems(filteredObj, setFilter) {
+function getMenuItems(filteredObj, setFilter, userId) {
   const issueFilterItems = [
     {
       label: '열린 이슈',
@@ -29,17 +30,17 @@ function getMenuItems(filteredObj, setFilter) {
     },
     {
       label: '내가 작성한 이슈',
-      isSelected: false,
+      isSelected: filteredObj.author === userId,
       onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '나에게 할당된 이슈',
-      isSelected: false,
+      isSelected: filteredObj.assignee === userId,
       onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '내가 댓글을 남긴 이슈',
-      isSelected: false,
+      isSelected: false, //🤩추후 백엔드와 협의구 구현 예정
       onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
@@ -56,7 +57,8 @@ export default function FilterBar() {
   const filteredObj = useFilterStore((state) => state.selectedFilters);
   const isActive = Object.keys(filteredObj).length > 0;
   const setFilter = useFilterStore((state) => state.setFilter);
-  const items = getMenuItems(filteredObj, setFilter);
+  const userId = useAuthStore((state) => state.userId);
+  const items = getMenuItems(filteredObj, setFilter, userId);
 
   return (
     <Container $isActive={isActive}>

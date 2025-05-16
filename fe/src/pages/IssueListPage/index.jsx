@@ -6,6 +6,7 @@ import { ISSUES_URL } from '@/api/issues';
 import MainPageHeaderTap from '@/units/mainPageHeaderTap';
 import IsOpenFilter from '@/units/kanbanHeader/IsOpenFilter';
 import CheckBox from '@/base-ui/utils/CheckBox';
+import useFilterModalStore from '@/stores/detailFilterModalStore';
 
 const Container = styled.div`
   display: flex;

@@ -14,8 +14,8 @@ const useFilterStore = create(
       label: null,
       milestone: null,
       author: null,
-      isOpen: true, // 열린/닫힌 여부
-      searchType: null, // 검색바 필터 옵션
+      commentedBy: null,
+      isOpen: true,
     },
 
     setFilter: (key, value) =>

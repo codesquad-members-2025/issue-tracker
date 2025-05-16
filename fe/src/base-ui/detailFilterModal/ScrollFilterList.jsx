@@ -1,6 +1,6 @@
 /*
 itemsArr의 구조
-const itemsArr = [{ imgUrl: '~~~', label: 'XXX' }, ...];
+const itemsArr = [{ imgUrl: '~~~', label: 'XXX' isSelect: boolean }, ...];
 
 */
 
@@ -31,24 +31,29 @@ const Content = styled.div`
   gap: 8px;
   align-items: center;
   padding: 10px 16px;
+  background-color: ${({ theme, $isSelect }) =>
+    $isSelect ? theme.surface.default : theme.surface.bold};
+  &:hover {
+    background-color: ${({ theme }) => theme.surface.bold};
+  }
 `;
 
 const Separator = styled.hr`
-  margin: 0.5rem 0;
+  width: 80%;
   border: none;
   border-top: 1px solid ${({ theme }) => theme.border.default};
 `;
 
-export function ScrollFilterList({ title, itemsArr }) {
+export default function ScrollFilterList({ title, itemsArr }) {
   return (
     <ScrollContainer>
       <Title>{title}</Title>
-      {itemsArr.map((item, idx, arr) => {
+      {itemsArr.map(({ label, imgUrl, isSelect }, idx, arr) => {
         return (
           <>
-            <Content key={idx}>
-              <img src={item.imgUrl} alt={item.label} />
-              <span>{item.label}</span>
+            <Content key={idx} $isSelect={isSelect}>
+              <img src={imgUrl} alt={label} />
+              <span>{label}</span>
             </Content>
             {idx !== arr.length - 1 && <Separator />}
           </>
