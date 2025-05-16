@@ -1,4 +1,8 @@
 package codesquad.team01.issuetracker.auth.dto;
 
-public class LoginResponse {
+public record LoginResponse(
+        Long id,
+        String loginId,
+        String avatarUrl
+) {
 }
