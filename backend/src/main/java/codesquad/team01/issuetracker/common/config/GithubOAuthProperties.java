@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-// application.yaml 의 github.oauth 아래에 정의된 모든 프로퍼티를 이 클래스의 필드와 자동으로 매핑해준다
+// application.yaml 의 github.oauth 아래에 정의된 모든 프로퍼티를 이 클래스의 필드와 자동으로 매핑
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "github.oauth")
