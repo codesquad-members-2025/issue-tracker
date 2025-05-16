@@ -32,7 +32,7 @@ public class JdbcTemplatesUserRepository implements UserRepository {
                     .id(rs.getLong("id"))
                     .loginId(rs.getString("login_id"))
                     .password(rs.getString("password"))
-                    .email(rs.getString("email"))
+                    .emailId(rs.getString("email"))
                     .nickName(rs.getString("user_name"))
                     .build();
         }
