@@ -2,6 +2,7 @@ import CheckOffCircleIcon from '@/assets/checkOffCircle.svg?react';
 import CheckOnCircleIcon from '@/assets/checkOnCircle.svg?react';
 import ChevronDownIcon from '@/assets/chevronDown.svg?react';
 import { useEffect, useRef, useState } from 'react';
+import { cn } from '../utils/shadcn-utils';
 
 export interface DropdownOption {
 	id: number;
@@ -28,7 +29,23 @@ export function CustomDropdownPanel({
 	className = '',
 }: CustomDropdownPanelProps) {
 	const [open, setOpen] = useState(false);
+	const [animating, setAnimating] = useState<'in' | 'out' | null>(null);
 	const selectRef = useRef<HTMLDivElement | null>(null);
+
+	// value: null → 'none' (미선택 시 구분)
+	const currentValue = value ?? 'none';
+
+	// 패널 열기/닫기 애니메이션 제어
+	useEffect(() => {
+		if (open) {
+			setAnimating('in');
+		} else if (animating === 'in') {
+			setAnimating('out');
+			const timer = setTimeout(() => setAnimating(null), 120); // 애니메이션 길이와 동일하게
+			return () => clearTimeout(timer);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [open]);
 
 	// 드롭다운 외부 클릭시 닫힘
 	useEffect(() => {
@@ -39,9 +56,6 @@ export function CustomDropdownPanel({
 		window.addEventListener('mousedown', handleClick);
 		return () => window.removeEventListener('mousedown', handleClick);
 	}, [open]);
-
-	// value: null → 'none' (미선택 시 구분)
-	const currentValue = value ?? 'none';
 
 	return (
 		<div ref={selectRef} className={`relative ${className}`}>
@@ -58,10 +72,23 @@ export function CustomDropdownPanel({
 				<ChevronDownIcon className='size-4 ml-1' />
 			</button>
 
-			{open && (
+			{/* 애니메이션을 위해 animating이 있을 때만 패널 렌더 */}
+			{(open || animating === 'out') && (
 				<div
-					className='absolute left-0 mt-2 w-[240px] bg-[var(--neutral-surface-default)] rounded-[16px] shadow-lg border border-[var(--neutral-border-default)] overflow-hidden z-50'
-					style={{ boxShadow: 'var(--shadow-light)' }}
+					data-state={open ? 'open' : 'closed'}
+					className={cn(
+						'absolute left-0 mt-2 w-[240px] bg-[var(--neutral-surface-default)] rounded-[16px] shadow-lg border border-[var(--neutral-border-default)] overflow-hidden z-50',
+						'transition-all duration-120',
+						'bg-popover text-popover-foreground',
+						'data-[state=open]:animate-in data-[state=closed]:animate-out',
+						'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+						'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+					)}
+					style={{
+						boxShadow: 'var(--shadow-light)',
+						visibility: open ? 'visible' : 'hidden',
+						pointerEvents: open ? 'auto' : 'none',
+					}}
 					role='listbox'
 					tabIndex={-1}
 				>
@@ -89,8 +116,7 @@ export function CustomDropdownPanel({
 								<button
 									key={opt.id}
 									type='button'
-									className={`
-                    flex items-center gap-2 w-full text-left
+									className={`flex items-center gap-2 w-full text-left
                     px-4 py-2 min-h-[44px] h-[44px] cursor-pointer
                     text-[var(--neutral-text-default)] font-display-medium-16
                     bg-[var(--neutral-surface-strong)]

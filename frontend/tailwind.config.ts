@@ -70,6 +70,25 @@ const config: Config = {
 				700: '700',
 				500: '500',
 			},
+			keyframes: {
+				'fade-in-0': { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+				'fade-out-0': { '0%': { opacity: 1 }, '100%': { opacity: 0 } },
+				'zoom-in-95': {
+					'0%': { transform: 'scale(.95)' },
+					'100%': { transform: 'scale(1)' },
+				},
+				'zoom-out-95': {
+					'0%': { transform: 'scale(1)' },
+					'100%': { transform: 'scale(.95)' },
+				},
+				// slide-in-from-* 도 원하면 추가 등록
+			},
+			animation: {
+				'fade-in-0': 'fade-in-0 120ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'fade-out-0': 'fade-out-0 120ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'zoom-in-95': 'zoom-in-95 120ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'zoom-out-95': 'zoom-out-95 120ms cubic-bezier(0.16, 1, 0.3, 1)',
+			},
 		},
 	},
 	plugins: [],
