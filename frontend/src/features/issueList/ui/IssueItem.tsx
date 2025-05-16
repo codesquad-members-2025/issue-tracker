@@ -1,6 +1,6 @@
 import IconInfo from '@/assets/icon_info.svg?react';
 import IconMilestone from '@/assets/milestone.svg?react';
-import type { Issue } from '@/entities/issue/issue';
+import type { Issue } from '@/entities/issue/issue.types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { Badge } from '@/shared/ui/badge';
 import { formatDistanceToNow } from 'date-fns';

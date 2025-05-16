@@ -1,3 +1,5 @@
+import { getMockData } from './mockData';
+
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'; // .env에서 VITE_USE_MOCK=true로 설정 시 모킹 활성화
 
 /**
@@ -27,17 +29,9 @@ async function realGetJSON<T>(path: string): Promise<T> {
  * path에 따라 필요한 mock 데이터를 분기하여 반환하세요.
  */
 async function mockGetJSON<T>(path: string): Promise<T> {
-	// 예시: '/api/issues' 요청 시 issueFixtures에서 정의한 mock 데이터를 반환
-	if (path === '/api/issues') {
-		const { mockIssueListResponse } = await import(
-			'@/entities/issue/issueFixtures'
-		);
-		// 타입 단언을 통해 T 형태로 반환
-		return mockIssueListResponse as unknown as T;
-	}
-
-	// 정의되지 않은 경로는 에러 처리
-	throw new Error(`알 수 없는 mock 경로: ${path}`);
+	// mockData 유틸에서 데이터 로드
+	const data = await getMockData(path);
+	return data as T;
 }
 
 /**

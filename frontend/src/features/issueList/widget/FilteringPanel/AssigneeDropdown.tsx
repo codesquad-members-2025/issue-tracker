@@ -1,39 +1,45 @@
+import { useUserList } from '@/entities/user/useUserList';
+// src/entities/user/ui/AssigneeDropdown.tsx
 import {
 	CustomDropdownPanel,
 	type DropdownOption,
 } from '@/shared/ui/CustomDropdownPanel';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-const userOptions: DropdownOption[] = [
-	{ id: 0, value: 'none', display: '담당자가 없는 이슈' },
-	{
-		id: 1,
-		value: 'jjinbbangS2',
-		display: 'jjinbbangS2',
-		imageUrl: 'https://user-images.githubusercontent.com/1.png',
-	},
-	{
-		id: 2,
-		value: 'htmlH3AD',
-		display: 'htmlH3AD',
-		imageUrl: 'https://user-images.githubusercontent.com/2.png',
-	},
-	{
-		id: 3,
-		value: 'samsamis9',
-		display: 'samsamis9',
-		imageUrl: 'https://user-images.githubusercontent.com/3.png',
-	},
-	{
-		id: 4,
-		value: 'dev_angel0',
-		display: 'dev_angel0',
-		imageUrl: 'https://user-images.githubusercontent.com/4.png',
-	},
-];
-
-export default function ExampleAssigneeDropdown() {
+export default function AssigneeDropdown() {
 	const [selected, setSelected] = useState<string | null>(null);
+	const { data, isLoading, error } = useUserList();
+
+	// ✅ useMemo를 항상 호출하도록 최상단에 선언
+	const userOptions = useMemo<DropdownOption[]>(() => {
+		const noneOption: DropdownOption = {
+			id: 0,
+			value: 'none',
+			display: '담당자가 없는 이슈',
+		};
+
+		const fetchedOptions: DropdownOption[] =
+			data?.users.map((user) => ({
+				id: user.id,
+				value: user.username,
+				display: user.username,
+				imageUrl: user.imageUrl,
+			})) ?? [];
+
+		return [noneOption, ...fetchedOptions];
+	}, [data]);
+
+	// 로딩·에러 UI는 그 다음에 처리
+	if (isLoading) {
+		return <div>담당자 목록 로딩 중…</div>;
+	}
+	if (error) {
+		return (
+			<div className='text-destructive'>
+				담당자 목록을 불러오는 중 에러가 발생했습니다.
+			</div>
+		);
+	}
 
 	return (
 		<div className='flex justify-center'>
@@ -44,16 +50,6 @@ export default function ExampleAssigneeDropdown() {
 				value={selected}
 				onChange={setSelected}
 			/>
-			{/* 아래는 상태 확인용 (선택된 담당자 보여주기) */}
-			{/* <div className='ml-6 flex items-center text-sm'>
-				{selected ? (
-					<>
-						선택된 담당자: <span className='font-bold'>{selected}</span>
-					</>
-				) : (
-					'담당자가 없는 이슈만 보기'
-				)}
-			</div> */}
 		</div>
 	);
 }

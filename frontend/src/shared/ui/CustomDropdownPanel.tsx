@@ -30,10 +30,22 @@ export function CustomDropdownPanel({
 }: CustomDropdownPanelProps) {
 	const [open, setOpen] = useState(false);
 	const [animating, setAnimating] = useState<'in' | 'out' | null>(null);
+	const [alignRight, setAlignRight] = useState(false);
 	const selectRef = useRef<HTMLDivElement | null>(null);
+	const triggerRef = useRef<HTMLButtonElement | null>(null);
 
 	// value: null → 'none' (미선택 시 구분)
 	const currentValue = value ?? 'none';
+
+	// open 시 트리거 버튼의 x 위치로 정렬 방식 결정
+	useEffect(() => {
+		if (open && triggerRef.current) {
+			const rect = triggerRef.current.getBoundingClientRect();
+			const windowWidth = window.innerWidth;
+			// 화면 오른쪽 30% 이내면 오른쪽 정렬, 아니면 왼쪽 정렬
+			setAlignRight(rect.left > windowWidth * 0.7);
+		}
+	}, [open]);
 
 	// 패널 열기/닫기 애니메이션 제어
 	useEffect(() => {
@@ -61,6 +73,7 @@ export function CustomDropdownPanel({
 		<div ref={selectRef} className={`relative ${className}`}>
 			{/* Trigger Button */}
 			<button
+				ref={triggerRef}
 				type='button'
 				className='w-[80px] h-[32px] flex items-center justify-center gap-1 bg-transparent font-bold text-[16px] leading-6'
 				style={{ color: 'var(--neutral-text-default)' }}
@@ -77,12 +90,13 @@ export function CustomDropdownPanel({
 				<div
 					data-state={open ? 'open' : 'closed'}
 					className={cn(
-						'absolute left-0 mt-2 w-[240px] bg-[var(--neutral-surface-default)] rounded-[16px] shadow-lg border border-[var(--neutral-border-default)] overflow-hidden z-50',
+						'absolute mt-2 w-[240px] bg-[var(--neutral-surface-default)] rounded-[16px] shadow-lg border border-[var(--neutral-border-default)] overflow-hidden z-50',
 						'transition-all duration-120',
 						'bg-popover text-popover-foreground',
 						'data-[state=open]:animate-in data-[state=closed]:animate-out',
 						'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
 						'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+						alignRight ? 'right-0' : 'left-0',
 					)}
 					style={{
 						boxShadow: 'var(--shadow-light)',

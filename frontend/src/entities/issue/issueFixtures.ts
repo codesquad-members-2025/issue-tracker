@@ -1,5 +1,5 @@
 // src/entities/issue/issueFixtures.ts
-import type { ApiResponse, Issue, IssueListData } from './issue';
+import type { ApiResponse, Issue, IssueListData } from './issue.types';
 
 const issues: Issue[] = [
 	{

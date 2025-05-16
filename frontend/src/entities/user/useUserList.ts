@@ -1,9 +1,10 @@
-import type { IssueListData } from '@/entities/issue/issue.types';
-import { fetchIssues } from '@/entities/issue/issueAPI';
 import { useEffect, useState } from 'react';
+// src/entities/user/hooks/useUserList.ts
+import type { UserListData } from './userApi';
+import { fetchUsers } from './userApi';
 
-export function useIssueList() {
-	const [data, setData] = useState<IssueListData | null>(null);
+export function useUserList() {
+	const [data, setData] = useState<UserListData | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [error, setError] = useState<Error | null>(null);
 
@@ -13,7 +14,7 @@ export function useIssueList() {
 		async function load() {
 			setIsLoading(true);
 			try {
-				const result = await fetchIssues();
+				const result = await fetchUsers();
 				if (mounted) {
 					setData(result);
 				}
