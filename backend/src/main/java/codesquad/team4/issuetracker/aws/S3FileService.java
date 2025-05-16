@@ -29,7 +29,7 @@ public class S3FileService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFile(MultipartFile file, String directory) {
+    public Optional<String> uploadFile(MultipartFile file, String directory) {
         return Optional.ofNullable(file)
                 .filter(f -> !f.isEmpty())  // 파일이 비어있지 않은 경우에만 처리
                 .map(f -> {
@@ -49,8 +49,7 @@ public class S3FileService {
 
                     log.info("S3 업로드 성공");
                     return String.format(S3_URL_FORMAT, bucket, key);
-                })
-                .orElse(EMPTY_STRING);  // 파일이 null이거나 비어있으면 빈 문자열 반환
+                });
     }
 
     private PutObjectRequest getRequest(MultipartFile f, String key) {

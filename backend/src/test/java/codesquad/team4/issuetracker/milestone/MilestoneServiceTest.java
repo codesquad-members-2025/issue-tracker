@@ -20,7 +20,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class MilestoneServiceTest {
     @Mock
-    JdbcTemplate jdbcTemplate;
+    MilestoneDao milestoneDao;
     @InjectMocks
     MilestoneService milestoneService;
 
@@ -33,15 +33,15 @@ public class MilestoneServiceTest {
         List<MilestoneDto.MilestoneInfo> mockMilestones = List.of(
                 MilestoneDto.MilestoneInfo.builder()
                         .id(1L)
-                        .name("week1")
+                        .title("week1")
                         .build(),
                 MilestoneDto.MilestoneInfo.builder()
                         .id(2L)
-                        .name("week2")
+                        .title("week2")
                         .build()
         );
 
-        given(jdbcTemplate.query(eq(sql), any(RowMapper.class))).willReturn(mockMilestones);
+        given(milestoneDao.findMilestoneForFiltering()).willReturn(mockMilestones);
 
         // when
         MilestoneDto.MilestoneFilter result = milestoneService.getFilterMilestones();
@@ -50,6 +50,6 @@ public class MilestoneServiceTest {
         assertThat(result.getMilestones()).hasSize(2);
         assertThat(result.getCount()).isEqualTo(2);
         assertThat(result.getMilestones().get(0).getId()).isEqualTo(1L);
-        assertThat(result.getMilestones().get(0).getName()).isEqualTo("week1");
+        assertThat(result.getMilestones().get(0).getTitle()).isEqualTo("week1");
     }
 }

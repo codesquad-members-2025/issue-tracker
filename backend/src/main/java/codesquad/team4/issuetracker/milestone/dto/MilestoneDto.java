@@ -13,7 +13,7 @@ public class MilestoneDto {
     @Builder
     public static class MilestoneInfo {
         private Long id;
-        private String name;
+        private String title;
     }
 
     @AllArgsConstructor
