@@ -36,7 +36,7 @@ public class JdbcIssueRepository implements IssueRepository {
 
     @Override
     public long countByStatus(IssueStatus status) {
-        String sql = "SELECT COUNT(*) FROM Issue WHERE is_closed = :st";
+        String sql = "SELECT COUNT(*) FROM issue WHERE is_closed = :st";
         Long count = jdbc.queryForObject(
                 sql,
                 new MapSqlParameterSource("st", status == IssueStatus.CLOSED),
@@ -62,7 +62,7 @@ public class JdbcIssueRepository implements IssueRepository {
                        l.color          AS color,
                        l.description    AS description
                   FROM issue_label il
-                  JOIN Label l ON l.id = il.label_id
+                  JOIN label l ON l.id = il.label_id
                  WHERE il.issue_id IN (:ids)
                 """;
         var params = new MapSqlParameterSource("ids", issueIds);
@@ -95,8 +95,8 @@ public class JdbcIssueRepository implements IssueRepository {
         String sql = """
                 SELECT a.issue_id          AS issueId,
                        u.profile_image_url AS imageUrl
-                  FROM Assignee a
-                  JOIN User u ON u.id = a.user_id
+                  FROM assignee a
+                  JOIN user u ON u.id = a.user_id
                  WHERE a.issue_id IN (:ids)
                 """;
         var params = new MapSqlParameterSource("ids", issueIds);
