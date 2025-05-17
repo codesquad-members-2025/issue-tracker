@@ -1,14 +1,12 @@
 package codesquad.team01.issuetracker.issue.repository;
 
-import codesquad.team01.issuetracker.issue.dto.IssueJoinRow;
+import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -17,7 +15,7 @@ public class IssueQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    private static final String BASE_QUERY = """
+    private static final String BASE_ISSUE_QUERY = """
         SELECT 
             i.id as issue_id,
             i.title as issue_title,
@@ -28,52 +26,69 @@ public class IssueQueryRepository {
             u.username as writer_username,
             u.profile_image_url as writer_profile_image_url,
             m.id as milestone_id,
-            m.title as milestone_title,
-            a.id as assignee_id,
-            a.profile_image_url as assignee_profile_image_url,
+            m.title as milestone_title
+        FROM Issue i
+        JOIN Users u ON i.writer_id = u.id
+        LEFT JOIN Milestone m ON i.milestone_id = m.id
+        WHERE 1=1
+        """;
+
+    // 담당자, 레이블 - 필터 OR vs AND 고민
+    private static final String ASSIGNEE_QUERY = """
+        SELECT 
+            ia.issue_id,
+            u.id as assignee_id,
+            u.profile_image_url as assignee_profile_image_url
+        FROM IssueAssignee ia
+        JOIN Users u ON ia.user_id = u.id
+        WHERE ia.issue_id IN (:issueIds)
+        """;
+
+    private static final String LABEL_QUERY = """
+        SELECT 
+            il.issue_id,
             l.id as label_id,
             l.name as label_name,
             l.color as label_color,
             l.text_color as label_text_color
-        FROM Issue i
-        JOIN Users u ON i.writer_id = u.id
-        LEFT JOIN Milestone m ON i.milestone_id = m.id
-        LEFT JOIN IssueAssignee ia ON i.id = ia.issue_id
-        LEFT JOIN Users a ON ia.user_id = a.id
-        LEFT JOIN IssueLabel il ON i.id = il.issue_id
-        LEFT JOIN Label l ON il.label_id = l.id
-        WHERE 1=1
+        FROM IssueLabel il
+        JOIN Label l ON il.label_id = l.id
+        WHERE il.issue_id IN (:issueIds)
         """;
 
-    private final RowMapper<IssueJoinRow> issueJoinRowMapper = new RowMapper<IssueJoinRow>() {
-        @Override
-        public IssueJoinRow mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new IssueJoinRow(
-                    rs.getLong("issue_id"),
-                    rs.getString("issue_title"),
-                    rs.getBoolean("issue_is_open"),
-                    rs.getTimestamp("issue_created_at").toLocalDateTime(),
-                    rs.getTimestamp("issue_updated_at").toLocalDateTime(),
-                    rs.getLong("writer_id"),
-                    rs.getString("writer_username"),
-                    rs.getString("writer_profile_image_url"),
-                    rs.getObject("milestone_id", Long.class),
-                    rs.getString("milestone_title"),
-                    rs.getObject("assignee_id", Long.class),
-                    rs.getString("assignee_profile_image_url"),
-                    rs.getObject("label_id", Long.class),
-                    rs.getString("label_name"),
-                    rs.getString("label_color"),
-                    rs.getString("label_text_color")
-            );
-        }
-    };
+    private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()
+            .issueId(rs.getLong("issue_id"))
+            .issueTitle(rs.getString("issue_title"))
+            .issueOpen(rs.getBoolean("issue_is_open"))
+            .issueCreatedAt(rs.getTimestamp("issue_created_at").toLocalDateTime())
+            .issueUpdatedAt(rs.getTimestamp("issue_updated_at").toLocalDateTime())
+            .writerId(rs.getLong("writer_id"))
+            .writerUsername(rs.getString("writer_username"))
+            .writerProfileImageUrl(rs.getString("writer_profile_image_url"))
+            .milestoneId(rs.getObject("milestone_id", Long.class))
+            .milestoneTitle(rs.getString("milestone_title"))
+            .build();
 
-    public List<IssueJoinRow> findIssuesWithFilters(
+    private final RowMapper<IssueDto.AssigneeRow> assigneeRowMapper = (rs, rowNum) -> IssueDto.AssigneeRow.builder()
+            .issueId(rs.getLong("issue_id"))
+            .assigneeId(rs.getLong("assignee_id"))
+            .assigneeProfileImageUrl(rs.getString("assignee_profile_image_url"))
+            .build();
+
+    private final RowMapper<IssueDto.LabelRow> labelRowMapper = (rs, rowNum) -> IssueDto.LabelRow.builder()
+            .issueId(rs.getLong("issue_id"))
+            .labelId(rs.getLong("label_id"))
+            .labelName(rs.getString("label_name"))
+            .labelColor(rs.getString("label_color"))
+            .labelTextColor(rs.getString("label_text_color"))
+            .build();
+
+
+    public List<IssueDto.BaseRow> findIssuesWithFilters(
             String state, Long writer, Long milestone,
             List<Long> labelIds, List<Long> assigneeIds) {
 
-        StringBuilder sql = new StringBuilder(BASE_QUERY);
+        StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         // state - 기본값: open
@@ -119,6 +134,22 @@ public class IssueQueryRepository {
         // 정렬: 생성일자 내림차순 (최신순)
         sql.append(" ORDER BY i.created_at DESC, i.id DESC");
 
-        return jdbcTemplate.query(sql.toString(), params, issueJoinRowMapper);
+        return jdbcTemplate.query(sql.toString(), params, issueRowMapper);
+    }
+
+    public List<IssueDto.AssigneeRow> findAssigneesByIssueIds(List<Long> issueIds) {
+        if (issueIds.isEmpty()) {
+            return List.of();
+        }
+        MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
+        return jdbcTemplate.query(ASSIGNEE_QUERY, params, assigneeRowMapper);
+    }
+
+    public List<IssueDto.LabelRow> findLabelsByIssueIds(List<Long> issueIds) {
+        if (issueIds.isEmpty()) {
+            return List.of();
+        }
+        MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
+        return jdbcTemplate.query(LABEL_QUERY, params, labelRowMapper);
     }
 }
