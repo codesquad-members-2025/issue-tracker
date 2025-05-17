@@ -26,11 +26,30 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
+
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+	// Lombok
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// MapStruct
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+	// Lombok과 MapStruct를 함께 사용하기 위한 바인딩
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j' //
+	testImplementation 'org.springframework.boot:spring-boot-starter-test' //
+
+
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
