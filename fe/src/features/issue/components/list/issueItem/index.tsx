@@ -53,15 +53,15 @@ const IssueItemWrapper = styled.li`
   align-items: center;
   justify-content: space-between;
   padding: 16px 32px;
-  border-bottom: 1px solid ${({ theme }) => theme.borderColor.default};
-  background-color: ${({ theme }) => theme.surfaceColor.strong};
+  border-bottom: 1px solid ${({ theme }) => theme.neutral.border.default};
+  background-color: ${({ theme }) => theme.neutral.surface.strong};
 
   &:last-of-type {
     border-bottom: none;
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.surfaceColor.default};
+    background-color: ${({ theme }) => theme.neutral.surface.default};
   }
 `;
 

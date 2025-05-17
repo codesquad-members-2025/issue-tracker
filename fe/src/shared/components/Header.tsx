@@ -30,7 +30,7 @@ const LeftSection = styled.div`
 const StyledLogo = styled(Logo)`
   width: 199px;
   height: 40px;
-  color: ${({ theme }) => theme.textColor.strong};
+  color: ${({ theme }) => theme.neutral.text.strong};
 `;
 
 // TODO profile 공통 컴포넌트 분리

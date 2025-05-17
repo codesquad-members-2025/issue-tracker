@@ -52,6 +52,6 @@ const ExtraText = styled.span`
   position: relative;
   z-index: 0;
 
-  color: ${({ theme }) => theme.textColor.strong};
+  color: ${({ theme }) => theme.neutral.text.strong};
   ${({ theme }) => theme.typography.displayMedium12};
 `;

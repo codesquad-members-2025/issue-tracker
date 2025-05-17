@@ -44,9 +44,9 @@ const HeaderWrapper = styled.div`
   align-items: center;
   padding: 16px 32px;
 
-  border-bottom: 1px solid ${({ theme }) => theme.borderColor.default};
-  background-color: ${({ theme }) => theme.surfaceColor.default};
-  color: ${({ theme }) => theme.textColor.default};
+  border-bottom: 1px solid ${({ theme }) => theme.neutral.border.default};
+  background-color: ${({ theme }) => theme.neutral.surface.default};
+  color: ${({ theme }) => theme.neutral.text.default};
   ${({ theme }) => theme.typography.availableMedium16};
 `;
 

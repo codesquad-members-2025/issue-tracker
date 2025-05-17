@@ -47,6 +47,6 @@ const Message = ({
 const MessageItem = styled.li<{ isError?: boolean }>`
   padding: 40px 0;
   text-align: center;
-  color: ${({ isError, theme }) => (isError ? 'red' : theme.textColor.weak)};
+  color: ${({ isError, theme }) => (isError ? 'red' : theme.neutral.text.weak)};
   ${({ theme }) => theme.typography.availableMedium16};
 `;

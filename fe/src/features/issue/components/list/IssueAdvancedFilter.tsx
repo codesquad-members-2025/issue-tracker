@@ -37,7 +37,7 @@ const FilterWrapper = styled.div`
   align-items: center;
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radius.medium};
-  border: 1px solid ${({ theme }) => theme.borderColor.default};
+  border: 1px solid ${({ theme }) => theme.neutral.border.default};
 `;
 
 const FilterButton = styled.button`
@@ -46,8 +46,8 @@ const FilterButton = styled.button`
   gap: 4px;
   padding: 4px 24px;
   border: none;
-  background-color: ${({ theme }) => theme.surfaceColor.default};
-  color: ${({ theme }) => theme.textColor.default};
+  background-color: ${({ theme }) => theme.neutral.surface.default};
+  color: ${({ theme }) => theme.neutral.text.default};
   ${({ theme }) => theme.typography.availableMedium16};
   cursor: pointer;
 `;
@@ -59,15 +59,15 @@ const SearchArea = styled.label`
   gap: 8px;
   padding: 8px 24px;
   height: 100%;
-  border-left: 1px solid ${({ theme }) => theme.borderColor.default};
-  background-color: ${({ theme }) => theme.surfaceColor.bold};
-  color: ${({ theme }) => theme.textColor.default};
+  border-left: 1px solid ${({ theme }) => theme.neutral.border.default};
+  background-color: ${({ theme }) => theme.neutral.surface.bold};
+  color: ${({ theme }) => theme.neutral.text.default};
 `;
 
 const SearchInput = styled.input`
   all: unset;
   flex: 1;
-  color: ${({ theme }) => theme.textColor.weak};
+  color: ${({ theme }) => theme.neutral.text.weak};
   ${({ theme }) => theme.typography.availableMedium16};
 `;
 

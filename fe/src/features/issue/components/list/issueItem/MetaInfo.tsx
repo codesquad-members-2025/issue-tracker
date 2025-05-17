@@ -36,7 +36,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-  color: ${({ theme }) => theme.textColor.weak};
+  color: ${({ theme }) => theme.neutral.text.weak};
   ${({ theme }) => theme.typography.displayMedium16};
 `;
 

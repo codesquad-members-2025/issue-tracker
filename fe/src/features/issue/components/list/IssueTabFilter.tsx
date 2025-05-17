@@ -60,7 +60,7 @@ const TabButton = styled.button<{ active?: boolean }>`
   gap: 4px;
   padding: 4px 0;
   color: ${({ active, theme }) =>
-    active ? theme.textColor.strong : theme.textColor.default};
+    active ? theme.neutral.text.strong : theme.neutral.text.default};
   ${({ theme }) => theme.typography.selectedBold16};
 
   cursor: pointer;

@@ -45,7 +45,7 @@ const TitleRow = styled.div`
 `;
 
 const IssueTitle = styled.span`
-  color: ${({ theme }) => theme.textColor.strong};
+  color: ${({ theme }) => theme.neutral.text.strong};
   ${({ theme }) => theme.typography.availableMedium20};
   cursor: pointer;
 `;

@@ -52,9 +52,9 @@ export default function IssueListContainer({
 }
 
 const Container = styled.section`
-  border: 1px solid ${({ theme }) => theme.borderColor.default};
+  border: 1px solid ${({ theme }) => theme.neutral.border.default};
   border-radius: ${({ theme }) => theme.radius.medium};
-  background-color: ${({ theme }) => theme.surfaceColor.default};
+  background-color: ${({ theme }) => theme.neutral.surface.default};
   overflow: hidden;
 
   display: flex;

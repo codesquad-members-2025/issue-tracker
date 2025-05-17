@@ -34,9 +34,9 @@ const TabItemWrapper = styled.button<{ isActive: boolean }>`
   cursor: pointer;
 
   background-color: ${({ isActive, theme }) =>
-    isActive ? theme.surfaceColor.bold : theme.surfaceColor.default};
+    isActive ? theme.neutral.surface.bold : theme.neutral.surface.default};
   color: ${({ isActive, theme }) =>
-    isActive ? theme.textColor.strong : theme.textColor.default};
+    isActive ? theme.neutral.text.strong : theme.neutral.text.default};
 
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};

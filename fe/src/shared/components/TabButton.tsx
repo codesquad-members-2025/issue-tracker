@@ -21,7 +21,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid ${({ theme }) => theme.borderColor.default};
+  border: 1px solid ${({ theme }) => theme.neutral.border.default};
   border-radius: ${({ theme }) => theme.radius.medium};
   overflow: hidden;
 `;
@@ -29,5 +29,5 @@ const Container = styled.div`
 const Divider = styled.div`
   width: 1px;
   height: 40px;
-  background-color: ${({ theme }) => theme.borderColor.default};
+  background-color: ${({ theme }) => theme.neutral.border.default};
 `;
