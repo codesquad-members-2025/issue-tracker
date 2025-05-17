@@ -2,14 +2,18 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
-import CodeSquad.IssueTracker.issueAssignee.IssueAssignee;
+import CodeSquad.IssueTracker.issue.issueimage.IssueImage;
+import CodeSquad.IssueTracker.issue.issueimage.IssueImageRepository;
+import CodeSquad.IssueTracker.issue.issueimage.IssueImageService;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeService;
-import CodeSquad.IssueTracker.issueLabel.IssueLabel;
 import CodeSquad.IssueTracker.issueLabel.IssueLabelService;
+import CodeSquad.IssueTracker.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +23,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final IssueAssigneeService issueAssigneeService;
     private final IssueLabelService issueLabelService;
+    private final IssueImageService issueImageService;
 
     public Issue save(Issue issue){
         return issueRepository.save(issue);
@@ -36,7 +41,7 @@ public class IssueService {
         return issueRepository.findAll();
     }
 
-    public Issue createIssue(IssueCreateRequest request) {
+    public Issue createIssue(IssueCreateRequest request, List<MultipartFile> files) {
         // 1. 이슈 저장
         Issue issue = new Issue();
         issue.setTitle(request.getTitle());
@@ -56,6 +61,9 @@ public class IssueService {
         }
 
         // 4. 이미지 URL 저장 로직 추가해야함 하 언제하냐
+        if (files != null) {
+            issueImageService.uploadAndSaveImages(savedIssue.getIssueId(), files);
+        }
 
         return savedIssue;
     }

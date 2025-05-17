@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.milestone;
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.*;

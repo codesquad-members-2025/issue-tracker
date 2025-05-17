@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.comment;
 
+import CodeSquad.IssueTracker.comment.dto.CommentUpdateDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -64,6 +65,13 @@ public class JdbcTemplatesCommentRepository implements CommentRepository {
                 .addValue("imageUrl", updateDto.getImageUrl())
                 .addValue("id", id);
         template.update(sql, param);
+    }
+
+    @Override
+    public List<Comment> findByIssueId(Long issueId) {
+        String sql ="SELECT * FROM comments WHERE issue_id = :issueId";
+        Map<String, Object> param = Map.of("issueId", issueId);
+        return template.query(sql, param, commentRowMapper());
     }
 
     private RowMapper<Comment> commentRowMapper(){

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class IssueUpdateDto {
 
     private String title;
+    private String content;
     private Boolean isOpen;
     private LocalDateTime timestamp;
     private Long assigneeId;

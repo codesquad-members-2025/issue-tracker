@@ -1,5 +1,7 @@
 package CodeSquad.IssueTracker.label;
 
+import CodeSquad.IssueTracker.label.dto.LabelUpdateDto;
+
 import java.util.List;
 
 public interface LabelRepository {
