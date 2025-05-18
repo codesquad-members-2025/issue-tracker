@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ScrollFilterList, SearchButton } from '@/base-ui/detailFilterModal';
 import { typography } from '@/styles/foundation';
-import useIssuesStore from '@/stores/issuesStore';
+import useFilterModalStore from '@/stores/detailFilterModalStore';
 import useFilterStore from '@/stores/filterStore';
 
 const Overlay = styled.div`
@@ -47,14 +47,17 @@ const Footer = styled.div`
 `;
 
 const CloseIcon = styled.svg`
-  position: relative;
-  top: 8px;
-  right: 8px;
   fill: ${({ theme }) => theme.text.default};
 
   &:hover {
     fill: ${({ theme }) => theme.danger.border};
   }
+`;
+
+const CloseButton = styled.button`
+  position: relative;
+  top: 8px;
+  right: 8px;
 `;
 
 const SearchIcon = styled.svg`
@@ -68,32 +71,42 @@ const Title = styled.div`
 `;
 
 // 외부에서 prop을 받는게 아니라 전역의 store를 끌고 와서 상태를 변경한다.
-export default function DetailFilterModal({ onClick }) {
-  const issues = useIssuesStore((state) => state.issues); //이슈 스토어의 필터 아이템 구독
-  const setFilter = useIssuesStore((state) => state.setFilter); //검색 버튼의 콜백함수에 사용
-  const filterEntry = ['담당자', '레이블', '마일스톤', '작성자'];
+export default function DetailFilterModal() {
+  const { filterEntry, closeModal } = useFilterModalStore((state) => ({
+    filterEntry: state.filterEntry,
+    closeModal: state.closeModal,
+  }));
+  const resetFilters = useFilterStore((state) => state.resetFilters); //검색 버튼의 콜백함수에 사용
   const titleLabel = '상세필터';
   const searchButton = '필터 적용';
+
+  function closeModalHandler() {
+    resetFilters();
+    closeModal();
+  }
   return (
-    <Overlay onClick={onClick}>
+    <Overlay onClick={closeModalHandler}>
       <Container>
         <Header>
           <Title>{titleLabel}</Title>
-          <CloseIcon
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill="currentColor"
-          >
-            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-          </CloseIcon>
+          <CloseButton onClick={closeModalHandler}>
+            <CloseIcon
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="currentColor"
+            >
+              <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </CloseIcon>
+          </CloseButton>
         </Header>
         <Body>
-          {filterEntry.map((title) => {
+          {Object.entries(filterEntry).map((entryArr) => {
             return (
-              <React.Fragment key={title}>
-                <ScrollFilterList title={title} />;
+              //row방향 필터 4개 스크롤 렌더 로직
+              <React.Fragment key={entryArr[0]}>
+                <ScrollFilterList title={entryArr[0]} itemsArr={entryArr[1]} />;
               </React.Fragment>
             );
           })}

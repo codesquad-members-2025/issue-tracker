@@ -25,7 +25,14 @@ const useFilterStore = create(
 
     resetFilters: () =>
       set((state) => {
-        state.selectedFilters = {};
+        state.selectedFilters = {
+          assignee: null,
+          label: null,
+          milestone: null,
+          author: null,
+          commentedBy: null,
+          isOpen: true,
+        };
       }),
   })),
 );

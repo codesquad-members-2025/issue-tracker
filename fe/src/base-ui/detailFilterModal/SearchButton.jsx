@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
 import { LargeContainerButton } from '../components/ContainerButtons';
+import useFilterStore from '@/stores/filterStore';
+import { useApplyQueryParams } from '@/utils/queryParams/useApplyQueryParams';
+import useFilterModalStore from '@/stores/detailFilterModalStore';
 
 const StyledButton = styled(LargeContainerButton)`
   display: flex;
@@ -8,7 +11,19 @@ const StyledButton = styled(LargeContainerButton)`
   align-items: center;
 `;
 
-export default function SearchButton({ onClick }) {
+export default function SearchButton() {
+  const { selectedFilters, resetFilters } = useFilterStore((state) => ({
+    selectedFilters: state.selectedFilters,
+    resetFilters: state.resetFilters,
+  }));
+  const closeModal = useFilterModalStore((state) => state.closeModal);
+  const applyQueryParams = useApplyQueryParams();
+
+  function searchHandler() {
+    closeModal();
+    applyQueryParams(selectedFilters);
+    resetFilters();
+  }
   const buttonLabel = '검색';
-  return <StyledButton onClick={onClick}>{buttonLabel}</StyledButton>;
+  return <StyledButton onClick={() => searchHandler()}>{buttonLabel}</StyledButton>;
 }

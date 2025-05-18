@@ -64,16 +64,19 @@ export default function IssueListPage() {
   // 이슈 선택 로직 추후에 구현
   const { response, isLoading, fetchData } = useDataFetch({ fetchType });
   const { issues, setIssues, toggleIssues, parseIssue, issueSummary } = useIssueStore();
+  const setFilterData = useFilterModalStore((state) => state.setFilterData);
 
   useEffect(() => {
     fetchData(ISSUES_URL);
   }, [page]);
   useEffect(() => {
-    if (response) {
-      setIssues(response); // ✅ 상태 변화 감지해서 후처리
+    const fetchedData = response.data;
+    if (fetchedData) {
+      setIssues(fetchedData); // ✅ 상태 변화 감지해서 후처리
       parseIssue(); // 여기도 safe하게
+      setFilterData(fetchedData.users, fetchedData.labels, fetchedData.milestones);
     }
-  }, [response]);
+  }, [response.data]);
 
   return (
     <Container>
