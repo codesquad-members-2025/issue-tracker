@@ -42,7 +42,7 @@ public class S3FileService {
                     // S3 클라이언트를 통해 파일 업로드
                     try {
                         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(f.getInputStream(), f.getSize()));
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         log.error("파일 업로드 중 오류 발생: {}", e.getMessage(), e);
                         throw new FileUploadException(ExceptionMessage.FILE_UPLOAD_FAILED, e);
                     }
