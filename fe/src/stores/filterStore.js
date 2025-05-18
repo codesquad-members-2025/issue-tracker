@@ -10,6 +10,7 @@ import { immer } from 'zustand/middleware/immer';
 const useFilterStore = create(
   immer((set) => ({
     selectedFilters: {
+      page: 1,
       assignee: null,
       label: null,
       milestone: null,

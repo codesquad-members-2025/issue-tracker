@@ -9,7 +9,6 @@ const useIssuesStore = create(
       set((state) => {
         if (!issues) return;
         state.issues = issues;
-        state.parseIssue();
       }),
 
     addIssue: (issue) =>
@@ -36,6 +35,7 @@ const useIssuesStore = create(
         state.issues = state.issues.filter((i) => i.id !== id);
       }),
 
+    //이 로직 맞아...?
     parseIssue: () =>
       set((state) => {
         const summary = state.issues.reduce(
@@ -51,7 +51,10 @@ const useIssuesStore = create(
           },
           { openedIssueId: [], closedIssueId: [], openIssueNumber: 0, closeIssueNumber: 0 },
         );
-        state.issueSummary = summary;
+
+        if (JSON.stringify(state.issueSummary) !== JSON.stringify(summary)) {
+          state.issueSummary = summary;
+        }
       }),
   })),
 );

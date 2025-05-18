@@ -3,10 +3,14 @@ import { useEffect, useState } from 'react';
 import useIssuesStore from '@/stores/issuesStore';
 import useDataFetch from '@/hooks/useDataFetch';
 import { ISSUES_URL } from '@/api/issues';
+import { TEST_ISSUES_URL } from '@/api/issues';
 import MainPageHeaderTap from '@/units/mainPageHeaderTap';
 import IsOpenFilter from '@/units/kanbanHeader/IsOpenFilter';
 import CheckBox from '@/base-ui/utils/CheckBox';
 import useFilterModalStore from '@/stores/detailFilterModalStore';
+import useFilterStore from '@/stores/filterStore';
+import DetailFilterModal from '@/units/detailFilterModal';
+import { useRef } from 'react';
 
 const Container = styled.div`
   display: flex;
@@ -49,34 +53,40 @@ const KanbanMain = styled.div`
   // 최소 높이는 설정 하지 않는다. -> 조건 만족하는 아이템이 없으면 안내 블럭을 띄워주는데 그 블럭이 최소 높이 역할.
 `;
 
-function useIssueStore() {
+export default function IssueListPage() {
+  const fetchType = '메인 페이지';
+  // 이슈 선택 로직 추후에 구현
+  const { response, isLoading, fetchData } = useDataFetch({ fetchType });
+
   const issues = useIssuesStore((state) => state.issues);
   const setIssues = useIssuesStore((state) => state.setIssues);
   const toggleIssues = useIssuesStore((state) => state.toggleIssues);
   const parseIssue = useIssuesStore((state) => state.parseIssue);
   const issueSummary = useIssuesStore((state) => state.issueSummary);
-  return { issues, setIssues, toggleIssues, parseIssue, issueSummary };
-}
 
-export default function IssueListPage() {
-  const fetchType = '메인 페이지';
-  const [page, setPage] = useState(1); // 필터 스토어에서 관리해야함!!
-  // 이슈 선택 로직 추후에 구현
-  const { response, isLoading, fetchData } = useDataFetch({ fetchType });
-  const { issues, setIssues, toggleIssues, parseIssue, issueSummary } = useIssueStore();
   const setFilterData = useFilterModalStore((state) => state.setFilterData);
-
+  const currentPage = useFilterStore((state) => state.selectedFilters.page);
+  const prevDataRef = useRef(null);
   useEffect(() => {
-    fetchData(ISSUES_URL);
-  }, [page]);
+    fetchData(TEST_ISSUES_URL);
+  }, []);
   useEffect(() => {
+    if (!response?.data) return;
     const fetchedData = response.data;
-    if (fetchedData) {
-      setIssues(fetchedData); // ✅ 상태 변화 감지해서 후처리
-      parseIssue(); // 여기도 safe하게
-      setFilterData(fetchedData.users, fetchedData.labels, fetchedData.milestones);
-    }
-  }, [response.data]);
+
+    const currentData = fetchedData;
+    const prevData = prevDataRef.current;
+
+    // 객체 내용이 진짜로 바뀐 경우에만 실행
+    const hasChanged = JSON.stringify(currentData) !== JSON.stringify(prevData);
+
+    if (!hasChanged) return;
+    prevDataRef.current = currentData; // 현재 값을 기억해둠
+
+    setIssues(fetchedData); // ✅ 상태 변화 감지해서 후처리
+    parseIssue(); // 여기도 safe하게
+    setFilterData(fetchedData.users, fetchedData.labels, fetchedData.milestones);
+  }, [response?.data]);
 
   return (
     <Container>
