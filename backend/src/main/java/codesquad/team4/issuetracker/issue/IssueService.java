@@ -139,7 +139,6 @@ public class IssueService {
                     .issueId(issueId)
                     .labelId(labelId)
                     .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
                     .build();
 
             issueLabelRepository.save(issueLabel);
@@ -150,7 +149,6 @@ public class IssueService {
                     .issueId(issueId)
                     .assigneeId(assigneeId)
                     .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
                     .build();
 
             issueAssigneeRepository.save(issueAssignee);
