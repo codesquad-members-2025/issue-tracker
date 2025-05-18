@@ -17,5 +17,4 @@ public class IssueAssignee {
     private Long issueId;
     private Long assigneeId;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

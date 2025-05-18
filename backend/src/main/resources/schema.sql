@@ -37,7 +37,6 @@ CREATE TABLE issue (
                        image_url VARCHAR(255),
                        author_id BIGINT NOT NULL,
                        milestone_id BIGINT,
-                       comment_id BIGINT,
                        is_open BOOLEAN DEFAULT true,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -65,7 +64,6 @@ CREATE TABLE issue_label (
                              issue_id BIGINT NOT NULL,
                              label_id BIGINT NOT NULL,
                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
                              CONSTRAINT fk_issue_label_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id),
                              CONSTRAINT fk_issue_label_label FOREIGN KEY (label_id) REFERENCES label(label_id)
@@ -77,7 +75,6 @@ CREATE TABLE issue_assignee (
                                 issue_id BIGINT NOT NULL,
                                 assignee_id BIGINT NOT NULL,
                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
                                 CONSTRAINT fk_issue_assignee_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id),
                                 CONSTRAINT fk_issue_assignee_user FOREIGN KEY (assignee_id) REFERENCES user(user_id)
