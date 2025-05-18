@@ -1,10 +1,12 @@
 package codesquad.team4.issuetracker.issue.dto;
 
+import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import java.util.List;
 
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,8 +31,8 @@ public class IssueResponseDto {
         private Long id;
         private String title;
         private UserDto.UserInfo author;
-        private List<LabelDto.LabelInfo> labels;
-        private List<UserDto.UserInfo> assignees;
+        private Set<LabelInfo> labels;
+        private Set<UserDto.UserInfo> assignees;
         private MilestoneDto.MilestoneInfo milestone;
         private String createdAt;
     }

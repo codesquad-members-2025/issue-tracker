@@ -61,8 +61,8 @@ public class IssueService {
                                     .nickname((String) row.get("author_nickname"))
                                     .profileImage((String) row.get("author_profile"))
                                     .build())
-                            .assignees(new ArrayList<>())
-                            .labels(new ArrayList<>())
+                            .assignees(new HashSet<>())
+                            .labels(new HashSet<>())
                             .milestone(MilestoneDto.MilestoneInfo.builder()
                                     .id((Long) row.get("milestone_id"))
                                     .title((String) row.get("milestone_title"))
@@ -98,8 +98,8 @@ public class IssueService {
             Long issueId = entry.getKey();
             IssueResponseDto.IssueInfo.IssueInfoBuilder builder = entry.getValue();
 
-            builder.assignees(List.copyOf(assigneeMap.getOrDefault(issueId, Set.of())));
-            builder.labels(List.copyOf(labelMap.getOrDefault(issueId, Set.of())));
+            builder.assignees(assigneeMap.getOrDefault(issueId, Set.of()));
+            builder.labels(labelMap.getOrDefault(issueId, Set.of()));
 
             issues.add(builder.build());
         }
