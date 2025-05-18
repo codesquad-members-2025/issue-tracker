@@ -7,6 +7,7 @@ import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import jakarta.validation.Valid;
 import java.io.IOException;
 
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class IssueController {
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<IssueResponseDto.CreateIssueDto> createIssue(
-            @RequestPart("issue") IssueRequestDto.CreateIssueDto request,
+            @RequestPart("issue") @Valid IssueRequestDto.CreateIssueDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         String uploadUrl;
 

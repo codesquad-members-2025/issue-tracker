@@ -1,10 +1,10 @@
 package codesquad.team4.issuetracker.issue.dto;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 
 public class IssueRequestDto {
 
@@ -12,11 +12,11 @@ public class IssueRequestDto {
     @Getter
     @Builder
     public static class CreateIssueDto{
-        @NonNull
+        @NotNull
         private String title;
-        @NonNull
+        @NotNull
         private String content;
-        @NonNull
+        @NotNull
         private Long authorId;
         private List<Long> assigneeId;
         private List<Long> labelId;

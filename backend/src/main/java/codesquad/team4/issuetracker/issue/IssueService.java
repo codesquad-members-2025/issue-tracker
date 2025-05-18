@@ -119,7 +119,7 @@ public class IssueService {
 
     @Transactional
     public IssueResponseDto.CreateIssueDto createIssue(IssueRequestDto.CreateIssueDto request, String uploadUrl) {
-        IssueBuilder issueBuilder = Issue.builder()
+        Issue issue = Issue.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .imageUrl(uploadUrl)
@@ -127,9 +127,9 @@ public class IssueService {
                 .authorId(request.getAuthorId())
                 .milestoneId(request.getMilestoneId())
                 .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now());
+                .updatedAt(LocalDateTime.now())
+                .build();
 
-        Issue issue = issueBuilder.build();
         Issue savedIssue = issueRepository.save(issue);
 
         Long issueId = savedIssue.getId();
