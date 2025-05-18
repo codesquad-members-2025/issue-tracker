@@ -134,24 +134,28 @@ public class IssueService {
 
         Long issueId = savedIssue.getId();
 
-        for (Long labelId : Optional.ofNullable(request.getLabelId()).orElse(List.of())) {
-            IssueLabel issueLabel = IssueLabel.builder()
-                    .issueId(issueId)
-                    .labelId(labelId)
-                    .createdAt(LocalDateTime.now())
-                    .build();
+        if(request.getLabelId() != null) {
+            for (Long labelId : request.getLabelId()) {
+                IssueLabel issueLabel = IssueLabel.builder()
+                        .issueId(issueId)
+                        .labelId(labelId)
+                        .createdAt(LocalDateTime.now())
+                        .build();
 
-            issueLabelRepository.save(issueLabel);
+                issueLabelRepository.save(issueLabel);
+            }
         }
 
-        for (Long assigneeId : Optional.ofNullable(request.getAssigneeId()).orElse(List.of())) {
-            IssueAssignee issueAssignee = IssueAssignee.builder()
-                    .issueId(issueId)
-                    .assigneeId(assigneeId)
-                    .createdAt(LocalDateTime.now())
-                    .build();
+        if(request.getAssigneeId() != null) {
+            for (Long assigneeId : request.getAssigneeId()) {
+                IssueAssignee issueAssignee = IssueAssignee.builder()
+                        .issueId(issueId)
+                        .assigneeId(assigneeId)
+                        .createdAt(LocalDateTime.now())
+                        .build();
 
-            issueAssigneeRepository.save(issueAssignee);
+                issueAssigneeRepository.save(issueAssignee);
+            }
         }
 
         return IssueResponseDto.CreateIssueDto.builder()
