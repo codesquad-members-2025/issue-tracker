@@ -1,11 +1,13 @@
 package codesquad.team4.issuetracker.issue;
 
 import codesquad.team4.issuetracker.aws.S3FileService;
+import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.exception.FileUploadException;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.user.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -170,6 +172,42 @@ class IssueControllerTest {
 
     @Test
     @DisplayName("이슈를 조회할 때 이슈 내용과 댓글을 함께 응답한다")
-    void searchIssueDetail() {
+    void searchIssueDetail() throws Exception {
+        // given
+        Long issueId = 1L;
+
+        IssueResponseDto.searchIssueDetailDto responseDto =
+                IssueResponseDto.searchIssueDetailDto.builder()
+                        .content("이슈 설명")
+                        .comments(List.of(
+                                CommentResponseDto.CommentInfo.builder()
+                                        .commentId(1L)
+                                        .content("댓글1")
+                                        .author(UserDto.UserInfo.builder()
+                                                .id(1L)
+                                                .nickname("작성자1")
+                                                .build())
+                                        .build(),
+                                CommentResponseDto.CommentInfo.builder()
+                                        .commentId(2L)
+                                        .content("댓글2")
+                                        .author(UserDto.UserInfo.builder()
+                                                .id(2L)
+                                                .nickname("작성자2")
+                                                .build())
+                                        .build()))
+                        .build();
+
+        given(issueService.getIssueDetailById(issueId)).willReturn(responseDto);
+
+        // when & then
+        mockMvc.perform(get("/api/issues/{issue-id}", issueId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content").value("이슈 설명"))
+                .andExpect(jsonPath("$.data.comments").isArray())
+                .andExpect(jsonPath("$.data.comments[0].content").value("댓글1"))
+                .andExpect(jsonPath("$.data.comments[0].author.nickname").value("작성자1"))
+                .andExpect(jsonPath("$.data.comments[1].content").value("댓글2"))
+                .andExpect(jsonPath("$.data.comments[1].author.nickname").value("작성자2"));
     }
 }
