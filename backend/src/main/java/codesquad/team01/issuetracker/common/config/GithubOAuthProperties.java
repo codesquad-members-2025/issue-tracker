@@ -14,6 +14,7 @@ public class GithubOAuthProperties {
     private String authorizeUri;
     private String tokenUri;
     private String userInfoUri;
+    private String userEmailUri;
     private String redirectUri;
     private String scope;
 }

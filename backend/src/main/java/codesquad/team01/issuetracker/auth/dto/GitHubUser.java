@@ -1,8 +1,8 @@
 package codesquad.team01.issuetracker.auth.dto;
 
-public record LoginResponse(
+public record GitHubUser(
         Long id,
-        String loginId,
+        String githubId,
         String avatarUrl
 ) {
 }
