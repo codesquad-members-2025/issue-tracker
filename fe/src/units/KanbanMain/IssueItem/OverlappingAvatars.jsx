@@ -29,9 +29,9 @@ const OverflowBadge = styled.div`
   margin-left: -10px;
 `;
 
-export default function OverlappingAvatars({ avatarUrls, maxVisible = 3 }) {
-  const visibleAvatars = avatarUrls.slice(0, maxVisible);
-  const overflowCount = avatarUrls.length - maxVisible;
+export default function OverlappingAvatars({ avatars, maxVisible = 3 }) {
+  const visibleAvatars = avatars.slice(0, maxVisible);
+  const overflowCount = avatars.length - maxVisible;
 
   return (
     <AvatarGroup>

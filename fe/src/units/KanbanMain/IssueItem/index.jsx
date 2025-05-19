@@ -7,6 +7,7 @@ import MileStoneTitle from '@/base-ui/utils/MileStoneTitle';
 import AuthorInform from '@/base-ui/utils/AuthorInform';
 import UserAvatar from '@/base-ui/utils/UserBadge';
 import ItemLabels from './ItemLabels';
+import OverlappingAvatars from './OverlappingAvatars';
 
 const Container = styled.div`
   width: 100%;
@@ -48,8 +49,7 @@ const Information = styled.div`
 `;
 
 export default function IssueItem({ issue }) {
-  const { id, isOpen, title, labels, issueNumber, lastModifiedAt, author, milestone, assignees } =
-    issue;
+  const { id, isOpen, title, labels, lastModifiedAt, author, milestone, assignees } = issue;
   return (
     <Container id={id}>
       <LetfWrapper>
@@ -64,14 +64,14 @@ export default function IssueItem({ issue }) {
             <ItemLabels labels={labels} />
           </Header>
           <Information>
-            <IssueNumber issueNumber={s} />
-            <AuthorInform lastModifiedAt={s} author={s} />
-            <MileStoneTitle mileStoneTitle={s} />
+            <IssueNumber issueNumber={id} />
+            <AuthorInform lastModifiedAt={lastModifiedAt} author={author.nickname} />
+            <MileStoneTitle mileStoneTitle={milestone.name} />
           </Information>
         </Main>
       </LetfWrapper>
       <RightWrapper>
-        <OverlappingAvatars avatarUrl={s} />
+        <OverlappingAvatars avatars={assignees} />
       </RightWrapper>
     </Container>
   );
