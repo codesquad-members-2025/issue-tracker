@@ -15,6 +15,7 @@ import DetailFilterTriigerButton from '@/units/detailFilterModal/DetailFilterTri
 import { useLocation } from 'react-router-dom';
 import { useApplyQueryParams } from '@/utils/queryParams/useApplyQueryParams';
 import KanbanMain from '@/units/KanbanMain';
+import ResetFilterButton from '@/base-ui/issueListPage/ResetFilterButton';
 
 const Container = styled.div`
   display: flex;
@@ -37,7 +38,8 @@ const KanbanHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ theme }) => theme.surface.default};
+  background-color: ${({ theme }) => theme.surface.bold};
+  border-bottom: 1px solid ${({ theme }) => theme.border.default};
 `;
 
 const HeaderLeft = styled.div`
@@ -66,6 +68,10 @@ export default function IssueListPage() {
   const prevDataRef = useRef(null);
   const location = useLocation(); // location.search → '?label=1&milestone=2&page=1'
   const applyQueryParams = useApplyQueryParams();
+  const queryParams = new URLSearchParams(location.search);
+  const hasActiveFilter = Object.keys(Object.fromEntries(queryParams)).some(
+    (key) => key !== 'isOpen' && key !== 'page',
+  );
 
   useEffect(() => {
     if (!location.search || location.search === '?') {
@@ -96,6 +102,7 @@ export default function IssueListPage() {
   return (
     <Container>
       <MainPageHeaderTap />
+      {hasActiveFilter && <ResetFilterButton />}
       <Kanban>
         <KanbanHeader>
           <HeaderLeft>

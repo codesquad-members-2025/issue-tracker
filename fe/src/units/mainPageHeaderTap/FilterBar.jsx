@@ -18,7 +18,9 @@ const Container = styled.div`
   border-radius: 12px;
   display: flex;
   align-items: center;
-  width: 560px;
+  min-width: 560px;
+  max-width: 760px;
+  overflow: hidden;
   background-color: ${({ theme, $isActive }) =>
     $isActive ? theme.surface.strong : theme.surface.bold};
 `;

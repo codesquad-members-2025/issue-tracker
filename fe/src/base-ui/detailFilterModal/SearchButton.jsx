@@ -14,6 +14,7 @@ const StyledButton = styled(LargeContainerButton)`
 
 export default function SearchButton({ children }) {
   const selectedFilters = useFilterStore((state) => state.selectedFilters);
+  const setFilter = useFilterStore((state) => state.setFilter);
   const resetFilters = useFilterStore((state) => state.resetFilters);
 
   const closeModal = useFilterModalStore((state) => state.closeModal);
@@ -21,6 +22,8 @@ export default function SearchButton({ children }) {
 
   function searchHandler() {
     closeModal();
+    setFilter('page', 1);
+    setFilter('isOpen', true);
     applyQueryParams(selectedFilters);
     resetFilters();
   }

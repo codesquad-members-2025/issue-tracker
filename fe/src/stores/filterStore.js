@@ -27,6 +27,7 @@ const useFilterStore = create(
     resetFilters: () =>
       set((state) => {
         state.selectedFilters = {
+          page: 1,
           assignee: null,
           label: null,
           milestone: null,
