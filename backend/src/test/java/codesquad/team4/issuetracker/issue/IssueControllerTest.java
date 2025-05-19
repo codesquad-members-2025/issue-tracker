@@ -2,6 +2,7 @@ package codesquad.team4.issuetracker.issue;
 
 import codesquad.team4.issuetracker.aws.S3FileService;
 import codesquad.team4.issuetracker.exception.FileUploadException;
+import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -151,5 +153,23 @@ class IssueControllerTest {
                 .andExpect(jsonPath("$.message").value("이슈가 존재하지 않습니다"));
     }
 
+    @Test
+    @DisplayName("존재하지 않는 이슈를 조회할 경우 에러가 발생한다")
+    void searchNotPresentIssue() throws Exception {
+        // given
+        Long notExistIssueId = 999L;
 
+        given(issueService.getIssueDetialById(notExistIssueId))
+                .willThrow(new IssueNotFoundException("해당 이슈를 찾을 수 없습니다."));
+
+        // when & then
+        mockMvc.perform(get("/api/issues/{issue-id}", notExistIssueId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("해당 이슈를 찾을 수 없습니다."));
+    }
+
+    @Test
+    @DisplayName("이슈를 조회할 때 이슈 내용과 댓글을 함께 응답한다")
+    void searchIssueDetail() {
+    }
 }
