@@ -38,13 +38,17 @@ const Tooltip = styled.span`
 
 export default function ItemLabels({ labels }) {
   return (
-    <Labels>
-      {labels.map(({ id, color, name, description }) => (
-        <TooltipWrapper key={id}>
-          <Label id={id} color={color} labelTitle={name} />
-          <Tooltip>{description}</Tooltip>
-        </TooltipWrapper>
-      ))}
-    </Labels>
+    <>
+      {labels && (
+        <Labels>
+          {labels.map(({ id, color, name, description }) => (
+            <TooltipWrapper key={id}>
+              <Label id={id} color={color} labelTitle={name} />
+              <Tooltip>{description}</Tooltip>
+            </TooltipWrapper>
+          ))}
+        </Labels>
+      )}
+    </>
   );
 }

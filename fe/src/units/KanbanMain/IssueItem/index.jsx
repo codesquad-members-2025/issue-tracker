@@ -55,7 +55,7 @@ export default function IssueItem({ issue }) {
       <LetfWrapper>
         <Icon>
           {/* 체크박스 관련은 스토어에서 관리 */}
-          <CheckBox isDisabled={false} isActive={'체크 박스 전용 스토어에서 관리'} onClick={s} />
+          {/* <CheckBox isDisabled={false} isActive={'체크 박스 전용 스토어에서 관리'} onClick={s} /> */}
         </Icon>
         <Main>
           <Header>
@@ -66,7 +66,7 @@ export default function IssueItem({ issue }) {
           <Information>
             <IssueNumber issueNumber={id} />
             <AuthorInform lastModifiedAt={lastModifiedAt} author={author.nickname} />
-            <MileStoneTitle mileStoneTitle={milestone.name} />
+            <MileStoneTitle mileStoneTitle={milestone?.name} />
           </Information>
         </Main>
       </LetfWrapper>

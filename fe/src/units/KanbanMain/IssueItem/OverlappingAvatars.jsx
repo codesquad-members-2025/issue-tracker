@@ -34,11 +34,15 @@ export default function OverlappingAvatars({ avatars, maxVisible = 3 }) {
   const overflowCount = avatars.length - maxVisible;
 
   return (
-    <AvatarGroup>
-      {visibleAvatars.map(({ imgUrl, nickname }, index) => (
-        <Avatar key={index} src={imgUrl} alt={`avatar-${nickname}`} />
-      ))}
-      {overflowCount > 0 && <OverflowBadge>+{overflowCount}</OverflowBadge>}
-    </AvatarGroup>
+    <>
+      {avatars && (
+        <AvatarGroup>
+          {visibleAvatars.map(({ imgUrl, nickname }, index) => (
+            <Avatar key={index} src={imgUrl} alt={`avatar-${nickname}`} />
+          ))}
+          {overflowCount > 0 && <OverflowBadge>+{overflowCount}</OverflowBadge>}
+        </AvatarGroup>
+      )}
+    </>
   );
 }
