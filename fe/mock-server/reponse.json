@@ -107,7 +107,7 @@
         "endDate": "2025-04-30T00:00:00Z",
         "isOpen": false
       }
-    ]
-  },
-  "meta-data": { "currentPage": 1, "openIssueNumber": 4, "closeIssueNumber": 1 }
+    ],
+    "metaData": { "currentPage": 1, "openIssueNumber": 4, "closeIssueNumber": 1 }
+  }
 }

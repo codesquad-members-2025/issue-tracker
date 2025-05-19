@@ -53,11 +53,11 @@ app.get('/', async (req, res) => {
         users: json.users,
         labels: json.labels,
         milestones: json.milestones,
-      },
-      'meta-data': {
-        currentPage: pageNum,
-        openIssueNumber: issues.filter((i) => i.isOpen === true).length,
-        closeIssueNumber: issues.filter((i) => i.isOpen === false).length,
+        metaData: {
+          currentPage: pageNum,
+          openIssueNumber: issues.filter((i) => i.isOpen === true).length,
+          closeIssueNumber: issues.filter((i) => i.isOpen === false).length,
+        },
       },
     });
   } catch (error) {

@@ -34,7 +34,7 @@ const Content = styled.button`
   align-items: center;
   padding: 10px 16px;
   background-color: ${({ theme, $isSelect }) =>
-    $isSelect ? theme.surface.default : theme.surface.bold};
+    $isSelect ? theme.surface.bold : theme.surface.default};
   &:hover {
     background-color: ${({ theme }) => theme.surface.bold};
   }

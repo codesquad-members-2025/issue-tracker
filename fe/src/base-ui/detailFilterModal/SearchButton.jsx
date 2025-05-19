@@ -8,10 +8,11 @@ import useFilterModalStore from '@/stores/detailFilterModalStore';
 const StyledButton = styled(LargeContainerButton)`
   display: flex;
   gap: 8px;
+  justify-content: center;
   align-items: center;
 `;
 
-export default function SearchButton() {
+export default function SearchButton({ children }) {
   const selectedFilters = useFilterStore((state) => state.selectedFilters);
   const resetFilters = useFilterStore((state) => state.resetFilters);
 
@@ -23,6 +24,5 @@ export default function SearchButton() {
     applyQueryParams(selectedFilters);
     resetFilters();
   }
-  const buttonLabel = '검색';
-  return <StyledButton onClick={() => searchHandler()}>{buttonLabel}</StyledButton>;
+  return <StyledButton onClick={() => searchHandler()}>{children}</StyledButton>;
 }

@@ -64,11 +64,10 @@ export default function IssueListPage() {
   const issues = useIssuesStore((state) => state.issues);
   const setIssues = useIssuesStore((state) => state.setIssues);
   const toggleIssues = useIssuesStore((state) => state.toggleIssues);
-  const parseIssue = useIssuesStore((state) => state.parseIssue);
-  const issueSummary = useIssuesStore((state) => state.issueSummary);
+  const setMetaData = useIssuesStore((state) => state.setMetaData);
+  const metaData = useIssuesStore((state) => state.metaData); // 페이지네이션에 필요
   const setFilterData = useFilterModalStore((state) => state.setFilterData);
   const isActive = useFilterModalStore((state) => state.isActive);
-  const currentPage = useFilterStore((state) => state.selectedFilters.page);
   const selectedFilters = useFilterStore((state) => state.selectedFilters);
   const prevDataRef = useRef(null);
   const location = useLocation(); // location.search → '?label=1&milestone=2&page=1'
@@ -79,12 +78,12 @@ export default function IssueListPage() {
       // location.search가 비어있다면 디폴트 필터 적용
       applyQueryParams(selectedFilters); // selectedFilters 초기값이 디폴트 필터임
     }
-    fetchData(`TEST_ISSUES_URL${location.search}`);
+    fetchData(`${TEST_ISSUES_URL}${location.search}`);
   }, [location.search]);
   useEffect(() => {
     if (!response?.data) return;
     // const fetchedData = response.data;
-    const { issues, users, labels, milestones } = response.data;
+    const { issues, users, labels, milestones, metaData } = response.data;
     const currentData = issues;
     const prevData = prevDataRef.current;
 
@@ -95,7 +94,7 @@ export default function IssueListPage() {
     prevDataRef.current = currentData; // 현재 값을 기억해둠
 
     setIssues(currentData); // ✅ 상태 변화 감지해서 후처리
-    parseIssue(); // 여기도 safe하게
+    setMetaData(metaData);
     setFilterData(users, labels, milestones);
   }, [response?.data]);
 
@@ -106,10 +105,7 @@ export default function IssueListPage() {
         <KanbanHeader>
           <HeaderLeft>
             <CheckBox isDisabled={true} />
-            <IsOpenFilter
-              openIssueNumber={issueSummary.openIssueNumber}
-              closeIssueNumber={issueSummary.closeIssueNumber}
-            />
+            <IsOpenFilter />
           </HeaderLeft>
           <HeaderRight>
             <DetailFilterTriigerButton />

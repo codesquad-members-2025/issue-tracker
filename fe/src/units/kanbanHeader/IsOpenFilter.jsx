@@ -1,6 +1,7 @@
 import CloseIssueButton from '@/base-ui/issueListPage/IssueListHeader/CloseIssueButton';
 import OpenIssueButton from '@/base-ui/issueListPage/IssueListHeader/OpenIssueButton';
 import styled from 'styled-components';
+import useIssuesStore from '@/stores/issuesStore';
 
 const Container = styled.div`
   display: flex;
@@ -8,10 +9,11 @@ const Container = styled.div`
 `;
 
 export default function IsOpenFilter({ openIssueNumber, closeIssueNumber }) {
+  const metaData = useIssuesStore((state) => state.metaData);
   return (
     <Container>
-      <OpenIssueButton number={openIssueNumber} />
-      <CloseIssueButton number={closeIssueNumber} />
+      <OpenIssueButton number={metaData.openIssueNumber} />
+      <CloseIssueButton number={metaData.closeIssueNumber} />
     </Container>
   );
 }

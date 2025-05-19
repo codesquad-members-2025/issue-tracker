@@ -15,10 +15,11 @@ const useFilterModalStore = create(
 
     setFilterData: (users, labels, milestones) =>
       set((state) => {
-        state.author = users;
-        state.label = labels;
-        state.milestone = milestones;
-        state.assignee = users;
+        const filterEntry = state.filterEntry;
+        filterEntry.author = users;
+        filterEntry.label = labels;
+        filterEntry.milestone = milestones;
+        filterEntry.assignee = users;
       }),
 
     openModal: () =>
