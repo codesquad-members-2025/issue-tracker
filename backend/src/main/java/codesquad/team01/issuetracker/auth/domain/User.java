@@ -39,9 +39,6 @@ public class User {
     @Column("updated_at")
     private LocalDateTime updatedAt;
 
-    @Column("provider_id")
-    private String providerId;
-
     @Column("auth_provider")
-    private String authProvider;
+    private String authProvider; //local or github
 }
