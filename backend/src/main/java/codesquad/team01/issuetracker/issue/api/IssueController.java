@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@RestController
 public class IssueController {
 
     private final IssueService issueService;

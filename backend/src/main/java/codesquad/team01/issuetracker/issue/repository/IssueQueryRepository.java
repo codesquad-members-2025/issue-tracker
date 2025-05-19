@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 @RequiredArgsConstructor
+@Repository
 public class IssueQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
