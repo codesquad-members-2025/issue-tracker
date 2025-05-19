@@ -2,31 +2,34 @@ package codesquad.team4.issuetracker.issue;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @ExtendWith(MockitoExtension.class)
 public class IssueServiceTest {
@@ -183,6 +186,49 @@ public class IssueServiceTest {
                 .isInstanceOf(IssueStatusUpdateException.class)
                 .hasMessageContaining("요청한 이슈 ID가 존재하지 않습니다.");
     }
+    @Test
+    @DisplayName("이슈 상세 정보를 성공적으로 조회한다")
+    void successGetIssueDetailById() {
+        // given
+        Long issueId = 1L;
+        Map<String, Object> row = new HashMap<>();
+        row.put("issue_content", "이슈 내용");
+        row.put("issue_image_url", "https://example.com/image.png");
+        row.put("comment_id", 10L);
+        row.put("comment_content", "댓글 내용");
+        row.put("comment_image_url", "https://example.com/comment.png");
+        row.put("comment_created_at", Timestamp.valueOf(LocalDateTime.now()));
+        row.put("author_id", 2L);
+        row.put("author_nickname", "작성자");
+        row.put("author_profile", "https://example.com/profile.png");
 
+        List<Map<String, Object>> mockResult = List.of(row);
+        given(issueDao.findIssueById(issueId)).willReturn(mockResult);
 
+        // when
+        IssueResponseDto.searchIssueDetailDto result = issueService.getIssueDetailById(issueId);
+
+        // then
+        assertThat(result.getContent()).isEqualTo("이슈 내용");
+        assertThat(result.getContentImageUrl()).isEqualTo("https://example.com/image.png");
+        assertThat(result.getComments()).hasSize(1);
+
+        CommentResponseDto.CommentInfo comment = result.getComments().get(0);
+        assertThat(comment.getCommentId()).isEqualTo(10L);
+        assertThat(comment.getContent()).isEqualTo("댓글 내용");
+        assertThat(comment.getAuthor().getNickname()).isEqualTo("작성자");
+    }
+
+    @Test
+    @DisplayName("이슈가 존재하지 않으면 예외를 던진다")
+    void getIssueDetailByNotExistId() {
+        // given
+        Long issueId = 999L;
+        given(issueDao.findIssueById(issueId)).willReturn(Collections.emptyList());
+
+        // when & then
+        assertThatThrownBy(() -> issueService.getIssueDetailById(issueId))
+                .isInstanceOf(IssueNotFoundException.class)
+                .hasMessageContaining("이슈를 찾을 수 없습니다. issueId = " + issueId);
+    }
 }
