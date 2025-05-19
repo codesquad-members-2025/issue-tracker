@@ -200,13 +200,12 @@ public class IssueService {
     }
 
     public IssueCountDto getIssueCounts() {
-        //// 쿼리 결과가 null일 경우 NPE 방지를 위해 int 대신 Integer 사용 -> queryForObject(...)가 null반환 할 수 있음
         Integer openCount = issueDao.countIssuesByOpenStatus(true);
         Integer closedCount = issueDao.countIssuesByOpenStatus(false);
 
         return IssueCountDto.builder()
-                .openCount(openCount)
-                .closedCount(closedCount)
+                .openCount(openCount != null ? openCount : 0)
+                .closedCount(closedCount != null ? closedCount : 0)
                 .build();
     }
 
