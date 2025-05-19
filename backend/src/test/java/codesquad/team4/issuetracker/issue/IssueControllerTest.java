@@ -160,7 +160,7 @@ class IssueControllerTest {
         Long notExistIssueId = 999L;
 
         given(issueService.getIssueDetailById(notExistIssueId))
-                .willThrow(new IssueNotFoundException("해당 이슈를 찾을 수 없습니다."));
+                .willThrow(new IssueNotFoundException(notExistIssueId));
 
         // when & then
         mockMvc.perform(get("/api/issues/{issue-id}", notExistIssueId))

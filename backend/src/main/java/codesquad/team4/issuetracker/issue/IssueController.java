@@ -82,13 +82,8 @@ public class IssueController {
 
     @GetMapping("/{issue-id}")
     public ResponseEntity<ApiResponse<IssueResponseDto.searchIssueDetailDto>> searchIssueDetail(@PathVariable("issue-id") Long issueId){
-        try {
-            IssueResponseDto.searchIssueDetailDto result = issueService.getIssueDetailById(issueId);
-            return ResponseEntity.ok(ApiResponse.success(result));
-        }catch (IssueNotFoundException e){
-            log.error("이슈 조회 실패, issueId : {}", issueId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    ApiResponse.fail("이슈를 찾을 수 없습니다. issueId = " + issueId));
-        }
+        IssueResponseDto.searchIssueDetailDto result = issueService.getIssueDetailById(issueId);
+
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 }

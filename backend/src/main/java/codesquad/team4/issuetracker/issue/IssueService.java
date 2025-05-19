@@ -213,7 +213,7 @@ public class IssueService {
     public searchIssueDetailDto getIssueDetailById(Long issueId) {
         List<Map<String, Object>> issueById = issueDao.findIssueDetailById(issueId);
         if (issueById.isEmpty()) {
-            throw new IssueNotFoundException("이슈를 찾을 수 없습니다. issueId = " + issueId);
+            throw new IssueNotFoundException(issueId);
         }
 
         String issueContent = (String) issueById.get(0).get("issue_content");
