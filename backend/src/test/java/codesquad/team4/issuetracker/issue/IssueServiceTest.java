@@ -203,7 +203,7 @@ public class IssueServiceTest {
         row.put("author_profile", "https://example.com/profile.png");
 
         List<Map<String, Object>> mockResult = List.of(row);
-        given(issueDao.findIssueById(issueId)).willReturn(mockResult);
+        given(issueDao.findIssueDetailById(issueId)).willReturn(mockResult);
 
         // when
         IssueResponseDto.searchIssueDetailDto result = issueService.getIssueDetailById(issueId);
