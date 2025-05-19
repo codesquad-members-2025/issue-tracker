@@ -7,6 +7,7 @@ import elbin_bank.issue_tracker.issue.domain.IssueRepository;
 import elbin_bank.issue_tracker.issue.domain.IssueStatus;
 import elbin_bank.issue_tracker.label.application.query.dto.LabelsDto;
 import elbin_bank.issue_tracker.label.domain.Label;
+import elbin_bank.issue_tracker.milestone.domain.MilestoneRepository;
 import elbin_bank.issue_tracker.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,12 @@ public class GetFilteredIssueListService {
 
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
+    private final MilestoneRepository milestoneRepository;
 
-    public GetFilteredIssueListService(IssueRepository issueRepository, UserRepository userRepository) {
+    public GetFilteredIssueListService(IssueRepository issueRepository, UserRepository userRepository, MilestoneRepository milestoneRepository) {
         this.issueRepository = issueRepository;
         this.userRepository = userRepository;
+        this.milestoneRepository = milestoneRepository;
     }
 
     @Transactional(readOnly = true)
@@ -36,10 +39,12 @@ public class GetFilteredIssueListService {
 
         List<Long> issueIds = issues.stream().map(Issue::getId).toList();
         List<Long> authorIds = issues.stream().map(Issue::getAuthorId).distinct().toList();
+        List<Long> milestoneIds = issues.stream().map(Issue::getMilestoneId).toList();
 
         Map<Long, String> authors = userRepository.findNickNamesByIds(authorIds);
         Map<Long, List<Label>> labelsMap = issueRepository.findLabelsByIssueIds(issueIds);
         Map<Long, List<String>> assigneesMap = issueRepository.findAssigneesByIssueIds(issueIds);
+        Map<Long, String> milestoneNames = milestoneRepository.findTitlesByIds(milestoneIds);
 
         List<IssueSummaryDto> dtos = issues.stream().map(i ->
                 new IssueSummaryDto(
@@ -53,7 +58,7 @@ public class GetFilteredIssueListService {
                         i.getCreatedAt(),
                         i.getUpdatedAt(),
                         assigneesMap.getOrDefault(i.getId(), Collections.emptyList()),
-                        "hello wanja" // @todo
+                        milestoneNames.getOrDefault(i.getMilestoneId(), null)
                 )
         ).toList();
 
