@@ -1,9 +1,6 @@
 package codesquad.team01.issuetracker.auth.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,13 +10,15 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
 
 @Table("users")
-@Data
-@Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(of = {"id", "loginId", "username"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column("login_id")
@@ -39,9 +38,19 @@ public class User {
     @Column("updated_at")
     private LocalDateTime updatedAt;
 
-    @Column("provider_id")
-    private String providerId;
-
     @Column("auth_provider")
     private String authProvider;
+
+    @Builder
+    public User(String loginId,
+                String username,
+                String email,
+                String password,
+                String authProvider) {
+        this.loginId = loginId;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authProvider = authProvider;
+    }
 }
