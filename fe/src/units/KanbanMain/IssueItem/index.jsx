@@ -71,7 +71,7 @@ export default function IssueItem({ issue }) {
         </Main>
       </LetfWrapper>
       <RightWrapper>
-        <UserAvatar avatarUrl={s} />
+        <OverlappingAvatars avatarUrl={s} />
       </RightWrapper>
     </Container>
   );
