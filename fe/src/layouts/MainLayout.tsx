@@ -17,3 +17,4 @@ const Container = styled.div`
   gap: 32px;
   padding: 0 80px;
 `;
+
