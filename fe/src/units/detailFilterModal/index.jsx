@@ -19,6 +19,7 @@ const Overlay = styled.div`
 `;
 
 const Container = styled.div`
+  padding: 16px;
   background-color: ${({ theme }) => theme.surface.default};
   position: relative;
   color: ${({ theme }) => theme.text.default};
@@ -36,7 +37,10 @@ const Header = styled.div`
 `;
 
 const Body = styled.div`
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.border.default};
   display: flex;
+  overflow: hidden;
 `;
 
 const Footer = styled.div`

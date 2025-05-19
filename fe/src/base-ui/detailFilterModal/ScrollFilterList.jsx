@@ -29,6 +29,7 @@ const Title = styled.div`
 
 const Content = styled.button`
   ${typography.available.medium16};
+  color: ${({ theme }) => theme.text.default};
   display: flex;
   gap: 8px;
   align-items: center;
@@ -37,6 +38,10 @@ const Content = styled.button`
     $isSelect ? theme.surface.bold : theme.surface.default};
   &:hover {
     background-color: ${({ theme }) => theme.surface.bold};
+  }
+  img {
+    width: 20px;
+    height: 20px;
   }
 `;
 

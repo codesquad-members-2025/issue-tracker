@@ -20,7 +20,7 @@
         "id": 5,
         "name": "v1.0 릴리즈"
       },
-      "createdAt": "2025-05-12T09:00:00Z"
+      "lastModifiedAt": "2025-05-12T09:00:00Z"
     },
     {
       "id": 2,
@@ -36,7 +36,7 @@
         "id": 6,
         "name": "v1.1 릴리즈"
       },
-      "createdAt": "2025-05-15T14:30:00Z"
+      "lastModifiedAt": "2025-05-15T14:30:00Z"
     },
     {
       "id": 3,
@@ -55,7 +55,7 @@
         "id": 7,
         "name": "v0.9 릴리즈"
       },
-      "createdAt": "2025-04-20T08:00:00Z"
+      "lastModifiedAt": "2025-04-20T08:00:00Z"
     },
     {
       "id": 4,
@@ -68,7 +68,7 @@
       "assignees": [],
       "labels": [{ "id": 5, "name": "documentation", "color": "#ffa500" }],
       "milestone": null,
-      "createdAt": "2025-05-18T12:00:00Z"
+      "lastModifiedAt": "2025-05-18T12:00:00Z"
     },
     {
       "id": 5,
@@ -90,16 +90,46 @@
         "id": 6,
         "name": "v1.1 릴리즈"
       },
-      "createdAt": "2025-05-20T10:00:00Z"
+      "lastModifiedAt": "2025-05-20T10:00:00Z"
     }
   ],
   "users": [
-    { "id": 101, "nickname": "devchan", "email": "devchan@example.com", "imgUrl": "wwwdasf" },
-    { "id": 102, "nickname": "alice", "email": "alice@example.com", "imgUrl": "wwwdasf" },
-    { "id": 103, "nickname": "bob", "email": "bob@example.com", "imgUrl": "wwwdasf" },
-    { "id": 104, "nickname": "charlie", "email": "charlie@example.com", "imgUrl": "wwwdasf" },
-    { "id": 105, "nickname": "david", "email": "david@example.com", "imgUrl": "wwwdasf" },
-    { "id": 106, "nickname": "eve", "email": "eve@example.com", "imgUrl": "wwwdasf" }
+    {
+      "id": 101,
+      "nickname": "devchan",
+      "email": "devchan@example.com",
+      "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+    },
+    {
+      "id": 102,
+      "nickname": "alice",
+      "email": "alice@example.com",
+      "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+    },
+    {
+      "id": 103,
+      "nickname": "bob",
+      "email": "bob@example.com",
+      "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
+    },
+    {
+      "id": 104,
+      "nickname": "charlie",
+      "email": "charlie@example.com",
+      "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
+    },
+    {
+      "id": 105,
+      "nickname": "david",
+      "email": "david@example.com",
+      "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
+    },
+    {
+      "id": 106,
+      "nickname": "eve",
+      "email": "eve@example.com",
+      "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
+    }
   ],
   "labels": [
     { "id": 1, "name": "bug", "color": "#ff0000", "description": "버그 관련" },

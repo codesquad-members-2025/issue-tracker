@@ -84,10 +84,11 @@ export default function IssueListPage() {
     if (!response?.data) return;
     // const fetchedData = response.data;
     const { issues, users, labels, milestones, metaData } = response.data;
+
     const currentData = issues;
     const prevData = prevDataRef.current;
-
     // 객체 내용이 진짜로 바뀐 경우에만 실행
+
     const hasChanged = JSON.stringify(currentData) !== JSON.stringify(prevData);
 
     if (!hasChanged) return;

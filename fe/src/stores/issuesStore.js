@@ -35,7 +35,7 @@ const useIssuesStore = create(
         state.issues = state.issues.filter((i) => i.id !== id);
       }),
 
-    //이 로직 맞아...?
+    //이 로직 맞아...? -> 수정 완료.
     // -> 오픈 ID 관리 로직 수정 필요
     // 분기 처리도 현재 필터의 상태 (isOpen 의 쿼리 파람 상태)에 돤련된 id 를 추적 해야한다.
     setMetaData: (metaData) =>
