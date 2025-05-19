@@ -16,16 +16,16 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    // 담당자, 레이블 - 필터 OR vs AND 고민
     private static final String ASSIGNEE_QUERY = """
         SELECT 
             ia.issue_id,
             u.id as assignee_id,
-            u.profile_image_url as assignee_profile_image_url
+            f.url as assignee_profile_image_url
         FROM issue_assignee ia
         JOIN users u ON ia.user_id = u.id
+        LEFT JOIN file f ON u.profile_image_id = f.id
         WHERE ia.issue_id IN (:issueIds)
-        """;
+    """;
 
     private final RowMapper<UserDto.IssueAssigneeRow> assigneeRowMapper = (rs, rowNum) -> UserDto.IssueAssigneeRow.builder()
             .issueId(rs.getLong("issue_id"))
