@@ -16,8 +16,8 @@ public class IssueAssembler {
 
     public List<IssueDto.Details> assembleIssueDetails(
             List<IssueDto.BaseRow> issues,
-            List<IssueDto.AssigneeRow> assignees,
-            List<IssueDto.LabelRow> labels) {
+            List<UserDto.IssueAssigneeRow> assignees,
+            List<LabelDto.IssueLabelRow> labels) {
 
         log.debug("이슈 {}개에 대한 상세 정보 조합", issues.size());
 
@@ -40,10 +40,10 @@ public class IssueAssembler {
     }
 
     // 담당자 정보 이슈 id로 그룹화
-    private Map<Long, List<UserDto.AssigneeResponse>> groupAssigneesByIssueId(List<IssueDto.AssigneeRow> assignees) {
+    private Map<Long, List<UserDto.AssigneeResponse>> groupAssigneesByIssueId(List<UserDto.IssueAssigneeRow> assignees) {
         return assignees.stream()
                 .collect(Collectors.groupingBy(
-                        IssueDto.AssigneeRow::issueId,
+                        UserDto.IssueAssigneeRow::issueId,
                         Collectors.mapping(
                                 row -> UserDto.AssigneeResponse.builder()
                                         .id(row.assigneeId())
@@ -55,10 +55,10 @@ public class IssueAssembler {
     }
 
     // 레이블 정보 이슈 id로 그룹화
-    private Map<Long, List<LabelDto.ListItemResponse>> groupLabelsByIssueId(List<IssueDto.LabelRow> labels) {
+    private Map<Long, List<LabelDto.ListItemResponse>> groupLabelsByIssueId(List<LabelDto.IssueLabelRow> labels) {
         return labels.stream()
                 .collect(Collectors.groupingBy(
-                        IssueDto.LabelRow::issueId,
+                        LabelDto.IssueLabelRow::issueId,
                         Collectors.mapping(
                                 row -> LabelDto.ListItemResponse.builder()
                                         .id(row.labelId())

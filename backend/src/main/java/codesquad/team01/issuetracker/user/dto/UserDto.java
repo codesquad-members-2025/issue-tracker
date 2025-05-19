@@ -26,4 +26,16 @@ public class UserDto {
             String profileImageUrl
     ) {
     }
+
+    /**
+     * DB 조회용 DTO
+     */
+    // 이슈 담당자 행 DTO
+    @Builder
+    public record IssueAssigneeRow(
+            Long issueId,
+            Long assigneeId,
+            String assigneeProfileImageUrl
+    ) {
+    }
 }

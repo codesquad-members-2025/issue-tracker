@@ -18,4 +18,15 @@ public class LabelDto {
             String textColor
     ) {
     }
+
+    // 이슈 레이블 행 DTO
+    @Builder
+    public record IssueLabelRow(
+            Long issueId,
+            Long labelId,
+            String labelName,
+            String labelColor,
+            String labelTextColor
+    ) {
+    }
 }

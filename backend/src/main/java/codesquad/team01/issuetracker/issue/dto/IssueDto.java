@@ -87,26 +87,6 @@ public class IssueDto {
     ) {
     }
 
-    // 이슈 담당자 행 DTO
-    @Builder
-    public record AssigneeRow(
-            Long issueId,
-            Long assigneeId,
-            String assigneeProfileImageUrl
-    ) {
-    }
-
-    // 이슈 레이블 행 DTO
-    @Builder
-    public record LabelRow(
-            Long issueId,
-            Long labelId,
-            String labelName,
-            String labelColor,
-            String labelTextColor
-    ) {
-    }
-
     /**
      * 서비스 계층 DTO
      */
