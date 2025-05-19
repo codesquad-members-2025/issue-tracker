@@ -2,6 +2,10 @@ package codesquad.team01.issuetracker.issue.service;
 
 import codesquad.team01.issuetracker.issue.dto.*;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
+import codesquad.team01.issuetracker.label.dto.LabelDto;
+import codesquad.team01.issuetracker.label.repository.LabelQueryRepository;
+import codesquad.team01.issuetracker.user.dto.UserDto;
+import codesquad.team01.issuetracker.user.repository.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,8 @@ import java.util.List;
 public class IssueService {
 
     private final IssueQueryRepository issueQueryRepository;
+    private final UserQueryRepository userQueryRepository;
+    private final LabelQueryRepository labelQueryRepository;
     private final IssueAssembler issueAssembler;
 
     @Transactional(readOnly = true)
@@ -39,9 +45,9 @@ public class IssueService {
                 .toList();
         log.debug("기본 이슈 {}개 조회, id 목록: {}", issues.size(), issueIds);
 
-        // 담당자와 레이블 정보 조회 - 이 작업을 issueQueryRepository에서 하는게 맞는건지? 각각의 repository에서 해야하는거 아닌지 고민
-        List<IssueDto.AssigneeRow> assignees = issueQueryRepository.findAssigneesByIssueIds(issueIds);
-        List<IssueDto.LabelRow> labels = issueQueryRepository.findLabelsByIssueIds(issueIds);
+        // 드라이빙 테이블 기준으로 분리
+        List<UserDto.IssueAssigneeRow> assignees = userQueryRepository.findAssigneesByIssueIds(issueIds);
+        List<LabelDto.IssueLabelRow> labels = labelQueryRepository.findLabelsByIssueIds(issueIds);
         log.debug("이슈 담당자 {}개, 레이블 {}개 조회", assignees.size(), labels.size());
 
         // 이슈 기본 정보와 담당자, 레이블 조합

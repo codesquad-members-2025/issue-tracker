@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Repository
 public class JdbcIssueQueryRepository implements IssueQueryRepository {
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private static final String BASE_ISSUE_QUERY = """
@@ -33,29 +34,6 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
         WHERE 1=1
         """;
 
-    // 담당자, 레이블 - 필터 OR vs AND 고민
-    private static final String ASSIGNEE_QUERY = """
-        SELECT 
-            ia.issue_id,
-            u.id as assignee_id,
-            u.profile_image_url as assignee_profile_image_url
-        FROM issue_assignee ia
-        JOIN users u ON ia.user_id = u.id
-        WHERE ia.issue_id IN (:issueIds)
-        """;
-
-    private static final String LABEL_QUERY = """
-        SELECT 
-            il.issue_id,
-            l.id as label_id,
-            l.name as label_name,
-            l.color as label_color,
-            l.text_color as label_text_color
-        FROM issue_label il
-        JOIN label l ON il.label_id = l.id
-        WHERE il.issue_id IN (:issueIds)
-        """;
-
     private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()
             .issueId(rs.getLong("issue_id"))
             .issueTitle(rs.getString("issue_title"))
@@ -68,21 +46,6 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
             .milestoneId(rs.getObject("milestone_id", Long.class))
             .milestoneTitle(rs.getString("milestone_title"))
             .build();
-
-    private final RowMapper<IssueDto.AssigneeRow> assigneeRowMapper = (rs, rowNum) -> IssueDto.AssigneeRow.builder()
-            .issueId(rs.getLong("issue_id"))
-            .assigneeId(rs.getLong("assignee_id"))
-            .assigneeProfileImageUrl(rs.getString("assignee_profile_image_url"))
-            .build();
-
-    private final RowMapper<IssueDto.LabelRow> labelRowMapper = (rs, rowNum) -> IssueDto.LabelRow.builder()
-            .issueId(rs.getLong("issue_id"))
-            .labelId(rs.getLong("label_id"))
-            .labelName(rs.getString("label_name"))
-            .labelColor(rs.getString("label_color"))
-            .labelTextColor(rs.getString("label_text_color"))
-            .build();
-
 
     @Override
     public List<IssueDto.BaseRow> findIssuesWithFilters(
@@ -136,23 +99,5 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
         sql.append(" ORDER BY i.created_at DESC, i.id DESC");
 
         return jdbcTemplate.query(sql.toString(), params, issueRowMapper);
-    }
-
-    @Override
-    public List<IssueDto.AssigneeRow> findAssigneesByIssueIds(List<Long> issueIds) {
-        if (issueIds.isEmpty()) {
-            return List.of();
-        }
-        MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
-        return jdbcTemplate.query(ASSIGNEE_QUERY, params, assigneeRowMapper);
-    }
-
-    @Override
-    public List<IssueDto.LabelRow> findLabelsByIssueIds(List<Long> issueIds) {
-        if (issueIds.isEmpty()) {
-            return List.of();
-        }
-        MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
-        return jdbcTemplate.query(LABEL_QUERY, params, labelRowMapper);
     }
 }

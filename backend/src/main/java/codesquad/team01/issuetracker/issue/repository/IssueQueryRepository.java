@@ -10,7 +10,4 @@ public interface IssueQueryRepository {
             String state, Long writerId, Long milestoneId,
             List<Long> labelIds, List<Long> assigneeIds);
 
-    List<IssueDto.AssigneeRow> findAssigneesByIssueIds(List<Long> issueIds);
-
-    List<IssueDto.LabelRow> findLabelsByIssueIds(List<Long> issueIds);
 }
