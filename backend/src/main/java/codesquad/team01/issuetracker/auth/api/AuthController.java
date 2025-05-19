@@ -1,6 +1,6 @@
 package codesquad.team01.issuetracker.auth.api;
 
-import codesquad.team01.issuetracker.auth.dto.LoginResponse;
+import codesquad.team01.issuetracker.auth.dto.GitHubUser;
 import codesquad.team01.issuetracker.auth.service.AuthService;
 import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +29,7 @@ public class AuthController {
 
     // Redirect(Callback) endpoint
     @GetMapping("/api/v1/oauth/callback")
-    public LoginResponse githubCallback(
+    public GitHubUser githubCallback(
             @RequestParam("code") String code,
             @RequestParam("state") String state,
             HttpSession session) {
