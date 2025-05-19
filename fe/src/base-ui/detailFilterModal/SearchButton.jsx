@@ -12,10 +12,9 @@ const StyledButton = styled(LargeContainerButton)`
 `;
 
 export default function SearchButton() {
-  const { selectedFilters, resetFilters } = useFilterStore((state) => ({
-    selectedFilters: state.selectedFilters,
-    resetFilters: state.resetFilters,
-  }));
+  const selectedFilters = useFilterStore((state) => state.selectedFilters);
+  const resetFilters = useFilterStore((state) => state.resetFilters);
+
   const closeModal = useFilterModalStore((state) => state.closeModal);
   const applyQueryParams = useApplyQueryParams();
 

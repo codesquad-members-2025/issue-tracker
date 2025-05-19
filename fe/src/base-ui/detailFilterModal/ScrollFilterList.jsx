@@ -137,10 +137,8 @@ function parsefilter(title, item, selectedFilters, onClick) {
 
 // 이제 아이템 클릭시 필터 스토어에 업데이트 하는 로직 엮어야한다.
 export default function ScrollFilterList({ title, itemsArr }) {
-  const { selectedFilters, setFilter } = useFilterStore((state) => ({
-    selectedFilters: state.selectedFilters,
-    setFilter: state.setFilter,
-  }));
+  const selectedFilters = useFilterStore((state) => state.selectedFilters);
+  const setFilter = useFilterStore((state) => state.setFilter);
 
   function clickHandler(key, id) {
     setFilter(key, id);

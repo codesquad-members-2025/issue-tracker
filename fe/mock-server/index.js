@@ -48,7 +48,17 @@ app.get('/', async (req, res) => {
     res.json({
       success: true,
       message: '요청에 성공했습니다.',
-      data: paginatedIssues,
+      data: {
+        issues: paginatedIssues,
+        users: json.users,
+        labels: json.labels,
+        milestones: json.milestones,
+      },
+      'meta-data': {
+        currentPage: pageNum,
+        openIssueNumber: issues.filter((i) => i.isOpen === true).length,
+        closeIssueNumber: issues.filter((i) => i.isOpen === false).length,
+      },
     });
   } catch (error) {
     console.error('🔥 서버 오류:', error.message);

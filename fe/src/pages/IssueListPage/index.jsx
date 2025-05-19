@@ -11,6 +11,9 @@ import useFilterModalStore from '@/stores/detailFilterModalStore';
 import useFilterStore from '@/stores/filterStore';
 import DetailFilterModal from '@/units/detailFilterModal';
 import { useRef } from 'react';
+import DetailFilterTriigerButton from '@/units/detailFilterModal/DetailFilterTriigerButton';
+import { useLocation } from 'react-router-dom';
+import { useApplyQueryParams } from '@/utils/queryParams/useApplyQueryParams';
 
 const Container = styled.div`
   display: flex;
@@ -63,18 +66,26 @@ export default function IssueListPage() {
   const toggleIssues = useIssuesStore((state) => state.toggleIssues);
   const parseIssue = useIssuesStore((state) => state.parseIssue);
   const issueSummary = useIssuesStore((state) => state.issueSummary);
-
   const setFilterData = useFilterModalStore((state) => state.setFilterData);
+  const isActive = useFilterModalStore((state) => state.isActive);
   const currentPage = useFilterStore((state) => state.selectedFilters.page);
+  const selectedFilters = useFilterStore((state) => state.selectedFilters);
   const prevDataRef = useRef(null);
+  const location = useLocation(); // location.search → '?label=1&milestone=2&page=1'
+  const applyQueryParams = useApplyQueryParams();
+
   useEffect(() => {
-    fetchData(TEST_ISSUES_URL);
-  }, []);
+    if (!location.search || location.search === '?') {
+      // location.search가 비어있다면 디폴트 필터 적용
+      applyQueryParams(selectedFilters); // selectedFilters 초기값이 디폴트 필터임
+    }
+    fetchData(`TEST_ISSUES_URL${location.search}`);
+  }, [location.search]);
   useEffect(() => {
     if (!response?.data) return;
-    const fetchedData = response.data;
-
-    const currentData = fetchedData;
+    // const fetchedData = response.data;
+    const { issues, users, labels, milestones } = response.data;
+    const currentData = issues;
     const prevData = prevDataRef.current;
 
     // 객체 내용이 진짜로 바뀐 경우에만 실행
@@ -83,9 +94,9 @@ export default function IssueListPage() {
     if (!hasChanged) return;
     prevDataRef.current = currentData; // 현재 값을 기억해둠
 
-    setIssues(fetchedData); // ✅ 상태 변화 감지해서 후처리
+    setIssues(currentData); // ✅ 상태 변화 감지해서 후처리
     parseIssue(); // 여기도 safe하게
-    setFilterData(fetchedData.users, fetchedData.labels, fetchedData.milestones);
+    setFilterData(users, labels, milestones);
   }, [response?.data]);
 
   return (
@@ -100,10 +111,13 @@ export default function IssueListPage() {
               closeIssueNumber={issueSummary.closeIssueNumber}
             />
           </HeaderLeft>
-          <HeaderRight></HeaderRight>
+          <HeaderRight>
+            <DetailFilterTriigerButton />
+          </HeaderRight>
         </KanbanHeader>
         <KanbanMain />
       </Kanban>
+      {isActive && <DetailFilterModal />}
     </Container>
   );
 }

@@ -72,10 +72,9 @@ const Title = styled.div`
 
 // 외부에서 prop을 받는게 아니라 전역의 store를 끌고 와서 상태를 변경한다.
 export default function DetailFilterModal() {
-  const { filterEntry, closeModal } = useFilterModalStore((state) => ({
-    filterEntry: state.filterEntry,
-    closeModal: state.closeModal,
-  }));
+  const { filterEntry } = useFilterModalStore((state) => state.filterEntry);
+  const { closeModal } = useFilterModalStore((state) => state.closeModal);
+
   const resetFilters = useFilterStore((state) => state.resetFilters); //검색 버튼의 콜백함수에 사용
   const titleLabel = '상세필터';
   const searchButton = '필터 적용';

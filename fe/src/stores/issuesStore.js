@@ -36,6 +36,8 @@ const useIssuesStore = create(
       }),
 
     //이 로직 맞아...?
+    // -> 오픈 ID 관리 로직 수정 필요
+    // 분기 처리도 현재 필터의 상태 (isOpen 의 쿼리 파람 상태)에 돤련된 id 를 추적 해야한다.
     parseIssue: () =>
       set((state) => {
         const summary = state.issues.reduce(
