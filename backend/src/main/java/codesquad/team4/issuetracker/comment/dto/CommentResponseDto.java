@@ -10,7 +10,7 @@ public class CommentResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class commentInfo {
+    public static class CommentInfo {
         private Long commentId;
         private String content;
         private UserDto.UserInfo author;

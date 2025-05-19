@@ -5,7 +5,6 @@ import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import java.util.List;
 
-import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -59,7 +58,8 @@ public class IssueResponseDto {
     @Builder
     public static class searchIssueDetailDto {
         private String content;
-        private List<CommentResponseDto.commentInfo> comments;
+        private String contentImageUrl;
+        private List<CommentResponseDto.CommentInfo> comments;
         private Integer commentSize;
     }
 }
