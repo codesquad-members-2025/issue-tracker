@@ -20,15 +20,15 @@ public class AuthService {
     private final GithubOAuthProperties properties;
     private final RestTemplate restTemplate;
 
-    public final String CLIENT_ID = "client_id";
-    public final String CLIENT_SECRET = "client_secret";
-    public final String AUTHORIZATION_CODE = "code";
-    public final String REDIRECT_URI = "redirect_uri";
-    public final String ID = "id";
-    public final String LOGIN = "login";
-    public final String AVATAR_URL = "avatar_url";
-    public final String GITHUB = "github";
-    public final String ACCESS_TOKEN = "access_token";
+    private final String CLIENT_ID = "client_id";
+    private final String CLIENT_SECRET = "client_secret";
+    private final String AUTHORIZATION_CODE = "code";
+    private final String REDIRECT_URI = "redirect_uri";
+    private final String ID = "id";
+    private final String LOGIN = "login";
+    private final String AVATAR_URL = "avatar_url";
+    private final String GITHUB = "github";
+    private final String ACCESS_TOKEN = "access_token";
 
     // 깃헙에서 받은 authorization code 받은 후 access token 요청하고 사용자 정보 요청
     public LoginResponse loginWithGitHub(String code) {
