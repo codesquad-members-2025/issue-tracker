@@ -16,8 +16,8 @@ public class Issue {
     private Long authorId;
     private Long milestoneId;
     private Boolean isOpen;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime lastModifiedAt;
+    private String imageUrl;
 }
 
 

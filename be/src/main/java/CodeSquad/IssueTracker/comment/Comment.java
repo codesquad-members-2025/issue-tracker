@@ -14,7 +14,7 @@ public class Comment {
     private Long issueId;       // ✅ 이슈 ID: 이 댓글이 속한 이슈
     private String content;
     private Long authorId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime lastModifiedAt;
+    private  String imageUrl;
 }
 
