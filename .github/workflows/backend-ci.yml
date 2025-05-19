@@ -27,5 +27,11 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x ./gradlew
 
-      - name: Build and Run Tests
-        run: ./gradlew build --no-daemon
+      - name: Run Tests with H2 Profile and Generate JaCoCo Report
+        run: ./gradlew clean test jacocoTestReport --no-daemon
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: codesquad-masters2025-team02/issue-tracker
