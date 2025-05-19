@@ -23,12 +23,10 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class IssueService {
     private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
     private static final String UPDATE_ISSUESTATUS = "이슈 상태가 변경되었습니다.";
+    private static final String ISSUE_PARTIALLY_UPDATED = "일부 이슈 ID는 존재하지 않아 제외되었습니다: %s";
 
     private final IssueDao issueDao;
     private final IssueRepository issueRepository;
@@ -176,27 +175,23 @@ public class IssueService {
             throw new IssueStatusUpdateException(ExceptionMessage.NO_ISSUE_IDS);
         }
 
-        String placeholders = issueIds.stream()
-                .map(id -> "?")
-                .collect(Collectors.joining(", "));
+        List<Long> existingIds = issueDao.findExistingIssueIds(issueIds);
 
-        Integer count = issueDao.countExistingIssuesByIds(issueIds, placeholders);
+        List<Long> missingIds = issueIds.stream()
+                .filter(id -> !existingIds.contains(id))
+                .toList();
 
-        if (count == null || count != issueIds.size()) {
-            throw new IssueStatusUpdateException(ExceptionMessage.ISSUE_IDS_NOT_FOUND); //todo 나중에 여기에 존재하지 않는 id 가 정확히 몇번인지 추가해주기
+        if (!existingIds.isEmpty()) {
+            issueDao.updateIssueStatusByIds(isOpen, existingIds);
         }
-
-
-        List<Object> params = new ArrayList<>();
-        params.add(isOpen);
-        params.addAll(issueIds);
-        issueDao.updateIssueStatus(placeholders, params);
+        String message = missingIds.isEmpty()
+                ? UPDATE_ISSUESTATUS
+                : String.format(ISSUE_PARTIALLY_UPDATED, missingIds);
 
         return IssueResponseDto.BulkUpdateIssueStatusDto.builder()
-                .issuesId(issueIds)
-                .message(UPDATE_ISSUESTATUS)
+                .issuesId(existingIds)
+                .message(message)
                 .build();
-
     }
 
     public IssueCountDto getIssueCounts() {
@@ -241,4 +236,3 @@ public class IssueService {
                 .build();
     }
 }
-

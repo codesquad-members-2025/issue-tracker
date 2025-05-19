@@ -1,5 +1,6 @@
     package codesquad.team4.issuetracker.issue;
 
+    import java.util.ArrayList;
     import java.util.List;
     import java.util.Map;
     import lombok.RequiredArgsConstructor;
@@ -51,15 +52,21 @@
             );
         }
 
-        public Integer countExistingIssuesByIds(List<Long> issueIds, String placeholders) {
-            // 요청받은 id 개수랑 DB에서 가져온 ID 개수 비교
-            String countSql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (" + placeholders + ")";
-
-            return jdbcTemplate.queryForObject(countSql, Integer.class, issueIds.toArray());
+        public List<Long> findExistingIssueIds(List<Long> issueIds) {
+            String placeholders = issueIds.stream().map(id -> "?").collect(Collectors.joining(", "));
+            String sql = "SELECT issue_id FROM issue WHERE issue_id IN (" + placeholders + ")";
+            return jdbcTemplate.query(sql,
+                    (rs, rowNum) -> rs.getLong("issue_id"),
+                    issueIds.toArray());
         }
 
-        public int updateIssueStatus(String placeholders, List<Object> params) {
+        public int updateIssueStatusByIds(boolean isOpen, List<Long> issueIds) {
+            String placeholders = issueIds.stream().map(id -> "?").collect(Collectors.joining(", "));
             String updateSql = "UPDATE issue SET is_open = ? WHERE issue_id IN (" + placeholders + ")";
+
+            List<Object> params = new ArrayList<>();
+            params.add(isOpen);
+            params.addAll(issueIds);
 
             return jdbcTemplate.update(updateSql, params.toArray());
         }
