@@ -30,12 +30,12 @@
                        a.nickname AS assignee_nickname,
                        a.profile_image AS assignee_profile
                 FROM issue i
-                LEFT JOIN user u ON i.author_id = u.user_id
+                LEFT JOIN `user` u ON i.author_id = u.user_id
                 LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
                 JOIN issue_label il ON i.issue_id = il.issue_id
                 LEFT JOIN label l ON il.label_id = l.label_id
                 JOIN issue_assignee ia ON i.issue_id = ia.issue_id
-                LEFT JOIN user a ON ia.assignee_id = a.user_id
+                LEFT JOIN `user` a ON ia.assignee_id = a.user_id
                 WHERE i.is_open = ?
                 LIMIT ? OFFSET ?
             """;

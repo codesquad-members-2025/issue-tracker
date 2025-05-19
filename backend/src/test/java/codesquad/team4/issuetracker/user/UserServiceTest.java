@@ -1,58 +1,48 @@
 package codesquad.team4.issuetracker.user;
 
 import codesquad.team4.issuetracker.user.dto.UserDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
 
-@ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
-    @Mock
-    UserDao userDao;
+@DataJdbcTest
+@ActiveProfiles("test")
+@Import({UserDao.class, UserService.class})
+class UserServiceTest {
 
-    @InjectMocks
-    UserService userService;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("""
+            INSERT INTO `user` (user_id, email, nickname, profile_image, created_at, updated_at)
+            VALUES 
+                (1, 'user1@test.com', 'user1', 'image.com/a.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                (2, 'user2@test.com', 'user2', 'image.com/b.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        """);
+    }
 
     @Test
     @DisplayName("유저 필터링 정보 조회")
     void 유저_필터링_정보_조회() {
-        // given
-        String sql = "SELECT user_id, nickname, profile_image FROM user";
-        List<UserDto.UserInfo> mockUsers = List.of(
-                UserDto.UserInfo.builder()
-                        .id(1L)
-                        .nickname("user1")
-                        .profileImage("image.com/a.jpg")
-                        .build(),
-                UserDto.UserInfo.builder()
-                        .id(2L)
-                        .nickname("user2")
-                        .profileImage("image.com/b.jpg")
-                        .build()
-        );
-        given(userDao.findUserForFiltering())
-                .willReturn(mockUsers);
-
-        // when
         UserDto.UserFilter result = userService.getFilterUsers();
 
-        // then
         assertThat(result.getUsers()).hasSize(2);
         assertThat(result.getUsers().get(0).getId()).isEqualTo(1L);
         assertThat(result.getUsers().get(0).getNickname()).isEqualTo("user1");
         assertThat(result.getUsers().get(0).getProfileImage()).isEqualTo("image.com/a.jpg");
     }
 }
-
