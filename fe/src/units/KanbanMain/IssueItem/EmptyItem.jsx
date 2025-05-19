@@ -15,7 +15,7 @@ const Emoji = styled.div`
 `;
 
 const Description = styled.div`
-  ${typography.display.medium16}
+  ${typography.display.medium20}
 `;
 
 export default function EmptyItem() {

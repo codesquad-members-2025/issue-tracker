@@ -9,6 +9,8 @@ import { FilterSearchField } from '@/base-ui/issueListPage/mainPageHeaderTap/Fil
 import { DropdownMenuTemplate } from '@/utils/dropDown/DropdownMenuTemplate';
 import useFilterStore from '@/stores/filterStore';
 import { useAuthStore } from '@/stores/authStore';
+import { useLocation } from 'react-router-dom';
+import { useMemo } from 'react';
 
 const Container = styled.div`
   border: 1px solid ${({ theme }) => theme.border.default};
@@ -59,6 +61,16 @@ export default function FilterBar() {
   const setFilter = useFilterStore((state) => state.setFilter);
   const userId = useAuthStore((state) => state.userId);
   const items = getMenuItems(filteredObj, setFilter, userId);
+  const location = useLocation();
+  // ✅ 현재 쿼리파람을 객체로 변환
+  const currentQueryParams = useMemo(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const result = {};
+    for (const [key, value] of searchParams.entries()) {
+      result[key] = isNaN(value) ? value : Number(value); // 숫자 자동 변환
+    }
+    return result;
+  }, [location.search]);
 
   return (
     <Container $isActive={isActive}>
@@ -68,7 +80,7 @@ export default function FilterBar() {
         label={'이슈 필터'}
         items={items}
       />
-      <FilterSearchField selectedFilters={filteredObj} />
+      <FilterSearchField selectedFilters={currentQueryParams} />
     </Container>
   );
 }

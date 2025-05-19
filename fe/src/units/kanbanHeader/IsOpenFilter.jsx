@@ -8,7 +8,7 @@ const Container = styled.div`
   gap: 24px;
 `;
 
-export default function IsOpenFilter({ openIssueNumber, closeIssueNumber }) {
+export default function IsOpenFilter() {
   const metaData = useIssuesStore((state) => state.metaData);
   return (
     <Container>
