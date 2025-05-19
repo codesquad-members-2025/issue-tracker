@@ -1,6 +1,6 @@
 package CodeSquad.IssueTracker.login.exception;
 
-import CodeSquad.IssueTracker.global.exception.CustomException;
+import CodeSquad.IssueTracker.global.exception.model.CustomException;
 import org.springframework.http.HttpStatus;
 
 public class PasswordMismatchException extends CustomException {

@@ -1,7 +1,7 @@
 package CodeSquad.IssueTracker.global;
 
 import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
-import CodeSquad.IssueTracker.global.exception.CustomException;
+import CodeSquad.IssueTracker.global.exception.model.CustomException;
 import CodeSquad.IssueTracker.jwt.exception.JwtValidationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
