@@ -2,7 +2,6 @@
 
     import java.util.List;
     import java.util.Map;
-    import java.util.stream.Collectors;
     import lombok.RequiredArgsConstructor;
     import org.springframework.jdbc.core.JdbcTemplate;
     import org.springframework.stereotype.Repository;
@@ -64,4 +63,26 @@
 
             return jdbcTemplate.update(updateSql, params.toArray());
         }
+
+        public List<Map<String, Object>> findIssueDetailById(Long issueId) {
+            String sql = """
+                SELECT
+                    i.content AS issue_content,
+                    i.imageUrl AS issue_image_url
+                    c.id AS comment_id,
+                    c.content AS comment_content,
+                    c.image_url AS comment_image_url,
+                    c.created_at AS comment_created_at,
+                    u.user_id AS author_id,
+                    u.nickname AS author_nickname,
+                    u.profile_image AS author_profile
+                FROM issue i
+                JOIN comment c ON i.id = c.issue_id
+                JOIN user u ON u.id = c.author_id
+                where i.id = ?
+            """;
+
+            return jdbcTemplate.queryForList(sql, issueId);
+        }
+
     }

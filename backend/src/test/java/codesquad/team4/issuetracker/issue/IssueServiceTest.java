@@ -224,7 +224,7 @@ public class IssueServiceTest {
     void getIssueDetailByNotExistId() {
         // given
         Long issueId = 999L;
-        given(issueDao.findIssueById(issueId)).willReturn(Collections.emptyList());
+        given(issueDao.findIssueDetailById(issueId)).willReturn(Collections.emptyList());
 
         // when & then
         assertThatThrownBy(() -> issueService.getIssueDetailById(issueId))

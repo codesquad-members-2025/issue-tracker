@@ -51,6 +51,7 @@ CREATE TABLE comment (
                          content TEXT NOT NULL,
                          author_id BIGINT NOT NULL,
                          issue_id BIGINT NOT NULL,
+                         image_url VARCHAR(255),
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 

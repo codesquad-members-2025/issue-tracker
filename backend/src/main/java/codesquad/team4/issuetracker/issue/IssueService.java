@@ -1,18 +1,21 @@
 package codesquad.team4.issuetracker.issue;
 
+import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
-import codesquad.team4.issuetracker.entity.Issue.IssueBuilder;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.searchIssueDetailDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -204,6 +207,38 @@ public class IssueService {
         return IssueCountDto.builder()
                 .openCount(openCount)
                 .closedCount(closedCount)
+                .build();
+    }
+
+    public searchIssueDetailDto getIssueDetailById(Long issueId) {
+        List<Map<String, Object>> issueById = issueDao.findIssueDetailById(issueId);
+        if (issueById.isEmpty()) {
+            throw new IssueNotFoundException("이슈를 찾을 수 없습니다. issueId = " + issueId);
+        }
+
+        String issueContent = (String) issueById.get(0).get("issue_content");
+        String issueImage = (String) issueById.get(0).get("issue_image_url");
+
+        List<CommentResponseDto.CommentInfo> comments = issueById.stream()
+                .filter(row -> row.get("comment_id") != null) // 댓글이 없는 경우 필터링
+                .map(row -> CommentResponseDto.CommentInfo.builder()
+                        .commentId((Long) row.get("comment_id"))
+                        .content((String) row.get("comment_content"))
+                        .imageUrl((String) row.get("comment_image_url"))
+                        .createdAt(((Timestamp) row.get("comment_created_at")).toLocalDateTime())
+                        .author(UserDto.UserInfo.builder()
+                                .id((Long) row.get("author_id"))
+                                .nickname((String) row.get("author_nickname"))
+                                .profileImage((String) row.get("author_profile"))
+                                .build())
+                        .build())
+                .toList();
+
+        return IssueResponseDto.searchIssueDetailDto.builder()
+                .content(issueContent)
+                .contentImageUrl(issueImage)
+                .comments(comments)
+                .commentSize(comments.size())
                 .build();
     }
 }
