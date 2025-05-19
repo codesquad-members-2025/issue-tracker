@@ -23,10 +23,13 @@ public class IssueDto {
     public record QueryRequest(
             @Pattern(regexp = "^(open|closed)$", message = "state는 'open' 또는 'closed'만 가능합니다")
             String state,
-            Long writer,
-            Long milestone,
-            List<Long> labels,
-            List<Long> assignees
+            Long writerId,
+            Long milestoneId,
+            List<Long> labelIds,
+            List<Long> assigneeIds
+
+            // String cursor, // 무한스크롤 구현 시 필요
+            // String search // 검색 구현 시 필요
     ) {
     }
 
@@ -37,27 +40,27 @@ public class IssueDto {
     @Builder
     public record ListResponse(
             int totalCount,
-            List<SimpleResponse> issues
+            List<ListItemResponse> issues
     ) {
     }
 
     // 이슈 목록 중 하나의 이슈 응답 DTO
     @Getter
-    @Builder(toBuilder = true)
-    public static class SimpleResponse {
+    @Builder
+    public static class ListItemResponse {
         private final Long id;
         private final String title;
         private final Boolean isOpen;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
-        private final UserDto.Response writer;
-        private final MilestoneDto.SimpleResponse milestone;
+        private final UserDto.WriterResponse writer;
+        private final MilestoneDto.ListItemResponse milestone;
 
         @Builder.Default
-        private final List<UserDto.SimpleResponse> assignees = new ArrayList<>();
+        private final List<UserDto.AssigneeResponse> assignees = new ArrayList<>();
 
         @Builder.Default
-        private final List<LabelDto.SimpleResponse> labels = new ArrayList<>();
+        private final List<LabelDto.ListItemResponse> labels = new ArrayList<>();
     }
 
     /**
@@ -73,12 +76,12 @@ public class IssueDto {
             LocalDateTime issueCreatedAt,
             LocalDateTime issueUpdatedAt,
 
-            // writer
+            // writerId
             Long writerId,
             String writerUsername,
             String writerProfileImageUrl,
 
-            // milestone - nullable
+            // milestoneId - nullable
             Long milestoneId,
             String milestoneTitle
     ) {
@@ -111,24 +114,24 @@ public class IssueDto {
     @Builder
     public record Details(
             BaseRow baseInfo,
-            List<UserDto.SimpleResponse> assignees,
-            List<LabelDto.SimpleResponse> labels
+            List<UserDto.AssigneeResponse> assignees,
+            List<LabelDto.ListItemResponse> labels
     ) {
-        public SimpleResponse toSimpleResponse() { // Mapper 클래스로 따로 뺄지 고민
-            return SimpleResponse.builder()
+        public ListItemResponse toSimpleResponse() { // Mapper 클래스로 따로 뺄지 고민
+            return IssueDto.ListItemResponse.builder()
                     .id(baseInfo.issueId())
                     .title(baseInfo.issueTitle())
                     .isOpen(baseInfo.issueOpen())
                     .createdAt(baseInfo.issueCreatedAt())
                     .updatedAt(baseInfo.issueUpdatedAt())
-                    .writer(UserDto.Response.builder()
+                    .writer(UserDto.WriterResponse.builder()
                             .id(baseInfo.writerId())
                             .username(baseInfo.writerUsername())
                             .profileImageUrl(baseInfo.writerProfileImageUrl())
                             .build()
                     )
                     .milestone(baseInfo.milestoneId() != null
-                            ? MilestoneDto.SimpleResponse.builder()
+                            ? MilestoneDto.ListItemResponse.builder()
                             .id(baseInfo.milestoneId())
                             .title(baseInfo.milestoneTitle())
                             .build()

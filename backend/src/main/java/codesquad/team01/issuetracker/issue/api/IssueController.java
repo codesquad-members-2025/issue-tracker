@@ -21,18 +21,17 @@ public class IssueController {
 
     @GetMapping("/issues")
     public ResponseEntity<ApiResponse<IssueDto.ListResponse>> getIssues(
-            @Valid IssueDto.QueryRequest request
-            ) {
+            @Valid IssueDto.QueryRequest request) {
 
-        log.info("이슈 목록 조회 요청: state={}, writer={}, milestone={}, labels={}, assignees={}",
-                request.state(), request.writer(), request.milestone(), request.labels(), request.assignees());
+        log.info("이슈 목록 조회 요청: state={}, writerId={}, milestoneId={}, labelIds={}, assigneeIds={}",
+                request.state(), request.writerId(), request.milestoneId(), request.labelIds(), request.assigneeIds());
 
         IssueDto.ListResponse response =
                 issueService.findIssues(request.state(),
-                        request.writer(),
-                        request.milestone(),
-                        request.labels(),
-                        request.assignees());
+                        request.writerId(),
+                        request.milestoneId(),
+                        request.labelIds(),
+                        request.assigneeIds());
 
         log.info("조건에 부합하는 이슈 개수= {}", response.totalCount());
         return ResponseEntity.ok(ApiResponse.success(response));

@@ -12,7 +12,7 @@ public class UserDto {
      */
     // 이슈 목록 - 작성자 응답 DTO
     @Builder
-    public record Response(
+    public record WriterResponse(
             Long id,
             String username,
             String profileImageUrl
@@ -21,7 +21,7 @@ public class UserDto {
 
     // 담당자 응답 DTO
     @Builder
-    public record SimpleResponse(
+    public record AssigneeResponse(
             Long id,
             String profileImageUrl
     ) {

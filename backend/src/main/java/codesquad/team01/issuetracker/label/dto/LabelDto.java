@@ -11,7 +11,7 @@ public class LabelDto {
      */
     // 이슈 목록 - 레이블 응답 DTO
     @Builder
-    public record SimpleResponse(
+    public record ListItemResponse(
             Long id,
             String name,
             String color,

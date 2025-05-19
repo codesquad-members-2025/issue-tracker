@@ -27,9 +27,9 @@ public class IssueQueryRepository {
             u.profile_image_url as writer_profile_image_url,
             m.id as milestone_id,
             m.title as milestone_title
-        FROM Issue i
-        JOIN Users u ON i.writer_id = u.id
-        LEFT JOIN Milestone m ON i.milestone_id = m.id
+        FROM issue i
+        JOIN users u ON i.writer_id = u.id
+        LEFT JOIN milestoneId m ON i.milestone_id = m.id
         WHERE 1=1
         """;
 
@@ -39,8 +39,8 @@ public class IssueQueryRepository {
             ia.issue_id,
             u.id as assignee_id,
             u.profile_image_url as assignee_profile_image_url
-        FROM IssueAssignee ia
-        JOIN Users u ON ia.user_id = u.id
+        FROM issue_assignee ia
+        JOIN users u ON ia.user_id = u.id
         WHERE ia.issue_id IN (:issueIds)
         """;
 
@@ -51,8 +51,8 @@ public class IssueQueryRepository {
             l.name as label_name,
             l.color as label_color,
             l.text_color as label_text_color
-        FROM IssueLabel il
-        JOIN Label l ON il.label_id = l.id
+        FROM issue_label il
+        JOIN label l ON il.label_id = l.id
         WHERE il.issue_id IN (:issueIds)
         """;
 
@@ -85,7 +85,7 @@ public class IssueQueryRepository {
 
 
     public List<IssueDto.BaseRow> findIssuesWithFilters(
-            String state, Long writer, Long milestone,
+            String state, Long writerId, Long milestoneId,
             List<Long> labelIds, List<Long> assigneeIds) {
 
         StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
@@ -95,23 +95,23 @@ public class IssueQueryRepository {
         sql.append(" AND i.is_open = :isOpen");
         params.addValue("isOpen", "open".equals(state));
 
-        // writer
-        if (writer != null) {
-            sql.append(" AND i.writer_id = :writer");
-            params.addValue("writer", writer);
+        // writerId
+        if (writerId != null) {
+            sql.append(" AND i.writer_id = :writerId");
+            params.addValue("writerId", writerId);
         }
 
-        // milestone
-        if (milestone != null) {
-            sql.append(" AND i.milestone_id = :milestone");
-            params.addValue("milestone", milestone);
+        // milestoneId
+        if (milestoneId != null) {
+            sql.append(" AND i.milestone_id = :milestoneId");
+            params.addValue("milestoneId", milestoneId);
         }
 
-        // labels - OR
+        // labelIds - OR
         if (labelIds != null && !labelIds.isEmpty()) {
             sql.append("""
                  AND EXISTS (
-                    SELECT 1 FROM IssueLabel il2 
+                    SELECT 1 FROM issue_label il2 
                     WHERE il2.issue_id = i.id 
                     AND il2.label_id IN (:labelIds)
                 )
@@ -119,11 +119,11 @@ public class IssueQueryRepository {
             params.addValue("labelIds", labelIds);
         }
 
-        // assignees - OR
+        // assigneeIds - OR
         if (assigneeIds != null && !assigneeIds.isEmpty()) {
             sql.append("""
                  AND EXISTS (
-                    SELECT 1 FROM IssueAssignee ia2 
+                    SELECT 1 FROM issue_assignee ia2 
                     WHERE ia2.issue_id = i.id 
                     AND ia2.user_id IN (:assigneeIds)
                 )

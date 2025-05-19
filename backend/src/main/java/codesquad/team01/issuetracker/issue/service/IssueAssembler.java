@@ -16,17 +16,17 @@ public class IssueAssembler {
 
     public List<IssueDto.Details> assembleIssueDetails(
             List<IssueDto.BaseRow> issues,
-            List<IssueDto.AssigneeRow> allAssignees,
-            List<IssueDto.LabelRow> allLabels) {
+            List<IssueDto.AssigneeRow> assignees,
+            List<IssueDto.LabelRow> labels) {
 
         log.debug("이슈 {}개에 대한 상세 정보 조합", issues.size());
 
         // 담당자 정보를 이슈 id로 그룹화
-        Map<Long, List<UserDto.SimpleResponse>> assigneesByIssueId = groupAssigneesByIssueId(allAssignees);
+        Map<Long, List<UserDto.AssigneeResponse>> assigneesByIssueId = groupAssigneesByIssueId(assignees);
         log.debug("이슈별 담당자 정보 그룹화: {}개 이슈-담당자 매핑", assigneesByIssueId.size());
 
         // 레이블 정보를 이슈 id로 그룹화
-        Map<Long, List<LabelDto.SimpleResponse>> labelsByIssueId = groupLabelsByIssueId(allLabels);
+        Map<Long, List<LabelDto.ListItemResponse>> labelsByIssueId = groupLabelsByIssueId(labels);
         log.debug("이슈별 레이블 정보 그룹화: {}개 이슈-레이블 매핑", labelsByIssueId.size());
 
         // 각 이슈 정보에 담당자, 레이블 결합
@@ -40,12 +40,12 @@ public class IssueAssembler {
     }
 
     // 담당자 정보 이슈 id로 그룹화
-    private Map<Long, List<UserDto.SimpleResponse>> groupAssigneesByIssueId(List<IssueDto.AssigneeRow> assignees) {
+    private Map<Long, List<UserDto.AssigneeResponse>> groupAssigneesByIssueId(List<IssueDto.AssigneeRow> assignees) {
         return assignees.stream()
                 .collect(Collectors.groupingBy(
                         IssueDto.AssigneeRow::issueId,
                         Collectors.mapping(
-                                row -> UserDto.SimpleResponse.builder()
+                                row -> UserDto.AssigneeResponse.builder()
                                         .id(row.assigneeId())
                                         .profileImageUrl(row.assigneeProfileImageUrl())
                                         .build(),
@@ -55,12 +55,12 @@ public class IssueAssembler {
     }
 
     // 레이블 정보 이슈 id로 그룹화
-    private Map<Long, List<LabelDto.SimpleResponse>> groupLabelsByIssueId(List<IssueDto.LabelRow> labels) {
+    private Map<Long, List<LabelDto.ListItemResponse>> groupLabelsByIssueId(List<IssueDto.LabelRow> labels) {
         return labels.stream()
                 .collect(Collectors.groupingBy(
                         IssueDto.LabelRow::issueId,
                         Collectors.mapping(
-                                row -> LabelDto.SimpleResponse.builder()
+                                row -> LabelDto.ListItemResponse.builder()
                                         .id(row.labelId())
                                         .name(row.labelName())
                                         .color(row.labelColor())
