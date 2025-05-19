@@ -20,7 +20,6 @@ public class Issue {
     private boolean isOpen;
     private Long authorId;
     private Long milestoneId;
-    private Long commentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

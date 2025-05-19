@@ -16,6 +16,7 @@ public class Comment {
     private Long id;
     private String content;
     private String imageUrl;
+    private Long issueId;
     private Long authorId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

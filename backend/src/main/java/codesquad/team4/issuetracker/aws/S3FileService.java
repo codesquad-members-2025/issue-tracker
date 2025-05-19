@@ -29,7 +29,7 @@ public class S3FileService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFile(MultipartFile file, String directory) {
+    public Optional<String> uploadFile(MultipartFile file, String directory) {
         return Optional.ofNullable(file)
                 .filter(f -> !f.isEmpty())  // 파일이 비어있지 않은 경우에만 처리
                 .map(f -> {
@@ -42,15 +42,14 @@ public class S3FileService {
                     // S3 클라이언트를 통해 파일 업로드
                     try {
                         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(f.getInputStream(), f.getSize()));
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         log.error("파일 업로드 중 오류 발생: {}", e.getMessage(), e);
                         throw new FileUploadException(ExceptionMessage.FILE_UPLOAD_FAILED, e);
                     }
 
                     log.info("S3 업로드 성공");
                     return String.format(S3_URL_FORMAT, bucket, key);
-                })
-                .orElse(EMPTY_STRING);  // 파일이 null이거나 비어있으면 빈 문자열 반환
+                });
     }
 
     private PutObjectRequest getRequest(MultipartFile f, String key) {

@@ -20,7 +20,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
-    JdbcTemplate jdbcTemplate;
+    UserDao userDao;
 
     @InjectMocks
     UserService userService;
@@ -42,7 +42,7 @@ public class UserServiceTest {
                         .profileImage("image.com/b.jpg")
                         .build()
         );
-        given(jdbcTemplate.query(eq(sql), any(RowMapper.class)))
+        given(userDao.findUserForFiltering())
                 .willReturn(mockUsers);
 
         // when
