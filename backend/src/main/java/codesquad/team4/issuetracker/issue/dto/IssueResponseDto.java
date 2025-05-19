@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.issue.dto;
 
+import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import java.util.List;
@@ -51,5 +52,14 @@ public class IssueResponseDto {
     public static class BulkUpdateIssueStatusDto {
         private List<Long> issuesId;
         private String message;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class searchIssueDetailDto {
+        private String content;
+        private List<CommentResponseDto.commentInfo> comments;
+        private Integer commentSize;
     }
 }

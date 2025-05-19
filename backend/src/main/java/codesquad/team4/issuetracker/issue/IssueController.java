@@ -3,21 +3,25 @@ package codesquad.team4.issuetracker.issue;
 import codesquad.team4.issuetracker.aws.S3FileService;
 import codesquad.team4.issuetracker.exception.FileUploadException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
+import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.response.ApiResponse;
 import jakarta.validation.Valid;
-import java.io.IOException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/issues")
 public class IssueController {
@@ -73,6 +77,18 @@ public class IssueController {
                             .build()
             );
 
+        }
+    }
+
+    @GetMapping("/{issue-id}")
+    public ResponseEntity<ApiResponse<IssueResponseDto.searchIssueDetailDto>> searchIssueDetail(@PathVariable("issue-id") Long issueId){
+        try {
+            IssueResponseDto.searchIssueDetailDto result = issueService.getIssueDetialById(issueId);
+            return ResponseEntity.ok(ApiResponse.success(result));
+        }catch (IssueNotFoundException e){
+            log.error("이슈 조회 실패, issueId : {}", issueId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    ApiResponse.fail("해당 이슈를 찾을 수 없습니다."));
         }
     }
 }
