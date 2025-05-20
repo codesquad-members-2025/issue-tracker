@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,8 +59,8 @@ public class IssueServiceTest {
                 .content("Test Content")
                 .authorId(1L)
                 .milestoneId(null)
-                .labelId(List.of(1L, 2L))
-                .assigneeId(List.of(1L, 2L));
+                .labelId(Set.of(1L, 2L))
+                .assigneeId(Set.of(1L, 2L));
     }
 
     @Test

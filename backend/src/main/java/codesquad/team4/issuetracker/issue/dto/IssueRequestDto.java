@@ -2,6 +2,7 @@ package codesquad.team4.issuetracker.issue.dto;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +19,8 @@ public class IssueRequestDto {
         private String content;
         @NotNull
         private Long authorId;
-        private List<Long> assigneeId;
-        private List<Long> labelId;
+        private Set<Long> assigneeId;
+        private Set<Long> labelId;
         private Long milestoneId;
     }
 
@@ -40,5 +41,12 @@ public class IssueRequestDto {
         private Long milestoneId;
         private Boolean isOpen;
         private Boolean removeImage;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class IssueLabelsUpdateDto {
+        private Set<Long> labels;
     }
 }

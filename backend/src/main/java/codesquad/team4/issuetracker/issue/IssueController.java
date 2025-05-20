@@ -3,19 +3,17 @@ package codesquad.team4.issuetracker.issue;
 import codesquad.team4.issuetracker.aws.S3FileService;
 import codesquad.team4.issuetracker.exception.FileUploadException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
-import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.response.ApiResponse;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +45,7 @@ public class IssueController {
     }
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<IssueResponseDto.CreateIssueDto> createIssue(
+    public ResponseEntity<ApiMessageDto> createIssue(
             @RequestPart("issue") @Valid IssueRequestDto.CreateIssueDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         String uploadUrl;
@@ -56,12 +54,12 @@ public class IssueController {
             uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
         } catch (FileUploadException e) {
             return ResponseEntity.badRequest().body(
-                    IssueResponseDto.CreateIssueDto.builder()
+                    ApiMessageDto.builder()
                     .message(ExceptionMessage.FILE_UPLOAD_FAILED)
                     .build());
         }
 
-        IssueResponseDto.CreateIssueDto result = issueService.createIssue(request, uploadUrl);
+        ApiMessageDto result = issueService.createIssue(request, uploadUrl);
         return ResponseEntity.ok(result);
     }
 
@@ -89,13 +87,21 @@ public class IssueController {
     }
 
     @PatchMapping(value = "/{issue-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<IssueResponseDto.CreateIssueDto>> updateIssue(
+    public ResponseEntity<ApiResponse<ApiMessageDto>> updateIssue(
             @PathVariable("issue-id") Long issueId,
             @RequestPart("issue") @Valid IssueRequestDto.IssueUpdateDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
 
         String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
-        IssueResponseDto.CreateIssueDto result = issueService.updateIssue(issueId, request, uploadUrl);
+        ApiMessageDto result = issueService.updateIssue(issueId, request, uploadUrl);
+
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @PutMapping("/{issueId}/labels")
+    public ResponseEntity<ApiResponse<IssueResponseDto.ApiMessageDto>> updateIssueLabels(@PathVariable Long issueId, @RequestBody IssueRequestDto.IssueLabelsUpdateDto request) {
+
+        ApiMessageDto result = issueService.updateLabels(issueId, request.getLabels());
 
         return ResponseEntity.ok(ApiResponse.success(result));
     }
