@@ -76,8 +76,8 @@ class IssueControllerTest {
                         .file(file)
                         .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.message").value("이슈가 생성되었습니다."));
+                .andExpect(jsonPath("$.data.id").value(1L))
+                .andExpect(jsonPath("$.data.message").value("이슈가 생성되었습니다."));
     }
 
     @Test
@@ -129,10 +129,10 @@ class IssueControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.issuesId[0]").value(1))
-                .andExpect(jsonPath("$.issuesId[1]").value(2))
-                .andExpect(jsonPath("$.issuesId[2]").value(3))
-                .andExpect(jsonPath("$.message").value("이슈 상태가 변경되었습니다."));
+                .andExpect(jsonPath("$.data.issuesId[0]").value(1))
+                .andExpect(jsonPath("$.data.issuesId[1]").value(2))
+                .andExpect(jsonPath("$.data.issuesId[2]").value(3))
+                .andExpect(jsonPath("$.data.message").value("이슈 상태가 변경되었습니다."));
     }
 
     @Test
@@ -153,7 +153,7 @@ class IssueControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("이슈가 존재하지 않습니다"));
+                .andExpect(jsonPath("$.message").value("일부 이슈 ID가 존재하지 않습니다."));
     }
 
     @Test
