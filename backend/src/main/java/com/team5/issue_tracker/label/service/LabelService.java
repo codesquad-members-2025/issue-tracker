@@ -8,6 +8,6 @@ import com.team5.issue_tracker.label.dto.LabelResponse;
 @Service
 public class LabelService {
   public List<LabelResponse> getLabelResponsesByIssueId(Long id) {
-    return List.of(new LabelResponse(id, "labelName", "labelImageUrl"));
+    return List.of(new LabelResponse(id, "labelName", "labelTextColor", "labelBackgroundColor"));
   }
 }
