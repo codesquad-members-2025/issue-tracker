@@ -1,7 +1,7 @@
 package CodeSquad.IssueTracker.global;
 
 import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
-import CodeSquad.IssueTracker.global.exception.CustomException;
+import CodeSquad.IssueTracker.global.exception.ApplicationException;
 import CodeSquad.IssueTracker.jwt.exception.JwtValidationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Log4j2
 public class GlobalExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<BaseResponseDto<String>> handleCustomExceptions(CustomException e) {
+    public ResponseEntity<BaseResponseDto<String>> handleCustomExceptions(ApplicationException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity
                 .status(e.getHttpStatus())
