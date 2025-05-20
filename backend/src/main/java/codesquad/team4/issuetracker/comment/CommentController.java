@@ -5,6 +5,7 @@ import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.exception.FileUploadException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
+import codesquad.team4.issuetracker.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class CommentController {
     private final S3FileService s3FileService;
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CommentResponseDto.CreateCommentDto> createComment(
+    public ResponseEntity<ApiResponse<CommentResponseDto.CreateCommentDto>> createComment(
             @RequestPart("comment") @Valid CommentRequestDto.CreateCommentDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
 
@@ -33,12 +34,28 @@ public class CommentController {
         try {
             uploadUrl = s3FileService.uploadFile(file, COMMENT_DIRECTORY).orElse("");
         } catch (FileUploadException e) {
-            return ResponseEntity.badRequest().body(
-                    CommentResponseDto.CreateCommentDto.builder()
-                            .message(ExceptionMessage.FILE_UPLOAD_FAILED)
-                            .build());
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.fail(ExceptionMessage.FILE_UPLOAD_FAILED));
         }
         CommentResponseDto.CreateCommentDto response = commentService.createComment(request, uploadUrl);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response));
+    }
+
+    @PatchMapping(value = "/{comment-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<CommentResponseDto.UpdateCommentDto>> updateComment(
+            @PathVariable("comment-id") Long commentId,
+            @RequestPart("comment") @Valid CommentRequestDto.UpdateCommentDto request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+
+        String uploadUrl;
+        try {
+            uploadUrl = s3FileService.uploadFile(file, COMMENT_DIRECTORY).orElse("");
+        } catch (FileUploadException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.fail(ExceptionMessage.FILE_UPLOAD_FAILED));
+        }
+
+        CommentResponseDto.UpdateCommentDto response = commentService.updateComment(commentId, request, uploadUrl);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
