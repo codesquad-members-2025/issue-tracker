@@ -6,5 +6,6 @@ export default function useIssueDetail(issueId: number) {
     queryKey: ['issueDetail', issueId],
     queryFn: () => getIssueDetail(issueId),
     enabled: !!issueId,
+    retry: false,
   });
 }
