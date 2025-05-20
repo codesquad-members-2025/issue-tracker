@@ -105,4 +105,12 @@ public class IssueController {
 
         return ResponseEntity.ok(ApiResponse.success(result));
     }
+
+    @PutMapping("/{issueId}/assignees")
+    public ResponseEntity<ApiResponse<IssueResponseDto.ApiMessageDto>> updateIssueAssignees(@PathVariable Long issueId, @RequestBody IssueRequestDto.IssueAssigneeUpdateDto request) {
+
+        ApiMessageDto result = issueService.updateAssignees(issueId, request.getAssignees());
+
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
 }

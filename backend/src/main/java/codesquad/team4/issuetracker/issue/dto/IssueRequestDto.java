@@ -49,4 +49,11 @@ public class IssueRequestDto {
     public static class IssueLabelsUpdateDto {
         private Set<Long> labels;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class IssueAssigneeUpdateDto {
+        private Set<Long> assignees;
+    }
 }

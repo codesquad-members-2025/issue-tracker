@@ -4,6 +4,7 @@ import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.exception.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
@@ -20,6 +21,7 @@ import codesquad.team4.issuetracker.label.LabelDao;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
+import codesquad.team4.issuetracker.user.UserDao;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -47,9 +49,11 @@ public class IssueService {
     private static final String UPDATE_ISSUE = "이슈가 수정되었습니다";
     private static final String ISSUE_PARTIALLY_UPDATED = "일부 이슈 ID는 존재하지 않아 제외되었습니다: %s";
     private static final String UPDATE_ISSUE_LABEL = "이슈의 레이블이 수정되었습니다";
+    private static final String UPDATE_ISSUE_ASSIGNEE = "이슈의 담당자가 수정되었습니다";
 
     private final IssueDao issueDao;
     private final LabelDao labelDao;
+    private final UserDao userDao;
     private final IssueRepository issueRepository;
     private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
@@ -282,7 +286,7 @@ public class IssueService {
         validateLabelIdsExist(labelIds);
 
         // 기존 매핑 삭제
-        issueDao.deleteAllByIssueId(issueId);
+        issueDao.deleteAllIssueLabelByIssueId(issueId);
 
         // 새 레이블 매핑 추가
         addNewLabels(issueId, labelIds);
@@ -316,6 +320,45 @@ public class IssueService {
             Set<Long> missing = new HashSet<>(labelIds);
             foundIds.forEach(missing::remove);
             throw new LabelNotFoundException(missing);
+        }
+    }
+
+    public ApiMessageDto updateAssignees(Long issueId, Set<Long> assigneeIds) {
+        issueRepository.findById(issueId)
+                .orElseThrow(() -> new IssueNotFoundException(issueId));
+
+        //존재하는 담당자인지 확인
+        validateAssigneeIdsExist(assigneeIds);
+
+        // 기존 매핑 삭제
+        userDao.deleteAllByIssueId(issueId);
+
+        // 새 담당자 매핑 추가
+        addNewAssignees(issueId, assigneeIds);
+
+        return createMessageResult(issueId, UPDATE_ISSUE_ASSIGNEE);
+    }
+
+    private void addNewAssignees(Long issueId, Set<Long> assigneeIds) {
+        for (Long assigneeId : assigneeIds) {
+            IssueAssignee issueAssignee = IssueAssignee.builder()
+                    .issueId(issueId)
+                    .assigneeId(assigneeId)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            issueAssigneeRepository.save(issueAssignee);
+        }
+    }
+
+
+    private void validateAssigneeIdsExist(Set<Long> assigneeIds) {
+        if (assigneeIds.isEmpty()) return;
+
+        List<Long> foundIds = userDao.findExistingAssigneeIds(assigneeIds);
+        if (foundIds.size() != assigneeIds.size()) {
+            Set<Long> missing = new HashSet<>(assigneeIds);
+            foundIds.forEach(missing::remove);
+            throw new AssigneeNotFoundException(missing);
         }
     }
 }
