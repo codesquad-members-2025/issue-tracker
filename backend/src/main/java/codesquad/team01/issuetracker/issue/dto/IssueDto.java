@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.issue.dto;
 
+import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.user.dto.UserDto;
@@ -29,11 +30,16 @@ public class IssueDto {
         private Long milestoneId;
         private List<Long> labelIds;
         private List<Long> assigneeIds;
+        // private String cursor; // 무한스크롤 구현 시 필요
+        // private String search; // 검색 구현 시 필요
+
+        public IssueState getIssueState() {
+            return IssueState.fromStateStr(state);
+        }
     }
 
 
-            // String cursor, // 무한스크롤 구현 시 필요
-            // String search // 검색 구현 시 필요
+
 
     /**
      * 응답 DTO
@@ -52,7 +58,7 @@ public class IssueDto {
     public static class ListItemResponse {
         private final Long id;
         private final String title;
-        private final Boolean isOpen;
+        private final String state;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
         private final UserDto.WriterResponse writer;
@@ -74,7 +80,7 @@ public class IssueDto {
             // issue
             Long issueId,
             String issueTitle,
-            Boolean issueOpen,
+            IssueState issueState,
             LocalDateTime issueCreatedAt,
             LocalDateTime issueUpdatedAt,
 
@@ -99,11 +105,11 @@ public class IssueDto {
             List<UserDto.AssigneeResponse> assignees,
             List<LabelDto.ListItemResponse> labels
     ) {
-        public ListItemResponse toSimpleResponse() { // Mapper 클래스로 따로 뺄지 고민
+        public ListItemResponse toListItemResponse() { // Mapper 클래스로 따로 뺄지 고민
             return IssueDto.ListItemResponse.builder()
                     .id(baseInfo.issueId())
                     .title(baseInfo.issueTitle())
-                    .isOpen(baseInfo.issueOpen())
+                    .state(baseInfo.issueState().getValue())
                     .createdAt(baseInfo.issueCreatedAt())
                     .updatedAt(baseInfo.issueUpdatedAt())
                     .writer(UserDto.WriterResponse.builder()

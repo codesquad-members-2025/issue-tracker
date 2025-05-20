@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table("Issue")
+@Table("issue")
 public class Issue extends BaseEntity {
 
     @Id
@@ -18,7 +18,7 @@ public class Issue extends BaseEntity {
     private String title;
     private String content;
 
-    private boolean isOpen = true;
+    private IssueState state = IssueState.OPEN;
 
     private LocalDateTime closedAt;
 
@@ -27,12 +27,12 @@ public class Issue extends BaseEntity {
     private Long milestoneId;
 
     @Builder
-    private Issue(Long id, String title, String content, boolean isOpen,
+    private Issue(Long id, String title, String content, IssueState state,
                   LocalDateTime closedAt, Long writerId, Long milestoneId) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.isOpen = isOpen;
+        this.state = state != null ? state : IssueState.OPEN; // 생성자에 들어가야하는지? 생성될 때 기본으로 open 아닌지? 이슈 생성 작업 때 고민해보자
         this.closedAt = closedAt;
         this.writerId = writerId;
         this.milestoneId = milestoneId;

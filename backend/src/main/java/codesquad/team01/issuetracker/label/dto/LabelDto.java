@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.label.dto;
 
+import codesquad.team01.issuetracker.label.domain.LabelTextColor;
 import lombok.Builder;
 
 public class LabelDto {
@@ -26,7 +27,7 @@ public class LabelDto {
             Long labelId,
             String labelName,
             String labelColor,
-            Boolean labelTextIsBlack
+            LabelTextColor labelTextColor
     ) {
     }
 }

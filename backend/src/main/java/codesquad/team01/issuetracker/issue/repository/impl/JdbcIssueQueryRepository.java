@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.issue.repository.impl;
 
+import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
         SELECT
             i.id as issue_id,
             i.title as issue_title,
-            i.is_open as issue_is_open,
+            i.state as issue_state,
             i.created_at as issue_created_at,
             i.updated_at as issue_updated_at,
             u.id as writer_id,
@@ -38,7 +39,11 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
     private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()
             .issueId(rs.getLong("issue_id"))
             .issueTitle(rs.getString("issue_title"))
-            .issueOpen(rs.getBoolean("issue_is_open"))
+            .issueState(IssueState.fromStateStr(rs.getString("issue_state")))
+            // enum 변환 - spring 내에서는 enum 사용이 타입 검증에도 맞을 것 같아서
+            // 요청 받을 때, db 조회해올 때 빼고는 spring 내에선 enum으로 변환해서 관리 - 이게 맞는 건지는 잘 모르겠음
+            // 그러기엔 IssueAssembler에서 dto 재활용을 위해 textColor를 미리 String으로 변환하긴 함.
+            // 그럼 위에 있는 나름의 논리가 맞지 않음
             .issueCreatedAt(rs.getTimestamp("issue_created_at").toLocalDateTime())
             .issueUpdatedAt(rs.getTimestamp("issue_updated_at").toLocalDateTime())
             .writerId(rs.getLong("writer_id"))
@@ -50,15 +55,15 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 
     @Override
     public List<IssueDto.BaseRow> findIssuesWithFilters(
-            String state, Long writerId, Long milestoneId,
+            IssueState state, Long writerId, Long milestoneId,
             List<Long> labelIds, List<Long> assigneeIds) {
 
         StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         // state - 기본값: open
-        sql.append(" AND i.is_open = :isOpen");
-        params.addValue("isOpen", "open".equals(state));
+        sql.append(" AND i.state = :state");
+        params.addValue("state", state.name());
 
         // writerId
         if (writerId != null) {

@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.issue.service;
 
+import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.*;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
@@ -24,8 +25,8 @@ public class IssueService {
     private final IssueAssembler issueAssembler;
 
     @Transactional(readOnly = true)
-    public IssueDto.ListResponse findIssues(String state, Long writerId, Long milestoneId,
-                                        List<Long> labelIds, List<Long> assigneeIds) {
+    public IssueDto.ListResponse findIssues(IssueState state, Long writerId, Long milestoneId,
+                                            List<Long> labelIds, List<Long> assigneeIds) {
 
         // 이슈 기본 정보 조회 - (담당자, 레이블 제외)
         List<IssueDto.BaseRow> issues = issueQueryRepository.findIssuesWithFilters(
@@ -56,7 +57,7 @@ public class IssueService {
 
         // 응답 dto로 변환
         List<IssueDto.ListItemResponse> issueResponses = issueDetails.stream()
-                .map(IssueDto.Details::toSimpleResponse)
+                .map(IssueDto.Details::toListItemResponse)
                 .toList();
 
         log.debug("응답 데이터 생성 완료: 이슈 {}개 포함", issueResponses.size());

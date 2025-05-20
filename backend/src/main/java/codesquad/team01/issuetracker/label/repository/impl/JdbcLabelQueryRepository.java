@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.label.repository.impl;
 
+import codesquad.team01.issuetracker.label.domain.LabelTextColor;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
             .labelId(rs.getLong("label_id"))
             .labelName(rs.getString("label_name"))
             .labelColor(rs.getString("label_color"))
-            .labelTextIsBlack(rs.getBoolean("label_text_is_black"))
+            .labelTextColor(LabelTextColor.fromTextColorStr(rs.getString("label_text_color")))
             .build();
 
     @Override

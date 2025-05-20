@@ -28,7 +28,8 @@ public class IssueController {
                 request.getLabelIds(), request.getAssigneeIds());
 
         IssueDto.ListResponse response =
-                issueService.findIssues(request.getState(),
+                issueService.findIssues(
+                        request.getIssueState(),
                         request.getWriterId(),
                         request.getMilestoneId(),
                         request.getLabelIds(),
