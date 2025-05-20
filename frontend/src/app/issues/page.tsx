@@ -98,8 +98,6 @@ export default function IssuesPage() {
     fetchIssues();
   }, []);
 
-  console.log(issues);
-
   return (
     <Page>
       <TopBar>
