@@ -7,6 +7,8 @@ public class UserDto {
     private UserDto() {
     }
 
+    private static final String DEFAULT_PROFILE_IMAGE_URL = "/images/default-profile.png";
+
     /**
      * 응답 DTO
      */
@@ -17,6 +19,9 @@ public class UserDto {
             String username,
             String profileImageUrl
     ) {
+        public String profileImageUrl() {
+            return profileImageUrl != null ? profileImageUrl : DEFAULT_PROFILE_IMAGE_URL;
+        }
     }
 
     // 담당자 응답 DTO
@@ -25,6 +30,9 @@ public class UserDto {
             Long id,
             String profileImageUrl
     ) {
+        public String profileImageUrl() {
+            return profileImageUrl != null ? profileImageUrl : DEFAULT_PROFILE_IMAGE_URL;
+        }
     }
 
     /**
