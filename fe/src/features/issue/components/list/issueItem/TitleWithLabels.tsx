@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import { getAccessibleLabelStyle } from '@/shared/utils/color';
 import { type Label } from '../../../types/issue';
 
 interface Props {
+  issueId: number;
   title: string;
   labels: Label[];
 }
@@ -13,10 +15,16 @@ interface LabelTagProps {
   color: string;
 }
 
-const TitleWithLabels = ({ title, labels }: Props) => {
+const TitleWithLabels = ({ issueId, title, labels }: Props) => {
+  const navigate = useNavigate();
+
+  const handleClickTitle = () => {
+    navigate(`/issues/${issueId}`);
+  };
+
   return (
     <TitleRow>
-      <IssueTitle>{title}</IssueTitle>
+      <IssueTitle onClick={handleClickTitle}>{title}</IssueTitle>
       {labels.map(label => {
         const { textColor, borderColor } = getAccessibleLabelStyle(label.color);
 
@@ -48,6 +56,10 @@ const IssueTitle = styled.span`
   color: ${({ theme }) => theme.neutral.text.strong};
   ${({ theme }) => theme.typography.availableMedium20};
   cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const LabelTag = styled.span<LabelTagProps>`
