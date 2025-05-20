@@ -6,7 +6,6 @@ import { ISSUES_URL } from '@/api/issues';
 import { TEST_ISSUES_URL } from '@/api/issues';
 import MainPageHeaderTap from '@/units/mainPageHeaderTap';
 import IsOpenFilter from '@/units/kanbanHeader/IsOpenFilter';
-import CheckBox from '@/base-ui/utils/CheckBox';
 import useFilterModalStore from '@/stores/detailFilterModalStore';
 import useFilterStore from '@/stores/filterStore';
 import DetailFilterModal from '@/units/detailFilterModal';
@@ -17,6 +16,7 @@ import { useApplyQueryParams } from '@/utils/queryParams/useApplyQueryParams';
 import KanbanMain from '@/units/KanbanMain';
 import ResetFilterButton from '@/base-ui/issueListPage/ResetFilterButton';
 import useCheckBoxStore from '@/stores/useCheckBoxStore';
+import TotalCheckBox from '@/units/kanbanHeader/TotalCheckBox';
 
 const Container = styled.div`
   display: flex;
@@ -109,7 +109,7 @@ export default function IssueListPage() {
       <Kanban>
         <KanbanHeader>
           <HeaderLeft>
-            <CheckBox isDisabled={true} />
+            <TotalCheckBox />
             <IsOpenFilter />
           </HeaderLeft>
           <HeaderRight>
