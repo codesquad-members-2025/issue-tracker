@@ -35,7 +35,7 @@ export default function IssueDetailPage() {
       <IssueHeader />
       <Divider />
       <MainArea>
-        <IssueMainSection />
+        <IssueMainSection issueId={issueId} />
         <Sidebar />
       </MainArea>
     </VerticalStack>

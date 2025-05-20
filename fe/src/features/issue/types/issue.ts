@@ -57,3 +57,21 @@ export interface IssueDetailResponse {
     },
   ];
 }
+
+export interface CommentAuthor {
+  id: number;
+  nickname: string;
+  profileImage: string;
+}
+
+export interface Comment {
+  id: number;
+  author: CommentAuthor;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CommentsResponse {
+  comments: Comment[];
+}
