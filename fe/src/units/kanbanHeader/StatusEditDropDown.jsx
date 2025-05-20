@@ -1,6 +1,10 @@
 import { DropdownMenuTemplate } from '@/utils/dropDown/DropdownMenuTemplate';
 import useCheckBoxStore from '@/stores/useCheckBoxStore';
 import useDataFetch from '@/hooks/useDataFetch';
+import { TEST_TOGGLE_STATUS_URL } from '@/api/toggleStatus';
+import { TEST_ISSUES_URL } from '@/api/issues';
+import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function getSelectedId(checkBoxEntry) {
   const selectedIdArr = [];
@@ -15,27 +19,51 @@ function getSelectedId(checkBoxEntry) {
 export default function StatusEditDropDown() {
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const fetchType = '이슈 상태 조작';
-  const { fetchData } = useDataFetch({ fetchType });
+  const { response, fetchData } = useDataFetch({ fetchType });
   const triggerButtonLabel = '상태수정';
   const dropDownLabel = '상태 변경';
   const selectedIdArr = getSelectedId(checkBoxEntry);
-  const istems = [
+  const patchRef = useRef(false);
+  const location = useLocation();
+  const optionObject = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id: selectedIdArr }),
+  };
+  const items = [
     {
       label: '선택한 이슈 열기',
       isSelected: true,
-      onClick: () => handleClick('홍길동'),
+      onClick: () => {
+        fetchData(`${TEST_TOGGLE_STATUS_URL}${location.search}`, optionObject);
+        patchRef.current = true;
+      },
     },
     {
       label: '선택한 이슈 닫기',
       isSelected: true,
-      onClick: () => handleClick('홍길동'),
+      onClick: () => {
+        fetchData(`${TEST_TOGGLE_STATUS_URL}${location.search}`, optionObject);
+        patchRef.current = true;
+      },
     },
   ];
+
+  useEffect(() => {
+    if (!response?.success) return;
+    if (!patchRef.current) return;
+    fetchData(`${TEST_ISSUES_URL}${location.search}`);
+    patchRef.current = false;
+  }, [response]);
+
   return (
     <DropdownMenuTemplate
       triggerLabel={triggerButtonLabel}
       menuWidth="240px"
       label={dropDownLabel}
+      items={items}
     />
   );
 }

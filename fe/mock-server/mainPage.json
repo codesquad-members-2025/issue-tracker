@@ -3,18 +3,32 @@
     {
       "id": 1,
       "title": "로그인 오류",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 101,
         "nickname": "devchan"
       },
       "assignees": [
-        { "id": 102, "nickname": "alice" },
-        { "id": 103, "nickname": "bob" }
+        {
+          "id": 102,
+          "nickname": "alice"
+        },
+        {
+          "id": 103,
+          "nickname": "bob"
+        }
       ],
       "labels": [
-        { "id": 1, "name": "bug", "color": "#ff0000" },
-        { "id": 2, "name": "urgent", "color": "#ffcc00" }
+        {
+          "id": 1,
+          "name": "bug",
+          "color": "#ff0000"
+        },
+        {
+          "id": 2,
+          "name": "urgent",
+          "color": "#ffcc00"
+        }
       ],
       "milestone": {
         "id": 5,
@@ -30,8 +44,19 @@
         "id": 102,
         "nickname": "alice"
       },
-      "assignees": [{ "id": 104, "nickname": "charlie" }],
-      "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
+      "assignees": [
+        {
+          "id": 104,
+          "nickname": "charlie"
+        }
+      ],
+      "labels": [
+        {
+          "id": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
       "milestone": {
         "id": 6,
         "name": "v1.1 릴리즈"
@@ -46,10 +71,23 @@
         "id": 103,
         "nickname": "bob"
       },
-      "assignees": [{ "id": 101, "nickname": "devchan" }],
+      "assignees": [
+        {
+          "id": 101,
+          "nickname": "devchan"
+        }
+      ],
       "labels": [
-        { "id": 1, "name": "bug", "color": "#ff0000" },
-        { "id": 4, "name": "performance", "color": "#0000ff" }
+        {
+          "id": 1,
+          "name": "bug",
+          "color": "#ff0000"
+        },
+        {
+          "id": 4,
+          "name": "performance",
+          "color": "#0000ff"
+        }
       ],
       "milestone": {
         "id": 7,
@@ -66,7 +104,13 @@
         "nickname": "charlie"
       },
       "assignees": [],
-      "labels": [{ "id": 5, "name": "documentation", "color": "#ffa500" }],
+      "labels": [
+        {
+          "id": 5,
+          "name": "documentation",
+          "color": "#ffa500"
+        }
+      ],
       "milestone": null,
       "lastModifiedAt": "2025-05-18T12:00:00Z"
     },
@@ -79,12 +123,26 @@
         "nickname": "david"
       },
       "assignees": [
-        { "id": 102, "nickname": "alice" },
-        { "id": 103, "nickname": "bob" }
+        {
+          "id": 102,
+          "nickname": "alice"
+        },
+        {
+          "id": 103,
+          "nickname": "bob"
+        }
       ],
       "labels": [
-        { "id": 6, "name": "security", "color": "#800000" },
-        { "id": 2, "name": "urgent", "color": "#ffcc00" }
+        {
+          "id": 6,
+          "name": "security",
+          "color": "#800000"
+        },
+        {
+          "id": 2,
+          "name": "urgent",
+          "color": "#ffcc00"
+        }
       ],
       "milestone": {
         "id": 6,
@@ -95,8 +153,11 @@
     {
       "id": 6,
       "title": "다크 모드 지원",
-      "isOpen": false,
-      "author": { "id": 102, "nickname": "alice" },
+      "isOpen": true,
+      "author": {
+        "id": 102,
+        "nickname": "alice"
+      },
       "assignees": [
         {
           "id": 101,
@@ -104,15 +165,27 @@
           "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         }
       ],
-      "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
-      "milestone": { "id": 6, "name": "v1.1 릴리즈" },
+      "labels": [
+        {
+          "id": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "id": 6,
+        "name": "v1.1 릴리즈"
+      },
       "lastModifiedAt": "2025-05-22T17:45:00Z"
     },
     {
       "id": 7,
       "title": "이메일 알림 기능 추가",
       "isOpen": true,
-      "author": { "id": 103, "nickname": "bob" },
+      "author": {
+        "id": 103,
+        "nickname": "bob"
+      },
       "assignees": [
         {
           "id": 104,
@@ -120,15 +193,27 @@
           "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
-      "milestone": { "id": 5, "name": "v1.0 릴리즈" },
+      "labels": [
+        {
+          "id": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "id": 5,
+        "name": "v1.0 릴리즈"
+      },
       "lastModifiedAt": "2025-05-23T09:15:00Z"
     },
     {
       "id": 8,
       "title": "이미지 업로드 버그",
-      "isOpen": false,
-      "author": { "id": 104, "nickname": "charlie" },
+      "isOpen": true,
+      "author": {
+        "id": 104,
+        "nickname": "charlie"
+      },
       "assignees": [
         {
           "id": 102,
@@ -141,15 +226,27 @@
           "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [{ "id": 1, "name": "bug", "color": "#ff0000" }],
-      "milestone": { "id": 7, "name": "v0.9 릴리즈" },
+      "labels": [
+        {
+          "id": 1,
+          "name": "bug",
+          "color": "#ff0000"
+        }
+      ],
+      "milestone": {
+        "id": 7,
+        "name": "v0.9 릴리즈"
+      },
       "lastModifiedAt": "2025-05-24T11:30:00Z"
     },
     {
       "id": 9,
       "title": "접근성 개선",
       "isOpen": true,
-      "author": { "id": 105, "nickname": "david" },
+      "author": {
+        "id": 105,
+        "nickname": "david"
+      },
       "assignees": [
         {
           "id": 106,
@@ -157,15 +254,27 @@
           "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
         }
       ],
-      "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
-      "milestone": { "id": 6, "name": "v1.1 릴리즈" },
+      "labels": [
+        {
+          "id": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "id": 6,
+        "name": "v1.1 릴리즈"
+      },
       "lastModifiedAt": "2025-05-25T08:20:00Z"
     },
     {
       "id": 10,
       "title": "패스워드 변경 오류",
-      "isOpen": false,
-      "author": { "id": 101, "nickname": "devchan" },
+      "isOpen": true,
+      "author": {
+        "id": 101,
+        "nickname": "devchan"
+      },
       "assignees": [
         {
           "id": 102,
@@ -174,17 +283,31 @@
         }
       ],
       "labels": [
-        { "id": 1, "name": "bug", "color": "#ff0000" },
-        { "id": 6, "name": "security", "color": "#800000" }
+        {
+          "id": 1,
+          "name": "bug",
+          "color": "#ff0000"
+        },
+        {
+          "id": 6,
+          "name": "security",
+          "color": "#800000"
+        }
       ],
-      "milestone": { "id": 5, "name": "v1.0 릴리즈" },
+      "milestone": {
+        "id": 5,
+        "name": "v1.0 릴리즈"
+      },
       "lastModifiedAt": "2025-05-26T13:40:00Z"
     },
     {
       "id": 11,
       "title": "릴리즈 노트 자동 생성",
-      "isOpen": true,
-      "author": { "id": 102, "nickname": "alice" },
+      "isOpen": false,
+      "author": {
+        "id": 102,
+        "nickname": "alice"
+      },
       "assignees": [
         {
           "id": 103,
@@ -192,15 +315,27 @@
           "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [{ "id": 5, "name": "documentation", "color": "#ffa500" }],
-      "milestone": { "id": 6, "name": "v1.1 릴리즈" },
+      "labels": [
+        {
+          "id": 5,
+          "name": "documentation",
+          "color": "#ffa500"
+        }
+      ],
+      "milestone": {
+        "id": 6,
+        "name": "v1.1 릴리즈"
+      },
       "lastModifiedAt": "2025-05-27T16:55:00Z"
     },
     {
       "id": 12,
       "title": "다국어 지원",
       "isOpen": false,
-      "author": { "id": 103, "nickname": "bob" },
+      "author": {
+        "id": 103,
+        "nickname": "bob"
+      },
       "assignees": [
         {
           "id": 104,
@@ -208,15 +343,27 @@
           "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
-      "milestone": { "id": 6, "name": "v1.1 릴리즈" },
+      "labels": [
+        {
+          "id": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "id": 6,
+        "name": "v1.1 릴리즈"
+      },
       "lastModifiedAt": "2025-05-28T19:10:00Z"
     },
     {
       "id": 13,
       "title": "로그아웃 버튼 위치 변경",
-      "isOpen": true,
-      "author": { "id": 104, "nickname": "charlie" },
+      "isOpen": false,
+      "author": {
+        "id": 104,
+        "nickname": "charlie"
+      },
       "assignees": [
         {
           "id": 105,
@@ -224,15 +371,27 @@
           "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
         }
       ],
-      "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
-      "milestone": { "id": 5, "name": "v1.0 릴리즈" },
+      "labels": [
+        {
+          "id": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "id": 5,
+        "name": "v1.0 릴리즈"
+      },
       "lastModifiedAt": "2025-05-29T11:05:00Z"
     },
     {
       "id": 14,
       "title": "API 응답 속도 개선",
       "isOpen": false,
-      "author": { "id": 105, "nickname": "david" },
+      "author": {
+        "id": 105,
+        "nickname": "david"
+      },
       "assignees": [
         {
           "id": 101,
@@ -245,15 +404,27 @@
           "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
         }
       ],
-      "labels": [{ "id": 4, "name": "performance", "color": "#0000ff" }],
-      "milestone": { "id": 7, "name": "v0.9 릴리즈" },
+      "labels": [
+        {
+          "id": 4,
+          "name": "performance",
+          "color": "#0000ff"
+        }
+      ],
+      "milestone": {
+        "id": 7,
+        "name": "v0.9 릴리즈"
+      },
       "lastModifiedAt": "2025-05-30T15:30:00Z"
     },
     {
       "id": 15,
       "title": "마일스톤 삭제 오류",
       "isOpen": true,
-      "author": { "id": 101, "nickname": "devchan" },
+      "author": {
+        "id": 101,
+        "nickname": "devchan"
+      },
       "assignees": [
         {
           "id": 102,
@@ -261,8 +432,17 @@
           "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
-      "labels": [{ "id": 1, "name": "bug", "color": "#ff0000" }],
-      "milestone": { "id": 5, "name": "v1.0 릴리즈" },
+      "labels": [
+        {
+          "id": 1,
+          "name": "bug",
+          "color": "#ff0000"
+        }
+      ],
+      "milestone": {
+        "id": 5,
+        "name": "v1.0 릴리즈"
+      },
       "lastModifiedAt": "2025-05-31T20:00:00Z"
     }
   ],
@@ -305,12 +485,42 @@
     }
   ],
   "labels": [
-    { "id": 1, "name": "bug", "color": "#ff0000", "description": "버그 관련" },
-    { "id": 2, "name": "urgent", "color": "#ffcc00", "description": "긴급 처리 필요" },
-    { "id": 3, "name": "feature", "color": "#00ff00", "description": "기능 요청" },
-    { "id": 4, "name": "performance", "color": "#0000ff", "description": "성능 관련" },
-    { "id": 5, "name": "documentation", "color": "#ffa500", "description": "문서 관련" },
-    { "id": 6, "name": "security", "color": "#800000", "description": "보안 관련" }
+    {
+      "id": 1,
+      "name": "bug",
+      "color": "#ff0000",
+      "description": "버그 관련"
+    },
+    {
+      "id": 2,
+      "name": "urgent",
+      "color": "#ffcc00",
+      "description": "긴급 처리 필요"
+    },
+    {
+      "id": 3,
+      "name": "feature",
+      "color": "#00ff00",
+      "description": "기능 요청"
+    },
+    {
+      "id": 4,
+      "name": "performance",
+      "color": "#0000ff",
+      "description": "성능 관련"
+    },
+    {
+      "id": 5,
+      "name": "documentation",
+      "color": "#ffa500",
+      "description": "문서 관련"
+    },
+    {
+      "id": 6,
+      "name": "security",
+      "color": "#800000",
+      "description": "보안 관련"
+    }
   ],
   "milestones": [
     {

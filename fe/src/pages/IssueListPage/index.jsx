@@ -18,6 +18,8 @@ import ResetFilterButton from '@/base-ui/issueListPage/ResetFilterButton';
 import useCheckBoxStore from '@/stores/useCheckBoxStore';
 import TotalCheckBox from '@/units/kanbanHeader/TotalCheckBox';
 import SelectDisplayer from '@/base-ui/issueListPage/IssueListHeader/SelectDisplayer';
+import StatusEditDropDown from '@/units/kanbanHeader/StatusEditDropDown';
+import deepEqualFast from '@/units/deepEqualFast';
 
 const Container = styled.div`
   display: flex;
@@ -62,7 +64,7 @@ function selectedCounter(idObject) {
   }, 0);
 }
 
-function isSelected(idObject) {
+function getIsSelected(idObject) {
   return Object.values(idObject).some((value) => value === true);
 }
 
@@ -88,7 +90,8 @@ export default function IssueListPage() {
   );
   const setEntry = useCheckBoxStore((state) => state.setEntry);
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
-  const isSelected = isSelected(checkBoxEntry);
+  const isSelected = getIsSelected(checkBoxEntry);
+
   useEffect(() => {
     if (!location.search || location.search === '?') {
       // location.search가 비어있다면 디폴트 필터 적용
@@ -96,6 +99,7 @@ export default function IssueListPage() {
     }
     fetchData(`${TEST_ISSUES_URL}${location.search}`);
   }, [location.search]);
+
   useEffect(() => {
     if (!response?.data) return;
     // const fetchedData = response.data;
@@ -105,7 +109,7 @@ export default function IssueListPage() {
     const prevData = prevDataRef.current;
     // 객체 내용이 진짜로 바뀐 경우에만 실행
 
-    const hasChanged = JSON.stringify(currentData) !== JSON.stringify(prevData);
+    const hasChanged = !deepEqualFast(currentData, prevData);
 
     if (!hasChanged) return;
     prevDataRef.current = currentData; // 현재 값을 기억해둠
@@ -131,8 +135,7 @@ export default function IssueListPage() {
             )}
           </HeaderLeft>
           <HeaderRight>
-            {isSelected?:<DetailFilterTriggerButton />}
-            
+            {isSelected ? <StatusEditDropDown /> : <DetailFilterTriggerButton />}
           </HeaderRight>
         </KanbanHeader>
         <KanbanMain />

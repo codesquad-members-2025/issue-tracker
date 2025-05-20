@@ -84,7 +84,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.patch('/issues/status', async (req, res) => {
+app.patch('/toggleStatus', async (req, res) => {
   try {
     const { id: ids } = req.body; // id 배열을 받음
     if (!Array.isArray(ids)) {
