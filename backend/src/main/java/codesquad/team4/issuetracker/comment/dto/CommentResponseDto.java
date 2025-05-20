@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import software.amazon.awssdk.annotations.NotNull;
 
 public class CommentResponseDto {
+
     @AllArgsConstructor
     @Getter
     @Builder
@@ -16,5 +18,21 @@ public class CommentResponseDto {
         private UserDto.UserInfo author;
         private String imageUrl;
         private LocalDateTime createdAt;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class CreateCommentDto {
+        private Long id;
+        private String message;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class UpdateCommentDto {
+        private Long id;
+        private String message;
     }
 }
