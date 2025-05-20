@@ -75,7 +75,7 @@ public class JdbcTemplatesMilestoneRepository implements MilestoneRepository {
     }
 
     @Override
-    public List<MilestoneResponse> findMilestoneResponsesByIssueId(Long issueId) {
+    public MilestoneResponse findMilestoneResponsesByIssueId(Long issueId) {
         String sql = """
         SELECT
             m.milestone_id,
@@ -98,7 +98,7 @@ public class JdbcTemplatesMilestoneRepository implements MilestoneRepository {
         LIMIT 1
         """;
 
-        return template.query(sql, Map.of("issueId", issueId), (rs, rowNum) -> {
+        return template.queryForObject(sql, Map.of("issueId", issueId), (rs, rowNum) -> {
             MilestoneResponse res = new MilestoneResponse();
             res.setMilestoneId(rs.getLong("milestone_id"));
             res.setName(rs.getString("name"));
