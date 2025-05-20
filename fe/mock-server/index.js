@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors());
+app.use(express.json());
 
 app.get('/', async (req, res) => {
   try {
@@ -78,6 +79,42 @@ app.get('/', async (req, res) => {
     res.status(500).json({
       success: false,
       message: '서버 내부 오류 발생',
+      error: error.message,
+    });
+  }
+});
+
+app.patch('/issues/status', async (req, res) => {
+  try {
+    const { id: ids } = req.body; // id 배열을 받음
+    if (!Array.isArray(ids)) {
+      return res.status(400).json({ success: false, message: 'id 필드는 배열이어야 합니다.' });
+    }
+
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+
+    let updatedCount = 0;
+    const updatedIssues = json.issues.map((issue) => {
+      if (ids.includes(issue.id)) {
+        updatedCount++;
+        return { ...issue, isOpen: !issue.isOpen };
+      }
+      return issue;
+    });
+
+    const updatedJson = { ...json, issues: updatedIssues };
+    await fs.writeFile(filePath, JSON.stringify(updatedJson, null, 2), 'utf-8');
+
+    res.json({
+      success: true,
+      message: `${updatedCount}개의 이슈 상태가 변경되었습니다.`,
+    });
+  } catch (error) {
+    console.error('🔥 PATCH 오류:', error.message);
+    res.status(500).json({
+      success: false,
+      message: '이슈 상태 변경 중 서버 오류 발생',
       error: error.message,
     });
   }

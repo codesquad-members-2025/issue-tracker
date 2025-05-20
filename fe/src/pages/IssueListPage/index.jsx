@@ -62,6 +62,10 @@ function selectedCounter(idObject) {
   }, 0);
 }
 
+function isSelected(idObject) {
+  return Object.values(idObject).some((value) => value === true);
+}
+
 export default function IssueListPage() {
   const fetchType = '메인 페이지';
   // 이슈 선택 로직 추후에 구현
@@ -84,7 +88,7 @@ export default function IssueListPage() {
   );
   const setEntry = useCheckBoxStore((state) => state.setEntry);
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
-
+  const isSelected = isSelected(checkBoxEntry);
   useEffect(() => {
     if (!location.search || location.search === '?') {
       // location.search가 비어있다면 디폴트 필터 적용
@@ -120,14 +124,15 @@ export default function IssueListPage() {
         <KanbanHeader>
           <HeaderLeft>
             <TotalCheckBox />
-            {Object.values(checkBoxEntry).some((value) => value === true) ? (
+            {isSelected ? (
               <SelectDisplayer count={selectedCounter(checkBoxEntry)} />
             ) : (
               <IsOpenFilter />
             )}
           </HeaderLeft>
           <HeaderRight>
-            <DetailFilterTriggerButton />
+            {isSelected?:<DetailFilterTriggerButton />}
+            
           </HeaderRight>
         </KanbanHeader>
         <KanbanMain />
