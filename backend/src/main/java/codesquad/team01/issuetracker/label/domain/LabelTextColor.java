@@ -7,21 +7,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum LabelTextColor {
 
-    BLACK("#000000"),
-    WHITE("#FFFFFF");
+	BLACK("#000000"),
+	WHITE("#FFFFFF");
 
-    private final String hexCode;
+	private final String hexCode;
 
-    public static LabelTextColor fromTextColorStr(String textColor) {
-        if (textColor == null) {
-            return BLACK; // 기본값
-        }
+	public static LabelTextColor fromTextColorStr(String textColor) {
+		if (textColor == null) {
+			return BLACK; // 기본값
+		}
 
-        try {
-            return valueOf(textColor.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return BLACK; // 기본값
-        }
-    }
+		try {
+			return valueOf(textColor.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			return BLACK; // 기본값
+		}
+	}
 
 }

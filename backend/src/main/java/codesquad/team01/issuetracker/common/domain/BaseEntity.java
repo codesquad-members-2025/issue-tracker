@@ -1,31 +1,32 @@
 package codesquad.team01.issuetracker.common.domain;
 
-import lombok.Getter;
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Getter
 public abstract class BaseEntity {
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+	@CreatedDate
+	private LocalDateTime createdAt;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+	@LastModifiedDate
+	private LocalDateTime updatedAt;
 
-    private LocalDateTime deletedAt;
+	private LocalDateTime deletedAt;
 
-    public boolean isDeleted() {
-        return deletedAt != null;
-    }
+	public boolean isDeleted() {
+		return deletedAt != null;
+	}
 
-    public void delete() {
-        this.deletedAt = LocalDateTime.now();
-    }
+	public void delete() {
+		this.deletedAt = LocalDateTime.now();
+	}
 
-    public void restore() {
-        this.deletedAt = null;
-    }
+	public void restore() {
+		this.deletedAt = null;
+	}
 }

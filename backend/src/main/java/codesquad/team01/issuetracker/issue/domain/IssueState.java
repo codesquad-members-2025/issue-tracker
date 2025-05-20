@@ -6,17 +6,17 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum IssueState {
-    OPEN("open"),
-    CLOSED("closed");
+	OPEN("open"),
+	CLOSED("closed");
 
-    private final String value;
+	private final String value;
 
-    public static IssueState fromStateStr(String state) {
-        for (IssueState issueState : IssueState.values()) {
-            if (issueState.value.equalsIgnoreCase(state)) {
-                return issueState;
-            }
-        }
-        return OPEN; // 기본값
-    }
+	public static IssueState fromStateStr(String state) {
+		for (IssueState issueState : IssueState.values()) {
+			if (issueState.value.equalsIgnoreCase(state)) {
+				return issueState;
+			}
+		}
+		return OPEN; // 기본값
+	}
 }
