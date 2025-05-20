@@ -48,16 +48,8 @@ public class IssueController {
     public ResponseEntity<ApiMessageDto> createIssue(
             @RequestPart("issue") @Valid IssueRequestDto.CreateIssueDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
-        String uploadUrl;
 
-        try {
-            uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
-        } catch (FileUploadException e) {
-            return ResponseEntity.badRequest().body(
-                    ApiMessageDto.builder()
-                    .message(ExceptionMessage.FILE_UPLOAD_FAILED)
-                    .build());
-        }
+        String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
 
         ApiMessageDto result = issueService.createIssue(request, uploadUrl);
         return ResponseEntity.ok(result);
@@ -66,17 +58,10 @@ public class IssueController {
     @PatchMapping("/status")
     public ResponseEntity<IssueResponseDto.BulkUpdateIssueStatusDto> updateIssueStatus(
             @RequestBody IssueRequestDto.BulkUpdateIssueStatusDto requestDto) {
-        try {
-            IssueResponseDto.BulkUpdateIssueStatusDto result = issueService.bulkUpdateIssueStatus(requestDto);
-            return ResponseEntity.ok(result);
-        } catch (IssueStatusUpdateException e) {
-            return ResponseEntity.badRequest().body(
-                    IssueResponseDto.BulkUpdateIssueStatusDto.builder()
-                            .message(ExceptionMessage.UPDATE_ISSUE_FAILED)
-                            .build()
-            );
 
-        }
+        IssueResponseDto.BulkUpdateIssueStatusDto result = issueService.bulkUpdateIssueStatus(requestDto);
+
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{issue-id}")

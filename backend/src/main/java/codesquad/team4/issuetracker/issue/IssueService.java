@@ -156,15 +156,7 @@ public class IssueService {
         }
 
         if(request.getAssigneeId() != null) {
-            for (Long assigneeId : request.getAssigneeId()) {
-                IssueAssignee issueAssignee = IssueAssignee.builder()
-                        .issueId(issueId)
-                        .assigneeId(assigneeId)
-                        .createdAt(LocalDateTime.now())
-                        .build();
-
-                issueAssigneeRepository.save(issueAssignee);
-            }
+            addNewAssignees(issueId, request.getAssigneeId());
         }
 
         return createMessageResult(issueId, CREATE_ISSUE);

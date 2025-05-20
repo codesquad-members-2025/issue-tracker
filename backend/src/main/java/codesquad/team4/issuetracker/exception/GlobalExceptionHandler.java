@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({IssueNotFoundException.class, MilestoneNotFoundException.class})
-    public ResponseEntity<ApiResponse<?>> handleIssueNotFoundException(IssueNotFoundException ex) {
+    public ResponseEntity<ApiResponse<?>> handleNotFoundException(IssueNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.fail(ex.getMessage()));
     }
 
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<ApiResponse<?>> handleFileUploadException(FileUploadException ex) {
+    @ExceptionHandler({FileUploadException.class, IssueStatusUpdateException.class})
+    public ResponseEntity<ApiResponse<?>> handleBadRequestException(FileUploadException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.fail(FILE_UPLOAD_FAILED));
+                .body(ApiResponse.fail(ex.getMessage()));
     }
 }
