@@ -1,4 +1,4 @@
-package codesquad.team01.issuetracker.user;
+package codesquad.team01.issuetracker.user.domain;
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,7 +19,7 @@ public class User {
 
     @Id
     @EqualsAndHashCode.Include
-    private Long id;
+    private int id;
 
     @Column("login_id")
     private String loginId;
@@ -29,6 +29,8 @@ public class User {
     private String email;
 
     private String password;
+
+    private Long providerId;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -43,11 +45,13 @@ public class User {
                 String username,
                 String email,
                 String password,
+                Long providerId,
                 String authProvider) {
         this.loginId = loginId;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.providerId = providerId;
         this.authProvider = authProvider;
     }
 }
