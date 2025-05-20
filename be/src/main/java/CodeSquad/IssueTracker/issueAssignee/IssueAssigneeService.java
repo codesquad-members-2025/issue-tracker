@@ -1,9 +1,13 @@
 package CodeSquad.IssueTracker.issueAssignee;
 
+import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
+import CodeSquad.IssueTracker.user.User;
+import CodeSquad.IssueTracker.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.ref.PhantomReference;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +16,7 @@ import java.util.List;
 public class IssueAssigneeService {
 
     private final IssueAssigneeRepository issueAssigneeRepository;
+    private final UserService userService;
 
     @Transactional
     public void assignAssignees(Long issueId, List<Long> assigneeIds) {
@@ -22,10 +27,14 @@ public class IssueAssigneeService {
             IssueAssignee entity = new IssueAssignee();
             entity.setIssueId(issueId);
             entity.setAssigneeId(assigneeId);
-            entity.setCreatedAt(LocalDateTime.now());
-            entity.setUpdatedAt(LocalDateTime.now());
+            entity.setLastModifiedAt(LocalDateTime.now());
             issueAssigneeRepository.save(entity);
         }
+    }
+
+    @Transactional
+    public List<IssueAssigneeResponse> findAssigneeResponsesByIssueId(Long issueId) {
+        return issueAssigneeRepository.findAssigneeResponsesByIssueId(issueId);
     }
 
 

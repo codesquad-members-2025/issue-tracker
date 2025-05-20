@@ -3,7 +3,7 @@ package CodeSquad.IssueTracker.global;
 import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
 import CodeSquad.IssueTracker.global.exception.ApplicationException;
 import CodeSquad.IssueTracker.jwt.exception.JwtValidationException;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-@Log4j2
+@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<BaseResponseDto<String>> handleCustomExceptions(ApplicationException e) {

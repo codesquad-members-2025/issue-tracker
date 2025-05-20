@@ -1,8 +1,11 @@
 package CodeSquad.IssueTracker.milestone;
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +27,9 @@ public class MilestoneService {
 
     public void deleteById(Long id) {
         milestoneRepository.deleteById(id);
+    }
+
+    public List<MilestoneResponse> findMilestoneResponsesByIssueId(Long issueId) {
+        return milestoneRepository.findMilestoneResponsesByIssueId(issueId);
     }
 }
