@@ -17,6 +17,7 @@ import KanbanMain from '@/units/KanbanMain';
 import ResetFilterButton from '@/base-ui/issueListPage/ResetFilterButton';
 import useCheckBoxStore from '@/stores/useCheckBoxStore';
 import TotalCheckBox from '@/units/kanbanHeader/TotalCheckBox';
+import SelectDisplayer from '@/base-ui/issueListPage/IssueListHeader/SelectDisplayer';
 
 const Container = styled.div`
   display: flex;
@@ -53,6 +54,14 @@ const HeaderRight = styled.div`
   gap: 32px;
 `;
 
+function selectedCounter(idObject) {
+  return Object.values(idObject).reduce((acc, value) => {
+    if (!value) return acc;
+    acc += 1;
+    return acc;
+  }, 0);
+}
+
 export default function IssueListPage() {
   const fetchType = '메인 페이지';
   // 이슈 선택 로직 추후에 구현
@@ -74,6 +83,7 @@ export default function IssueListPage() {
     (key) => key !== 'isOpen' && key !== 'page',
   );
   const setEntry = useCheckBoxStore((state) => state.setEntry);
+  const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
 
   useEffect(() => {
     if (!location.search || location.search === '?') {
@@ -110,7 +120,11 @@ export default function IssueListPage() {
         <KanbanHeader>
           <HeaderLeft>
             <TotalCheckBox />
-            <IsOpenFilter />
+            {Object.values(checkBoxEntry).some((value) => value === true) ? (
+              <SelectDisplayer count={selectedCounter(checkBoxEntry)} />
+            ) : (
+              <IsOpenFilter />
+            )}
           </HeaderLeft>
           <HeaderRight>
             <DetailFilterTriggerButton />
