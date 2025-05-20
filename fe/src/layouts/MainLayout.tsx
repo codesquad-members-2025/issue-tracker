@@ -1,10 +1,20 @@
 import { Outlet } from 'react-router-dom';
+import styled from '@emotion/styled';
+import Header from '@/shared/components/Header';
 
 export default function MainLayout() {
   return (
-    <div>
-      <h1>🧱 Main Layout (임시)</h1>
+    <Container>
+      <Header />
       <Outlet />
-    </div>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 0 80px;
+`;
+

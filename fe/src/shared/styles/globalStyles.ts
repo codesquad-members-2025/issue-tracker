@@ -18,10 +18,8 @@ const globalStyle = (theme: Theme) => css`
     align-items: stretch;
     justify-content: flex-start;
     font-family: ${theme.typography.fontFamily};
-    background-color: ${theme.surfaceColor.strong};
-    color: ${theme.textColor.strong};
-
-    overflow: hidden;
+    background-color: ${theme.neutral.surface.default};
+    color: ${theme.neutral.text.strong};
 
     transition:
       background-color 0.2s ease,

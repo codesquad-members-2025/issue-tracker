@@ -1,4 +1,5 @@
 import typography from './typography';
+import { accent } from './color';
 
 const commonTheme = {
   typography,
@@ -18,9 +19,9 @@ const commonTheme = {
     disabled: 0.32,
   },
   palette: {
-    blue: '#007AFF',
-    navy: '#0025E6',
-    red: '#FF3B30',
+    blue: accent.blue,
+    navy: accent.navy,
+    red: accent.red,
   },
 };
 
