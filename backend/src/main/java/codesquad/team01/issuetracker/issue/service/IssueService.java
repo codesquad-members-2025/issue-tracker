@@ -24,7 +24,6 @@ public class IssueService {
     private final LabelQueryRepository labelQueryRepository;
     private final IssueAssembler issueAssembler;
 
-    @Transactional(readOnly = true) //todo 이 어노테이션 꼭 필요한지?
     public IssueDto.ListResponse findIssues(IssueState state, Long writerId, Long milestoneId,
                                             List<Long> labelIds, List<Long> assigneeIds) {
 
