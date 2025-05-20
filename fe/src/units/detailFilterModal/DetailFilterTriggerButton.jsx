@@ -8,7 +8,7 @@ const TriggerButton = styled(GhostButton)`
   justify-content: space-between;
 `;
 
-export default function DetailFilterTriigerButton() {
+export default function DetailFilterTriggerButton() {
   const openModal = useFilterModalStore((state) => state.openModal);
   const buttonLabel = '상세필터';
   return (

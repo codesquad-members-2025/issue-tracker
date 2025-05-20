@@ -8,6 +8,7 @@ import AuthorInform from '@/base-ui/utils/AuthorInform';
 import UserAvatar from '@/base-ui/utils/UserBadge';
 import ItemLabels from './ItemLabels';
 import OverlappingAvatars from './OverlappingAvatars';
+import useCheckBoxStore from '@/stores/useCheckBoxStore';
 
 const Container = styled.div`
   width: 100%;
@@ -50,12 +51,18 @@ const Information = styled.div`
 
 export default function IssueItem({ issue }) {
   const { id, isOpen, title, labels, lastModifiedAt, author, milestone, assignees } = issue;
+  const toggleCheckBox = useCheckBoxStore((state) => state.toggleCheckBox);
+  const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
+
   return (
     <Container id={id}>
       <LetfWrapper>
         <Icon>
-          {/* 체크박스 관련은 스토어에서 관리 */}
-          {/* <CheckBox isDisabled={false} isActive={'체크 박스 전용 스토어에서 관리'} onClick={s} /> */}
+          <CheckBox
+            isDisabled={false}
+            isActive={checkBoxEntry[id]}
+            onClick={() => toggleCheckBox(id)}
+          />
         </Icon>
         <Main>
           <Header>
