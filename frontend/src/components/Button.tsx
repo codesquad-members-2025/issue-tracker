@@ -2,6 +2,8 @@
 import styled from "@emotion/styled";
 
 const StyledButton = styled.button`
+  width: 8rem;
+  height: 2.5rem;
   padding: 0.5rem 1rem; /* 8px 16px */
   font-size: 1rem; /* 16px */
   line-height: 1.5rem; /* 24px */

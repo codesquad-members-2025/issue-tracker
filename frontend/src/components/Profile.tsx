@@ -1,20 +1,12 @@
-/** @jsxImportSource @emotion/react */
-import styled from "@emotion/styled";
+import Image from "next/image";
 
-const Avatar = styled.img`
-  width: 2.5rem; /* 40px */
-  height: 2.5rem;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-`;
-
-interface ProfileProps {
-  avatarUrl: string;
+export default function Profile() {
+  return (
+    <Image
+      src="/icons/profileIcon.svg"
+      alt="이슈 트래커 로고"
+      width={32}
+      height={32}
+    />
+  );
 }
-
-const Profile: React.FC<ProfileProps> = ({ avatarUrl }) => (
-  <Avatar src={avatarUrl} alt="프로필" />
-);
-
-export default Profile;

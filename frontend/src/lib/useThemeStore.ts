@@ -1,4 +1,3 @@
-// src/lib/useThemeStore.ts
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import lightTheme, { darkTheme } from "@/styles/theme";

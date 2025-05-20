@@ -1,28 +1,22 @@
-/** @jsxImportSource @emotion/react */
-import styled from "@emotion/styled";
+import Image from "next/image";
+import { useThemeStore } from "@lib/useThemeStore";
 
-const LogoWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  font-family: "Pretendard", sans-serif;
-  font-weight: 700;
-  font-size: 2rem; /* 32px */
-  color: ${({ theme }) => theme.colors.brandText.default};
-`;
+export default function Logo() {
+  const isDarkMode = useThemeStore((state) => state.isDark);
 
-const SvgIcon = styled.svg`
-  width: 2rem; /* 32px */
-  height: 2rem;
-`;
-
-const Logo: React.FC = () => (
-  <LogoWrapper>
-    <SvgIcon viewBox="0 0 24 24" fill="currentColor">
-      {/* 실제 로고 SVG 경로 */}
-      <path d="M4 4h16v16H4z" />
-    </SvgIcon>
-    <span css={{ marginLeft: "0.5rem" }}>Issue Tracker</span>
-  </LogoWrapper>
-);
-
-export default Logo;
+  return isDarkMode ? (
+    <Image
+      src="/icons/logoIconDark.svg"
+      alt="이슈 트래커 로고 - 다크모드"
+      width={199}
+      height={40}
+    />
+  ) : (
+    <Image
+      src="/icons/logoIcon.svg"
+      alt="이슈 트래커 로고"
+      width={199}
+      height={40}
+    />
+  );
+}
