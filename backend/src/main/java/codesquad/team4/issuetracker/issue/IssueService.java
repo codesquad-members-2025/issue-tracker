@@ -286,7 +286,7 @@ public class IssueService {
         validateLabelIdsExist(labelIds);
 
         // 기존 매핑 삭제
-        issueDao.deleteAllIssueLabelByIssueId(issueId);
+        labelDao.deleteAllIssueLabelByIssueId(issueId);
 
         // 새 레이블 매핑 추가
         addNewLabels(issueId, labelIds);

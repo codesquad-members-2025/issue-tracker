@@ -28,6 +28,12 @@ public class LabelDao {
         );
     }
 
+    public void deleteAllIssueLabelByIssueId(Long issueId) {
+        String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
+        Map<String, Object> params = Map.of("issueId", issueId);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
     public List<Long> findExistingLabelIds(Set<Long> labelIds) {
         String sql = "SELECT label_id FROM label WHERE label_id IN (:ids)";
         Map<String, Object> params = Map.of("ids", labelIds);

@@ -95,10 +95,4 @@
 
             return jdbcTemplate.queryForList(sql, issueId);
         }
-
-        public void deleteAllIssueLabelByIssueId(Long issueId) {
-            String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
-            Map<String, Object> params = Map.of("issueId", issueId);
-            namedParameterJdbcTemplate.update(sql, params);
-        }
     }
