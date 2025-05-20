@@ -13,33 +13,33 @@ import java.util.Optional;
 @EnableJdbcAuditing
 public class DataJdbcConfig {
 
-    @Bean
-    public AuditorAware<String> auditorProvider() {
-        return () -> Optional.of("system");
-    }
+	@Bean
+	public AuditorAware<String> auditorProvider() {
+		return () -> Optional.of("system");
+	}
 
-    @Bean
-    public NamingStrategy namingStrategy() {
-        return new NamingStrategy() {
-            @Override
-            public String getTableName(Class<?> type) {
-                return toSnake(type.getSimpleName());
-            }
+	@Bean
+	public NamingStrategy namingStrategy() {
+		return new NamingStrategy() {
+			@Override
+			public String getTableName(Class<?> type) {
+				return toSnake(type.getSimpleName());
+			}
 
-            @Override
-            public String getSchema() {
-                return "";
-            }
+			@Override
+			public String getSchema() {
+				return "";
+			}
 
-            @Override
-            public String getColumnName(RelationalPersistentProperty property) {
-                return toSnake(property.getName());
-            }
+			@Override
+			public String getColumnName(RelationalPersistentProperty property) {
+				return toSnake(property.getName());
+			}
 
-            private String toSnake(String input) {
-                return input.replaceAll("([a-z])([A-Z])", "$1_$2")
-                        .toLowerCase();
-            }
-        };
-    }
+			private String toSnake(String input) {
+				return input.replaceAll("([a-z])([A-Z])", "$1_$2")
+					.toLowerCase();
+			}
+		};
+	}
 }

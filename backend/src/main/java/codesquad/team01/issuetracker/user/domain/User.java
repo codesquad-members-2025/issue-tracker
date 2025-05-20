@@ -1,6 +1,7 @@
 package codesquad.team01.issuetracker.user.domain;
 
 import lombok.*;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,41 +18,41 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
-    @Id
-    @EqualsAndHashCode.Include
-    private int id;
+	@Id
+	@EqualsAndHashCode.Include
+	private int id;
 
-    @Column("login_id")
-    private String loginId;
+	@Column("login_id")
+	private String loginId;
 
-    private String username;
+	private String username;
 
-    private String email;
+	private String email;
 
-    private String password;
+	private String password;
 
-    private Long providerId;
+	private Long providerId;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+	@CreatedDate
+	private LocalDateTime createdAt;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+	@LastModifiedDate
+	private LocalDateTime updatedAt;
 
-    private String authProvider;
+	private String authProvider;
 
-    @Builder
-    public User(String loginId,
-                String username,
-                String email,
-                String password,
-                Long providerId,
-                String authProvider) {
-        this.loginId = loginId;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.providerId = providerId;
-        this.authProvider = authProvider;
-    }
+	@Builder
+	public User(String loginId,
+		String username,
+		String email,
+		String password,
+		Long providerId,
+		String authProvider) {
+		this.loginId = loginId;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.providerId = providerId;
+		this.authProvider = authProvider;
+	}
 }
