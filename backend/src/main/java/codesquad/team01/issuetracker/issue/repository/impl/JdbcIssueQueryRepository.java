@@ -33,7 +33,8 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
         JOIN users u ON i.writer_id = u.id
         LEFT JOIN file f ON u.profile_image_id = f.id
         LEFT JOIN milestone m ON i.milestone_id = m.id
-        WHERE 1=1
+        WHERE 1=1 
+        AND i.deleted_at IS NULL
         """;
 
     private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()
