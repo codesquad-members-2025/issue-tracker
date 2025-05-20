@@ -24,3 +24,36 @@ export interface IssuesResponse {
   openCount: number;
   closeCount: number;
 }
+
+export interface Milestone {
+  id: number;
+  name: string;
+  progressRate: number;
+}
+
+export interface Assignee {
+  id: number;
+  nickname: string;
+  profileImage: string;
+}
+
+export interface IssueDetailResponse {
+  issues: [
+    {
+      id: number;
+      author: {
+        id: number;
+        nickname: string;
+        profileImage: string;
+      };
+      title: string;
+      content: string;
+      labels: Label[];
+      milestone: Milestone | null;
+      assignees: Assignee[];
+      isClosed: boolean;
+      createdAt: string;
+      updatedAt: string;
+    },
+  ];
+}
