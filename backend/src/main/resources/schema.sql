@@ -22,15 +22,14 @@ CREATE TABLE issue
 (
     id           BIGINT PRIMARY KEY AUTO_INCREMENT,
     title        VARCHAR(255) NOT NULL,
-    body         TEXT,
-    image_url    VARCHAR(255),
+    body         TEXT         NOT NULL,
     user_id      BIGINT       NOT NULL,
     milestone_id BIGINT,
     is_open      BOOLEAN      NOT NULL,
     created_at   DATETIME     NOT NULL,
     updated_at   DATETIME     NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user (id),
-    FOREIGN KEY (milestone_id) REFERENCES milestone (id)
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (milestone_id) REFERENCES milestone (id) ON DELETE SET NULL
 );
 CREATE TABLE comment
 (
@@ -38,19 +37,18 @@ CREATE TABLE comment
     user_id    BIGINT   NOT NULL,
     issue_id   BIGINT   NOT NULL,
     content    TEXT     NOT NULL,
-    image_url  VARCHAR(255),
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user (id),
-    FOREIGN KEY (issue_id) REFERENCES issue (id)
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL,
+    FOREIGN KEY (issue_id) REFERENCES issue (id) ON DELETE CASCADE
 );
 CREATE TABLE label
 (
     id               BIGINT PRIMARY KEY AUTO_INCREMENT,
     name             VARCHAR(255) NOT NULL,
     description      TEXT,
-    text_color       VARCHAR(50),
-    background_color VARCHAR(50),
+    text_color       VARCHAR(50)  NOT NULL,
+    background_color VARCHAR(50)  NOT NULL,
     created_at       DATETIME     NOT NULL,
     updated_at       DATETIME     NOT NULL
 );
@@ -59,6 +57,14 @@ CREATE TABLE issue_label
     issue_id BIGINT NOT NULL,
     label_id BIGINT NOT NULL,
     PRIMARY KEY (issue_id, label_id),
-    FOREIGN KEY (issue_id) REFERENCES issue (id),
-    FOREIGN KEY (label_id) REFERENCES label (id)
+    FOREIGN KEY (issue_id) REFERENCES issue (id) ON DELETE CASCADE,
+    FOREIGN KEY (label_id) REFERENCES label (id) ON DELETE CASCADE
+);
+CREATE TABLE issue_assignee
+(
+    issue_id    BIGINT NOT NULL,
+    assignee_id BIGINT NOT NULL,
+    PRIMARY KEY (issue_id, assignee_id),
+    FOREIGN KEY (issue_id) REFERENCES issue (id) ON DELETE CASCADE,
+    FOREIGN KEY (assignee_id) REFERENCES user (id) ON DELETE CASCADE
 );
