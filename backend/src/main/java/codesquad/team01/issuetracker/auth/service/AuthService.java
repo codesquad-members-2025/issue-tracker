@@ -3,6 +3,8 @@ package codesquad.team01.issuetracker.auth.service;
 import codesquad.team01.issuetracker.auth.client.GitHubClient;
 import codesquad.team01.issuetracker.auth.dto.GitHubUser;
 import codesquad.team01.issuetracker.auth.dto.LoginResponse;
+import codesquad.team01.issuetracker.user.repository.UserRepository;
+import codesquad.team01.issuetracker.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final GitHubClient gitHubClient;
+    private final UserRepository userRepository;
+
+    private final String GITHUB = "github";
 
     public LoginResponse loginWithGitHub(String code) {
         // 깃헙에 access token 요청
@@ -22,14 +27,28 @@ public class AuthService {
         // 사용자 정보 요청
         log.debug("Received access token");
         GitHubUser gitHubUser = gitHubClient.fetchUserInfo(accessToken);
-
         log.info("Fetched user info: id={}, githubId={}", gitHubUser.id(), gitHubUser.githubId());
-        LoginResponse loginResponse = new LoginResponse(
-                gitHubUser.githubId(),
-                gitHubUser.avatarUrl(),
-                gitHubUser.email()
+
+        User oauthUser = findOrCreateUser(gitHubUser);
+        log.info("Created LoginResponse for userId={}", oauthUser.getId());
+
+        return new LoginResponse(
+                oauthUser.getId(),
+                oauthUser.getEmail()
         );
-        log.info("Created LoginResponse for userId={}", loginResponse.id());
-        return loginResponse;
+    }
+
+    private User findOrCreateUser(GitHubUser gitHubUser) {
+        return userRepository
+                .findByProviderIdAndAuthProvider(gitHubUser.id(), GITHUB)
+                .orElseGet(() -> userRepository.save(
+                        User.builder()
+                                .loginId(null)
+                                .username(gitHubUser.githubId())
+                                .email(gitHubUser.email())
+                                .providerId(gitHubUser.id())
+                                .authProvider(GITHUB)
+                                .build()
+                ));
     }
 }
