@@ -8,6 +8,7 @@ import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
 import codesquad.team4.issuetracker.response.ApiResponse;
 import jakarta.validation.Valid;
 
@@ -83,6 +84,18 @@ public class IssueController {
     @GetMapping("/{issue-id}")
     public ResponseEntity<ApiResponse<IssueResponseDto.searchIssueDetailDto>> searchIssueDetail(@PathVariable("issue-id") Long issueId){
         IssueResponseDto.searchIssueDetailDto result = issueService.getIssueDetailById(issueId);
+
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @PatchMapping(value = "/{issue-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<IssueResponseDto.CreateIssueDto>> updateIssue(
+            @PathVariable("issue-id") Long issueId,
+            @RequestPart("issue") @Valid IssueRequestDto.IssueUpdateDto request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+
+        String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
+        IssueResponseDto.CreateIssueDto result = issueService.updateIssue(issueId, request, uploadUrl);
 
         return ResponseEntity.ok(ApiResponse.success(result));
     }

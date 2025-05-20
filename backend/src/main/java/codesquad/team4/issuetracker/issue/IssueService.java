@@ -7,11 +7,14 @@ import codesquad.team4.issuetracker.entity.IssueLabel;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
+import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
+import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.CreateIssueDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.searchIssueDetailDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
+import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
@@ -43,6 +46,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
+    private final MilestoneRepository milestoneRepository;
 
     public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
         List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen, page, size);
@@ -233,6 +237,29 @@ public class IssueService {
                 .contentImageUrl(issueImage)
                 .comments(comments)
                 .commentSize(comments.size())
+                .build();
+    }
+
+    @Transactional
+    public IssueResponseDto.CreateIssueDto updateIssue(Long id, IssueRequestDto.IssueUpdateDto request, String uploadUrl) {
+        Issue oldIssue = issueRepository.findById(id)
+                .orElseThrow(() -> new IssueNotFoundException(id));
+
+        milestoneRepository.findById(request.getMilestoneId())
+                .orElseThrow(() -> new MilestoneNotFoundException(request.getMilestoneId()));
+
+        Issue updated = oldIssue.toBuilder()
+                .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
+                .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
+                .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
+                .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
+                .build();
+
+        issueRepository.save(updated);
+
+        return IssueResponseDto.CreateIssueDto.builder()
+                .id(updated.getId())
+                .message("이슈가 수정되었습니다")
                 .build();
     }
 }

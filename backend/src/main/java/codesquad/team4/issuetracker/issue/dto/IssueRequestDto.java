@@ -30,4 +30,14 @@ public class IssueRequestDto {
         private List<Long> issuesId;
         private boolean isOpen;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class IssueUpdateDto {
+        private String title;
+        private String content;
+        private Long milestoneId;
+        private Boolean isOpen;
+    }
 }

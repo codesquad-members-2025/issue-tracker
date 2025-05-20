@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("issue")
 @AllArgsConstructor
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class Issue {
     @Id
     private Long id;
