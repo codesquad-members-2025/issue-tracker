@@ -16,7 +16,7 @@ function getSelectedId(checkBoxEntry) {
   return selectedIdArr;
 }
 
-export default function StatusEditDropDown() {
+export default function StatusEditDropDown({ onPatchSuccess }) {
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const fetchType = '이슈 상태 조작';
   const { response, fetchData } = useDataFetch({ fetchType });
@@ -37,7 +37,7 @@ export default function StatusEditDropDown() {
       label: '선택한 이슈 열기',
       isSelected: true,
       onClick: () => {
-        fetchData(`${TEST_TOGGLE_STATUS_URL}${location.search}`, optionObject);
+        fetchData(TEST_TOGGLE_STATUS_URL, optionObject);
         patchRef.current = true;
       },
     },
@@ -45,7 +45,7 @@ export default function StatusEditDropDown() {
       label: '선택한 이슈 닫기',
       isSelected: true,
       onClick: () => {
-        fetchData(`${TEST_TOGGLE_STATUS_URL}${location.search}`, optionObject);
+        fetchData(TEST_TOGGLE_STATUS_URL, optionObject);
         patchRef.current = true;
       },
     },
@@ -54,7 +54,7 @@ export default function StatusEditDropDown() {
   useEffect(() => {
     if (!response?.success) return;
     if (!patchRef.current) return;
-    fetchData(`${TEST_ISSUES_URL}${location.search}`);
+    onPatchSuccess();
     patchRef.current = false;
   }, [response]);
 

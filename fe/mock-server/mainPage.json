@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "로그인 오류",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 101,
         "nickname": "devchan"
@@ -66,7 +66,7 @@
     {
       "id": 3,
       "title": "서버 응답 지연 문제",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 103,
         "nickname": "bob"
@@ -117,7 +117,7 @@
     {
       "id": 5,
       "title": "보안 취약점 발견",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 105,
         "nickname": "david"
@@ -209,7 +209,7 @@
     {
       "id": 8,
       "title": "이미지 업로드 버그",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 104,
         "nickname": "charlie"
@@ -242,7 +242,7 @@
     {
       "id": 9,
       "title": "접근성 개선",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 105,
         "nickname": "david"
@@ -359,7 +359,7 @@
     {
       "id": 13,
       "title": "로그아웃 버튼 위치 변경",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 104,
         "nickname": "charlie"

@@ -19,8 +19,8 @@ import useCheckBoxStore from '@/stores/useCheckBoxStore';
 import TotalCheckBox from '@/units/kanbanHeader/TotalCheckBox';
 import SelectDisplayer from '@/base-ui/issueListPage/IssueListHeader/SelectDisplayer';
 import StatusEditDropDown from '@/units/kanbanHeader/StatusEditDropDown';
-import deepEqualFast from '@/units/deepEqualFast';
-
+import deepEqualFast from '@/units/deepEqualFast/deepEqualFast';
+import useLabelStore from '@/stores/labelStore';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -91,6 +91,7 @@ export default function IssueListPage() {
   const setEntry = useCheckBoxStore((state) => state.setEntry);
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const isSelected = getIsSelected(checkBoxEntry);
+  const setLabels = useLabelStore((state) => state.setLabels);
 
   useEffect(() => {
     if (!location.search || location.search === '?') {
@@ -117,6 +118,7 @@ export default function IssueListPage() {
     setIssues(currentData); // ✅ 상태 변화 감지해서 후처리
     setMetaData(metaData);
     setFilterData(users, labels, milestones);
+    setLabels(labels);
     setEntry(issues); //체크 박스 엔트리 초기화
   }, [response?.data]);
 
@@ -135,7 +137,13 @@ export default function IssueListPage() {
             )}
           </HeaderLeft>
           <HeaderRight>
-            {isSelected ? <StatusEditDropDown /> : <DetailFilterTriggerButton />}
+            {isSelected ? (
+              <StatusEditDropDown
+                onPatchSuccess={() => fetchData(`${TEST_ISSUES_URL}${location.search}`)}
+              />
+            ) : (
+              <DetailFilterTriggerButton />
+            )}
           </HeaderRight>
         </KanbanHeader>
         <KanbanMain />
