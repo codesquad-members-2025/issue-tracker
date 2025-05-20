@@ -20,18 +20,20 @@ public class IssueDto {
      * 요청 DTO
      */
     // 조회 필터 쿼리 요청 DTO
-    public record QueryRequest(
-            @Pattern(regexp = "^(open|closed)$", message = "state는 'open' 또는 'closed'만 가능합니다")
-            String state,
-            Long writerId,
-            Long milestoneId,
-            List<Long> labelIds,
-            List<Long> assigneeIds
+    @Getter
+    public static class QueryRequest {
+        @Pattern(regexp = "^(open|closed)$", message = "state는 'open' 또는 'closed'만 가능합니다")
+        private String state = "open";
+
+        private Long writerId;
+        private Long milestoneId;
+        private List<Long> labelIds;
+        private List<Long> assigneeIds;
+    }
+
 
             // String cursor, // 무한스크롤 구현 시 필요
             // String search // 검색 구현 시 필요
-    ) {
-    }
 
     /**
      * 응답 DTO

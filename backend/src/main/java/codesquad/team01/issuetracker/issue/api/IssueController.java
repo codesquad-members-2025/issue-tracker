@@ -24,14 +24,16 @@ public class IssueController {
             @Valid IssueDto.QueryRequest request) {
 
         log.info("이슈 목록 조회 요청: state={}, writerId={}, milestoneId={}, labelIds={}, assigneeIds={}",
-                request.state(), request.writerId(), request.milestoneId(), request.labelIds(), request.assigneeIds());
+                request.getState(), request.getWriterId(), request.getMilestoneId(),
+                request.getLabelIds(), request.getAssigneeIds());
 
         IssueDto.ListResponse response =
-                issueService.findIssues(request.state(),
-                        request.writerId(),
-                        request.milestoneId(),
-                        request.labelIds(),
-                        request.assigneeIds());
+                issueService.findIssues(request.getState(),
+                        request.getWriterId(),
+                        request.getMilestoneId(),
+                        request.getLabelIds(),
+                        request.getAssigneeIds()
+                );
 
         log.info("조건에 부합하는 이슈 개수= {}", response.totalCount());
         return ResponseEntity.ok(ApiResponse.success(response));
