@@ -59,7 +59,7 @@ public class JdbcTemplatesCommentRepository implements CommentRepository {
 
     @Override
     public void update(Long id, CommentUpdateDto updateDto) {
-        String sql = "UPDATE comments Set content = :content, imageUrl = :imageUrl WHERE id = :id";
+        String sql = "UPDATE comments SET content = :content, image_url = :imageUrl, last_modified_at = NOW() WHERE comment_id = :id";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("content", updateDto.getContent())
                 .addValue("imageUrl", updateDto.getImageUrl())
