@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,20 +25,79 @@ public class S3Uploader implements Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    private static final long PART_SIZE = 5 * 1024 * 1024;
+
     @Override
     public String upload(MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String key = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-        PutObjectRequest request = PutObjectRequest.builder()
+        // 1. initiate multipart upload
+        CreateMultipartUploadRequest createRequest = CreateMultipartUploadRequest.builder()
                 .bucket(bucket)
-                .key(fileName)
+                .key(key)
+                .acl(ObjectCannedACL.PUBLIC_READ)
                 .contentType(file.getContentType())
-                .acl(ObjectCannedACL.PUBLIC_READ) // 퍼블릭으로 접근 허용
                 .build();
 
-        s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+        CreateMultipartUploadResponse createResponse = s3Client.createMultipartUpload(createRequest);
+        String uploadId = createResponse.uploadId();
 
-        return "https://" + bucket + ".s3.amazonaws.com/" + fileName;
+        List<CompletedPart> completedParts = new ArrayList<>();
+        try (InputStream inputStream = file.getInputStream()) {
+            byte[] buffer = new byte[(int) PART_SIZE];
+            int bytesRead;
+            int partNumber = 1;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                UploadPartRequest uploadRequest = UploadPartRequest.builder()
+                        .bucket(bucket)
+                        .key(key)
+                        .uploadId(uploadId)
+                        .partNumber(partNumber)
+                        .contentLength((long) bytesRead)
+                        .build();
+
+                UploadPartResponse uploadResponse = s3Client.uploadPart(uploadRequest,
+                        RequestBody.fromBytes(copyOf(buffer, bytesRead)));
+
+                completedParts.add(CompletedPart.builder()
+                        .partNumber(partNumber)
+                        .eTag(uploadResponse.eTag())
+                        .build());
+
+                partNumber++;
+            }
+
+            // 3. complete upload
+            CompletedMultipartUpload completedMultipartUpload = CompletedMultipartUpload.builder()
+                    .parts(completedParts)
+                    .build();
+
+            CompleteMultipartUploadRequest completeRequest = CompleteMultipartUploadRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .uploadId(uploadId)
+                    .multipartUpload(completedMultipartUpload)
+                    .build();
+
+            s3Client.completeMultipartUpload(completeRequest);
+
+            return "https://" + bucket + ".s3.amazonaws.com/" + key;
+
+        } catch (Exception e) {
+            // 4. abort upload on error
+            AbortMultipartUploadRequest abortRequest = AbortMultipartUploadRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .uploadId(uploadId)
+                    .build();
+            s3Client.abortMultipartUpload(abortRequest);
+            throw new IOException("Multipart upload failed", e);
+        }
+    }
+
+    private byte[] copyOf(byte[] source, int length) {
+        byte[] copy = new byte[length];
+        System.arraycopy(source, 0, copy, 0, length);
+        return copy;
     }
 }
-

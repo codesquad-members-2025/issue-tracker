@@ -3,9 +3,11 @@ package CodeSquad.IssueTracker.comment;
 import CodeSquad.IssueTracker.comment.dto.CommentRequestDto;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
 import CodeSquad.IssueTracker.comment.dto.CommentUpdateDto;
+import CodeSquad.IssueTracker.global.exception.UserNotFoundException;
 import CodeSquad.IssueTracker.user.User;
 import CodeSquad.IssueTracker.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,7 +56,7 @@ public class CommentService {
         return comments.stream()
                 .map(comment -> {
                     User author = userRepository.findById(comment.getAuthorId())
-                            .orElseThrow(() -> new IllegalArgumentException("작성자를 찾을 수 없습니다: " + comment.getAuthorId()));
+                            .orElseThrow(() -> new UserNotFoundException("작성자를 찾을 수 없습니다: " + comment.getAuthorId(), HttpStatus.BAD_REQUEST));
                     return new CommentResponseDto(comment, author);
                 })
                 .toList();
