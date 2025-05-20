@@ -1,4 +1,4 @@
-package codesquad.team01.issuetracker.auth.domain;
+package codesquad.team01.issuetracker.user;
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -31,14 +31,11 @@ public class User {
     private String password;
 
     @CreatedDate
-    @Column("created_at")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column("updated_at")
     private LocalDateTime updatedAt;
 
-    @Column("auth_provider")
     private String authProvider;
 
     @Builder
