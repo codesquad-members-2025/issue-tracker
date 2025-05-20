@@ -40,7 +40,7 @@ public class LabelQueryRepository {
             row -> ((Number) row.get("issue_id")).longValue(),
             Collectors.mapping(row -> new LabelResponse(
                 ((Number) row.get("label_id")).longValue(),
-                (String) row.get("name"),
+                (String) row.get("label_name"),
                 (String) row.get("label_text_color"),
                 (String) row.get("label_background_color")
             ), Collectors.toList())
