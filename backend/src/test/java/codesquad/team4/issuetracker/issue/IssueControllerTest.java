@@ -7,6 +7,7 @@ import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
@@ -62,7 +63,7 @@ class IssueControllerTest {
 
         given(s3FileService.uploadFile(any(), eq("issue/"))).willReturn(Optional.of("https://fake-s3-url/image.png"));
 
-        IssueResponseDto.CreateIssueDto responseDto = IssueResponseDto.CreateIssueDto.builder()
+        ApiMessageDto responseDto = ApiMessageDto.builder()
                 .id(1L)
                 .message("이슈가 생성되었습니다.")
                 .build();

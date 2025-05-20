@@ -12,10 +12,9 @@ import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
-import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import java.sql.Timestamp;
@@ -84,7 +83,7 @@ public class IssueServiceTest {
         given(issueRepository.save(any(Issue.class))).willReturn(issue);
 
         // when
-        CreateIssueDto response = issueService.createIssue(requestDto, uploadUrl);
+        ApiMessageDto response = issueService.createIssue(requestDto, uploadUrl);
 
         // then
         assertThat(response).isNotNull();
@@ -120,7 +119,7 @@ public class IssueServiceTest {
         given(issueRepository.save(any(Issue.class))).willReturn(issue);
 
         // when
-        CreateIssueDto response = issueService.createIssue(requestDto, uploadUrl);
+        ApiMessageDto response = issueService.createIssue(requestDto, uploadUrl);
 
         // then
         assertThat(response).isNotNull();

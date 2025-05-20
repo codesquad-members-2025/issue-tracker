@@ -1,11 +1,10 @@
 package codesquad.team4.issuetracker.issue;
 
 import codesquad.team4.issuetracker.entity.Issue;
-import codesquad.team4.issuetracker.entity.Milestone;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
@@ -19,8 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import static codesquad.team4.issuetracker.util.TestDataHelper.insertIssueAllParams;
-import static codesquad.team4.issuetracker.util.TestDataHelper.insertMilestone;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -69,7 +66,7 @@ class IssueServiceUpdateTest {
                 .build();
 
         //when
-        IssueResponseDto.CreateIssueDto result = issueService.updateIssue(1L, request, "");
+        ApiMessageDto result = issueService.updateIssue(1L, request, "");
 
         Issue updated = issueRepository.findById(1L).get();
 
