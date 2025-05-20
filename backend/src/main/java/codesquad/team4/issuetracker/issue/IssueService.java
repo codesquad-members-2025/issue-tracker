@@ -11,6 +11,7 @@ import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.CreateIssueDto;
+import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.searchIssueDetailDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
+import java.util.Optional;
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class IssueService {
     private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
     private static final String UPDATE_ISSUESTATUS = "이슈 상태가 변경되었습니다.";
+    private static final String UPDATE_ISSUE = "이슈가 수정되었습니다";
     private static final String ISSUE_PARTIALLY_UPDATED = "일부 이슈 ID는 존재하지 않아 제외되었습니다: %s";
 
     private final IssueDao issueDao;
@@ -245,12 +248,18 @@ public class IssueService {
         Issue oldIssue = issueRepository.findById(id)
                 .orElseThrow(() -> new IssueNotFoundException(id));
 
-        milestoneRepository.findById(request.getMilestoneId())
-                .orElseThrow(() -> new MilestoneNotFoundException(request.getMilestoneId()));
+        if (request.getMilestoneId() != null) {
+            milestoneRepository.findById(request.getMilestoneId())
+                    .orElseThrow(() -> new MilestoneNotFoundException(request.getMilestoneId()));
+        }
+
+        //기존 이미지를 삭제하는 것인지 확인
+        Optional<String> newImageUrl = determineNewImageUrl(request, uploadUrl, oldIssue);
 
         Issue updated = oldIssue.toBuilder()
                 .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
                 .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
+                .imageUrl(newImageUrl.orElse(null))
                 .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
                 .build();
@@ -259,7 +268,18 @@ public class IssueService {
 
         return IssueResponseDto.CreateIssueDto.builder()
                 .id(updated.getId())
-                .message("이슈가 수정되었습니다")
+                .message(UPDATE_ISSUE)
                 .build();
+    }
+
+    private Optional<String> determineNewImageUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
+        String newImageUrl = oldIssue.getImageUrl();
+
+        if (Boolean.TRUE.equals(request.getRemoveImage())) {
+            newImageUrl = null;
+        } else if (uploadUrl != null && !uploadUrl.isBlank()) {
+            newImageUrl = uploadUrl;
+        }
+        return Optional.ofNullable(newImageUrl);
     }
 }

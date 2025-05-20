@@ -39,5 +39,6 @@ public class IssueRequestDto {
         private String content;
         private Long milestoneId;
         private Boolean isOpen;
+        private Boolean removeImage;
     }
 }
