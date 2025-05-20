@@ -74,12 +74,7 @@ export default function FilterBar() {
     const updated = useFilterStore.getState().selectedFilters;
     applyQueryParams(updated);
   }
-  useEffect(() => {
-    if (!deepEqualFast(prevObj.current, filteredObj)) {
-      initFilter(filteredObj);
-      prevObj.current = filteredObj;
-    }
-  }, [filteredObj]);
+
   return (
     <Container $isActive={isActive}>
       <DropdownMenuTemplate
