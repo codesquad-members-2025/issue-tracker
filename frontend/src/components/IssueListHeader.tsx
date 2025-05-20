@@ -18,21 +18,23 @@ const HeaderWrapper = styled.div`
 
 const LeftSection = styled.div`
   display: flex;
+  justify-content: start;
   align-items: center;
   flex: 1;
-  gap: 32px;
+  gap: 2rem;
 `;
 
 const RightSection = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 1rem;
 `;
 
 const Checkbox = styled.input`
-  display: flex;
-  justify-content: center;
-  width: 16px;
-  height: 32px;
+  /* display: flex;
+  justify-content: start;
+  align-items: start; */
+  width: 1rem;
+  height: 1rem;
   cursor: pointer;
 `;
 

@@ -7,13 +7,16 @@ import IssueListHeader from "@components/IssueListHeader";
 import type { Issue } from "@/types/issue";
 import Link from "next/link";
 
-const ListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+const Container = styled.div`
+  overflow: hidden;
   border: ${({ theme }) =>
     `${theme.border.default} ${theme.colors.border.default}`};
   border-radius: ${({ theme }) => theme.radius.medium};
-  overflow: hidden;
+`;
+
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 interface IssueListProps {
@@ -21,7 +24,7 @@ interface IssueListProps {
 }
 
 const IssueList: React.FC<IssueListProps> = ({ issues }) => (
-  <>
+  <Container>
     <IssueListHeader
       openCount={0}
       closeCount={0}
@@ -39,7 +42,7 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => (
         </Link>
       ))}
     </ListContainer>
-  </>
+  </Container>
 );
 
 // const IssueList: React.FC<IssueListProps> = () => {

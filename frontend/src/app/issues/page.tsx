@@ -10,6 +10,7 @@ import { FilterGroup, FilterDropdown } from "@components/FilterGroup";
 import IssueListComponent from "@/components/IssueList";
 import ThemeToggleBtn from "@/components/ThemeToggleBtn";
 import type { Issue } from "@/types/issue";
+import Link from "next/link";
 
 const Page = styled.div`
   display: flex;
@@ -119,28 +120,34 @@ export default function IssuesPage() {
         </LeftControls>
         <RightControls>
           <FilterGroup>
-            <LabelMoveBtn
-              label={`레이블(${3})`}
-              hasDownIcon={false}
-              onClick={() => {
-                /* 레이블 팝업 */
-              }}
-            />
-            <MileStoneMoveBtn
-              label={`마일스톤(${2})`}
-              hasDownIcon={false}
-              onClick={() => {
-                /* 마일스톤 팝업 */
-              }}
-            />
+            <Link href="/labels">
+              <LabelMoveBtn
+                label={`레이블(${3})`}
+                hasDownIcon={false}
+                onClick={() => {
+                  /* 레이블 팝업 */
+                }}
+              />
+            </Link>
+            <Link href="/milestones">
+              <MileStoneMoveBtn
+                label={`마일스톤(${2})`}
+                hasDownIcon={false}
+                onClick={() => {
+                  /* 마일스톤 팝업 */
+                }}
+              />
+            </Link>
           </FilterGroup>
-          <Button
-            onClick={() => {
-              /* 이슈 작성 페이지로 이동 */
-            }}
-          >
-            + 이슈 작성
-          </Button>
+          <Link href="/issues/new">
+            <Button
+              onClick={() => {
+                /* 이슈 작성 페이지로 이동 */
+              }}
+            >
+              + 이슈 작성
+            </Button>
+          </Link>
         </RightControls>
       </Toolbar>
 

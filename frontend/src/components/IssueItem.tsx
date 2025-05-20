@@ -22,7 +22,7 @@ const Item = styled.div`
 `;
 
 const IssueCheckbox = styled.input`
-  margin: 1.5rem 2rem auto 2rem;
+  margin: 1.5rem 2rem auto 2.25rem;
   width: 1rem;
   height: 1rem;
 `;
