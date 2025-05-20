@@ -87,19 +87,6 @@ export default function IssuesPage() {
 
   // fetch("/api/v1/issues?state=open")
   useEffect(() => {
-    const fetchIssues = async () => {
-      try {
-        const res = await fetch("/mockDatas/issueMockData.json");
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const json = await res.json();
-        const data = json.data.issues;
-        setIssues(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchIssues();
   }, []);
 
@@ -107,13 +94,27 @@ export default function IssuesPage() {
     fetchMoreIssues();
   }, []);
 
+  const fetchIssues = async () => {
+    try {
+      const res = await fetch("/mockDatas/issueMockData.json");
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const json = await res.json();
+      const data = json.data.issues;
+      setIssues(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const fetchMoreIssues = async () => {
     if (loading || !hasNext) return;
     setLoading(true);
     try {
       const url = cursor
         ? `/api/v1/issues?cursor=${encodeURIComponent(cursor)}`
-        : "/api/v1/issues`";
+        : "/api/v1/issues";
       const res = await fetch(url);
       const result = await res.json();
       const {
