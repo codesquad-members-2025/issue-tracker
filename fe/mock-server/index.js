@@ -48,7 +48,16 @@ app.get('/', async (req, res) => {
     const startIndex = (pageNum - 1) * limitNum;
     const paginatedIssues = issues.slice(startIndex, startIndex + limitNum);
 
-    // 응답
+    // Create a filtered list of issues that ignore isOpen filter
+    const baseFilteredIssues = json.issues.filter((i) => {
+      if (author && String(i.author.id) !== String(author)) return false;
+      if (label && !i.labels?.some((l) => String(l.id) === String(label))) return false;
+      if (milestone && String(i.milestone?.id) !== String(milestone)) return false;
+      if (assignee && !i.assignees?.some((a) => String(a.id) === String(assignee))) return false;
+      return true;
+    });
+
+    // Then use that to compute open/close issue numbers
     res.json({
       success: true,
       message: '요청에 성공했습니다.',
@@ -59,8 +68,8 @@ app.get('/', async (req, res) => {
         milestones: json.milestones,
         metaData: {
           currentPage: pageNum,
-          openIssueNumber: issues.filter((i) => i.isOpen === true).length,
-          closeIssueNumber: issues.filter((i) => i.isOpen === false).length,
+          openIssueNumber: baseFilteredIssues.filter((i) => i.isOpen === true).length,
+          closeIssueNumber: baseFilteredIssues.filter((i) => i.isOpen === false).length,
         },
       },
     });

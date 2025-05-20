@@ -11,11 +11,12 @@ import useFilterModalStore from '@/stores/detailFilterModalStore';
 import useFilterStore from '@/stores/filterStore';
 import DetailFilterModal from '@/units/detailFilterModal';
 import { useRef } from 'react';
-import DetailFilterTriigerButton from '@/units/detailFilterModal/DetailFilterTriigerButton';
+import DetailFilterTriggerButton from '@/units/detailFilterModal/DetailFilterTriggerButton';
 import { useLocation } from 'react-router-dom';
 import { useApplyQueryParams } from '@/utils/queryParams/useApplyQueryParams';
 import KanbanMain from '@/units/KanbanMain';
 import ResetFilterButton from '@/base-ui/issueListPage/ResetFilterButton';
+import useCheckBoxStore from '@/stores/useCheckBoxStore';
 
 const Container = styled.div`
   display: flex;
@@ -72,6 +73,7 @@ export default function IssueListPage() {
   const hasActiveFilter = Object.keys(Object.fromEntries(queryParams)).some(
     (key) => key !== 'isOpen' && key !== 'page',
   );
+  const setEntry = useCheckBoxStore((state) => state.setEntry);
 
   useEffect(() => {
     if (!location.search || location.search === '?') {
@@ -97,6 +99,7 @@ export default function IssueListPage() {
     setIssues(currentData); // ✅ 상태 변화 감지해서 후처리
     setMetaData(metaData);
     setFilterData(users, labels, milestones);
+    setEntry(issues); //체크 박스 엔트리 초기화
   }, [response?.data]);
 
   return (
@@ -110,7 +113,7 @@ export default function IssueListPage() {
             <IsOpenFilter />
           </HeaderLeft>
           <HeaderRight>
-            <DetailFilterTriigerButton />
+            <DetailFilterTriggerButton />
           </HeaderRight>
         </KanbanHeader>
         <KanbanMain />

@@ -2,15 +2,12 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 const useCheckBoxStore = create(
-  immer(() => ({
+  immer((set) => ({
     checkBoxEntry: {},
-    checkIssue: (id) =>
+
+    toggleCheckBox: (id) =>
       set((state) => {
-        state.checkBoxEntry[id] = true;
-      }),
-    unCheckIssue: (id) =>
-      set((state) => {
-        state.checkBoxEntry[id] = false;
+        state.checkBoxEntry[id] = !state.checkBoxEntry[id];
       }),
     allCheckIssue: () =>
       set((state) => {
@@ -24,11 +21,13 @@ const useCheckBoxStore = create(
           state.checkBoxEntry[key] = false;
         });
       }),
+
+    //서버에서 다시 새로운 데이터를 받아오면 이 로직은 필요가 없다.
     deleteIssueToEntry: (id) =>
       set((state) => {
         delete state.checkBoxEntry[id];
       }),
-    initEntry: (issues) =>
+    setEntry: (issues) =>
       set((state) => {
         issues.forEach(({ id }) => {
           state.checkBoxEntry[id] = false;
@@ -36,3 +35,5 @@ const useCheckBoxStore = create(
       }),
   })),
 );
+
+export default useCheckBoxStore;
