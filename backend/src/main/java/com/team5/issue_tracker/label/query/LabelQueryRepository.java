@@ -23,7 +23,8 @@ public class LabelQueryRepository {
             i.id AS issue_id,
             l.id AS label_id,
             l.name AS label_name,
-            l.color AS label_color
+            l.text_color AS label_text_color,
+            l.background_color AS label_background_color
         FROM issue i
         JOIN issue_label il ON i.id = il.issue_id
         JOIN label l ON il.label_id = l.id
@@ -40,7 +41,8 @@ public class LabelQueryRepository {
             Collectors.mapping(row -> new LabelResponse(
                 ((Number) row.get("label_id")).longValue(),
                 (String) row.get("name"),
-                (String) row.get("color")
+                (String) row.get("label_text_color"),
+                (String) row.get("label_background_color")
             ), Collectors.toList())
         ));
   }
