@@ -24,8 +24,8 @@ public class IssueService {
 	private final LabelQueryRepository labelQueryRepository;
 	private final IssueAssembler issueAssembler;
 
-	public IssueDto.ListResponse findIssues(IssueState state, Long writerId, Long milestoneId,
-		List<Long> labelIds, List<Long> assigneeIds) {
+	public IssueDto.ListResponse findIssues(IssueState state, Integer writerId, Integer milestoneId,
+		List<Integer> labelIds, List<Integer> assigneeIds) {
 
 		// 이슈 기본 정보 조회 - (담당자, 레이블 제외)
 		List<IssueDto.BaseRow> issues = issueQueryRepository.findIssuesWithFilters(
@@ -40,7 +40,7 @@ public class IssueService {
 		}
 
 		// 이슈 ID 목록
-		List<Long> issueIds = issues.stream()
+		List<Integer> issueIds = issues.stream()
 			.map(IssueDto.BaseRow::issueId)
 			.toList();
 		log.debug("기본 이슈 {}개 조회, id 목록: {}", issues.size(), issueIds);

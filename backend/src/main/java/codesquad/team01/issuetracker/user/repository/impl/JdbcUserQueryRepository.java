@@ -29,13 +29,13 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
 		""";
 
 	private final RowMapper<UserDto.IssueAssigneeRow> assigneeRowMapper = (rs, rowNum) -> UserDto.IssueAssigneeRow.builder()
-		.issueId(rs.getLong("issue_id"))
-		.assigneeId(rs.getLong("assignee_id"))
+		.issueId(rs.getInt("issue_id"))
+		.assigneeId(rs.getInt("assignee_id"))
 		.assigneeProfileImageUrl(rs.getString("assignee_profile_image_url"))
 		.build();
 
 	@Override
-	public List<UserDto.IssueAssigneeRow> findAssigneesByIssueIds(List<Long> issueIds) {
+	public List<UserDto.IssueAssigneeRow> findAssigneesByIssueIds(List<Integer> issueIds) {
 		if (issueIds.isEmpty()) {
 			return List.of();
 		}

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Issue extends BaseEntity {
 
 	@Id
-	private Long id;
+	private Integer id;
 
 	private String title;
 	private String content;
@@ -26,13 +26,13 @@ public class Issue extends BaseEntity {
 
 	private LocalDateTime closedAt;
 
-	private Long writerId;
+	private Integer writerId;
 
-	private Long milestoneId;
+	private Integer milestoneId;
 
 	@Builder
-	private Issue(Long id, String title, String content, IssueState state,
-		LocalDateTime closedAt, Long writerId, Long milestoneId) {
+	private Issue(Integer id, String title, String content, IssueState state,
+		LocalDateTime closedAt, Integer writerId, Integer milestoneId) {
 		this.id = id;
 		this.title = title;
 		this.content = content;

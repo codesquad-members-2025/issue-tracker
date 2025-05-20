@@ -31,15 +31,15 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 		""";
 
 	private final RowMapper<LabelDto.IssueLabelRow> labelRowMapper = (rs, rowNum) -> LabelDto.IssueLabelRow.builder()
-		.issueId(rs.getLong("issue_id"))
-		.labelId(rs.getLong("label_id"))
+		.issueId(rs.getInt("issue_id"))
+		.labelId(rs.getInt("label_id"))
 		.labelName(rs.getString("label_name"))
 		.labelColor(rs.getString("label_color"))
 		.labelTextColor(LabelTextColor.fromTextColorStr(rs.getString("label_text_color")))
 		.build();
 
 	@Override
-	public List<LabelDto.IssueLabelRow> findLabelsByIssueIds(List<Long> issueIds) {
+	public List<LabelDto.IssueLabelRow> findLabelsByIssueIds(List<Integer> issueIds) {
 		if (issueIds.isEmpty()) {
 			return List.of();
 		}

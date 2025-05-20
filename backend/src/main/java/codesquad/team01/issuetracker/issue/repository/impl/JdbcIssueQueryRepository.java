@@ -39,7 +39,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 		""";
 
 	private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()
-		.issueId(rs.getLong("issue_id"))
+		.issueId(rs.getInt("issue_id"))
 		.issueTitle(rs.getString("issue_title"))
 		.issueState(IssueState.fromStateStr(rs.getString("issue_state")))
 		// enum 변환 - spring 내에서는 enum 사용이 타입 검증에도 맞을 것 같아서
@@ -48,17 +48,17 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 		// 그럼 위에 있는 나름의 논리가 맞지 않음
 		.issueCreatedAt(rs.getTimestamp("issue_created_at").toLocalDateTime())
 		.issueUpdatedAt(rs.getTimestamp("issue_updated_at").toLocalDateTime())
-		.writerId(rs.getLong("writer_id"))
+		.writerId(rs.getInt("writer_id"))
 		.writerUsername(rs.getString("writer_username"))
 		.writerProfileImageUrl(rs.getString("writer_profile_image_url"))
-		.milestoneId(rs.getObject("milestone_id", Long.class))
+		.milestoneId(rs.getInt("milestone_id"))
 		.milestoneTitle(rs.getString("milestone_title"))
 		.build();
 
 	@Override
 	public List<IssueDto.BaseRow> findIssuesWithFilters(
-		IssueState state, Long writerId, Long milestoneId,
-		List<Long> labelIds, List<Long> assigneeIds) {
+		IssueState state, Integer writerId, Integer milestoneId,
+		List<Integer> labelIds, List<Integer> assigneeIds) {
 
 		StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
 		MapSqlParameterSource params = new MapSqlParameterSource();

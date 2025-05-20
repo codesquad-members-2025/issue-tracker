@@ -12,7 +12,7 @@ public class MilestoneDto {
 	// 이슈 목록 - 마일스톤 응답 DTO
 	@Builder
 	public record ListItemResponse(
-		Long id,
+		Integer id,
 		String title
 	) {
 	}

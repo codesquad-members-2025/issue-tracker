@@ -13,7 +13,7 @@ public class LabelDto {
 	// 이슈 목록 - 레이블 응답 DTO
 	@Builder
 	public record ListItemResponse(
-		Long id,
+		Integer id,
 		String name,
 		String color,
 		String textColor
@@ -23,8 +23,8 @@ public class LabelDto {
 	// 이슈 레이블 행 DTO
 	@Builder
 	public record IssueLabelRow(
-		Long issueId,
-		Long labelId,
+		Integer issueId,
+		Integer labelId,
 		String labelName,
 		String labelColor,
 		LabelTextColor labelTextColor

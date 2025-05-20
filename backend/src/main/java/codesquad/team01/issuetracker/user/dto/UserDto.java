@@ -15,7 +15,7 @@ public class UserDto {
 	// 이슈 목록 - 작성자 응답 DTO
 	@Builder
 	public record WriterResponse(
-		Long id,
+		Integer id,
 		String username,
 		String profileImageUrl
 	) {
@@ -27,7 +27,7 @@ public class UserDto {
 	// 담당자 응답 DTO
 	@Builder
 	public record AssigneeResponse(
-		Long id,
+		Integer id,
 		String profileImageUrl
 	) {
 		public String profileImageUrl() {
@@ -41,8 +41,8 @@ public class UserDto {
 	// 이슈 담당자 행 DTO
 	@Builder
 	public record IssueAssigneeRow(
-		Long issueId,
-		Long assigneeId,
+		Integer issueId,
+		Integer assigneeId,
 		String assigneeProfileImageUrl
 	) {
 	}
