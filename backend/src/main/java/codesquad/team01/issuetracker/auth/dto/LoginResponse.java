@@ -4,6 +4,6 @@ package codesquad.team01.issuetracker.auth.dto;
 // jwt, id, 프로필 정보 등
 public record LoginResponse(
         int id,
-        String email
+        String email    // null 가능
 ) {
 }

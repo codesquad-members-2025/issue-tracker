@@ -1,6 +1,5 @@
 package codesquad.team01.issuetracker.auth.api;
 
-import codesquad.team01.issuetracker.auth.dto.GitHubUser;
 import codesquad.team01.issuetracker.auth.dto.LoginResponse;
 import codesquad.team01.issuetracker.auth.service.AuthService;
 import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +24,13 @@ public class AuthController {
     // Authorization endpoint
     @GetMapping("/api/v1/oauth/github/login")
     public void redirectToGithub(HttpServletResponse response, HttpSession session) throws IOException {
-        URI githubUri = authorizationUrlBuilder.buildAuthorizeUri(session);
+        // CSRF 방지용 state 생성 및 세션 저장
+        String state = UUID.randomUUID().toString();
+        session.setAttribute("oauth_state", state);
+
+        // URL 생성
+        URI githubUri = authorizationUrlBuilder.buildAuthorizeUri(state);
+
         response.sendRedirect(githubUri.toString());
     }
 
