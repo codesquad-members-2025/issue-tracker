@@ -1,7 +1,7 @@
 package codesquad.team01.issuetracker.common.exception;
 
-public class BadRequestException extends RuntimeException {
-    public BadRequestException(String message) {
+public class InvalidParameterException extends RuntimeException {
+    public InvalidParameterException(String message) {
         super(message);
     }
 }
