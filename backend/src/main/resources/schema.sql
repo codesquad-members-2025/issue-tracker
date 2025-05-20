@@ -54,17 +54,19 @@ CREATE TABLE label
 );
 CREATE TABLE issue_label
 (
+    id       BIGINT AUTO_INCREMENT PRIMARY KEY,
     issue_id BIGINT NOT NULL,
     label_id BIGINT NOT NULL,
-    PRIMARY KEY (issue_id, label_id),
+    UNIQUE (issue_id, label_id),
     FOREIGN KEY (issue_id) REFERENCES issue (id) ON DELETE CASCADE,
     FOREIGN KEY (label_id) REFERENCES label (id) ON DELETE CASCADE
 );
 CREATE TABLE issue_assignee
 (
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     issue_id    BIGINT NOT NULL,
     assignee_id BIGINT NOT NULL,
-    PRIMARY KEY (issue_id, assignee_id),
+    UNIQUE (issue_id, assignee_id),
     FOREIGN KEY (issue_id) REFERENCES issue (id) ON DELETE CASCADE,
     FOREIGN KEY (assignee_id) REFERENCES user (id) ON DELETE CASCADE
 );
