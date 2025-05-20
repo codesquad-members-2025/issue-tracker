@@ -24,6 +24,10 @@ const base = css`
     background: var(--bg);
     color: var(--fg);
   }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `;
 
 export default function GlobalStyles() {

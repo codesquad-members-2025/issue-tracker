@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import IssueItem from "@/components/IssueItem";
 import IssueListHeader from "@components/IssueListHeader";
 import type { Issue } from "@/types/issue";
+import Link from "next/link";
 
 const ListContainer = styled.div`
   display: flex;
@@ -29,7 +30,13 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => (
     />
     <ListContainer>
       {issues.map((issue) => (
-        <IssueItem key={issue.id} issue={issue} />
+        <Link
+          key={issue.id}
+          href={`/issues/${issue.id}`}
+          // 앱 라우터라면 스타일드 컴포넌트 같은 wrapper 안 써도 됩니다.
+        >
+          <IssueItem key={issue.id} issue={issue} />
+        </Link>
       ))}
     </ListContainer>
   </>
