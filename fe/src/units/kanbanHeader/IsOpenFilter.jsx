@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import useIssuesStore from '@/stores/issuesStore';
 import { useApplyQueryParams } from '@/utils/queryParams/useApplyQueryParams';
 import useQueryObject from '@/utils/queryParams/useQueryObject';
+
 const Container = styled.div`
   display: flex;
   gap: 24px;
