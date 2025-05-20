@@ -1,7 +1,9 @@
 package codesquad.team4.issuetracker.issue;
 
 import codesquad.team4.issuetracker.entity.Issue;
+import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.exception.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
@@ -11,7 +13,6 @@ import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.util.TestDataHelper;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +55,9 @@ class IssueServiceUpdateTest {
     @BeforeEach
     void setUp() {
         TestDataHelper.insertUser(jdbcTemplate, 1L, "사용자1");
+        TestDataHelper.insertUser(jdbcTemplate, 2L, "사용자2");
+        TestDataHelper.insertUser(jdbcTemplate, 3L, "사용자3");
+
         TestDataHelper.insertIssueAllParams(jdbcTemplate, 1L, "이슈 1", true, 1L, "본문", "http://s3.com/old.png", null);
         TestDataHelper.insertMilestone(jdbcTemplate, 1L, "v1.0", "First release", null, true);
 
@@ -196,5 +200,55 @@ class IssueServiceUpdateTest {
 
         //then
         assertThat(mappings.isEmpty()).isTrue();
+    }
+
+    @Test
+    @DisplayName("정상적으로 담당자가 업데이트된다")
+    void updateAssignees_success() {
+        // given
+        Set<Long> assigneeIds = Set.of(1L, 2L, 3L);
+
+        // when
+        ApiMessageDto result = issueService.updateAssignees(1L, assigneeIds);
+
+        // then
+        assertThat(result.getMessage()).isEqualTo("이슈의 담당자가 수정되었습니다");
+
+        List<IssueAssignee> mappings = issueAssigneeRepository.findAllByIssueId(1L);
+        assertThat(mappings).hasSize(assigneeIds.size());
+    }
+
+    @Test
+    @DisplayName("이슈 ID가 존재하지 않으면 예외가 발생한다")
+    void updateAssignees_issueNotFound() {
+        // given
+        Long nonExistentIssueId = 9999L;
+        Set<Long> assigneeIds = Set.of(1L, 2L);
+
+        // when & then
+        assertThatThrownBy(() -> issueService.updateAssignees(nonExistentIssueId, assigneeIds))
+                .isInstanceOf(IssueNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 유저를 담당자로 지정하면 예외가 발생한다")
+    void updateAssignees_assigneeNotFound() {
+        // given
+        Set<Long> invalidUserIds = Set.of(100L, 200L);
+
+        // when & then
+        assertThatThrownBy(() -> issueService.updateAssignees(1L, invalidUserIds))
+                .isInstanceOf(AssigneeNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("빈 담당자 목록이 오면 기존 매핑은 삭제되고 아무것도 추가되지 않는다")
+    void updateAssignees_withEmptyAssigneeList() {
+        // when
+        issueService.updateAssignees(1L, Set.of());
+
+        // then
+        List<IssueAssignee> mappings = issueAssigneeRepository.findAllByIssueId(1L);
+        assertThat(mappings).isEmpty();
     }
 }
