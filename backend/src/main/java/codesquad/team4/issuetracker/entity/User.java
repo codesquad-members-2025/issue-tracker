@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("user")
@@ -13,10 +14,21 @@ import org.springframework.data.relational.core.mapping.Table;
 @Builder
 public class User {
     @Id
+    @Column("user_id")
     private Long id;
+
+    @Column("email")
     private String email;
+
+    @Column("nickname")
     private String nickname;
+
+    @Column("profile_image")
     private String profileImage;
+
+    @Column("created_at")
     private LocalDateTime createdAt;
+
+    @Column("updated_at")
     private LocalDateTime updatedAt;
 }

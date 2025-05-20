@@ -1,6 +1,8 @@
 package codesquad.team4.issuetracker.user;
 
+import codesquad.team4.issuetracker.response.ApiResponse;
 import codesquad.team4.issuetracker.user.dto.UserDto;
+import codesquad.team4.issuetracker.user.dto.UserDto.UserFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +16,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/filter")
-    public ResponseEntity<UserDto.UserFilter> getFilterUsers() {
+    public ResponseEntity<ApiResponse<UserFilter>> getFilterUsers() {
         UserDto.UserFilter result = userService.getFilterUsers();
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
 }

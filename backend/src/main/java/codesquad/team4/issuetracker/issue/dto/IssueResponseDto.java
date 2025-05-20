@@ -40,7 +40,7 @@ public class IssueResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class CreateIssueDto {
+    public static class ApiMessageDto {
         private Long id;
         private String message;
     }

@@ -4,16 +4,24 @@ import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.exception.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
+import codesquad.team4.issuetracker.exception.LabelNotFoundException;
+import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
+import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.searchIssueDetailDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
+import codesquad.team4.issuetracker.label.LabelDao;
+import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
+import codesquad.team4.issuetracker.user.UserDao;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -26,6 +34,7 @@ import java.util.Map;
 
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
+import java.util.Optional;
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
@@ -37,12 +46,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class IssueService {
     private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
     private static final String UPDATE_ISSUESTATUS = "이슈 상태가 변경되었습니다.";
+    private static final String UPDATE_ISSUE = "이슈가 수정되었습니다";
     private static final String ISSUE_PARTIALLY_UPDATED = "일부 이슈 ID는 존재하지 않아 제외되었습니다: %s";
+    private static final String UPDATE_ISSUE_LABEL = "이슈의 레이블이 수정되었습니다";
+    private static final String UPDATE_ISSUE_ASSIGNEE = "이슈의 담당자가 수정되었습니다";
 
     private final IssueDao issueDao;
+    private final LabelDao labelDao;
+    private final UserDao userDao;
     private final IssueRepository issueRepository;
     private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
+    private final MilestoneRepository milestoneRepository;
 
     public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
         List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen, page, size);
@@ -120,7 +135,7 @@ public class IssueService {
     }
 
     @Transactional
-    public IssueResponseDto.CreateIssueDto createIssue(IssueRequestDto.CreateIssueDto request, String uploadUrl) {
+    public ApiMessageDto createIssue(IssueRequestDto.CreateIssueDto request, String uploadUrl) {
         Issue issue = Issue.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -137,33 +152,14 @@ public class IssueService {
         Long issueId = savedIssue.getId();
 
         if(request.getLabelId() != null) {
-            for (Long labelId : request.getLabelId()) {
-                IssueLabel issueLabel = IssueLabel.builder()
-                        .issueId(issueId)
-                        .labelId(labelId)
-                        .createdAt(LocalDateTime.now())
-                        .build();
-
-                issueLabelRepository.save(issueLabel);
-            }
+            addNewLabels(issueId, request.getLabelId());
         }
 
         if(request.getAssigneeId() != null) {
-            for (Long assigneeId : request.getAssigneeId()) {
-                IssueAssignee issueAssignee = IssueAssignee.builder()
-                        .issueId(issueId)
-                        .assigneeId(assigneeId)
-                        .createdAt(LocalDateTime.now())
-                        .build();
-
-                issueAssigneeRepository.save(issueAssignee);
-            }
+            addNewAssignees(issueId, request.getAssigneeId());
         }
 
-        return IssueResponseDto.CreateIssueDto.builder()
-                .id(issueId)
-                .message(CREATE_ISSUE)
-                .build();
+        return createMessageResult(issueId, CREATE_ISSUE);
     }
 
     @Transactional
@@ -234,5 +230,127 @@ public class IssueService {
                 .comments(comments)
                 .commentSize(comments.size())
                 .build();
+    }
+
+    @Transactional
+    public ApiMessageDto updateIssue(Long id, IssueRequestDto.IssueUpdateDto request, String uploadUrl) {
+        Issue oldIssue = issueRepository.findById(id)
+                .orElseThrow(() -> new IssueNotFoundException(id));
+
+        if (request.getMilestoneId() != null) {
+            milestoneRepository.findById(request.getMilestoneId())
+                    .orElseThrow(() -> new MilestoneNotFoundException(request.getMilestoneId()));
+        }
+
+        //기존 이미지를 삭제하는 것인지 확인
+        Optional<String> newImageUrl = determineNewImageUrl(request, uploadUrl, oldIssue);
+
+        Issue updated = oldIssue.toBuilder()
+                .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
+                .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
+                .imageUrl(newImageUrl.orElse(null))
+                .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
+                .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
+                .build();
+
+        issueRepository.save(updated);
+
+        return createMessageResult(updated.getId(), UPDATE_ISSUE);
+    }
+
+    private Optional<String> determineNewImageUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
+        String newImageUrl = oldIssue.getImageUrl();
+
+        if (Boolean.TRUE.equals(request.getRemoveImage())) {
+            newImageUrl = null;
+        } else if (uploadUrl != null && !uploadUrl.isBlank()) {
+            newImageUrl = uploadUrl;
+        }
+        return Optional.ofNullable(newImageUrl);
+    }
+
+    @Transactional
+    public IssueResponseDto.ApiMessageDto updateLabels(Long issueId, Set<Long> labelIds) {
+        issueRepository.findById(issueId)
+                        .orElseThrow(() -> new IssueNotFoundException(issueId));
+
+        //존재하는 레이블인지 확인
+        validateLabelIdsExist(labelIds);
+
+        // 기존 매핑 삭제
+        labelDao.deleteAllIssueLabelByIssueId(issueId);
+
+        // 새 레이블 매핑 추가
+        addNewLabels(issueId, labelIds);
+
+        return createMessageResult(issueId, UPDATE_ISSUE_LABEL);
+    }
+
+    private static ApiMessageDto createMessageResult(Long id, String message) {
+        return ApiMessageDto.builder()
+                .id(id)
+                .message(message)
+                .build();
+    }
+
+    private void addNewLabels(Long issueId, Set<Long> labelIds) {
+        for (Long labelId : labelIds) {
+            IssueLabel issueLabel = IssueLabel.builder()
+                    .issueId(issueId)
+                    .labelId(labelId)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            issueLabelRepository.save(issueLabel);
+        }
+    }
+
+    private void validateLabelIdsExist(Set<Long> labelIds) {
+        if (labelIds.isEmpty()) return;
+
+        List<Long> foundIds = labelDao.findExistingLabelIds(labelIds);
+        if (foundIds.size() != labelIds.size()) {
+            Set<Long> missing = new HashSet<>(labelIds);
+            foundIds.forEach(missing::remove);
+            throw new LabelNotFoundException(missing);
+        }
+    }
+
+    public ApiMessageDto updateAssignees(Long issueId, Set<Long> assigneeIds) {
+        issueRepository.findById(issueId)
+                .orElseThrow(() -> new IssueNotFoundException(issueId));
+
+        //존재하는 담당자인지 확인
+        validateAssigneeIdsExist(assigneeIds);
+
+        // 기존 매핑 삭제
+        userDao.deleteAllByIssueId(issueId);
+
+        // 새 담당자 매핑 추가
+        addNewAssignees(issueId, assigneeIds);
+
+        return createMessageResult(issueId, UPDATE_ISSUE_ASSIGNEE);
+    }
+
+    private void addNewAssignees(Long issueId, Set<Long> assigneeIds) {
+        for (Long assigneeId : assigneeIds) {
+            IssueAssignee issueAssignee = IssueAssignee.builder()
+                    .issueId(issueId)
+                    .assigneeId(assigneeId)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            issueAssigneeRepository.save(issueAssignee);
+        }
+    }
+
+
+    private void validateAssigneeIdsExist(Set<Long> assigneeIds) {
+        if (assigneeIds.isEmpty()) return;
+
+        List<Long> foundIds = userDao.findExistingAssigneeIds(assigneeIds);
+        if (foundIds.size() != assigneeIds.size()) {
+            Set<Long> missing = new HashSet<>(assigneeIds);
+            foundIds.forEach(missing::remove);
+            throw new AssigneeNotFoundException(missing);
+        }
     }
 }

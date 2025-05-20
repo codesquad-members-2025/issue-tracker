@@ -7,6 +7,7 @@
 
     import lombok.RequiredArgsConstructor;
     import org.springframework.jdbc.core.JdbcTemplate;
+    import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
     import org.springframework.stereotype.Repository;
 
     @Repository
@@ -14,6 +15,7 @@
     public class IssueDao {
 
         private final JdbcTemplate jdbcTemplate;
+        private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
         public List<Map<String, Object>> findIssuesByOpenStatus(boolean isOpen, int page, int size){
             int offset = Math.max(0, (page - 1) * size);
@@ -93,5 +95,4 @@
 
             return jdbcTemplate.queryForList(sql, issueId);
         }
-
     }
