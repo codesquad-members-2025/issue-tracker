@@ -11,6 +11,7 @@ import IssueListComponent from "@/components/IssueList";
 import ThemeToggleBtn from "@/components/ThemeToggleBtn";
 import type { Issue } from "@/types/issue";
 import Link from "next/link";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Page = styled.div`
   display: flex;
@@ -80,6 +81,9 @@ const MileStoneMoveBtn = styled(FilterDropdown)`
 
 export default function IssuesPage() {
   const [issues, setIssues] = useState<Issue[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasNext, setHasNext] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // fetch("/api/v1/issues?state=open")
   useEffect(() => {
@@ -98,6 +102,34 @@ export default function IssuesPage() {
     };
     fetchIssues();
   }, []);
+
+  useEffect(() => {
+    fetchMoreIssues();
+  }, []);
+
+  const fetchMoreIssues = async () => {
+    if (loading || !hasNext) return;
+    setLoading(true);
+    try {
+      const url = cursor
+        ? `/api/v1/issues?cursor=${encodeURIComponent(cursor)}`
+        : "/api/v1/issues`";
+      const res = await fetch(url);
+      const result = await res.json();
+      const {
+        issues: newIssues,
+        cursor: { next, hasNext: nextExists },
+      } = result.data;
+
+      setIssues((prev) => [...prev, ...newIssues]);
+      setCursor(next);
+      setHasNext(nextExists);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Page>
@@ -151,7 +183,20 @@ export default function IssuesPage() {
         </RightControls>
       </Toolbar>
 
-      <IssueListComponent issues={issues} />
+      <InfiniteScroll
+        className="your-scroll-container" /* 스크롤 바 없애기 */
+        dataLength={issues.length}
+        next={fetchMoreIssues}
+        hasMore={hasNext}
+        loader={<h4 style={{ textAlign: "center" }}>로딩 중...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>모든 이슈를 불러왔습니다.</b>
+          </p>
+        }
+      >
+        <IssueListComponent issues={issues} />
+      </InfiniteScroll>
     </Page>
   );
 }

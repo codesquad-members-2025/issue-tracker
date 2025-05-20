@@ -28,6 +28,10 @@ const base = css`
     color: inherit;
     text-decoration: none;
   }
+
+  .your-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export default function GlobalStyles() {
