@@ -1,13 +1,13 @@
 package codesquad.team01.issuetracker.user.repository;
 
-import codesquad.team01.issuetracker.user.domain.User;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Optional;
+import codesquad.team01.issuetracker.user.domain.User;
 
 public interface UserRepository extends CrudRepository<User, Integer> {
-	Optional<User> findByLoginId(int id);
+	Optional<User> findByLoginId(Integer id);
 
 	Optional<User> findByProviderIdAndAuthProvider(Long providerId, String authProvider);
 }

@@ -25,7 +25,7 @@ public class User {
 
 	@Id
 	@EqualsAndHashCode.Include
-	private int id;
+	private Integer id;
 
 	@Column("login_id")
 	private String loginId;
