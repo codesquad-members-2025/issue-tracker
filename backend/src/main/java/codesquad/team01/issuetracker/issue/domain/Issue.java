@@ -33,6 +33,7 @@ public class Issue extends BaseEntity {
 	@Builder
 	private Issue(Integer id, String title, String content, IssueState state,
 		LocalDateTime closedAt, Integer writerId, Integer milestoneId) {
+
 		this.id = id;
 		this.title = title;
 		this.content = content;

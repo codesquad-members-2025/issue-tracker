@@ -40,6 +40,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 
 	private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()
 		.issueId(rs.getInt("issue_id"))
+
 		.issueTitle(rs.getString("issue_title"))
 		.issueState(IssueState.fromStateStr(rs.getString("issue_state")))
 		// enum 변환 - spring 내에서는 enum 사용이 타입 검증에도 맞을 것 같아서
@@ -52,6 +53,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 		.writerUsername(rs.getString("writer_username"))
 		.writerProfileImageUrl(rs.getString("writer_profile_image_url"))
 		.milestoneId(rs.getInt("milestone_id"))
+
 		.milestoneTitle(rs.getString("milestone_title"))
 		.build();
 

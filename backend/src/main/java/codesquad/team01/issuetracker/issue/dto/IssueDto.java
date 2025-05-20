@@ -37,6 +37,7 @@ public class IssueDto {
 
 		private List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds;
 		private List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds;
+
 		// private String cursor; // 무한스크롤 구현 시 필요
 		// private String search; // 검색 구현 시 필요
 
@@ -65,6 +66,7 @@ public class IssueDto {
 	@Builder
 	public static class ListItemResponse {
 		private final Integer id;
+
 		private final String title;
 		private final String state;
 		private final LocalDateTime createdAt;
@@ -87,6 +89,7 @@ public class IssueDto {
 	public record BaseRow(
 		// issue
 		Integer issueId,
+
 		String issueTitle,
 		IssueState issueState,
 		LocalDateTime issueCreatedAt,
@@ -94,11 +97,13 @@ public class IssueDto {
 
 		// writerId
 		Integer writerId,
+
 		String writerUsername,
 		String writerProfileImageUrl,
 
 		// milestoneId - nullable
 		Integer milestoneId,
+
 		String milestoneTitle
 	) {
 	}

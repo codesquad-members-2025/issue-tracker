@@ -14,6 +14,7 @@ public class LabelDto {
 	@Builder
 	public record ListItemResponse(
 		Integer id,
+
 		String name,
 		String color,
 		String textColor
@@ -25,6 +26,7 @@ public class LabelDto {
 	public record IssueLabelRow(
 		Integer issueId,
 		Integer labelId,
+
 		String labelName,
 		String labelColor,
 		LabelTextColor labelTextColor

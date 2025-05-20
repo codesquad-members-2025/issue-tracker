@@ -7,4 +7,5 @@ import codesquad.team01.issuetracker.user.dto.UserDto;
 public interface UserQueryRepository {
 
 	List<UserDto.IssueAssigneeRow> findAssigneesByIssueIds(List<Integer> issueIds);
+
 }

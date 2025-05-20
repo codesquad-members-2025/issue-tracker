@@ -13,6 +13,7 @@ public class MilestoneDto {
 	@Builder
 	public record ListItemResponse(
 		Integer id,
+
 		String title
 	) {
 	}

@@ -36,6 +36,7 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
 
 	@Override
 	public List<UserDto.IssueAssigneeRow> findAssigneesByIssueIds(List<Integer> issueIds) {
+
 		if (issueIds.isEmpty()) {
 			return List.of();
 		}

@@ -16,6 +16,7 @@ public class UserDto {
 	@Builder
 	public record WriterResponse(
 		Integer id,
+
 		String username,
 		String profileImageUrl
 	) {
@@ -28,6 +29,7 @@ public class UserDto {
 	@Builder
 	public record AssigneeResponse(
 		Integer id,
+
 		String profileImageUrl
 	) {
 		public String profileImageUrl() {
@@ -43,6 +45,7 @@ public class UserDto {
 	public record IssueAssigneeRow(
 		Integer issueId,
 		Integer assigneeId,
+
 		String assigneeProfileImageUrl
 	) {
 	}
