@@ -30,4 +30,11 @@ public class TestDataHelper {
         VALUES (?, ?, ?, ?, ?)
     """, id, name, description, endDate, isOpen);
     }
+
+    public static void insertLabel(JdbcTemplate jdbcTemplate, Long id, String title, String color) {
+        jdbcTemplate.update("""
+        INSERT INTO label (label_id, name, color)
+        VALUES (?, ?, ?)
+    """, id, title, color);
+    }
 }

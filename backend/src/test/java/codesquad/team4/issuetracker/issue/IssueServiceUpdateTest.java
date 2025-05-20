@@ -1,7 +1,9 @@
 package codesquad.team4.issuetracker.issue;
 
 import codesquad.team4.issuetracker.entity.Issue;
+import codesquad.team4.issuetracker.entity.IssueLabel;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
+import codesquad.team4.issuetracker.exception.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
@@ -9,6 +11,9 @@ import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.util.TestDataHelper;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,6 +56,10 @@ class IssueServiceUpdateTest {
         TestDataHelper.insertUser(jdbcTemplate, 1L, "사용자1");
         TestDataHelper.insertIssueAllParams(jdbcTemplate, 1L, "이슈 1", true, 1L, "본문", "http://s3.com/old.png", null);
         TestDataHelper.insertMilestone(jdbcTemplate, 1L, "v1.0", "First release", null, true);
+
+        TestDataHelper.insertLabel(jdbcTemplate, 1L, "bug", "#ff0000");
+        TestDataHelper.insertLabel(jdbcTemplate, 2L, "feature", "#00ff00");
+        TestDataHelper.insertLabel(jdbcTemplate, 3L, "urgent", "#0000ff");
     }
 
     @Test
@@ -136,4 +145,56 @@ class IssueServiceUpdateTest {
         assertThat(issueRepository.findById(1L).get().getImageUrl()).isNull();
     }
 
+
+    @Test
+    @DisplayName("정상적으로 레이블 업데이트가 수행된다")
+    void updateLabels_success() {
+        //given
+        Set<Long> labelIds = Set.of(1L, 2L, 3L);
+
+        //when
+        ApiMessageDto result = issueService.updateLabels(1L, labelIds);
+
+        //then
+        assertThat(result.getMessage()).isEqualTo("이슈의 레이블이 수정되었습니다");
+
+        List<IssueLabel> mappings = issueLabelRepository.findAllByIssueId(1L);
+        assertThat(mappings).hasSize(labelIds.size());
+    }
+
+    @Test
+    @DisplayName("이슈 아이디가 존재하지 않으면 에러가 발생한다")
+    void updateLabels_issueNotFound() {
+        //given
+        Long nonExistentIssueId = 9999L;
+        Set<Long> labelIds = Set.of(1L, 2L, 3L);
+
+        //when & then
+        assertThatThrownBy(() -> issueService.updateLabels(nonExistentIssueId, labelIds))
+                .isInstanceOf(IssueNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 레이블로 수정하려하면 에러가 발생한다")
+    void updateLabels_labelNotFound() {
+        //given
+        Set<Long> invalidLabelIds = Set.of(100L, 200L);
+
+        //when & then
+        assertThatThrownBy(() -> issueService.updateLabels(1L, invalidLabelIds))
+                .isInstanceOf(LabelNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("빈 레이블 리스트가 온다면 삭제 후 아무것도 추가하지 않는다")
+    void updateLabels_withEmptyLabelList() {
+        //given
+        issueService.updateLabels(1L, Set.of());
+
+        //when
+        List<IssueLabel> mappings = issueLabelRepository.findAllByIssueId(1L);
+
+        //then
+        assertThat(mappings.isEmpty()).isTrue();
+    }
 }
