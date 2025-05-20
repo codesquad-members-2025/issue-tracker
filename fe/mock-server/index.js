@@ -35,6 +35,10 @@ app.get('/', async (req, res) => {
     if (assignee) {
       issues = issues.filter((i) => i.assignees?.some((a) => String(a.id) === String(assignee)));
     }
+    if (req.query.isOpen !== undefined) {
+      const isOpen = req.query.isOpen === 'true';
+      issues = issues.filter((i) => i.isOpen === isOpen);
+    }
 
     // 페이지네이션
     const pageNum = parseInt(page, 10);
