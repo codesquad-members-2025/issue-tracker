@@ -1,17 +1,20 @@
 package codesquad.team01.issuetracker.auth.client;
 
-import codesquad.team01.issuetracker.auth.dto.GitHubEmail;
-import codesquad.team01.issuetracker.auth.dto.GitHubUser;
-import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Map;
 
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Map;
+import codesquad.team01.issuetracker.auth.dto.AuthDto;
+import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -28,7 +31,6 @@ public class GitHubClient {
 	private final String ID = "id";
 	private final String LOGIN = "login";
 	private final String AVATAR_URL = "avatar_url";
-	private final String GITHUB = "github";
 	private final String ACCESS_TOKEN = "access_token";
 
 	// token 요청
@@ -54,7 +56,7 @@ public class GitHubClient {
 	}
 
 	// 사용자 정보 요청
-	public GitHubUser fetchUserInfo(String accessToken) {
+	public AuthDto.GitHubUser fetchUserInfo(String accessToken) {
 		log.info("Fetching GitHub user info with accessToken");
 		HttpHeaders authHeaders = new HttpHeaders();
 		authHeaders.setBearerAuth((accessToken));
@@ -74,28 +76,28 @@ public class GitHubClient {
 		if (email == null) {
 			var emails = fetchUserEmail(accessToken);
 			email = emails.stream()
-				.filter(GitHubEmail::primary)
-				.filter(GitHubEmail::verified)
+				.filter(AuthDto.GitHubEmail::primary)
+				.filter(AuthDto.GitHubEmail::verified)
 				.findFirst()
-				.map(GitHubEmail::email)
+				.map(AuthDto.GitHubEmail::email)
 				.orElse(null);
 		}
 
 		log.info("GitHubUser parsed: id={}, login={}", id, githubId);
-		return new GitHubUser(id, githubId, avatarUrl, email);
+		return new AuthDto.GitHubUser(id, githubId, avatarUrl, email);
 	}
 
 	// 사용자가 깃헙에서 이메일을 공개하지 않았을 경우, 리소스 서버에 이메일 추가 요청
-	public List<GitHubEmail> fetchUserEmail(String accessToken) {
+	public List<AuthDto.GitHubEmail> fetchUserEmail(String accessToken) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(accessToken);
 		HttpEntity<Void> request = new HttpEntity<>(headers);
 
-		ResponseEntity<GitHubEmail[]> response = restTemplate.exchange(
+		ResponseEntity<AuthDto.GitHubEmail[]> response = restTemplate.exchange(
 			properties.getUserEmailUri(),
 			HttpMethod.GET,
 			request,
-			GitHubEmail[].class
+			AuthDto.GitHubEmail[].class
 		);
 		return List.of(response.getBody());
 	}

@@ -1,19 +1,19 @@
 package codesquad.team01.issuetracker.auth.api;
 
-import codesquad.team01.issuetracker.auth.dto.LoginResponse;
-import codesquad.team01.issuetracker.auth.service.AuthService;
-import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.net.URI;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.UUID;
+import codesquad.team01.issuetracker.auth.dto.AuthDto;
+import codesquad.team01.issuetracker.auth.service.AuthService;
+import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class AuthController {
 
 	// Redirect(Callback) endpoint
 	@GetMapping("/api/v1/oauth/callback")
-	public LoginResponse githubCallback(
+	public AuthDto.LoginResponse githubCallback(
 		@RequestParam("code") String code,
 		@RequestParam("state") String state,
 		HttpSession session) {
