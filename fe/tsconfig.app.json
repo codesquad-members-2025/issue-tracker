@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "typeRoots": ["./node_modules", "./src/types"],
-    "types": ["vite/client", "vitest/globals"],
+    "types": ["vite/client", "vitest/globals", "vitest", "vitest-fetch-mock"],
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
