@@ -1,8 +1,7 @@
-"use client";
-
 import EmotionProvider from "../styles/emotionProvider";
 import GlobalStyles from "@/styles/globalStyles";
 import ThemeProvider from "@/components/ThemeProvider";
+import ClientProviders from "@/components/ClientProviders";
 
 // export const metadata = {
 //   title: "Issue Tracker",
@@ -16,13 +15,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body>
-        <EmotionProvider>
-          <ThemeProvider>
-            <GlobalStyles />
-            {children}
-          </ThemeProvider>
-        </EmotionProvider>
+      <body suppressHydrationWarning>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

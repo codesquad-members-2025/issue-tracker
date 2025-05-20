@@ -7,7 +7,7 @@ import Logo from "@/components/Logo";
 import Profile from "@/components/Profile";
 import Button from "@/components/Button";
 import { FilterGroup, FilterDropdown } from "@components/FilterGroup";
-import IssueItem from "@/components/IssueItem";
+import IssueListComponent from "@/components/IssueList";
 import ThemeToggleBtn from "@/components/ThemeToggleBtn";
 import type { Issue } from "@/types/issue";
 
@@ -58,13 +58,6 @@ const RightControls = styled.div`
   gap: 0.5rem;
 `;
 
-const IssueList = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-top: ${({ theme }) =>
-    `${theme.border.default} ${theme.colors.border.default}`};
-`;
-
 const IssueFilterDropdown = styled(FilterDropdown)`
   width: 8rem;
   height: 2.5rem;
@@ -87,25 +80,25 @@ const MileStoneMoveBtn = styled(FilterDropdown)`
 export default function IssuesPage() {
   const [issues, setIssues] = useState<Issue[]>([]);
 
+  // fetch("/api/v1/issues?state=open")
   useEffect(() => {
-    fetch("/api/v1/issues?state=open")
-      .then((res) => res.json())
-      .then((json) => {
+    const fetchIssues = async () => {
+      try {
+        const res = await fetch("/mockDatas/issueMockData.json");
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const json = await res.json();
         const data = json.data.issues;
-        const mapped: Issue[] = data.map((i: any) => ({
-          id: i.id,
-          number: i.id,
-          title: i.title,
-          createdBy: i.writer.username,
-          createdAt: i.createdAt,
-          avatarUrl: i.writer.profileImageUrl,
-          labels: i.labels.map((l: any) => l.name),
-          milestone: i.milestone?.title,
-          state: i.isOpen ? "open" : "closed",
-        }));
-        setIssues(mapped);
-      });
+        setIssues(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchIssues();
   }, []);
+
+  console.log(issues);
 
   return (
     <Page>
@@ -153,11 +146,7 @@ export default function IssuesPage() {
         </RightControls>
       </Toolbar>
 
-      <IssueList>
-        {issues.map((issue) => (
-          <IssueItem key={issue.id} issue={issue} />
-        ))}
-      </IssueList>
+      <IssueListComponent issues={issues} />
     </Page>
   );
 }
