@@ -32,7 +32,6 @@ const Kanban = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 16px;
-  overflow: hidden;
 `;
 
 const KanbanHeader = styled.div`
@@ -44,6 +43,8 @@ const KanbanHeader = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.surface.bold};
   border-bottom: 1px solid ${({ theme }) => theme.border.default};
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 `;
 
 const HeaderLeft = styled.div`
