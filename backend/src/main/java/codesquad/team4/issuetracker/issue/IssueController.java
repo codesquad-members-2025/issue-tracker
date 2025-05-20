@@ -31,37 +31,37 @@ public class IssueController {
     private final S3FileService s3FileService;
 
     @GetMapping("")
-    public ResponseEntity<IssueResponseDto.IssueListDto> showIssueList(@RequestParam(name = "is_open") boolean isOpen, Pageable pageable) {
+    public ResponseEntity<ApiResponse<IssueResponseDto.IssueListDto>> showIssueList(@RequestParam(name = "is_open") boolean isOpen, Pageable pageable) {
 
         IssueResponseDto.IssueListDto issues = issueService.getIssues(isOpen, pageable.getPageNumber(), pageable.getPageSize());
 
-        return ResponseEntity.ok(issues);
+        return ResponseEntity.ok(ApiResponse.success(issues));
     }
 
     @GetMapping("/count")
-    public ResponseEntity<IssueCountDto> showIssueCount() {
+    public ResponseEntity<ApiResponse<IssueCountDto>> showIssueCount() {
         IssueCountDto result = issueService.getIssueCounts();
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiMessageDto> createIssue(
+    public ResponseEntity<ApiResponse<IssueResponseDto.ApiMessageDto>> createIssue(
             @RequestPart("issue") @Valid IssueRequestDto.CreateIssueDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
 
         String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
 
         ApiMessageDto result = issueService.createIssue(request, uploadUrl);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @PatchMapping("/status")
-    public ResponseEntity<IssueResponseDto.BulkUpdateIssueStatusDto> updateIssueStatus(
+    public ResponseEntity<ApiResponse<IssueResponseDto.BulkUpdateIssueStatusDto>> updateIssueStatus(
             @RequestBody IssueRequestDto.BulkUpdateIssueStatusDto requestDto) {
 
         IssueResponseDto.BulkUpdateIssueStatusDto result = issueService.bulkUpdateIssueStatus(requestDto);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @GetMapping("/{issue-id}")
