@@ -21,7 +21,7 @@ public class CommentController {
     }
 
     @PatchMapping("/{commentId}")
-    public CommentResponseDto updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentUpdateDto request,Long requesterId) throws AccessDeniedException {
+    public CommentResponseDto updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentUpdateDto request,Long requesterId) {
         return commentService.update(commentId,request,requesterId);
     }
 

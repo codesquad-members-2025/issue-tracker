@@ -8,7 +8,6 @@ import CodeSquad.IssueTracker.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +38,7 @@ public class CommentService {
         return commentRepository.findById(id).orElse(null);
     }
 
-    public CommentResponseDto update(Long commentId, CommentUpdateDto dto, Long requesterId) throws AccessDeniedException {
+    public CommentResponseDto update(Long commentId, CommentUpdateDto dto, Long requesterId) {
         Comment comment = commentRepository.findById(commentId).get(); //To do 이중으로 null 체크를 해야할까?
         comment.update(dto.getContent(), dto.getImageUrl(), requesterId );
         return new CommentResponseDto(comment,userRepository.findById(requesterId).get());
@@ -47,6 +46,18 @@ public class CommentService {
 
     public List<Comment> findByIssueId(Long issueId) {
         return commentRepository.findByIssueId(issueId);
+    }
+
+    public List<CommentResponseDto> findCommentResponsesByIssueId(Long issueId) {
+        List<Comment> comments = commentRepository.findByIssueId(issueId);
+
+        return comments.stream()
+                .map(comment -> {
+                    User author = userRepository.findById(comment.getAuthorId())
+                            .orElseThrow(() -> new IllegalArgumentException("작성자를 찾을 수 없습니다: " + comment.getAuthorId()));
+                    return new CommentResponseDto(comment, author);
+                })
+                .toList();
     }
 
 

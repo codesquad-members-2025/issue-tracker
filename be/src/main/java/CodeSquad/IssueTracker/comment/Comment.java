@@ -1,13 +1,12 @@
 package CodeSquad.IssueTracker.comment;
 
+import CodeSquad.IssueTracker.global.exception.NoAuthorityException;
 import CodeSquad.IssueTracker.global.exception.NoParametersException;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.http.HttpStatus;
 
-import java.nio.channels.AcceptPendingException;
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 
 @Data
@@ -37,13 +36,13 @@ public class Comment {
         return new Comment(null, issueId, content, authorId, LocalDateTime.now(), imageUrl);
     }
 
-    private void verifyAuthor(Long requesterId) throws AccessDeniedException {
-        if(!this.authorId.equals(requesterId)){
-            throw new AccessDeniedException("작성자만 댓글을 수정할 수 있습니다.");
+    private void verifyAuthor(Long requesterId) {
+        if (!this.authorId.equals(requesterId)) {
+            throw new NoAuthorityException("작성자만 댓글을 수정할 수 있습니다.", HttpStatus.valueOf(401));
         }
     }
 
-    public void update(String content,String imageUrl,Long requesterId) throws AccessDeniedException {
+    public void update(String content, String imageUrl, Long requesterId) {
         verifyAuthor(requesterId);
         this.content = content;
         this.imageUrl = imageUrl;

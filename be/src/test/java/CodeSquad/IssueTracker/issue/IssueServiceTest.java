@@ -1,9 +1,13 @@
 package CodeSquad.IssueTracker.issue;
 
+import CodeSquad.IssueTracker.comment.CommentService;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
 import CodeSquad.IssueTracker.issue.issueimage.IssueImageService;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeService;
 import CodeSquad.IssueTracker.issueLabel.IssueLabelService;
+import CodeSquad.IssueTracker.milestone.MilestoneService;
+import CodeSquad.IssueTracker.user.UserService;
+import CodeSquad.IssueTracker.util.S3Uploader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,16 +30,19 @@ class IssueServiceTest {
     private IssueRepository issueRepository;
     private IssueAssigneeService issueAssigneeService;
     private IssueLabelService issueLabelService;
+    private UserService userService;
+    private CommentService commentService;
+    private S3Uploader s3Uploader;
+    private MilestoneService milestoneService;
     private IssueService issueService;
-    private IssueImageService issueImageService;
 
     @BeforeEach
     void setUp() {
         issueRepository = mock(IssueRepository.class);
         issueAssigneeService = mock(IssueAssigneeService.class);
         issueLabelService = mock(IssueLabelService.class);
-        issueImageService = mock(IssueImageService.class);
-        issueService = new IssueService(issueRepository, issueAssigneeService, issueLabelService,issueImageService);
+        issueService = new IssueService(issueRepository, issueAssigneeService, issueLabelService
+        ,userService,milestoneService,commentService,s3Uploader);
     }
 
     @Test
