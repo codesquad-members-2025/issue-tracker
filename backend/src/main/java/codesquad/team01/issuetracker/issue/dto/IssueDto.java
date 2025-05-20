@@ -5,6 +5,7 @@ import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.user.dto.UserDto;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -22,19 +23,29 @@ public class IssueDto {
      */
     // 조회 필터 쿼리 요청 DTO
     @Getter
+    @Builder
     public static class QueryRequest {
-        @Pattern(regexp = "^(open|closed)$", message = "state는 'open' 또는 'closed'만 가능합니다")
-        private String state = "open";
 
+        @Pattern(regexp = "^(open|closed)$", message = "state는 'open' 또는 'closed'만 가능합니다")
+        private String state;
+
+        @Positive(message = "작성자 ID는 양수여야 합니다")
         private Long writerId;
+
+        @Positive(message = "마일스톤 ID는 양수여야 합니다")
         private Long milestoneId;
-        private List<Long> labelIds;
-        private List<Long> assigneeIds;
+
+        private List<@Positive(message = "레이블 ID는 양수여야 합니다") Long> labelIds;
+        private List<@Positive(message = "담당자 ID는 양수여야 합니다") Long> assigneeIds;
         // private String cursor; // 무한스크롤 구현 시 필요
         // private String search; // 검색 구현 시 필요
 
         public IssueState getIssueState() {
             return IssueState.fromStateStr(state);
+        }
+
+        public String getState() { // 값이 들어오지 않은 경우 초기값 설정
+            return state != null ? state : "open";
         }
     }
 
