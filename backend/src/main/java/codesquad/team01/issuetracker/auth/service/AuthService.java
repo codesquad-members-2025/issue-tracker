@@ -32,6 +32,7 @@ public class AuthService {
         User oauthUser = findOrCreateUser(gitHubUser);
         log.info("Created LoginResponse for userId={}", oauthUser.getId());
 
+        // todo : 임시조치. 지토가 넘겨받아서 수정할 예정
         return new LoginResponse(
                 oauthUser.getId(),
                 oauthUser.getEmail()
