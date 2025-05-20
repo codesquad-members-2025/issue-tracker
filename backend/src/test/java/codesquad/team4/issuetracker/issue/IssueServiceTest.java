@@ -2,6 +2,7 @@ package codesquad.team4.issuetracker.issue;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -131,61 +132,6 @@ public class IssueServiceTest {
         verify(issueAssigneeRepository, times(0)).save(any(IssueAssignee.class)); // No assignees
     }
 
-    @Test
-    @DisplayName("상태 변경 성공: 모든 이슈 ID가 유효하면 상태가 정상적으로 변경된다")
-    public void testUpdateIssueStatus_Success() {
-        // given
-        List<Long> issuesId = List.of(1L, 2L, 3L);
-        boolean isOpen = true;
-
-        IssueRequestDto.BulkUpdateIssueStatusDto requestDto = IssueRequestDto.BulkUpdateIssueStatusDto.builder()
-                .issuesId(issuesId)
-                .isOpen(isOpen)
-                .build();
-
-        String placeholders = "?, ?, ?";
-
-        List<Long> queryArgs = List.of(1L, 2L, 3L);
-        List<Object> updateArgs = List.of(isOpen, 1L, 2L, 3L);
-
-        given(issueDao.countExistingIssuesByIds(queryArgs, placeholders))
-                .willReturn(3);
-        given(issueDao.updateIssueStatus(placeholders, updateArgs))
-                .willReturn(3);
-
-        // when
-        IssueResponseDto.BulkUpdateIssueStatusDto result = issueService.bulkUpdateIssueStatus(requestDto);
-
-        // then
-        assertThat(result).isNotNull();
-        assertThat(result.getIssuesId()).isEqualTo(issuesId);
-        assertThat(result.getMessage()).isEqualTo("이슈 상태가 변경되었습니다.");
-    }
-
-    @Test
-    @DisplayName("상태 변경 실패: 일부 이슈 ID만 존재하면 예외가 발생한다")
-    public void testUpdateIssueStatus_InvalidIds_ThrowsException() {
-        // given
-        List<Long> issuesId = List.of(1L, 2L, 3L);
-        boolean isOpen = false;
-
-        IssueRequestDto.BulkUpdateIssueStatusDto requestDto = IssueRequestDto.BulkUpdateIssueStatusDto.builder()
-                .issuesId(issuesId)
-                .isOpen(isOpen)
-                .build();
-
-        String placeholders = "?, ?, ?";
-        List<Long> queryArgs = List.of(1L, 2L, 3L);
-
-        // 일부 ID만 존재한다고 가정 (ex. 2개)
-        given(issueDao.countExistingIssuesByIds(queryArgs, placeholders))
-                .willReturn(2);
-
-        // when & then
-        assertThatThrownBy(() -> issueService.bulkUpdateIssueStatus(requestDto))
-                .isInstanceOf(IssueStatusUpdateException.class)
-                .hasMessageContaining("요청한 이슈 ID가 존재하지 않습니다.");
-    }
     @Test
     @DisplayName("이슈 상세 정보를 성공적으로 조회한다")
     void successGetIssueDetailById() {

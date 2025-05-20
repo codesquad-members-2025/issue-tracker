@@ -13,7 +13,7 @@ public class UserDao {
     private final JdbcTemplate jdbcTemplate;
 
     public List<UserDto.UserInfo> findUserForFiltering() {
-        String sql = "SELECT user_id, nickname, profile_image FROM user";
+        String sql = "SELECT user_id, nickname, profile_image FROM `user`";
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
                 UserDto.UserInfo.builder()

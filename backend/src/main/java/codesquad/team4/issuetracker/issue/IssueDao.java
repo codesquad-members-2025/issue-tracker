@@ -1,7 +1,10 @@
     package codesquad.team4.issuetracker.issue;
 
+    import java.util.ArrayList;
     import java.util.List;
     import java.util.Map;
+    import java.util.stream.Collectors;
+
     import lombok.RequiredArgsConstructor;
     import org.springframework.jdbc.core.JdbcTemplate;
     import org.springframework.stereotype.Repository;
@@ -30,12 +33,12 @@
                        a.nickname AS assignee_nickname,
                        a.profile_image AS assignee_profile
                 FROM issue i
-                LEFT JOIN user u ON i.author_id = u.user_id
+                LEFT JOIN `user` u ON i.author_id = u.user_id
                 LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
                 JOIN issue_label il ON i.issue_id = il.issue_id
                 LEFT JOIN label l ON il.label_id = l.label_id
                 JOIN issue_assignee ia ON i.issue_id = ia.issue_id
-                LEFT JOIN user a ON ia.assignee_id = a.user_id
+                LEFT JOIN `user` a ON ia.assignee_id = a.user_id
                 WHERE i.is_open = ?
                 LIMIT ? OFFSET ?
             """;
@@ -51,15 +54,21 @@
             );
         }
 
-        public Integer countExistingIssuesByIds(List<Long> issueIds, String placeholders) {
-            // 요청받은 id 개수랑 DB에서 가져온 ID 개수 비교
-            String countSql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (" + placeholders + ")";
-
-            return jdbcTemplate.queryForObject(countSql, Integer.class, issueIds.toArray());
+        public List<Long> findExistingIssueIds(List<Long> issueIds) {
+            String placeholders = issueIds.stream().map(id -> "?").collect(Collectors.joining(", "));
+            String sql = "SELECT issue_id FROM issue WHERE issue_id IN (" + placeholders + ")";
+            return jdbcTemplate.query(sql,
+                    (rs, rowNum) -> rs.getLong("issue_id"),
+                    issueIds.toArray());
         }
 
-        public int updateIssueStatus(String placeholders, List<Object> params) {
+        public int updateIssueStatusByIds(boolean isOpen, List<Long> issueIds) {
+            String placeholders = issueIds.stream().map(id -> "?").collect(Collectors.joining(", "));
             String updateSql = "UPDATE issue SET is_open = ? WHERE issue_id IN (" + placeholders + ")";
+
+            List<Object> params = new ArrayList<>();
+            params.add(isOpen);
+            params.addAll(issueIds);
 
             return jdbcTemplate.update(updateSql, params.toArray());
         }
