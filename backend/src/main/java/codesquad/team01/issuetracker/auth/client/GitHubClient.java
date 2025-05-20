@@ -4,6 +4,7 @@ import codesquad.team01.issuetracker.auth.dto.GitHubEmail;
 import codesquad.team01.issuetracker.auth.dto.GitHubUser;
 import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class GitHubClient {
@@ -30,6 +32,7 @@ public class GitHubClient {
 
     // token 요청
     public String fetchAccessToken(String code) {
+        log.info("Requesting access token from GitHub for code={}", code);
         Map<String, String> tokenRequest = Map.of(
                 CLIENT_ID, properties.getClientId(),
                 CLIENT_SECRET, properties.getClientSecret(),
@@ -44,12 +47,14 @@ public class GitHubClient {
         ResponseEntity<Map> tokenResponse = restTemplate.postForEntity(
                 properties.getTokenUri(), request, Map.class
         );
-
-        return (String) tokenResponse.getBody().get(ACCESS_TOKEN);
+        String token = (String) tokenResponse.getBody().get(ACCESS_TOKEN);
+        log.info("GitHub access token fetched");
+        return token;
     }
 
     // 사용자 정보 요청
     public GitHubUser fetchUserInfo(String accessToken) {
+        log.info("Fetching GitHub user info with accessToken");
         HttpHeaders authHeaders = new HttpHeaders();
         authHeaders.setBearerAuth((accessToken));
         HttpEntity<Void> userRequest = new HttpEntity<>(authHeaders);
@@ -59,6 +64,7 @@ public class GitHubClient {
         );
 
         Map<String, Object> userMap = userResponse.getBody();
+        log.debug("GitHub user info response: {}", userMap);
         Long id = ((Number) userMap.get(ID)).longValue();
         String githubId = (String) userMap.get(LOGIN);
         String avatarUrl = (String) userMap.get(AVATAR_URL);
@@ -74,6 +80,7 @@ public class GitHubClient {
                     .orElse(null);
         }
 
+        log.info("GitHubUser parsed: id={}, login={}",id, githubId);
         return new GitHubUser(id, githubId, avatarUrl, email);
     }
 
