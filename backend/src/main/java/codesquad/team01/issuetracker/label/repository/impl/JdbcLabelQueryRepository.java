@@ -22,18 +22,18 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
             l.id as label_id,
             l.name as label_name,
             l.color as label_color,
-            l.text_color as label_text_color
+            l.text_is_black as label_text_is_black
         FROM issue_label il
         JOIN label l ON il.label_id = l.id
         WHERE il.issue_id IN (:issueIds)
-        """;
+    """;
 
     private final RowMapper<LabelDto.IssueLabelRow> labelRowMapper = (rs, rowNum) -> LabelDto.IssueLabelRow.builder()
             .issueId(rs.getLong("issue_id"))
             .labelId(rs.getLong("label_id"))
             .labelName(rs.getString("label_name"))
             .labelColor(rs.getString("label_color"))
-            .labelTextColor(rs.getString("label_text_color"))
+            .labelTextIsBlack(rs.getBoolean("label_text_is_black"))
             .build();
 
     @Override

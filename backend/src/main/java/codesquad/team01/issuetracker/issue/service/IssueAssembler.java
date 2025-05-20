@@ -64,7 +64,7 @@ public class IssueAssembler {
                                         .id(row.labelId())
                                         .name(row.labelName())
                                         .color(row.labelColor())
-                                        .textColor(row.labelTextColor())
+                                        .textColor(row.labelTextIsBlack() ? "#000000" : "#FFFFFF")
                                         .build(),
                                 Collectors.toList()
                         )

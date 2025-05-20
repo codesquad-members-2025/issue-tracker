@@ -26,7 +26,7 @@ public class LabelDto {
             Long labelId,
             String labelName,
             String labelColor,
-            String labelTextColor
+            Boolean labelTextIsBlack
     ) {
     }
 }
