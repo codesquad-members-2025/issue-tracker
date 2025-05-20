@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
+import codesquad.team4.issuetracker.exception.CommentNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class CommentServiceTest {
@@ -97,6 +99,56 @@ public class CommentServiceTest {
         assertThat(response.getMessage()).isEqualTo("댓글이 생성되었습니다.");
 
         verify(commentRepository, times(1)).save(any(Comment.class));
+    }
+
+    @Test
+    @DisplayName("댓글 수정 성공")
+    void updateComment_success() {
+        // given
+        Long commentId = 1L;
+        Comment existingComment = Comment.builder()
+                .id(commentId)
+                .issueId(10L)
+                .authorId(5L)
+                .content("이전 댓글")
+                .imageUrl("old.png")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        given(commentRepository.findById(commentId)).willReturn(Optional.of(existingComment));
+
+        CommentRequestDto.UpdateCommentDto request = CommentRequestDto.UpdateCommentDto.builder()
+                .content("수정된 댓글")
+                .build();
+
+        String uploadUrl = "https://s3.com/new.png";
+
+        // when
+        CommentResponseDto.UpdateCommentDto result = commentService.updateComment(commentId, request, uploadUrl);
+
+        // then
+        assertThat(result.getId()).isEqualTo(commentId);
+        assertThat(result.getMessage()).isEqualTo("댓글이 수정되었습니다.");
+        assertThat(existingComment.getContent()).isEqualTo("수정된 댓글");
+        assertThat(existingComment.getImageUrl()).isEqualTo(uploadUrl);
+    }
+
+    @Test
+    @DisplayName("댓글 수정 실패 - 댓글 없음")
+    void updateComment_notFound() {
+        // given
+        Long commentId = 100L;
+        given(commentRepository.findById(commentId)).willReturn(Optional.empty());
+
+        CommentRequestDto.UpdateCommentDto request = CommentRequestDto.UpdateCommentDto.builder()
+                .content("수정된 댓글")
+                .build();
+
+        // when + then
+        assertThatThrownBy(() ->
+                commentService.updateComment(commentId, request, "dummy.png")
+        ).isInstanceOf(CommentNotFoundException.class)
+                .hasMessageContaining("댓글을 찾을 수 없습니다.");
     }
 
 }
