@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.auth.client;
 
+import codesquad.team01.issuetracker.auth.dto.GitHubEmail;
 import codesquad.team01.issuetracker.auth.dto.GitHubUser;
 import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +63,32 @@ public class GitHubClient {
         String githubId = (String) userMap.get(LOGIN);
         String avatarUrl = (String) userMap.get(AVATAR_URL);
 
-        return new GitHubUser(id, githubId, avatarUrl);
+        String email = (String) userMap.get("email");
+        if (email == null) {
+            var emails = fetchUserEmail(accessToken);
+            email = emails.stream()
+                    .filter(GitHubEmail::primary)
+                    .filter(GitHubEmail::verified)
+                    .findFirst()
+                    .map(GitHubEmail::email)
+                    .orElse(null);
+        }
+
+        return new GitHubUser(id, githubId, avatarUrl, email);
+    }
+
+    // 사용자가 깃헙에서 이메일을 공개하지 않았을 경우, 리소스 서버에 이메일 추가 요청
+    public List<GitHubEmail> fetchUserEmail(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        ResponseEntity<GitHubEmail[]> response = restTemplate.exchange(
+                properties.getUserEmailUri(),
+                HttpMethod.GET,
+                request,
+                GitHubEmail[].class
+        );
+        return List.of(response.getBody());
     }
 }
