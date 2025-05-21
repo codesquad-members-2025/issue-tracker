@@ -1,12 +1,10 @@
 package elbin_bank.issue_tracker.comment.application.query.dto;
 
-import elbin_bank.issue_tracker.user.infrastructure.query.projection.UserProjection;
-
 import java.time.LocalDateTime;
 
-public record CommentDto(
+public record CommentsSummaryDto(
         Long id,
-        UserProjection author,
+        UserDto userDto,
         String content,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

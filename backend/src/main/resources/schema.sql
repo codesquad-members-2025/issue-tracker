@@ -63,14 +63,14 @@ CREATE TABLE `label`
 CREATE TABLE `comment`
 (
     `id`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `label_id`   BIGINT UNSIGNED NULL,
+    `issue_id`   BIGINT UNSIGNED NOT NULL,
     `user_id`    BIGINT UNSIGNED NOT NULL,
     `contents`   TEXT     NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-    FOREIGN KEY (`label_id`) REFERENCES `label` (`id`)
+    FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
 CREATE TABLE `assignee`
