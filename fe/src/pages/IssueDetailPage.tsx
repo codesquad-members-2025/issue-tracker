@@ -34,9 +34,10 @@ export default function IssueDetailPage() {
   }, [isIssueDetailError]);
 
   // TODO 로딩,에러 상태에 따라 분기처리 내부적으로 처리
-  if (isIssueDetailLoading) return <div>로딩 중...</div>;
-  if (isIssueDetailError) return <div>에러 발생</div>;
-  if (!issueDetailData) return;
+  if (isIssueDetailLoading || isCommentLoading) return <div>로딩 중...</div>;
+
+  if (isIssueDetailError || isCommentError) return <div>에러 발생</div>;
+  if (!issueDetailData || !commentData) return;
 
   return (
     <VerticalStack>
@@ -47,11 +48,7 @@ export default function IssueDetailPage() {
       />
       <Divider />
       <MainArea>
-        <IssueMainSection
-          comments={commentData ?? []}
-          isLoading={isCommentLoading}
-          isError={isCommentError}
-        />
+        <IssueMainSection comments={commentData ?? []} />
         <Sidebar />
       </MainArea>
     </VerticalStack>

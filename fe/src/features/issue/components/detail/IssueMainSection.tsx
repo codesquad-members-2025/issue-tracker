@@ -5,24 +5,14 @@ import CommentList from './CommentList';
 import CommentEditor from './CommentEditor';
 
 interface IssueMainSectionProps {
-  isLoading: boolean;
-  isError: boolean;
   comments: Comment[];
 }
 
-export default function IssueMainSection({
-  comments,
-  isLoading,
-  isError,
-}: IssueMainSectionProps) {
+export default function IssueMainSection({ comments }: IssueMainSectionProps) {
   return (
     <MainWrapper>
       <IssueContent />
-      <CommentList
-        comments={comments}
-        isLoading={isLoading}
-        isError={isError}
-      />
+      <CommentList comments={comments} />
       <CommentEditor />
     </MainWrapper>
   );
