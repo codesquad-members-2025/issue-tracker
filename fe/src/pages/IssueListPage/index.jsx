@@ -21,7 +21,7 @@ import SelectDisplayer from '@/base-ui/issueListPage/IssueListHeader/SelectDispl
 import StatusEditDropDown from '@/units/kanbanHeader/StatusEditDropDown';
 import deepEqualFast from '@/units/deepEqualFast/deepEqualFast';
 import useLabelStore from '@/stores/labelStore';
-import getOptionWithToken from '@/utils/getOptionWithToken';
+import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import { useAuthStore } from '@/stores/authStore';
 const Container = styled.div`
   display: flex;
