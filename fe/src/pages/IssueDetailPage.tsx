@@ -48,7 +48,12 @@ export default function IssueDetailPage() {
       />
       <Divider />
       <MainArea>
-        <IssueMainSection comments={commentData ?? []} />
+        <IssueMainSection
+          comments={commentData ?? []}
+          content={issueDetailData.content}
+          createdAt={issueDetailData.createdAt}
+          author={issueDetailData.author}
+        />
         <Sidebar />
       </MainArea>
     </VerticalStack>
