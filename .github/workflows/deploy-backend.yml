@@ -28,8 +28,8 @@ jobs:
           # 프로젝트 디렉토리로 이동
           cd ~/issue-tracker  # EC2에 clone해둔 경로
           # 최신 코드 가져오기
-          git checkout dev-be 
-          git pull origin dev-be
+          git fetch origin dev-be
+          git rebase origin/dev-be || git reset --hard origin/dev-be
           # 빌드 및 실행
           chmod +x ./gradlew
           ./gradlew -p backend build -x test
