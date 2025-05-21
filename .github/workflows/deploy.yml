@@ -59,6 +59,8 @@ jobs:
       - name: 🧱 Build Frontend
         if: github.event.before == 'refs/heads/develop-FE'
         working-directory: frontend
+        env:
+          VITE_API_URL: ""
         run: |
           npm install
           npm run build
