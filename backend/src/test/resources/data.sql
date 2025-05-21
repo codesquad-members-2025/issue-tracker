@@ -23,7 +23,7 @@ VALUES (1, 1, '로그인 오류', '소셜 로그인 시 500 에러 발생', FALS
        (3, 2, '치명적 버그', '데이터베이스 연결 실패', TRUE, NULL, CURRENT_TIMESTAMP);
 
 -- ▶ comment 테이블
-INSERT INTO comment (label_id, user_id, contents, file_path, created_at)
+INSERT INTO comment (issue_id, user_id, contents, file_path, created_at)
 VALUES (1, 2, '저도 같은 오류가 재현됩니다', NULL, CURRENT_TIMESTAMP),
        (3, 1, '이 부분 어떻게 동작하나요?', NULL, CURRENT_TIMESTAMP),
        (2, 3, '이슈와 연관된 PR이 준비되었습니다', NULL, CURRENT_TIMESTAMP);
