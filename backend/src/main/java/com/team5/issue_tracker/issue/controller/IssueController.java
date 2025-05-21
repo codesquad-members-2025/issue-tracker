@@ -13,6 +13,8 @@ import com.team5.issue_tracker.issue.query.IssueQueryService;
 import com.team5.issue_tracker.issue.service.IssueService;
 import com.team5.issue_tracker.label.dto.response.IssueLabelPageResponse;
 import com.team5.issue_tracker.label.query.LabelQueryService;
+import com.team5.issue_tracker.milestone.dto.response.IssueMilestonePageResponse;
+import com.team5.issue_tracker.milestone.query.MilestoneQueryService;
 import com.team5.issue_tracker.user.dto.UserPageResponse;
 
 import jakarta.validation.Valid;
@@ -27,6 +29,7 @@ public class IssueController {
   private final IssueService issueService;
   private final IssueQueryService issueQueryService;
   private final LabelQueryService labelQueryService;
+  private final MilestoneQueryService milestonePageResponse;
 
   @GetMapping
   public ResponseEntity<ApiResponse<IssuePageResponse>> getAllIssues() {
@@ -52,4 +55,10 @@ public class IssueController {
   public ResponseEntity<ApiResponse<IssueLabelPageResponse>> getFilterLabels() {
     return ResponseEntity.ok(ApiResponse.success(labelQueryService.getFilterLabels()));
   }
+
+  @GetMapping("/milestones")
+  public ResponseEntity<ApiResponse<IssueMilestonePageResponse>> getFilterMilestones() {
+    return ResponseEntity.ok(ApiResponse.success(milestonePageResponse.getFilterMilestones()));
+  }
+
 }

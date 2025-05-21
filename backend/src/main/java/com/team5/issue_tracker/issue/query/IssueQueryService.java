@@ -10,7 +10,7 @@ import com.team5.issue_tracker.issue.dto.response.IssueSummaryResponse;
 import com.team5.issue_tracker.issue.mapper.IssueMapper;
 import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
 import com.team5.issue_tracker.label.query.LabelQueryRepository;
-import com.team5.issue_tracker.milestone.dto.MilestoneResponse;
+import com.team5.issue_tracker.milestone.dto.response.MilestoneSummaryResponse;
 import com.team5.issue_tracker.milestone.query.MilestoneQueryRepository;
 import com.team5.issue_tracker.user.dto.UserPageResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
@@ -36,7 +36,7 @@ public class IssueQueryService {
         .toList();
 
     Map<Long, List<LabelSummaryResponse>> labelMap = labelQueryRepository.getLabelListByIssueIds(issueIds);
-    Map<Long, MilestoneResponse> milestoneMap =
+    Map<Long, MilestoneSummaryResponse> milestoneMap =
         milestoneQueryRepository.getMilestonesByIds(issueIds);
     Map<Long, UserSummaryResponse> authorMap = userQueryRepository.getAuthorsByIssueIds(issueIds);
 

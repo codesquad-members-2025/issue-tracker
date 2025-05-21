@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.team5.issue_tracker.milestone.dto.MilestoneResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
 import lombok.RequiredArgsConstructor;

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.team5.issue_tracker.issue.dto.IssueQueryDto;
 import com.team5.issue_tracker.issue.dto.response.IssueSummaryResponse;
 import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
-import com.team5.issue_tracker.milestone.dto.MilestoneResponse;
+import com.team5.issue_tracker.milestone.dto.response.MilestoneSummaryResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
 public class IssueMapper {
@@ -14,7 +14,7 @@ public class IssueMapper {
       List<IssueQueryDto> issueQueryDtos,
       Map<Long, List<LabelSummaryResponse>> labels,
       Map<Long, UserSummaryResponse> userDto,
-      Map<Long, MilestoneResponse> milestoneDto
+      Map<Long, MilestoneSummaryResponse> milestoneDto
   ) {
     return issueQueryDtos.stream()
         .map(issueQueryDto -> {
