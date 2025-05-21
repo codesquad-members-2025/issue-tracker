@@ -5,7 +5,7 @@ export const useAuthStore = create(
   immer((set) => ({
     userId: 106,
     imgUrl: null,
-    accessToken: 'null',
+    accessToken: null,
 
     resetUser: () =>
       set((state) => {
