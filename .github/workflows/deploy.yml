@@ -52,7 +52,15 @@ jobs:
           script: |
             cd /home/ubuntu/issue-tracker/backend
             ./gradlew bootJar
+
+            # 기존 프로세스 종료
             pkill -f 'java -jar' || true
+
+            # 새로운 프로세스를 백그라운드에서 실행
             nohup java -jar build/libs/*.jar > log.txt 2>&1 &
-            
+
+            # 약간의 대기 시간 후 프로세스가 시작되었는지 확인
+            sleep 5
+
+            # nginx reload (짧고 안전함)
             sudo nginx -s reload
