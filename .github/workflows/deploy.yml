@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [main]  # main 브랜치에 push될 때만 실행
+    branches: [main]
 
 jobs:
   deploy:
@@ -23,27 +23,25 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 🧱 Build Frontend
-        working-directory: frontend
-        run: |
-          npm install
-          npm run build
-
+      # 백엔드만 머지된 경우
       - name: 🧱 Build Backend
+        if: github.event.before == 'refs/heads/develop-BE'
         working-directory: backend
         run: |
           ./gradlew build -x test
 
-      - name: 🚀 Deploy to EC2
+      - name: 🚀 Deploy Backend to EC2
+        if: github.event.before == 'refs/heads/develop-BE'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: "./"
-          target: "/home/ubuntu/issue-tracker"
+          source: "backend/"
+          target: "/home/ubuntu/issue-tracker/backend"
 
-      - name: 🖥️ Remote SSH Commands
+      - name: 🖥️ Remote SSH Commands (Backend)
+        if: github.event.before == 'refs/heads/develop-BE'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -53,6 +51,24 @@ jobs:
             cd /home/ubuntu/issue-tracker/backend
             ./gradlew bootJar
             pkill -f 'java -jar' || true
-            nohup java -jar build/libs/*.jar > log.txt 2>&1 &
-            
+            nohup java -jar backend/build/libs/*.jar > log.txt 2>&1 &
+            sleep 5
             sudo nginx -s reload
+
+      # 프론트엔드만 머지된 경우
+      - name: 🧱 Build Frontend
+        if: github.event.before == 'refs/heads/develop-FE'
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: 🚀 Deploy Frontend to EC2
+        if: github.event.before == 'refs/heads/develop-FE'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          source: "frontend/"
+          target: "/home/ubuntu/issue-tracker/frontend"
