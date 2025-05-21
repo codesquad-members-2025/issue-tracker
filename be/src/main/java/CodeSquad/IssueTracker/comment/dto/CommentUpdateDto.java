@@ -1,4 +1,4 @@
-package CodeSquad.IssueTracker.comment;
+package CodeSquad.IssueTracker.comment.dto;
 
 import lombok.Data;
 

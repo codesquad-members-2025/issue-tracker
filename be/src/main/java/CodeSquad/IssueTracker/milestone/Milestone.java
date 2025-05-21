@@ -15,6 +15,6 @@ public class Milestone {
     private String description;
     private LocalDateTime endDate;
     private Boolean isOpen;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime lastModifiedAt;
+    private Long processingRate;
 }

@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.issueAssignee;
 
+import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -37,5 +38,24 @@ public class JdbcTemplateAssigneeRepository implements IssueAssigneeRepository {
         template.update(sql, Map.of("issueId", issueId));
     }
 
+    @Override
+    public List<IssueAssigneeResponse> findAssigneeResponsesByIssueId(Long issueId) {
+        String sql = """
+        SELECT 
+            u.id AS assignee_id,
+            u.nick_name AS nickname,
+            u.profile_image_url AS profile_image_url
+        FROM issue_assignee ia
+        JOIN users u ON ia.assignee_id = u.id
+        WHERE ia.issue_id = :issueId
+        """;
 
+        return template.query(sql, Map.of("issueId", issueId), (rs, rowNum) ->
+                new IssueAssigneeResponse(
+                        rs.getLong("assignee_id"),
+                        rs.getString("nickname"),
+                        rs.getString("profile_image_url")
+                )
+        );
+    }
 }

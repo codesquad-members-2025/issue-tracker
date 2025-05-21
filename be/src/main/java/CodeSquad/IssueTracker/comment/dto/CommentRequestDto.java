@@ -1,0 +1,23 @@
+package CodeSquad.IssueTracker.comment.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+public class CommentRequestDto {
+
+    @NotNull(message = "이슈 ID는 필수입니다.")
+    private Long issueId;
+    @NotBlank(message = "댓글 내용은 비어 있을 수 없습니다.")
+    private String content;
+    private String imageUrl;
+
+    public CommentRequestDto(Long issueId, String content, String imageUrl) {
+        this.issueId = issueId;
+        this.content = content;
+        this.imageUrl = imageUrl;
+    }
+}

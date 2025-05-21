@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.issueLabel;
 
+import CodeSquad.IssueTracker.issueLabel.dto.IssueLabelResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,5 +24,10 @@ public class IssueLabelService {
             entity.setLabelId(labelId);
             issueLabelRepository.save(entity);
         }
+    }
+
+    @Transactional
+    public List<IssueLabelResponse> findIssueLabelResponsesByIssueId(Long issueId) {
+        return issueLabelRepository.returnedIssueLabelResponsesByIssueId(issueId);
     }
 }
