@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error(e.getMessage()));
 	}
 
-	@ExceptionHandler(MethodArgumentNotValidException.class) // @Valid에서 발생하는 오류
+	@ExceptionHandler(MethodArgumentNotValidException.class) // @Valid에서 발생하는 에러
 	public ResponseEntity<ApiResponse<?>> handleValidationExceptions(MethodArgumentNotValidException e) {
 		String errorMessage = e.getBindingResult().getFieldErrors().stream()
 			.map(FieldError::getDefaultMessage)

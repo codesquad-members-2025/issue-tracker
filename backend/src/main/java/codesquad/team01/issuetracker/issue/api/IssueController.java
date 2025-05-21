@@ -24,20 +24,22 @@ public class IssueController {
 	public ResponseEntity<ApiResponse<IssueDto.ListResponse>> getIssues(
 		@Valid IssueDto.QueryRequest request) {
 
-		log.info("이슈 목록 조회 요청: state={}, writerId={}, milestoneId={}, labelIds={}, assigneeIds={}",
-			request.getState(), request.getWriterId(), request.getMilestoneId(),
-			request.getLabelIds(), request.getAssigneeIds());
+		log.info("이슈 목록 조회 요청: state={}, writerId={}, milestoneId={}, labelIds={}, assigneeIds={}, cursor={}",
+			request.getState(), request.writerId(), request.milestoneId(),
+			request.labelIds(), request.assigneeIds(), request.cursor());
 
 		IssueDto.ListResponse response =
 			issueService.findIssues(
 				request.getIssueState(),
-				request.getWriterId(),
-				request.getMilestoneId(),
-				request.getLabelIds(),
-				request.getAssigneeIds()
+				request.writerId(),
+				request.milestoneId(),
+				request.labelIds(),
+				request.assigneeIds(),
+				request.decode()
 			);
 
-		log.info("조건에 부합하는 이슈 개수= {}", response.totalCount());
+		log.info("조건에 부합하는 이슈 개수= {}, 다음 페이지 존재= {}",
+			response.totalCount(), response.cursor().hasNext());
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }
