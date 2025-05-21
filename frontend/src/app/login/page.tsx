@@ -15,42 +15,39 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: ${theme.colors.surface.default};
+  background-color: ${({ theme }) => theme.colors.surface.default};
 `;
 
 const Logo = styled.div`
-  font-family: "Pretendard", sans-serif;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 48px;
-  color: ${theme.colors.grayscale[900]};
-  margin-bottom: 32px;
+  color: ${({ theme }) => theme.colors.grayscale[900]};
+  margin-top: 1.5rem;
+  margin-bottom: 4rem;
 `;
 
 const SocialButton = styled.button`
   width: 280px;
   height: 48px;
-  border: 1px solid ${theme.colors.accent.blue};
-  border-radius: ${theme.radius.medium};
+  border: 1px solid ${({ theme }) => theme.colors.accent.blue};
+  border-radius: ${({ theme }) => theme.radius.medium};
   background-color: transparent;
-  color: ${theme.colors.accent.blue};
+  color: ${({ theme }) => theme.colors.accent.blue};
   font-family: "Pretendard", sans-serif;
   font-weight: 500;
   font-size: 16px;
   cursor: pointer;
   transition: opacity 0.2s;
   &:hover {
-    opacity: ${theme.opacity.hover};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `;
 
 const Divider = styled.div`
   margin: 16px 0;
   font-size: 14px;
-  color: ${theme.colors.grayscale[600]};
+  color: ${({ theme }) => theme.colors.grayscale[600]};
   position: relative;
   span {
-    background-color: ${theme.colors.surface.default};
+    background-color: ${({ theme }) => theme.colors.surface.default};
     padding: 0 8px;
   }
   &::before {
@@ -59,7 +56,7 @@ const Divider = styled.div`
     top: 50%;
     left: 0;
     right: 0;
-    border-top: 1px solid ${theme.colors.grayscale[400]};
+    /* border-top: 1px solid ${({ theme }) => theme.colors.grayscale[400]}; */
     transform: translateY(-50%);
     z-index: 0;
   }
@@ -77,12 +74,12 @@ const TextInput = styled.input`
   height: 48px;
   padding: 0 12px;
   border: none;
-  border-radius: ${theme.radius.large};
-  background-color: ${theme.colors.surface.strong};
+  border-radius: ${({ theme }) => theme.radius.large};
+  background-color: ${({ theme }) => theme.colors.surface.strong};
   font-size: 16px;
-  color: ${theme.colors.grayscale[900]};
+  color: ${({ theme }) => theme.colors.grayscale[900]};
   &::placeholder {
-    color: ${theme.colors.grayscale[500]};
+    color: ${({ theme }) => theme.colors.grayscale[500]};
   }
 `;
 
@@ -90,23 +87,23 @@ const LoginButton = styled.button`
   width: 280px;
   height: 48px;
   border: none;
-  border-radius: ${theme.radius.medium};
-  background-color: ${theme.colors.accent.blue};
-  color: ${theme.colors.surface.strong};
+  border-radius: ${({ theme }) => theme.radius.medium};
+  background-color: ${({ theme }) => theme.colors.accent.blue};
+  color: ${({ theme }) => theme.colors.surface.strong};
   font-family: "Pretendard", sans-serif;
   font-weight: 500;
   font-size: 16px;
   cursor: pointer;
   transition: opacity 0.2s;
   &:hover {
-    opacity: ${theme.opacity.hover};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `;
 
 const SignupLink = styled(Link)`
   margin-top: 8px;
   font-size: 14px;
-  color: ${theme.colors.grayscale[600]};
+  color: ${({ theme }) => theme.colors.grayscale[600]};
   text-decoration: none;
   &:hover {
     text-decoration: underline;
@@ -125,15 +122,15 @@ export default function LoginPage() {
           <Image
             src="/icons/logoIconDark.svg"
             alt="이슈 트래커 로고 - 다크모드"
-            width={199}
-            height={40}
+            width={300}
+            height={72}
           />
         ) : (
           <Image
             src="/icons/logoIcon.svg"
             alt="이슈 트래커 로고"
-            width={199}
-            height={40}
+            width={300}
+            height={72}
           />
         )}
       </Logo>
