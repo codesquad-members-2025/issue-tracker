@@ -24,7 +24,7 @@ export default function IssueMainSection({
         createdAt={createdAt}
         author={author}
       />
-      <CommentList comments={comments} />
+      {comments.length > 0 && <CommentList comments={comments} />}
       <CommentEditor />
     </MainWrapper>
   );
