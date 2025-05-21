@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import codesquad.team01.issuetracker.common.exception.CursorException;
@@ -21,7 +22,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class IssueDto {
 
 	private IssueDto() {
@@ -64,8 +67,12 @@ public class IssueDto {
 
 			try {
 				String decoded = new String(Base64.getDecoder().decode(cursor), StandardCharsets.UTF_8);
-				return new ObjectMapper().readValue(decoded, CursorData.class);
+				ObjectMapper mapper = new ObjectMapper()
+					.registerModule(new JavaTimeModule())
+					.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+				return mapper.readValue(decoded, CursorData.class);
 			} catch (Exception e) {
+				log.warn("커서 디코딩 실패", e);
 				// 디코딩 실패 시 null 반환 -> 첫 페이지
 				return null;
 			}
@@ -185,7 +192,9 @@ public class IssueDto {
 			try {
 				String json = new ObjectMapper()
 					.registerModule(new JavaTimeModule())
+					.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 					.writeValueAsString(this);
+
 				return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
 			} catch (JsonProcessingException e) { // 인코딩 실패 시
 				throw new CursorException("json 직렬화 실패");
@@ -194,7 +203,4 @@ public class IssueDto {
 			}
 		}
 	}
-
 }
-
-

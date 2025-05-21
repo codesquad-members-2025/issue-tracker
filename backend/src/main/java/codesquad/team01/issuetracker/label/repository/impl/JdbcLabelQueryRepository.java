@@ -24,7 +24,7 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 		        l.id as label_id,
 		        l.name as label_name,
 		        l.color as label_color,
-		        l.text_is_black as label_text_is_black
+		        l.text_color as label_text_color
 		    FROM issue_label il
 		    JOIN label l ON il.label_id = l.id
 		    WHERE il.issue_id IN (:issueIds)

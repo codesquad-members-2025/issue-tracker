@@ -26,7 +26,6 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
     implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
@@ -40,6 +39,10 @@ dependencies {
 
     // Lombok과 MapStruct를 함께 사용하기 위한 바인딩
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+    // Jackson 의존성 추가
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'

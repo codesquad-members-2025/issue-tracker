@@ -11,7 +11,9 @@ import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Repository
 public class JdbcIssueQueryRepository implements IssueQueryRepository {
@@ -53,20 +55,19 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 		.writerUsername(rs.getString("writer_username"))
 		.writerProfileImageUrl(rs.getString("writer_profile_image_url"))
 		.milestoneId(rs.getInt("milestone_id"))
-
 		.milestoneTitle(rs.getString("milestone_title"))
 		.build();
 
 	@Override
 	public List<IssueDto.BaseRow> findIssuesWithFilters(
 		IssueState state, Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds) {
+		List<Integer> labelIds, List<Integer> assigneeIds, IssueDto.CursorData cursor) {
 
 		StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
 		MapSqlParameterSource params = new MapSqlParameterSource();
 
 		// state - 기본값: open
-		sql.append(" AND i.state = :state");
+		sql.append(" AND i.state = :state ");
 		params.addValue("state", state.name());
 
 		// writerId
@@ -109,8 +110,21 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 			}
 		}
 
+		// 무한스크롤 커서
+		if (cursor != null) {
+			sql.append("""
+				AND (i.created_at < :cursorCreatedAt 
+				     OR (i.created_at = :cursorCreatedAt AND i.id < :cursorId))
+				""");
+			params.addValue("cursorCreatedAt", cursor.getCreatedAt());
+			params.addValue("cursorId", cursor.getId());
+		}
+
 		// 정렬: 생성일자 내림차순 (최신순)
 		sql.append(" ORDER BY i.created_at DESC, i.id DESC");
+
+		sql.append(" LIMIT :pageSize");
+		params.addValue("pageSize", PAGE_SIZE + 1); // 다음 페이지 존재 여부 확인을 위해 +1
 
 		return jdbcTemplate.query(sql.toString(), params, issueRowMapper);
 	}

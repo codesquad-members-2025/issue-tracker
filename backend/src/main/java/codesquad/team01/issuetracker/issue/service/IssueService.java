@@ -25,25 +25,36 @@ public class IssueService {
 	private final IssueAssembler issueAssembler;
 
 	public IssueDto.ListResponse findIssues(IssueState state, Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds) {
+		List<Integer> labelIds, List<Integer> assigneeIds, IssueDto.CursorData cursor) {
+
+		final int PAGE_SIZE = issueQueryRepository.PAGE_SIZE;
 
 		// 이슈 기본 정보 조회 - (담당자, 레이블 제외)
 		List<IssueDto.BaseRow> issues = issueQueryRepository.findIssuesWithFilters(
-			state, writerId, milestoneId, labelIds, assigneeIds);
+			state, writerId, milestoneId, labelIds, assigneeIds, cursor);
 
-		if (issues.isEmpty()) {
+		boolean hasNext = issues.size() > PAGE_SIZE; // 다음 페이지 존재 여부
+
+		List<IssueDto.BaseRow> pagedIssues =
+			hasNext ? issues.subList(0, PAGE_SIZE) : issues; // 다음 페이지가 있다면 PAGE_SIZE만큼만
+
+		if (pagedIssues.isEmpty()) {
 			log.debug("조건에 맞는 이슈가 없습니다.");
 			return IssueDto.ListResponse.builder()
 				.issues(List.of())
 				.totalCount(0)
+				.cursor(IssueDto.CursorResponse.builder()
+					.next(null)
+					.hasNext(false)
+					.build())
 				.build();
 		}
 
 		// 이슈 ID 목록
-		List<Integer> issueIds = issues.stream()
+		List<Integer> issueIds = pagedIssues.stream()
 			.map(IssueDto.BaseRow::issueId)
 			.toList();
-		log.debug("기본 이슈 {}개 조회, id 목록: {}", issues.size(), issueIds);
+		log.debug("기본 이슈 {}개 조회, id 목록: {}", pagedIssues.size(), issueIds);
 
 		// 드라이빙 테이블 기준으로 분리
 		List<UserDto.IssueAssigneeRow> assignees = userQueryRepository.findAssigneesByIssueIds(issueIds);
@@ -52,17 +63,34 @@ public class IssueService {
 
 		// 이슈 기본 정보와 담당자, 레이블 조합
 		List<IssueDto.Details> issueDetails = issueAssembler.assembleIssueDetails(
-			issues, assignees, labels);
+			pagedIssues, assignees, labels);
 
 		// 응답 dto로 변환
 		List<IssueDto.ListItemResponse> issueResponses = issueDetails.stream()
 			.map(IssueDto.Details::toListItemResponse)
 			.toList();
 
-		log.debug("응답 데이터 생성 완료: 이슈 {}개 포함", issueResponses.size());
+		// 커서 생성
+		String next = null;
+		if (hasNext && !pagedIssues.isEmpty()) { // 다음 페이지 있으면
+			IssueDto.BaseRow lastIssue = pagedIssues.getLast();
+			IssueDto.CursorData nextCursor = IssueDto.CursorData.builder()
+				.id(lastIssue.issueId())
+				.createdAt(lastIssue.issueCreatedAt())
+				.build();
+			log.debug("last issue CreatedAt: {}, issue id={}", lastIssue.issueCreatedAt(), lastIssue.issueId());
+			next = nextCursor.encode();
+		}
+
+		log.debug("응답 데이터 생성 완료: 이슈 {}개 포함, 다음 페이지 존재: {}",
+			issueResponses.size(), hasNext);
 		return IssueDto.ListResponse.builder()
 			.issues(issueResponses)
 			.totalCount(issueResponses.size())
+			.cursor(IssueDto.CursorResponse.builder()
+				.next(next)
+				.hasNext(hasNext)
+				.build())
 			.build();
 	}
 }
