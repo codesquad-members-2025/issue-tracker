@@ -1,5 +1,5 @@
 import DescriptionBox, { type DescriptionBoxProps } from './DescriptionBox';
 
-export default function IssueDescription(props: DescriptionBoxProps) {
+export default function CommentDescription(props: DescriptionBoxProps) {
   return <DescriptionBox {...props} />;
 }
