@@ -33,17 +33,17 @@ function getMenuItems(filteredObj, userId, menuClickHandler) {
     },
     {
       label: '내가 작성한 이슈',
-      isSelected: filteredObj.author === userId.toString(),
+      isSelected: filteredObj.author === userId?.toString(),
       onClick: () => menuClickHandler('author', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '나에게 할당된 이슈',
-      isSelected: filteredObj.assignee === userId.toString(),
+      isSelected: filteredObj.assignee === userId?.toString(),
       onClick: () => menuClickHandler('assignee', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '내가 댓글을 남긴 이슈',
-      isSelected: filteredObj.commentedBy === userId.toString(),
+      isSelected: filteredObj.commentedBy === userId?.toString(),
       onClick: () => menuClickHandler('commentedBy', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
