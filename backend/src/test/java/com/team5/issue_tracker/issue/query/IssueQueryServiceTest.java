@@ -3,7 +3,7 @@ package com.team5.issue_tracker.issue.query;
 import com.team5.issue_tracker.issue.dto.IssueQueryDto;
 import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.dto.response.IssueSummaryResponse;
-import com.team5.issue_tracker.label.dto.LabelResponse;
+import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
 import com.team5.issue_tracker.label.query.LabelQueryRepository;
 import com.team5.issue_tracker.milestone.dto.MilestoneResponse;
 import com.team5.issue_tracker.milestone.query.MilestoneQueryRepository;
@@ -48,15 +48,15 @@ class IssueQueryServiceTest {
     IssueQueryDto issueQueryDto2 = new IssueQueryDto(2L, "제목2", true, null, null);
     UserSummaryResponse userSummaryResponse1 = new UserSummaryResponse(1L, "작성자1", "이미지");
     UserSummaryResponse userSummaryResponse2 = new UserSummaryResponse(2L, "작성자2", "이미지");
-    LabelResponse labelResponse1 = new LabelResponse(1L, "라벨1", "라벨 설명");
-    LabelResponse labelResponse2 = new LabelResponse(2L, "라벨2", "라벨 설명");
+    LabelSummaryResponse labelSummaryResponse1 = new LabelSummaryResponse(1L, "라벨1", "#007AFF", "#007AFF");
+    LabelSummaryResponse labelSummaryResponse2 = new LabelSummaryResponse(2L, "라벨2", "#007AFF", "#007AFF");
     MilestoneResponse milestoneResponse1 = new MilestoneResponse(1L, "마일스톤1");
     MilestoneResponse milestoneResponse2 = new MilestoneResponse(2L, "마일스톤2");
 
     List<Long> issueIds = List.of(1L, 2L);
-    Map<Long, List<LabelResponse>> labelMap = Map.of(
-        1L, List.of(labelResponse1),
-        2L, List.of(labelResponse2)
+    Map<Long, List<LabelSummaryResponse>> labelMap = Map.of(
+        1L, List.of(labelSummaryResponse1),
+        2L, List.of(labelSummaryResponse2)
     );
     Map<Long, UserSummaryResponse> userMap = Map.of(
         1L, userSummaryResponse1,
@@ -82,12 +82,12 @@ class IssueQueryServiceTest {
     List<IssueSummaryResponse> issueSummaryResponses = issuePageResponse.getIssues();
     assertThat(issueSummaryResponses.get(0).getId()).isEqualTo(1L);
     assertThat(issueSummaryResponses.get(0).getAuthor()).isEqualTo(userSummaryResponse1);
-    assertThat(issueSummaryResponses.get(0).getLabels()).containsExactly(labelResponse1);
+    assertThat(issueSummaryResponses.get(0).getLabels()).containsExactly(labelSummaryResponse1);
     assertThat(issueSummaryResponses.get(0).getMilestone()).isEqualTo(milestoneResponse1);
 
     assertThat(issueSummaryResponses.get(1).getId()).isEqualTo(2L);
     assertThat(issueSummaryResponses.get(1).getAuthor()).isEqualTo(userSummaryResponse2);
-    assertThat(issueSummaryResponses.get(1).getLabels()).containsExactly(labelResponse2);
+    assertThat(issueSummaryResponses.get(1).getLabels()).containsExactly(labelSummaryResponse2);
     assertThat(issueSummaryResponses.get(1).getMilestone()).isEqualTo(milestoneResponse2);
   }
 }

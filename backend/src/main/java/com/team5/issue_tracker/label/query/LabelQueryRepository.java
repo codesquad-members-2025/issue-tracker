@@ -7,17 +7,28 @@ import java.util.stream.Collectors;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import com.team5.issue_tracker.label.dto.LabelResponse;
+import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class LabelQueryRepository {
-
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public Map<Long, List<LabelResponse>> getLabelListByIssueIds(List<Long> issueIds) {
+  public List<LabelSummaryResponse> findAllLables() {
+    String lableSql = "SELECT id, name, text_color, background_color FROM label";
+    return jdbcTemplate.query(lableSql, (rs, rowNum) ->
+        new LabelSummaryResponse(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("text_color"),
+            rs.getString("background_color")
+        )
+    );
+  }
+
+  public Map<Long, List<LabelSummaryResponse>> getLabelListByIssueIds(List<Long> issueIds) {
     String labelSql = """
         SELECT 
             i.id AS issue_id,
@@ -38,7 +49,7 @@ public class LabelQueryRepository {
     return rows.stream()
         .collect(Collectors.groupingBy(
             row -> ((Number) row.get("issue_id")).longValue(),
-            Collectors.mapping(row -> new LabelResponse(
+            Collectors.mapping(row -> new LabelSummaryResponse(
                 ((Number) row.get("label_id")).longValue(),
                 (String) row.get("label_name"),
                 (String) row.get("label_text_color"),
