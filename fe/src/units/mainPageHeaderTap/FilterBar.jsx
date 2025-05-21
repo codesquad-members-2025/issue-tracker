@@ -10,8 +10,6 @@ import { DropdownMenuTemplate } from '@/utils/dropDown/DropdownMenuTemplate';
 import useFilterStore from '@/stores/filterStore';
 import { useAuthStore } from '@/stores/authStore';
 import useQueryObject from '@/utils/queryParams/useQueryObject';
-import { useEffect, useRef } from 'react';
-import deepEqualFast from '../deepEqualFast/deepEqualFast';
 import { useApplyQueryParams } from '@/utils/queryParams/useApplyQueryParams';
 
 const Container = styled.div`
@@ -35,17 +33,17 @@ function getMenuItems(filteredObj, userId, menuClickHandler) {
     },
     {
       label: '내가 작성한 이슈',
-      isSelected: filteredObj.author === userId,
+      isSelected: filteredObj.author === userId.toString(),
       onClick: () => menuClickHandler('author', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '나에게 할당된 이슈',
-      isSelected: filteredObj.assignee === userId,
+      isSelected: filteredObj.assignee === userId.toString(),
       onClick: () => menuClickHandler('assignee', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '내가 댓글을 남긴 이슈',
-      isSelected: filteredObj.commentedBy === userId,
+      isSelected: filteredObj.commentedBy === userId.toString(),
       onClick: () => menuClickHandler('commentedBy', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
@@ -66,7 +64,6 @@ export default function FilterBar() {
   const userId = useAuthStore((state) => state.userId);
   const applyQueryParams = useApplyQueryParams();
   const items = getMenuItems(filteredObj, userId, menuClickHandler);
-  const prevObj = useRef(null);
 
   function menuClickHandler(key, value) {
     initFilter(filteredObj);
