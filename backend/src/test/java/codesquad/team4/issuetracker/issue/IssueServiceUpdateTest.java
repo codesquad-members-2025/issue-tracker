@@ -114,7 +114,7 @@ class IssueServiceUpdateTest {
     }
 
     @Test
-    @DisplayName("removeImage가 true이면 imageUrl이 빈 문자열이어야한다")
+    @DisplayName("removeImage가 true이면 fileUrl이 빈 문자열이어야한다")
     void removeImageWhenRequested() {
         IssueRequestDto.IssueUpdateDto request = IssueRequestDto.IssueUpdateDto.builder()
                 .removeImage(true)
@@ -122,11 +122,11 @@ class IssueServiceUpdateTest {
 
         issueService.updateIssue(1L, request, "");
 
-        assertThat(issueRepository.findById(1L).get().getImageUrl()).isEmpty();
+        assertThat(issueRepository.findById(1L).get().getFileUrl()).isEmpty();
     }
 
     @Test
-    @DisplayName("removeImage가 false면 이전 imageUrl이 유지되어야 한다")
+    @DisplayName("removeImage가 false면 이전 fileUrl이 유지되어야 한다")
     void keepImageWhenRemoveFalse() {
         IssueRequestDto.IssueUpdateDto request = IssueRequestDto.IssueUpdateDto.builder()
                 .removeImage(false)
@@ -134,7 +134,7 @@ class IssueServiceUpdateTest {
 
         issueService.updateIssue(1L, request, "");
 
-        assertThat(issueRepository.findById(1L).get().getImageUrl()).isEqualTo(OLD_IMAGE);
+        assertThat(issueRepository.findById(1L).get().getFileUrl()).isEqualTo(OLD_IMAGE);
     }
 
     @Test
@@ -146,7 +146,7 @@ class IssueServiceUpdateTest {
 
         issueService.updateIssue(1L, request, "");
 
-        assertThat(issueRepository.findById(1L).get().getImageUrl()).isEmpty();
+        assertThat(issueRepository.findById(1L).get().getFileUrl()).isEmpty();
     }
 
 

@@ -18,11 +18,11 @@ public class TestDataHelper {
             VALUES (?, ?, ?, ?)
         """, id, title, isOpen, authorId);
     }
-    public static void insertIssueAllParams(JdbcTemplate jdbcTemplate, Long id, String title, boolean isOpen, Long authorId, String content, String imageUrl, Long milestoneId) {
+    public static void insertIssueAllParams(JdbcTemplate jdbcTemplate, Long id, String title, boolean isOpen, Long authorId, String content, String fileUrl, Long milestoneId) {
         jdbcTemplate.update("""
-        INSERT INTO issue (issue_id, title, is_open, author_id, content, image_url, milestone_id)
+        INSERT INTO issue (issue_id, title, is_open, author_id, content, file_url, milestone_id)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, id, title, isOpen, authorId, content, imageUrl, milestoneId);
+    """, id, title, isOpen, authorId, content, fileUrl, milestoneId);
     }
     public static void insertMilestone(JdbcTemplate jdbcTemplate, Long id, String name, String description, LocalDateTime endDate, Boolean isOpen) {
         jdbcTemplate.update("""

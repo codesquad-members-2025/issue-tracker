@@ -79,10 +79,10 @@
             String sql = """
                 SELECT
                     i.content AS issue_content,
-                    i.image_url AS issue_image_url,
+                    i.file_url AS issue_file_url,
                     c.comment_id AS comment_id,
                     c.content AS comment_content,
-                    c.image_url AS comment_image_url,
+                    c.file_url AS comment_file_url,
                     c.created_at AS comment_created_at,
                     u.user_id AS author_id,
                     u.nickname AS author_nickname,

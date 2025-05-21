@@ -15,7 +15,7 @@ public class CommentResponseDto {
         private Long commentId;
         private String content;
         private UserDto.UserInfo author;
-        private String imageUrl;
+        private String fileUrl;
         private LocalDateTime createdAt;
     }
 

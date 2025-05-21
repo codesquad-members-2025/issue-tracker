@@ -58,7 +58,7 @@ public class IssueResponseDto {
     @Builder
     public static class searchIssueDetailDto {
         private String content;
-        private String contentImageUrl;
+        private String contentFileUrl;
         private List<CommentResponseDto.CommentInfo> comments;
         private Integer commentSize;
     }

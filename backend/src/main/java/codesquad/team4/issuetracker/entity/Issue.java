@@ -23,8 +23,8 @@ public class Issue {
     @Column("content")
     private String content;
 
-    @Column("image_url")
-    private String imageUrl;
+    @Column("file_url")
+    private String FileUrl;
 
     @Column("is_open")
     private boolean isOpen;

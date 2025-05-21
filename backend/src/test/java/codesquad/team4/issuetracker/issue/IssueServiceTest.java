@@ -1,8 +1,8 @@
 package codesquad.team4.issuetracker.issue;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -74,7 +74,7 @@ public class IssueServiceTest {
                 .id(1L)
                 .title("Test Issue")
                 .content("Test Content")
-                .imageUrl(uploadUrl)
+                .FileUrl(uploadUrl)
                 .isOpen(true)
                 .authorId(1L)
                 .createdAt(LocalDateTime.now())
@@ -110,7 +110,7 @@ public class IssueServiceTest {
                 .id(1L)
                 .title("Test Issue")
                 .content("Test Content")
-                .imageUrl(uploadUrl)
+                .FileUrl(uploadUrl)
                 .isOpen(true)
                 .authorId(1L)
                 .createdAt(LocalDateTime.now())
@@ -139,10 +139,10 @@ public class IssueServiceTest {
         Long issueId = 1L;
         Map<String, Object> row = new HashMap<>();
         row.put("issue_content", "이슈 내용");
-        row.put("issue_image_url", "https://example.com/image.png");
+        row.put("issue_file_url", "https://example.com/image.png");
         row.put("comment_id", 10L);
         row.put("comment_content", "댓글 내용");
-        row.put("comment_image_url", "https://example.com/comment.png");
+        row.put("comment_file_url", "https://example.com/comment.png");
         row.put("comment_created_at", Timestamp.valueOf(LocalDateTime.now()));
         row.put("author_id", 2L);
         row.put("author_nickname", "작성자");
@@ -156,7 +156,7 @@ public class IssueServiceTest {
 
         // then
         assertThat(result.getContent()).isEqualTo("이슈 내용");
-        assertThat(result.getContentImageUrl()).isEqualTo("https://example.com/image.png");
+        assertThat(result.getContentFileUrl()).isEqualTo("https://example.com/image.png");
         assertThat(result.getComments()).hasSize(1);
 
         CommentResponseDto.CommentInfo comment = result.getComments().get(0);

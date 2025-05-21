@@ -140,7 +140,7 @@ public class IssueService {
         Issue issue = Issue.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .imageUrl(uploadUrl)
+                .FileUrl(uploadUrl)
                 .isOpen(true)
                 .authorId(request.getAuthorId())
                 .milestoneId(request.getMilestoneId())
@@ -208,14 +208,14 @@ public class IssueService {
         }
 
         String issueContent = (String) issueById.get(0).get("issue_content");
-        String issueImage = (String) issueById.get(0).get("issue_image_url");
+        String issueImage = (String) issueById.get(0).get("issue_file_url");
 
         List<CommentResponseDto.CommentInfo> comments = issueById.stream()
                 .filter(row -> row.get("comment_id") != null) // 댓글이 없는 경우 필터링
                 .map(row -> CommentResponseDto.CommentInfo.builder()
                         .commentId((Long) row.get("comment_id"))
                         .content((String) row.get("comment_content"))
-                        .imageUrl((String) row.get("comment_image_url"))
+                        .fileUrl((String) row.get("comment_file_url"))
                         .createdAt(((Timestamp) row.get("comment_created_at")).toLocalDateTime())
                         .author(UserDto.UserInfo.builder()
                                 .id((Long) row.get("author_id"))
@@ -227,7 +227,7 @@ public class IssueService {
 
         return IssueResponseDto.searchIssueDetailDto.builder()
                 .content(issueContent)
-                .contentImageUrl(issueImage)
+                .contentFileUrl(issueImage)
                 .comments(comments)
                 .commentSize(comments.size())
                 .build();
@@ -244,12 +244,12 @@ public class IssueService {
         }
 
         //기존 이미지를 삭제하는 것인지 확인
-        String newImageUrl = determineNewImageUrl(request, uploadUrl, oldIssue);
+        String newFileUrl = determineNewFileUrl(request, uploadUrl, oldIssue);
 
         Issue updated = oldIssue.toBuilder()
                 .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
                 .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
-                .imageUrl(newImageUrl)
+                .FileUrl(newFileUrl)
                 .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
                 .build();
@@ -259,15 +259,15 @@ public class IssueService {
         return createMessageResult(updated.getId(), UPDATE_ISSUE);
     }
 
-    private String determineNewImageUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
-        String newImageUrl = oldIssue.getImageUrl();
+    private String determineNewFileUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
+        String newFileUrl = oldIssue.getFileUrl();
 
         if (Boolean.TRUE.equals(request.getRemoveImage())) {
-            newImageUrl = EMPTY_STRING;
+            newFileUrl = EMPTY_STRING;
         } else if (!uploadUrl.isBlank()) {
-            newImageUrl = uploadUrl;
+            newFileUrl = uploadUrl;
         }
-        return newImageUrl;
+        return newFileUrl;
     }
 
     @Transactional
