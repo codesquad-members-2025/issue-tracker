@@ -3,7 +3,7 @@ package codesquad.team4.issuetracker.comment;
 import codesquad.team4.issuetracker.aws.S3FileService;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
-import codesquad.team4.issuetracker.exception.FileUploadException;
+import codesquad.team4.issuetracker.exception.badrequest.FileUploadException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
 import codesquad.team4.issuetracker.response.ApiResponse;
 import jakarta.validation.Valid;

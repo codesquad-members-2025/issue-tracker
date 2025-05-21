@@ -10,9 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import codesquad.team4.issuetracker.aws.S3FileService;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
-import codesquad.team4.issuetracker.exception.FileUploadException;
-import codesquad.team4.issuetracker.exception.IssueNotFoundException;
-import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
+import codesquad.team4.issuetracker.exception.badrequest.FileUploadException;
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
+import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;

@@ -3,7 +3,7 @@ package codesquad.team4.issuetracker.comment;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
-import codesquad.team4.issuetracker.exception.CommentNotFoundException;
+import codesquad.team4.issuetracker.exception.notfound.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

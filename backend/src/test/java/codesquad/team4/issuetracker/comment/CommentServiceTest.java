@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
-import codesquad.team4.issuetracker.exception.CommentNotFoundException;
+import codesquad.team4.issuetracker.exception.notfound.CommentNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

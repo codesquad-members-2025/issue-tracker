@@ -1,10 +1,7 @@
 package codesquad.team4.issuetracker.exception;
 
-import static codesquad.team4.issuetracker.exception.ExceptionMessage.FILE_UPLOAD_FAILED;
-import static codesquad.team4.issuetracker.exception.ExceptionMessage.NOT_FOUND_ISSUE;
-import static codesquad.team4.issuetracker.exception.ExceptionMessage.NOT_FOUND_MILESTONE;
-
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidRequestException;
+import codesquad.team4.issuetracker.exception.notfound.DataNotFoundException;
 import codesquad.team4.issuetracker.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,20 +11,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({IssueNotFoundException.class, MilestoneNotFoundException.class})
-    public ResponseEntity<ApiResponse<?>> handleNotFoundException(RuntimeException ex) {
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleNotFoundException(DataNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.fail(ex.getMessage()));
     }
 
-    @ExceptionHandler({FileUploadException.class, IssueStatusUpdateException.class})
-    public ResponseEntity<ApiResponse<?>> handleBadRequestException(RuntimeException ex) {
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ApiResponse<?>> handleBadRequestException(InvalidRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.fail(ex.getMessage()));
-    }
-    @ExceptionHandler(CommentNotFoundException.class)
-    public ResponseEntity<ApiResponse<?>> handleCommentNotFoundException(CommentNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.fail(ex.getMessage()));
     }
 }
