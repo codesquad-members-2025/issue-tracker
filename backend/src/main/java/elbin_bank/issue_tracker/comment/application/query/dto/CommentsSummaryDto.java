@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public record CommentsSummaryDto(
         Long id,
-        UserDto userDto,
+        UserDto author,
         String content,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
