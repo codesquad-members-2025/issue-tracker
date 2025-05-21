@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import useIssueDetail from '@/features/issue/hooks/useIssueDetail';
+import useIssueComments from '@/features/issue/hooks/useIssueComments';
 import Divider from '@/shared/components/Divider';
 import IssueHeader from '@/features/issue/components/detail/IssueHeader';
 import IssueMainSection from '@/features/issue/components/detail/IssueMainSection';
@@ -18,6 +19,12 @@ export default function IssueDetailPage() {
     isLoading: isIssueDetailLoading,
     isError: isIssueDetailError,
   } = useIssueDetail(issueId);
+
+  const {
+    data: commentData,
+    isLoading: isCommentLoading,
+    isError: isCommentError,
+  } = useIssueComments(issueId);
 
   //TODO 에러 종류에 따라 분기 처리
   useEffect(() => {
@@ -36,12 +43,15 @@ export default function IssueDetailPage() {
       <IssueHeader
         {...issueDetailData}
         issueNumber={issueDetailData.id}
-        // TODO useIssueComments 호출위치를 현재 파일로 변경 후 랜더링 반영
-        commentCount={0}
+        commentCount={commentData?.length ?? 0}
       />
       <Divider />
       <MainArea>
-        <IssueMainSection issueId={issueId} />
+        <IssueMainSection
+          comments={commentData ?? []}
+          isLoading={isCommentLoading}
+          isError={isCommentError}
+        />
         <Sidebar />
       </MainArea>
     </VerticalStack>
