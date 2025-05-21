@@ -1,17 +1,26 @@
 package codesquad.team01.issuetracker.issue.dto;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import codesquad.team01.issuetracker.common.exception.CursorEncodeException;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.user.dto.UserDto;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class IssueDto {
 
@@ -35,6 +44,7 @@ public class IssueDto {
 		Integer milestoneId,
 
 		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
+
 		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds,
 
 		String cursor // 무한스크롤 커서
@@ -46,6 +56,7 @@ public class IssueDto {
 		public String getState() { // 값이 들어오지 않은 경우 초기값 설정
 			return state != null ? state : "open";
 		}
+
 	}
 
 	/**
@@ -140,4 +151,29 @@ public class IssueDto {
 				.build();
 		}
 	}
+
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class CursorData {
+		private Integer id;
+		private LocalDateTime createdAt;
+
+		public String encode() {
+			try {
+				String json = new ObjectMapper()
+					.registerModule(new JavaTimeModule())
+					.writeValueAsString(this);
+				return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
+			} catch (JsonProcessingException e) {
+				throw new CursorEncodeException("json 직렬화 실패");
+			} catch (Exception e) {
+				throw new CursorEncodeException(e.getMessage());
+			}
+		}
+	}
+
 }
+
+
