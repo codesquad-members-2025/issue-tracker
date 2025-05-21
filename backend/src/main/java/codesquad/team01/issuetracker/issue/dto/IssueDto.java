@@ -22,25 +22,23 @@ public class IssueDto {
 	 * 요청 DTO
 	 */
 	// 조회 필터 쿼리 요청 DTO
-	@Getter
-	@Builder
-	public static class QueryRequest {
 
+	@Builder
+	public record QueryRequest(
 		@Pattern(regexp = "^(open|closed)$", message = "state는 'open' 또는 'closed'만 가능합니다")
-		private String state;
+		String state,
 
 		@Positive(message = "작성자 ID는 양수여야 합니다")
-		private Integer writerId;
+		Integer writerId,
 
 		@Positive(message = "마일스톤 ID는 양수여야 합니다")
-		private Integer milestoneId;
+		Integer milestoneId,
 
-		private List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds;
-		private List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds;
+		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
+		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds,
 
-		// private String cursor; // 무한스크롤 구현 시 필요
-		// private String search; // 검색 구현 시 필요
-
+		String cursor // 무한스크롤 커서
+	) {
 		public IssueState getIssueState() {
 			return IssueState.fromStateStr(state);
 		}
