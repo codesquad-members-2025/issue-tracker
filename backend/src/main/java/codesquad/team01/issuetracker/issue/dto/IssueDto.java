@@ -57,6 +57,19 @@ public class IssueDto {
 			return state != null ? state : "open";
 		}
 
+		public CursorData decode() {
+			if (cursor == null || cursor.isBlank()) {
+				return null;
+			}
+
+			try {
+				String decoded = new String(Base64.getDecoder().decode(cursor), StandardCharsets.UTF_8);
+				return new ObjectMapper().readValue(decoded, CursorData.class);
+			} catch (Exception e) {
+				// 디코딩 실패 시 null 반환 -> 첫 페이지
+				return null;
+			}
+		}
 	}
 
 	/**
@@ -66,7 +79,8 @@ public class IssueDto {
 	@Builder
 	public record ListResponse(
 		int totalCount,
-		List<ListItemResponse> issues
+		List<ListItemResponse> issues,
+		CursorResponse cursor
 	) {
 	}
 
@@ -88,6 +102,13 @@ public class IssueDto {
 
 		@Builder.Default
 		private final List<LabelDto.ListItemResponse> labels = new ArrayList<>();
+	}
+
+	@Builder
+	public record CursorResponse(
+		String next,
+		boolean hasNext
+	) {
 	}
 
 	/**
@@ -166,7 +187,7 @@ public class IssueDto {
 					.registerModule(new JavaTimeModule())
 					.writeValueAsString(this);
 				return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
-			} catch (JsonProcessingException e) {
+			} catch (JsonProcessingException e) { // 인코딩 실패 시
 				throw new CursorException("json 직렬화 실패");
 			} catch (Exception e) {
 				throw new CursorException(e.getMessage());
