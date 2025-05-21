@@ -1,7 +1,5 @@
 package com.team5.issue_tracker.label.dto.response;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LabelPageResponse {
-  private Long total;
-  private Long page;
-  private Long perPage;
-  private List<LabelResponse> labels;
+public class LabelResponse {
+  private Long id;
+  private String name;
+  private String description;
+  private String textColor;
+  private String backgroundColor;
 }

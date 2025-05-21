@@ -48,8 +48,10 @@ class IssueQueryServiceTest {
     IssueQueryDto issueQueryDto2 = new IssueQueryDto(2L, "제목2", true, null, null);
     UserSummaryResponse userSummaryResponse1 = new UserSummaryResponse(1L, "작성자1", "이미지");
     UserSummaryResponse userSummaryResponse2 = new UserSummaryResponse(2L, "작성자2", "이미지");
-    LabelSummaryResponse labelSummaryResponse1 = new LabelSummaryResponse(1L, "라벨1", "#007AFF", "#007AFF");
-    LabelSummaryResponse labelSummaryResponse2 = new LabelSummaryResponse(2L, "라벨2", "#007AFF", "#007AFF");
+    LabelSummaryResponse
+        labelSummaryResponse1 = new LabelSummaryResponse(1L, "라벨1", "#007AFF", "#007AFF");
+    LabelSummaryResponse
+        labelSummaryResponse2 = new LabelSummaryResponse(2L, "라벨2", "#007AFF", "#007AFF");
     MilestoneResponse milestoneResponse1 = new MilestoneResponse(1L, "마일스톤1");
     MilestoneResponse milestoneResponse2 = new MilestoneResponse(2L, "마일스톤2");
 

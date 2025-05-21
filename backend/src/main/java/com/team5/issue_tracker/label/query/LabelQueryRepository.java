@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import com.team5.issue_tracker.label.dto.response.LabelResponse;
 import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,25 @@ import lombok.RequiredArgsConstructor;
 public class LabelQueryRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public List<LabelSummaryResponse> findAllLabels() {
+  public List<LabelSummaryResponse> findIssueLabels() {
     String lableSql = "SELECT id, name, text_color, background_color FROM label";
     return jdbcTemplate.query(lableSql, (rs, rowNum) ->
         new LabelSummaryResponse(
             rs.getLong("id"),
             rs.getString("name"),
+            rs.getString("text_color"),
+            rs.getString("background_color")
+        )
+    );
+  }
+
+  public List<LabelResponse> findAllLabels() {
+    String lableSql = "SELECT id, name, description, text_color, background_color FROM label";
+    return jdbcTemplate.query(lableSql, (rs, rowNum) ->
+        new LabelResponse(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("description"),
             rs.getString("text_color"),
             rs.getString("background_color")
         )

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LabelPageResponse {
+public class IssueLabelPageResponse {
   private Long total;
   private Long page;
   private Long perPage;
-  private List<LabelResponse> labels;
+  private List<LabelSummaryResponse> labels;
 }

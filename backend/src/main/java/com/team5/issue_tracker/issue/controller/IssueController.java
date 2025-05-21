@@ -11,6 +11,8 @@ import com.team5.issue_tracker.issue.dto.request.IssueCreateRequest;
 import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.query.IssueQueryService;
 import com.team5.issue_tracker.issue.service.IssueService;
+import com.team5.issue_tracker.label.dto.response.IssueLabelPageResponse;
+import com.team5.issue_tracker.label.query.LabelQueryService;
 import com.team5.issue_tracker.user.dto.UserPageResponse;
 
 import jakarta.validation.Valid;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class IssueController {
   private final IssueService issueService;
   private final IssueQueryService issueQueryService;
+  private final LabelQueryService labelQueryService;
 
   @GetMapping
   public ResponseEntity<ApiResponse<IssuePageResponse>> getAllIssues() {
@@ -43,5 +46,10 @@ public class IssueController {
   public ResponseEntity<ApiResponse<UserPageResponse>> getAllAuthors() {
     log.info("GET /api/issues/authors 요청");
     return ResponseEntity.ok(ApiResponse.success(issueQueryService.getIssueAuthors()));
+  }
+
+  @GetMapping("/labels")
+  public ResponseEntity<ApiResponse<IssueLabelPageResponse>> getFilterLabels() {
+    return ResponseEntity.ok(ApiResponse.success(labelQueryService.getFilterLabels()));
   }
 }
