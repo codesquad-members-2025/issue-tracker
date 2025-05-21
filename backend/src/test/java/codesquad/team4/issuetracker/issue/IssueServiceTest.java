@@ -59,8 +59,8 @@ public class IssueServiceTest {
                 .content("Test Content")
                 .authorId(1L)
                 .milestoneId(null)
-                .labelId(Set.of(1L, 2L))
-                .assigneeId(Set.of(1L, 2L));
+                .labelIds(Set.of(1L, 2L))
+                .assigneeIds(Set.of(1L, 2L));
     }
 
     @Test
@@ -101,8 +101,8 @@ public class IssueServiceTest {
     public void testCreateIssue_NoLabelsAndAssignees() {
         // given
         IssueRequestDto.CreateIssueDto requestDto = requestDtoBuilder
-                .labelId(null)
-                .assigneeId(null)
+                .labelIds(null)
+                .assigneeIds(null)
                 .build();
         String uploadUrl = "http://example.com/uploaded_image.jpg";
 

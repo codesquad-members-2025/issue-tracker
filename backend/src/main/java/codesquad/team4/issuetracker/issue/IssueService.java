@@ -150,12 +150,12 @@ public class IssueService {
 
         Long issueId = savedIssue.getId();
 
-        if(request.getLabelId() != null) {
-            addNewLabels(issueId, request.getLabelId());
+        if(request.getLabelIds() != null) {
+            addNewLabels(issueId, request.getLabelIds());
         }
 
-        if(request.getAssigneeId() != null) {
-            addNewAssignees(issueId, request.getAssigneeId());
+        if(request.getAssigneeIds() != null) {
+            addNewAssignees(issueId, request.getAssigneeIds());
         }
 
         return createMessageResult(issueId, CREATE_ISSUE);
