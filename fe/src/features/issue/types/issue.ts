@@ -38,24 +38,20 @@ export interface Assignee {
 }
 
 export interface IssueDetailResponse {
-  issues: [
-    {
-      id: number;
-      author: {
-        id: number;
-        nickname: string;
-        profileImage: string;
-      };
-      title: string;
-      content: string;
-      labels: Label[];
-      milestone: Milestone | null;
-      assignees: Assignee[];
-      isClosed: boolean;
-      createdAt: string;
-      updatedAt: string;
-    },
-  ];
+  id: number;
+  author: {
+    id: number;
+    nickname: string;
+    profileImage: string;
+  };
+  title: string;
+  content: string;
+  labels: Label[];
+  milestone: Milestone | null;
+  assignees: Assignee[];
+  isClosed: boolean;
+  createdAt: string;
+  updatedAt: string | null;
 }
 
 export interface CommentAuthor {
@@ -69,7 +65,7 @@ export interface Comment {
   author: CommentAuthor;
   content: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt: string | null;
 }
 
 export interface CommentsResponse {
