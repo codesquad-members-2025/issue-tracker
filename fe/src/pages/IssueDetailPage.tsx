@@ -29,10 +29,16 @@ export default function IssueDetailPage() {
   // TODO 로딩,에러 상태에 따라 분기처리 내부적으로 처리
   if (isIssueDetailLoading) return <div>로딩 중...</div>;
   if (isIssueDetailError) return <div>에러 발생</div>;
+  if (!issueDetailData) return;
 
   return (
     <VerticalStack>
-      <IssueHeader />
+      <IssueHeader
+        {...issueDetailData}
+        issueNumber={issueDetailData.id}
+        // TODO useIssueComments 호출위치를 현재 파일로 변경 후 랜더링 반영
+        commentCount={0}
+      />
       <Divider />
       <MainArea>
         <IssueMainSection issueId={issueId} />
