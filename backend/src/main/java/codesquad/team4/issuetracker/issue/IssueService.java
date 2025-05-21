@@ -285,7 +285,7 @@ public class IssueService {
         return createMessageResult(issueId, UPDATE_ISSUE_LABEL);
     }
 
-    private static ApiMessageDto createMessageResult(Long id, String message) {
+    private ApiMessageDto createMessageResult(Long id, String message) {
         return ApiMessageDto.builder()
                 .id(id)
                 .message(message)
