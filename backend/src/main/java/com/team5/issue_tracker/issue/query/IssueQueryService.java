@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.team5.issue_tracker.issue.dto.IssueQueryDto;
+import com.team5.issue_tracker.issue.dto.IssueSearchCondition;
+import com.team5.issue_tracker.issue.dto.request.IssueSearchRequest;
 import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.dto.response.IssueSummaryResponse;
 import com.team5.issue_tracker.issue.mapper.IssueMapper;
@@ -28,14 +31,19 @@ public class IssueQueryService {
   private final MilestoneQueryRepository milestoneQueryRepository;
   private final UserQueryRepository userQueryRepository;
 
-  public IssuePageResponse getIssuePage() {
-    log.debug("전체 이슈 페이지 조회 요청");
-    List<IssueQueryDto> issueQueryDtos = issueQueryRepository.findAllIssues();
+  @Transactional(readOnly = true)
+  public IssuePageResponse getIssuePage(IssueSearchRequest searchRequest) {
+    log.debug("조건에 맞는 이슈 조회 요청");
+    IssueSearchCondition searchCondition = getCondition(searchRequest);
+    List<IssueQueryDto> issueQueryDtos =
+        issueQueryRepository.findIssuesByCondition(searchCondition);
+
     List<Long> issueIds = issueQueryDtos.stream()
         .map(IssueQueryDto::getId)
         .toList();
 
-    Map<Long, List<LabelSummaryResponse>> labelMap = labelQueryRepository.getLabelListByIssueIds(issueIds);
+    Map<Long, List<LabelSummaryResponse>> labelMap =
+        labelQueryRepository.getLabelListByIssueIds(issueIds);
     Map<Long, MilestoneSummaryResponse> milestoneMap =
         milestoneQueryRepository.getMilestonesByIds(issueIds);
     Map<Long, UserSummaryResponse> authorMap = userQueryRepository.getAuthorsByIssueIds(issueIds);
@@ -54,5 +62,23 @@ public class IssueQueryService {
     List<UserSummaryResponse> authorSummaries = issueQueryRepository.findDistinctAuthors();
     return new UserPageResponse((long) authorSummaries.size(), 0L, (long) authorSummaries.size(),
         authorSummaries);
+  }
+
+  private IssueSearchCondition getCondition(IssueSearchRequest searchRequest) {
+    Long assigneeId = userQueryRepository.getUserIdByUsername(searchRequest.getAssigneeName());
+    List<Long> labelIds = labelQueryRepository.getLabelIdsByNames(searchRequest.getLabelNames());
+    Long milestoneId =
+        milestoneQueryRepository.getMilestoneIdByName(searchRequest.getMilestoneName());
+    Long authorId = userQueryRepository.getUserIdByUsername(searchRequest.getAuthorName());
+    log.info("assigneeId: {}, labelIds: {}, milestoneId: {}, authorId: {}",
+        assigneeId, labelIds, milestoneId, authorId);
+
+    return new IssueSearchCondition(
+        searchRequest.getIsOpen(),
+        assigneeId,
+        labelIds,
+        milestoneId,
+        authorId
+    );
   }
 }

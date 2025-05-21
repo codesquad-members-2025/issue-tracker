@@ -54,4 +54,13 @@ public class UserQueryRepository {
             )
         ));
   }
+
+  public Long getUserIdByUsername(String username) {
+    if (username == null) {
+      return null;
+    }
+    String sql = "SELECT id FROM user WHERE username = :username";
+    MapSqlParameterSource params = new MapSqlParameterSource("username", username);
+    return jdbcTemplate.queryForObject(sql, params, Long.class);
+  }
 }

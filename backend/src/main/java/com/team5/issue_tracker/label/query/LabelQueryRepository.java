@@ -1,5 +1,6 @@
 package com.team5.issue_tracker.label.query;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,5 +71,14 @@ public class LabelQueryRepository {
                 (String) row.get("label_background_color")
             ), Collectors.toList())
         ));
+  }
+
+  public List<Long> getLabelIdsByNames(Collection<String> issueNames) {
+    if (issueNames.isEmpty()) {
+      return List.of();
+    }
+    String sql = "SELECT id FROM label WHERE name IN (:issueNames)";
+    MapSqlParameterSource params = new MapSqlParameterSource("issueNames", issueNames);
+    return jdbcTemplate.queryForList(sql, params, Long.class);
   }
 }

@@ -1,24 +1,26 @@
 package com.team5.issue_tracker.issue.parser;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.team5.issue_tracker.issue.dto.IssueSearchCondition;
+
+import com.team5.issue_tracker.issue.dto.request.IssueSearchRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class IssueSearchConditionParserTest {
+class IssueSearchRequestParserTest {
   @Test
   @DisplayName("is:Open인 경우")
   void parseIsOpenTrue() {
     String searchCondition = "is:open";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    Boolean isOpen = issueSearchCondition.getIsOpen();
+    Boolean isOpen = IssueSearchRequest.getIsOpen();
     assertTrue(isOpen);
   }
 
@@ -26,10 +28,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("is:Closed 인 경우")
   void parseIsOpenFalse() {
     String searchCondition = "is:closed";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    Boolean isOpen = issueSearchCondition.getIsOpen();
+    Boolean isOpen = IssueSearchRequest.getIsOpen();
     assertFalse(isOpen);
   }
 
@@ -37,10 +39,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("is:open과 is:closed가 모두 있는 경우, 뒤에 오는 값이 우선한다.")
   void parseIsOpenAndIsClosed() {
     String searchCondition = "is:open is:closed";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    Boolean isOpen = issueSearchCondition.getIsOpen();
+    Boolean isOpen = IssueSearchRequest.getIsOpen();
     assertFalse(isOpen);
   }
 
@@ -48,10 +50,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("is:open과 is:closed가 모두 없는 경우, null이 반환된다.")
   void parseIsOpenAndIsClosedNone() {
     String searchCondition = "";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    Boolean isOpen = issueSearchCondition.getIsOpen();
+    Boolean isOpen = IssueSearchRequest.getIsOpen();
     assertNull(isOpen);
   }
 
@@ -59,10 +61,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("assignee:kim 인 경우")
   void parseAssignee() {
     String searchCondition = "assignee:kim";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String assigneeName = issueSearchCondition.getAssigneeName();
+    String assigneeName = IssueSearchRequest.getAssigneeName();
     assertThat(assigneeName).isEqualTo("kim");
   }
 
@@ -70,10 +72,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("assignee:kim과 assignee:lee가 모두 있는 경우, 뒤에 오는 값이 우선한다.")
   void parseAssigneeAndAssignee() {
     String searchCondition = "assignee:kim assignee:lee";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String assigneeName = issueSearchCondition.getAssigneeName();
+    String assigneeName = IssueSearchRequest.getAssigneeName();
     assertThat(assigneeName).isEqualTo("lee");
   }
 
@@ -81,10 +83,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("label:bug 인 경우")
   void parseLabel() {
     String searchCondition = "label:bug";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String labelName = issueSearchCondition.getLabelNames().get(0);
+    String labelName = IssueSearchRequest.getLabelNames().iterator().next();
     assertThat(labelName).isEqualTo("bug");
   }
 
@@ -92,10 +94,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("label:bug과 label:feature가 모두 있는 경우, 둘 다 포함한다.")
   void parseLabelAndLabel() {
     String searchCondition = "label:bug label:feature";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    List<String> labelNames = issueSearchCondition.getLabelNames();
+    Set<String> labelNames = IssueSearchRequest.getLabelNames();
     assertThat(labelNames.size()).isEqualTo(2);
     assertThat( labelNames).contains("bug", "feature");
   }
@@ -104,10 +106,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("라벨이 없는 경우 빈 리스트를 반환한다.")
   void parseLabelNone() {
     String searchCondition = "";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    List<String> labelNames = issueSearchCondition.getLabelNames();
+    Set<String> labelNames = IssueSearchRequest.getLabelNames();
     assertThat(labelNames.size()).isEqualTo(0);
   }
 
@@ -115,10 +117,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("milestone:hard 인 경우")
   void parseMilestone() {
     String searchCondition = "milestone:hard";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String milestoneName = issueSearchCondition.getMilestoneName();
+    String milestoneName = IssueSearchRequest.getMilestoneName();
     assertThat(milestoneName).isEqualTo("hard");
   }
 
@@ -126,10 +128,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("milestone:hard과 milestone:easy가 모두 있는 경우, 뒤에 오는 값이 우선한다.")
   void parseMilestoneAndMilestone() {
     String searchCondition = "milestone:hard milestone:easy";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String milestoneName = issueSearchCondition.getMilestoneName();
+    String milestoneName = IssueSearchRequest.getMilestoneName();
     assertThat(milestoneName).isEqualTo("easy");
   }
 
@@ -137,10 +139,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("milestone이 없는 경우 null을 반환한다.")
   void parseMilestoneNone() {
     String searchCondition = "";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String milestoneName = issueSearchCondition.getMilestoneName();
+    String milestoneName = IssueSearchRequest.getMilestoneName();
     assertNull(milestoneName);
   }
 
@@ -148,10 +150,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("author:kim 인 경우")
   void parseAuthor() {
     String searchCondition = "author:kim";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String authorName = issueSearchCondition.getAuthorName();
+    String authorName = IssueSearchRequest.getAuthorName();
     assertThat(authorName).isEqualTo("kim");
   }
 
@@ -159,10 +161,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("author:kim과 author:lee가 모두 있는 경우, 뒤에 오는 값이 우선한다.")
   void parseAuthorAndAuthor() {
     String searchCondition = "author:kim author:lee";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String authorName = issueSearchCondition.getAuthorName();
+    String authorName = IssueSearchRequest.getAuthorName();
     assertThat(authorName).isEqualTo("lee");
   }
 
@@ -170,10 +172,10 @@ class IssueSearchConditionParserTest {
   @DisplayName("author가 없는 경우 null을 반환한다.")
   void parseAuthorNone() {
     String searchCondition = "";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    String authorName = issueSearchCondition.getAuthorName();
+    String authorName = IssueSearchRequest.getAuthorName();
     assertNull(authorName);
   }
 
@@ -181,14 +183,14 @@ class IssueSearchConditionParserTest {
   @DisplayName("여러 값들을 조합한 경우")
   void parseAll() {
     String searchCondition = "is:open assignee:kim label:bug milestone:hard author:lee";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    Boolean isOpen = issueSearchCondition.getIsOpen();
-    String assigneeName = issueSearchCondition.getAssigneeName();
-    List<String> labelNames = issueSearchCondition.getLabelNames();
-    String milestoneName = issueSearchCondition.getMilestoneName();
-    String authorName = issueSearchCondition.getAuthorName();
+    Boolean isOpen = IssueSearchRequest.getIsOpen();
+    String assigneeName = IssueSearchRequest.getAssigneeName();
+    Set<String> labelNames = IssueSearchRequest.getLabelNames();
+    String milestoneName = IssueSearchRequest.getMilestoneName();
+    String authorName = IssueSearchRequest.getAuthorName();
 
     assertTrue(isOpen);
     assertThat(assigneeName).isEqualTo("kim");
@@ -202,14 +204,14 @@ class IssueSearchConditionParserTest {
   @DisplayName("잘못된 값들은 무시하고, 나머지 값들만 파싱한다.")
   void parseInvalid() {
     String searchCondition = "is:open assignee:kim label:bug milestone:hard author:lee invalid:value";
-    IssueSearchCondition issueSearchCondition =
-        IssueSearchConditionParser.fromQueryString(searchCondition);
+    IssueSearchRequest IssueSearchRequest =
+        IssueSearchRequestParser.fromQueryString(searchCondition);
 
-    Boolean isOpen = issueSearchCondition.getIsOpen();
-    String assigneeName = issueSearchCondition.getAssigneeName();
-    List<String> labelNames = issueSearchCondition.getLabelNames();
-    String milestoneName = issueSearchCondition.getMilestoneName();
-    String authorName = issueSearchCondition.getAuthorName();
+    Boolean isOpen = IssueSearchRequest.getIsOpen();
+    String assigneeName = IssueSearchRequest.getAssigneeName();
+    Set<String> labelNames = IssueSearchRequest.getLabelNames();
+    String milestoneName = IssueSearchRequest.getMilestoneName();
+    String authorName = IssueSearchRequest.getAuthorName();
 
     assertTrue(isOpen);
     assertThat(assigneeName).isEqualTo("kim");
