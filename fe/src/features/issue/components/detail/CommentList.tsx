@@ -14,7 +14,7 @@ export default function CommentList({ issueId }: CommentListProps) {
 
   return (
     <ul>
-      {data?.comments.map((comment: Comment) => (
+      {data?.map((comment: Comment) => (
         <li key={comment.id}>{comment.content}</li>
       ))}
     </ul>
