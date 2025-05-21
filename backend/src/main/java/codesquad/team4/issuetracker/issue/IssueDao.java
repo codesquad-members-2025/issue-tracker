@@ -89,7 +89,7 @@
                     u.profile_image AS author_profile
                 FROM issue i
                 JOIN comment c ON i.issue_id = c.issue_id
-                JOIN user u ON u.user_id = c.author_id
+                JOIN `user` u ON u.user_id = c.author_id
                 where i.issue_id = ?
             """;
 
