@@ -13,6 +13,5 @@ public class IssueLabel {
     private Long issueLabelId;
     private Long issueId;
     private Long labelId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime lastModifiedAt;
 }

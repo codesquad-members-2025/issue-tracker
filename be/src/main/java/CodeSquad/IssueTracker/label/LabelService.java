@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.label;
 
+import CodeSquad.IssueTracker.label.dto.LabelUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

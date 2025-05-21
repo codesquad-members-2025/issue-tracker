@@ -1,5 +1,7 @@
 package CodeSquad.IssueTracker.milestone;
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
+import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.*;
@@ -70,6 +72,42 @@ public class JdbcTemplatesMilestoneRepository implements MilestoneRepository {
                 .addValue("isOpen", updateDto.getIsOpen())
                 .addValue("id", id);
         template.update(sql, param);
+    }
+
+    @Override
+    public List<MilestoneResponse> findMilestoneResponsesByIssueId(Long issueId) {
+        String sql = """
+        SELECT
+            m.milestone_id,
+            m.name,
+            m.description,
+            DATE_FORMAT(m.end_date, '%Y-%m-%d') AS end_date,
+            m.is_open,
+            (
+                SELECT COUNT(*) 
+                FROM issues i2
+                WHERE i2.milestone_id = m.milestone_id AND i2.is_open = false
+            ) * 100 / NULLIF((
+                SELECT COUNT(*) 
+                FROM issues i3
+                WHERE i3.milestone_id = m.milestone_id
+            ), 0) AS processing_rate
+        FROM milestones m
+        JOIN issues i ON m.milestone_id = i.milestone_id
+        WHERE i.issue_id = :issueId
+        LIMIT 1
+        """;
+
+        return template.query(sql, Map.of("issueId", issueId), (rs, rowNum) -> {
+            MilestoneResponse res = new MilestoneResponse();
+            res.setMilestoneId(rs.getLong("milestone_id"));
+            res.setName(rs.getString("name"));
+            res.setDescription(rs.getString("description"));
+            res.setEndDate(rs.getString("end_date")); // ISO string
+            res.setIsOpen(rs.getBoolean("is_open"));
+            res.setProcessingRate(rs.getLong("processing_rate"));
+            return res;
+        });
     }
 
     private RowMapper<Milestone> milestoneRowMapper() {
