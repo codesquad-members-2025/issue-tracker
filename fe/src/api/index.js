@@ -1,1 +1,4 @@
-export const BASE_URL = 'https://http://localhost:5173';
+export const BASE_URL = 'http://localhost:8080';
+
+// export const TEST_URL = 'http://localhost:5001';
+export const TEST_URL = 'http://localhost:8080';
