@@ -32,7 +32,7 @@ public class CommentController {
 
         String uploadUrl;
         try {
-            uploadUrl = s3FileService.uploadFile(file, COMMENT_DIRECTORY).orElse("");
+            uploadUrl = s3FileService.uploadFile(file, COMMENT_DIRECTORY);
         } catch (FileUploadException e) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.fail(ExceptionMessage.FILE_UPLOAD_FAILED));
@@ -50,7 +50,7 @@ public class CommentController {
 
         String uploadUrl;
         try {
-            uploadUrl = s3FileService.uploadFile(file, COMMENT_DIRECTORY).orElse("");
+            uploadUrl = s3FileService.uploadFile(file, COMMENT_DIRECTORY);
         } catch (FileUploadException e) {
             return ResponseEntity.badRequest().body(ApiResponse.fail(ExceptionMessage.FILE_UPLOAD_FAILED));
         }

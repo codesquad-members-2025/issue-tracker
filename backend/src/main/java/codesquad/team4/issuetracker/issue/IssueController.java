@@ -1,22 +1,27 @@
 package codesquad.team4.issuetracker.issue;
 
 import codesquad.team4.issuetracker.aws.S3FileService;
-import codesquad.team4.issuetracker.exception.FileUploadException;
-import codesquad.team4.issuetracker.exception.ExceptionMessage;
-import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.response.ApiResponse;
 import jakarta.validation.Valid;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -49,7 +54,7 @@ public class IssueController {
             @RequestPart("issue") @Valid IssueRequestDto.CreateIssueDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
 
-        String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
+        String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY);
 
         ApiMessageDto result = issueService.createIssue(request, uploadUrl);
         return ResponseEntity.ok(ApiResponse.success(result));
@@ -77,7 +82,7 @@ public class IssueController {
             @RequestPart("issue") @Valid IssueRequestDto.IssueUpdateDto request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
 
-        String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY).orElse(EMPTY);
+        String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY);
         ApiMessageDto result = issueService.updateIssue(issueId, request, uploadUrl);
 
         return ResponseEntity.ok(ApiResponse.success(result));

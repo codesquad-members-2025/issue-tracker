@@ -1,5 +1,8 @@
 package codesquad.team4.issuetracker.issue;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
@@ -23,9 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -114,7 +114,7 @@ class IssueServiceUpdateTest {
     }
 
     @Test
-    @DisplayName("removeImage가 true이면 imageUrl이 null이어야한다")
+    @DisplayName("removeImage가 true이면 imageUrl이 빈 문자열이어야한다")
     void removeImageWhenRequested() {
         IssueRequestDto.IssueUpdateDto request = IssueRequestDto.IssueUpdateDto.builder()
                 .removeImage(true)
@@ -122,7 +122,7 @@ class IssueServiceUpdateTest {
 
         issueService.updateIssue(1L, request, "");
 
-        assertThat(issueRepository.findById(1L).get().getImageUrl()).isNull();
+        assertThat(issueRepository.findById(1L).get().getImageUrl()).isEmpty();
     }
 
     @Test
@@ -146,7 +146,7 @@ class IssueServiceUpdateTest {
 
         issueService.updateIssue(1L, request, "");
 
-        assertThat(issueRepository.findById(1L).get().getImageUrl()).isNull();
+        assertThat(issueRepository.findById(1L).get().getImageUrl()).isEmpty();
     }
 
 

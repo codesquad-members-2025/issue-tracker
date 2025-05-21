@@ -1,13 +1,15 @@
 package codesquad.team4.issuetracker.issue;
 
+import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
+
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
 import codesquad.team4.issuetracker.exception.AssigneeNotFoundException;
+import codesquad.team4.issuetracker.exception.ExceptionMessage;
 import codesquad.team4.issuetracker.exception.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
-import codesquad.team4.issuetracker.exception.ExceptionMessage;
 import codesquad.team4.issuetracker.exception.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
@@ -18,10 +20,12 @@ import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.searchIssueDetailDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.label.LabelDao;
+import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
+import codesquad.team4.issuetracker.user.dto.UserDto;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -31,12 +35,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import codesquad.team4.issuetracker.label.dto.LabelDto;
-import codesquad.team4.issuetracker.user.dto.UserDto;
-import java.util.Optional;
 import java.util.Set;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -243,12 +242,12 @@ public class IssueService {
         }
 
         //기존 이미지를 삭제하는 것인지 확인
-        Optional<String> newImageUrl = determineNewImageUrl(request, uploadUrl, oldIssue);
+        String newImageUrl = determineNewImageUrl(request, uploadUrl, oldIssue);
 
         Issue updated = oldIssue.toBuilder()
                 .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
                 .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
-                .imageUrl(newImageUrl.orElse(null))
+                .imageUrl(newImageUrl)
                 .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
                 .build();
@@ -258,15 +257,15 @@ public class IssueService {
         return createMessageResult(updated.getId(), UPDATE_ISSUE);
     }
 
-    private Optional<String> determineNewImageUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
+    private String determineNewImageUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
         String newImageUrl = oldIssue.getImageUrl();
 
         if (Boolean.TRUE.equals(request.getRemoveImage())) {
-            newImageUrl = null;
-        } else if (uploadUrl != null && !uploadUrl.isBlank()) {
+            newImageUrl = EMPTY_STRING;
+        } else if (!uploadUrl.isBlank()) {
             newImageUrl = uploadUrl;
         }
-        return Optional.ofNullable(newImageUrl);
+        return newImageUrl;
     }
 
     @Transactional
