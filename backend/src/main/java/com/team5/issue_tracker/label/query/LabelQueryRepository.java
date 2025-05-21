@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class LabelQueryRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public List<LabelSummaryResponse> findAllLables() {
+  public List<LabelSummaryResponse> findAllLabels() {
     String lableSql = "SELECT id, name, text_color, background_color FROM label";
     return jdbcTemplate.query(lableSql, (rs, rowNum) ->
         new LabelSummaryResponse(

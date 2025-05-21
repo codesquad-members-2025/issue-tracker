@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 public class LabelQueryService {
   private final LabelQueryRepository labelQueryRepository;
 
-  public LabelPageResponse getAllLables() {
-    List<LabelSummaryResponse> labels = labelQueryRepository.findAllLables();
+  public LabelPageResponse getAllLabels() {
+    List<LabelSummaryResponse> labels = labelQueryRepository.findAllLabels();
     return new LabelPageResponse((long) labels.size(), 0L, (long) labels.size(), labels);
   }
 }

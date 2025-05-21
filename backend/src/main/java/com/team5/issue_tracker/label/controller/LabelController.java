@@ -21,6 +21,6 @@ public class LabelController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<LabelPageResponse>> getAllLabels() {
-    return ResponseEntity.ok(ApiResponse.success(labelQueryService.getAllLables()));
+    return ResponseEntity.ok(ApiResponse.success(labelQueryService.getAllLabels()));
   }
 }
