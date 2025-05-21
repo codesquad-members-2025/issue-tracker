@@ -31,7 +31,7 @@ public class IssueController {
     return ResponseEntity.ok(ApiResponse.success(issueQueryService.getIssuePage()));
   }
 
-  @PostMapping()
+  @PostMapping
   public ResponseEntity<ApiResponse<Long>> createIssue(
       @Valid @RequestBody IssueCreateRequest request
   ) {
