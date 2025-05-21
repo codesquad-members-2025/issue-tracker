@@ -31,19 +31,15 @@ public class IssueController {
     ) throws IOException {
         String loginId = httpRequest.getAttribute("loginId").toString();
         return issueService.createIssue(request,files,loginId);
-    } //지금 issue에는 imageUrl이 없음 ResponseEntity<Issue> 로 변환도 고려해봐야함 아님 response DTO만들자
-
-    @GetMapping("/{issueId}")
-    public IssueDetailResponse getIssueParticleInfo(@PathVariable Long issueId) {
-        Issue byIdIssue = issueService.findById(issueId).get();
-        List<Comment> byIssueIdComments = commentService.findByIssueId(issueId);
-        IssueDetailResponse response = new IssueDetailResponse();
-        response.setIssue(byIdIssue);
-        response.setComments(byIssueIdComments);
-        return response;
     }
 
-    @PostMapping("{issueId}/update")
+    @GetMapping("/{issueId}")
+    public IssueDetailResponse getIssueDetailInfo(@PathVariable Long issueId) {
+        Issue byIdIssue = issueService.findById(issueId).get();
+        return issueService.toDetailResponse(byIdIssue);
+    }
+
+    @PatchMapping("{issueId}")
     public void updateIssue(@PathVariable Long issueId, @RequestBody IssueUpdateDto updateParam) {
         issueService.update(issueId, updateParam);
     }

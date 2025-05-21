@@ -1,3 +1,15 @@
+/*
+로그인 ID (nickname)
+비밀번호
+devchan - 1234
+alice - 1234
+bob - 1234
+charlie - 1234
+david - 1234
+eve - 1234
+
+*/
+
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 

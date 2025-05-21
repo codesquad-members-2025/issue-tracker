@@ -42,8 +42,8 @@ spring:
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jwt:
-    access-key: ${SPRING_JWT_ACCESS_KEY}
-    refresh-key: ${SPRING_JWT_REFRESH_KEY}
+    access-key: 123454
+    refresh-key: 123454
   cloud:
     aws:
       s3:

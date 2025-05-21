@@ -95,10 +95,15 @@ public class IssueService {
         List<IssueLabelResponse> issueLabels = issueLabelService.findIssueLabelResponsesByIssueId(issue.getIssueId());
 
         // ✅ 3. Milestone
-        List<MilestoneResponse> milestones = milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
+        MilestoneResponse milestones = milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
 
         // ✅ 4. Comments
         List<CommentResponseDto> comments = commentService.findCommentResponsesByIssueId(issue.getIssueId());
+
+        response.setAssignees(issueAssignees);
+        response.setLabels(issueLabels);
+        response.setComments(comments);
+        response.setMilestone(milestones);
 
         return response;
     }
