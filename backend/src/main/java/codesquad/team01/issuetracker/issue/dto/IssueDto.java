@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import codesquad.team01.issuetracker.common.exception.CursorEncodeException;
+import codesquad.team01.issuetracker.common.exception.CursorException;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
@@ -167,9 +167,9 @@ public class IssueDto {
 					.writeValueAsString(this);
 				return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
 			} catch (JsonProcessingException e) {
-				throw new CursorEncodeException("json 직렬화 실패");
+				throw new CursorException("json 직렬화 실패");
 			} catch (Exception e) {
-				throw new CursorEncodeException(e.getMessage());
+				throw new CursorException(e.getMessage());
 			}
 		}
 	}
