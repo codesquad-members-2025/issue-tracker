@@ -95,7 +95,8 @@ public class JdbcTemplatesMilestoneRepository implements MilestoneRepository {
         FROM milestones m
         JOIN issues i ON m.milestone_id = i.milestone_id
         WHERE i.issue_id = :issueId
-        LIMIT 1
+        LIMIT 1"
+        "
         """;
 
         return template.queryForObject(sql, Map.of("issueId", issueId), (rs, rowNum) -> {

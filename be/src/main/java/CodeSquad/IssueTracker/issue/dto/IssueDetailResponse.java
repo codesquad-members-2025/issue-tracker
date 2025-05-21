@@ -1,6 +1,5 @@
 package CodeSquad.IssueTracker.issue.dto;
 
-import CodeSquad.IssueTracker.comment.Comment;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
 import CodeSquad.IssueTracker.issue.Issue;
 import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;

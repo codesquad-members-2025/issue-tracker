@@ -34,13 +34,9 @@ public class IssueController {
     }
 
     @GetMapping("/{issueId}")
-    public IssueDetailResponse getIssueParticleInfo(@PathVariable Long issueId) {
+    public IssueDetailResponse getIssueDetailInfo(@PathVariable Long issueId) {
         Issue byIdIssue = issueService.findById(issueId).get();
-        List<Comment> byIssueIdComments = commentService.findByIssueId(issueId);
-        IssueDetailResponse response = new IssueDetailResponse();
-        response.setIssue(byIdIssue);
-        response.setComments(byIssueIdComments);
-        return response;
+        return issueService.toDetailResponse(byIdIssue);
     }
 
     @PatchMapping("{issueId}")
