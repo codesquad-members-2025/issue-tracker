@@ -23,6 +23,7 @@ import codesquad.team4.issuetracker.label.LabelDao;
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
+import codesquad.team4.issuetracker.user.AssigneeDao;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
 import codesquad.team4.issuetracker.user.dto.UserDto;
@@ -53,6 +54,7 @@ public class IssueService {
     private final IssueDao issueDao;
     private final LabelDao labelDao;
     private final UserDao userDao;
+    private final AssigneeDao assigneeDao;
     private final IssueRepository issueRepository;
     private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
@@ -322,7 +324,7 @@ public class IssueService {
         validateAssigneeIdsExist(assigneeIds);
 
         // 기존 매핑 삭제
-        userDao.deleteAllByIssueId(issueId);
+        assigneeDao.deleteAllByIssueId(issueId);
 
         // 새 담당자 매핑 추가
         addNewAssignees(issueId, assigneeIds);
