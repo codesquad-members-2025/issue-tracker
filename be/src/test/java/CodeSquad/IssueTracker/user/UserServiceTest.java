@@ -25,7 +25,6 @@ class UserServiceTest {
     void save() {
         //given
         User user = new User();
-        user.setEmailId("<EMAIL>");
         user.setPassword("<PASSWORD>");
         user.setLoginId("code_squad");
         user.setNickName("Johnnie");
@@ -36,7 +35,6 @@ class UserServiceTest {
         //then
         assertNotNull(savedUser);
         assertEquals(user.getLoginId(), savedUser.getLoginId());
-        assertEquals(user.getEmailId(), savedUser.getEmailId());
         assertEquals(user.getNickName(), savedUser.getNickName());
     }
 
@@ -44,7 +42,6 @@ class UserServiceTest {
     void findByLoginId() {
         // given
         User user = new User();
-        user.setEmailId("<EMAIL>");
         user.setPassword("<PASSWORD>");
         user.setLoginId("code_squad");
         user.setNickName("Johnnie");
@@ -62,7 +59,6 @@ class UserServiceTest {
     void findById() {
         // given
         User user = new User();
-        user.setEmailId("test@example.com");
         user.setPassword("password123");
         user.setLoginId("tester");
         user.setNickName("테스터");
@@ -80,14 +76,12 @@ class UserServiceTest {
     void findAll() {
         // given
         User user1 = new User();
-        user1.setEmailId("a@example.com");
         user1.setPassword("1111");
         user1.setLoginId("user_a");
         user1.setNickName("유저A");
         userService.save(user1);
 
         User user2 = new User();
-        user2.setEmailId("b@example.com");
         user2.setPassword("2222");
         user2.setLoginId("user_b");
         user2.setNickName("유저B");
@@ -105,7 +99,6 @@ class UserServiceTest {
     void deleteById() {
         // given
         User user = new User();
-        user.setEmailId("delete@example.com");
         user.setPassword("deletepass");
         user.setLoginId("todelete");
         user.setNickName("삭제유저");

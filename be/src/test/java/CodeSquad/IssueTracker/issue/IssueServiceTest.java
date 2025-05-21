@@ -2,7 +2,6 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.comment.CommentService;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
-import CodeSquad.IssueTracker.issue.issueimage.IssueImageService;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeService;
 import CodeSquad.IssueTracker.issueLabel.IssueLabelService;
 import CodeSquad.IssueTracker.milestone.MilestoneService;
