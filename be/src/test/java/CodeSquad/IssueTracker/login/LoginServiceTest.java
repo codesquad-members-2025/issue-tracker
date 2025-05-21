@@ -46,7 +46,6 @@ class LoginServiceTest {
                 .id(1L)
                 .loginId(loginId)
                 .password(password)
-                .emailId("testUser@example.com")
                 .nickName("testUser")
                 .build();
 
@@ -76,7 +75,6 @@ class LoginServiceTest {
                 .id(1L)
                 .loginId(loginId)
                 .password(correctPassword)
-                .emailId("testUser@example.com")
                 .nickName("testUser")
                 .build();
 

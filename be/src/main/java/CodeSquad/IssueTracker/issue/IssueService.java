@@ -1,6 +1,5 @@
 package CodeSquad.IssueTracker.issue;
 
-import CodeSquad.IssueTracker.comment.Comment;
 import CodeSquad.IssueTracker.comment.CommentService;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
 import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
@@ -14,7 +13,7 @@ import CodeSquad.IssueTracker.milestone.MilestoneService;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.user.User;
 import CodeSquad.IssueTracker.user.UserService;
-import CodeSquad.IssueTracker.util.S3Uploader;
+import CodeSquad.IssueTracker.util.Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +33,7 @@ public class IssueService {
     private final UserService userService;
     private final MilestoneService milestoneService;
     private final CommentService commentService;
-    private final S3Uploader s3Uploader;
+    private final Uploader s3Uploader;
 
     public Issue save(Issue issue){
         return issueRepository.save(issue);

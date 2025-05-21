@@ -51,6 +51,8 @@ public class JwtAuthFilter implements Filter {
 
         try {
             Claims claims = jwtUtil.validateAccessToken(accessToken);
+            Object loginId = claims.get("loginId");
+            log.info("[JWT Filter] loginId from claims: {}", loginId);
             httpRequest.setAttribute("loginId", claims.get("loginId"));
         } catch (JwtValidationException e) {
             BaseResponseDto responseDto = BaseResponseDto.failure(e.getMessage());
