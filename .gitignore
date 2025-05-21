@@ -34,6 +34,7 @@ build/
 .sts4-cache
 .apt_generated
 .springBeans
+application-prod.yml
 HELP.md
 
 # Gradle Wrapper

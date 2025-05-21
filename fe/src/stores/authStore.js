@@ -3,19 +3,19 @@ import { immer } from 'zustand/middleware/immer';
 
 export const useAuthStore = create(
   immer((set) => ({
-    userId: null,
+    loginId: null,
     imgUrl: null,
-    accessToken: 'null',
+    accessToken: null,
 
     resetUser: () =>
       set((state) => {
-        state.userId = null;
+        state.loginId = null;
         state.imgUrl = null;
         state.accessToken = null;
       }),
-    setUser: ({ userId, imgUrl, accessToken }) =>
+    setUser: (loginId, imgUrl, accessToken) =>
       set((state) => {
-        state.userId = userId;
+        state.loginId = loginId;
         state.imgUrl = imgUrl;
         state.accessToken = accessToken;
       }),

@@ -1,6 +1,9 @@
 package CodeSquad.IssueTracker.milestone;
 
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
+import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -10,4 +13,5 @@ public interface MilestoneRepository {
     List<Milestone> findAll();
     void deleteById(Long milestoneId);
     void update(Long id, MilestoneUpdateDto updateDto);
+    List<MilestoneResponse> findMilestoneResponsesByIssueId(Long issueId);
 }

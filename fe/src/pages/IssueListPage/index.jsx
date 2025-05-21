@@ -21,6 +21,8 @@ import SelectDisplayer from '@/base-ui/issueListPage/IssueListHeader/SelectDispl
 import StatusEditDropDown from '@/units/kanbanHeader/StatusEditDropDown';
 import deepEqualFast from '@/units/deepEqualFast/deepEqualFast';
 import useLabelStore from '@/stores/labelStore';
+import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
+import { useAuthStore } from '@/stores/authStore';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -93,13 +95,20 @@ export default function IssueListPage() {
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const isSelected = getIsSelected(checkBoxEntry);
   const setLabels = useLabelStore((state) => state.setLabels);
-
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const GEToptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
   useEffect(() => {
     if (!location.search || location.search === '?') {
       // location.search가 비어있다면 디폴트 필터 적용
       applyQueryParams(selectedFilters); // selectedFilters 초기값이 디폴트 필터임
     }
-    fetchData(`${TEST_ISSUES_URL}${location.search}`);
+
+    fetchData(`${TEST_ISSUES_URL}${location.search}`, getOptionWithToken(GEToptions, accessToken));
   }, [location.search]);
 
   useEffect(() => {
@@ -140,7 +149,12 @@ export default function IssueListPage() {
           <HeaderRight>
             {isSelected ? (
               <StatusEditDropDown
-                onPatchSuccess={() => fetchData(`${TEST_ISSUES_URL}${location.search}`)}
+                onPatchSuccess={() =>
+                  fetchData(
+                    `${TEST_ISSUES_URL}${location.search}`,
+                    getOptionWithToken(GEToptions, accessToken),
+                  )
+                }
               />
             ) : (
               <DetailFilterTriggerButton />

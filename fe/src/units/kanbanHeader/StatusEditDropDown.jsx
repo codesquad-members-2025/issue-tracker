@@ -5,6 +5,8 @@ import { TEST_TOGGLE_STATUS_URL } from '@/api/toggleStatus';
 import { TEST_ISSUES_URL } from '@/api/issues';
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
+import { useAuthStore } from '@/stores/authStore';
 
 function getSelectedId(checkBoxEntry) {
   const selectedIdArr = [];
@@ -17,6 +19,7 @@ function getSelectedId(checkBoxEntry) {
 }
 
 export default function StatusEditDropDown({ onPatchSuccess }) {
+  const accessToken = useAuthStore((state) => state.accessToken);
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const fetchType = '이슈 상태 조작';
   const { response, fetchData } = useDataFetch({ fetchType });
@@ -37,7 +40,7 @@ export default function StatusEditDropDown({ onPatchSuccess }) {
       label: '선택한 이슈 열기',
       isSelected: true,
       onClick: () => {
-        fetchData(TEST_TOGGLE_STATUS_URL, optionObject);
+        fetchData(TEST_TOGGLE_STATUS_URL, getOptionWithToken(optionObject, accessToken));
         patchRef.current = true;
       },
     },
@@ -45,7 +48,7 @@ export default function StatusEditDropDown({ onPatchSuccess }) {
       label: '선택한 이슈 닫기',
       isSelected: true,
       onClick: () => {
-        fetchData(TEST_TOGGLE_STATUS_URL, optionObject);
+        fetchData(TEST_TOGGLE_STATUS_URL, getOptionWithToken(optionObject, accessToken));
         patchRef.current = true;
       },
     },

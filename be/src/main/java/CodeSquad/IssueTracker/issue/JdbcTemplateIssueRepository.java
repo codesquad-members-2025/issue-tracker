@@ -38,9 +38,10 @@ public class JdbcTemplateIssueRepository implements IssueRepository{
 
     @Override
     public void update(Long issueId, IssueUpdateDto updateParam) {
-        String sql = "UPDATE issues SET title = :title, is_Open = :isOpen, timestamp = :timestamp, assignee_Id = :assigneeId, milestone_Id = :milestoneId WHERE id = :id" ;
+        String sql = "UPDATE issues SET title = :title, content = :content, is_Open = :isOpen, timestamp = :timestamp, assignee_Id = :assigneeId, milestone_Id = :milestoneId WHERE id = :id" ;
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("title",updateParam.getTitle())
+                .addValue("content",updateParam.getContent())
                 .addValue("isOpen",updateParam.getIsOpen())
                 .addValue("timestamp",updateParam.getTimestamp())
                 .addValue("mildstondId",updateParam.getMilestoneId())
