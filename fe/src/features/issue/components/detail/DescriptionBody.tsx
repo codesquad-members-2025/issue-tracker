@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 
+const DEFAULT_DESCRIPTION = 'No description provided.';
+
 interface DescriptionBodyProps {
-  content: string;
+  content: string | null;
 }
 
 export default function DescriptionBody({ content }: DescriptionBodyProps) {
-  return <StyledContent>{content}</StyledContent>;
+  return <StyledContent>{content || DEFAULT_DESCRIPTION}</StyledContent>;
 }
 
 const StyledContent = styled.div`

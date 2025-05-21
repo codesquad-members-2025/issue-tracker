@@ -45,7 +45,7 @@ export interface IssueDetailResponse {
     profileImage: string;
   };
   title: string;
-  content: string;
+  content: string | null;
   labels: Label[];
   milestone: Milestone | null;
   assignees: Assignee[];
