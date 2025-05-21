@@ -1,6 +1,5 @@
 package elbin_bank.issue_tracker.common.domain;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
