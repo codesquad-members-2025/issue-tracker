@@ -113,7 +113,7 @@ public class IssueService {
 		return response;
 	}
 
-	public LabelDto.FilterLabelListResponse findLabels() {
+	public LabelDto.FilterLabelListResponse findLabelsForFilter() {
 
 		List<LabelDto.FilterLabelListItemResponse> labelList = labelQueryRepository.findLabelList();
 
@@ -123,7 +123,7 @@ public class IssueService {
 			.build();
 	}
 
-	public MilestoneDto.FilterMilestoneListResponse findMilestones() {
+	public MilestoneDto.FilterMilestoneListResponse findMilestonesForFilter() {
 
 		List<MilestoneDto.FilterMilestoneListItemResponse> milestoneList = milestoneQueryRepository.findMilestoneList();
 
@@ -133,7 +133,7 @@ public class IssueService {
 			.build();
 	}
 
-	public UserDto.FilterUserListResponse findUsers() {
+	public UserDto.FilterUserListResponse findUsersForFilter() {
 
 		List<UserDto.WriterResponse> userList = userQueryRepository.findUserList();
 

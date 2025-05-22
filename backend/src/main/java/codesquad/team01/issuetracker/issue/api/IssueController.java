@@ -63,21 +63,26 @@ public class IssueController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	@GetMapping("/issue-metadata/labels")
+	// 이슈의 메타데이터인 것 같아 IssueController에 두었는데, 이것들도 각각의 controller에서 구현해야하는지
+	// 이것 또한 드라이빙 테이블 기준??
+	@GetMapping("/filters/labels")
 	public ResponseEntity<ApiResponse<LabelDto.FilterLabelListResponse>> getLabels() {
-		LabelDto.FilterLabelListResponse response = issueService.findLabels();
+		LabelDto.FilterLabelListResponse response = issueService.findLabelsForFilter();
+		log.info("레이블 목록 개수= {}", response.totalCount());
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	@GetMapping("/issue-metadata/milestones")
+	@GetMapping("/filters/milestones")
 	public ResponseEntity<ApiResponse<MilestoneDto.FilterMilestoneListResponse>> getMilestones() {
-		MilestoneDto.FilterMilestoneListResponse response = issueService.findMilestones();
+		MilestoneDto.FilterMilestoneListResponse response = issueService.findMilestonesForFilter();
+		log.info("마일스톤 목록 개수= {}", response.totalCount());
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	@GetMapping("/issue-metadata/users")
+	@GetMapping("/filters/users")
 	public ResponseEntity<ApiResponse<UserDto.FilterUserListResponse>> getUsers() {
-		UserDto.FilterUserListResponse response = issueService.findUsers();
+		UserDto.FilterUserListResponse response = issueService.findUsersForFilter();
+		log.info("사용자 목록 개수= {}", response.totalCount());
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }
