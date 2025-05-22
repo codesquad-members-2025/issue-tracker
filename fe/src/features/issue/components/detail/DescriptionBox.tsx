@@ -4,7 +4,7 @@ import DescriptionHeader from './DescriptionHeader';
 import DescriptionBody from './DescriptionBody';
 
 export interface DescriptionBoxProps {
-  content: string;
+  content: string | null;
   author: CommentAuthor;
   createdAt: string;
 }

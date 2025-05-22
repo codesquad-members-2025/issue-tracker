@@ -6,7 +6,7 @@ import CommentEditor from './CommentEditor';
 
 interface IssueMainSectionProps {
   comments: Comment[];
-  content: string;
+  content: string | null;
   createdAt: string;
   author: CommentAuthor;
 }
