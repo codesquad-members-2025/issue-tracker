@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar"
-          target: "/home/ubuntu/"
+          target: "/home/ubuntu/upload"  # ✅ 디렉토리 이름으로 명확히
 
       - name: Run JAR on EC2
         uses: appleboy/ssh-action@master
@@ -41,6 +41,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             pkill -f 'java -jar' || true
-            mv /home/ubuntu/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app.jar
+            # 실제 jar 경로 탐색 후 app.jar로 복사
+            JAR_PATH=$(find /home/ubuntu/upload -name "*.jar" | head -n 1)
+            echo "Found jar at: $JAR_PATH"
+            cp "$JAR_PATH" /home/ubuntu/app.jar
             nohup java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
             exit 0
