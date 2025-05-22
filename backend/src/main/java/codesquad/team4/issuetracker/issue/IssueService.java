@@ -1,5 +1,7 @@
 package codesquad.team4.issuetracker.issue;
 
+import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
+
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
@@ -26,15 +28,18 @@ import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
 
 @Service
 @RequiredArgsConstructor
@@ -55,8 +60,8 @@ public class IssueService {
     private final IssueAssigneeRepository issueAssigneeRepository;
     private final MilestoneRepository milestoneRepository;
 
-    public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
-        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen);
+    public IssueResponseDto.IssueListDto getIssues(IssueRequestDto.IssueFilterParamDto params, int page, int size) {
+        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(params);
 
         Map<Long, IssueResponseDto.IssueInfo> issueMap = new LinkedHashMap<>();
         Map<Long, Set<UserInfo>> assigneeMap = new HashMap<>();
@@ -72,7 +77,7 @@ public class IssueService {
 
         List<IssueInfo> issues = pagenateList(page, size, issueMap);
 
-        int totalElements = issueDao.countIssuesByOpenStatus(isOpen);
+        int totalElements = issueDao.countIssuesByOpenStatus(params.getIsOpen());
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
         return IssueResponseDto.IssueListDto.builder()

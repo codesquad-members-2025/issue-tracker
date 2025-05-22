@@ -60,4 +60,15 @@ public class IssueRequestDto {
     public static class IssueAssigneeUpdateDto {
         private Set<Long> assignees;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class IssueFilterParamDto {
+        private Long authorId;
+        private Long assigneeId;
+        private Long commentAuthorId;
+        @NotNull
+        private Boolean isOpen;
+    }
 }
