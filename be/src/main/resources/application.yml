@@ -2,11 +2,17 @@ spring:
   config:
     activate:
       on-profile: local
+  jwt:
+    access-key: 3Three-Squad-AccessKey-1234567890-abcdefg
+    refresh-key: 3Three-Squad-RefreshKey-1234567890-hijklmn
   datasource:
-    url: jdbc:h2:mem:issueTracker;MODE=MYSQL;NON_KEYWORDS=USER
-    username: sa
+    url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul
+    username: JOHNNIE
     password:
-    driver-class-name: org.h2.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
   jpa:
     hibernate:
       ddl-auto: create
@@ -42,14 +48,14 @@ spring:
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jwt:
-    access-key: 123454
-    refresh-key: 123454
+    access-key: ${JWT_ACCESS_KEY}
+    refresh-key: ${JWT_REFRESH_KEY}
   cloud:
     aws:
       s3:
         bucket: my-issue-image-bucket
       region:
         static: ap-northeast-2
-      credentials:
-        access-key: dummy
-        secret-key: dummy # TODO: 실제 키 등록 시 주의
+  sql:
+    init:
+      mode: always
