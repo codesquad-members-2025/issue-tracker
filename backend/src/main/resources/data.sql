@@ -1,5 +1,5 @@
 INSERT INTO milestone (id, deadline, name, description, is_open, created_at, updated_at)
-VALUES (1, '2025-07-11', 'Milestone 1', 'Description for milestone 1', True, '2025-05-23 07:50:56',
+VALUES (1, '2025-07-11', 'Milestone1', 'Description for milestone 1', True, '2025-05-23 07:50:56',
         '2025-05-23 07:50:56');
 INSERT INTO milestone (id, deadline, name, description, is_open, created_at, updated_at)
 VALUES (2, '2025-07-12', 'Milestone 2', 'Description for milestone 2', False, '2025-05-24 07:50:56',
@@ -74,19 +74,19 @@ INSERT INTO user (id, username, email, image_url, password, created_at, updated_
 VALUES (20, 'user20', 'user20@example.com', 'https://example.com/user20.png', 'pass20',
         '2025-06-11 07:50:56', '2025-06-11 07:50:56');
 INSERT INTO label (id, name, description, text_color, background_color, created_at, updated_at)
-VALUES (1, 'Label 1', 'Description for label 1', '#000000', '#CCCCCC', '2025-05-23 07:50:56',
+VALUES (1, 'Label1', 'Description for label 1', '#000000', '#CCCCCC', '2025-05-23 07:50:56',
         '2025-05-23 07:50:56');
 INSERT INTO label (id, name, description, text_color, background_color, created_at, updated_at)
-VALUES (2, 'Label 2', 'Description for label 2', '#000000', '#CCCCCC', '2025-05-24 07:50:56',
+VALUES (2, 'Label2', 'Description for label 2', '#000000', '#CCCCCC', '2025-05-24 07:50:56',
         '2025-05-24 07:50:56');
 INSERT INTO label (id, name, description, text_color, background_color, created_at, updated_at)
-VALUES (3, 'Label 3', 'Description for label 3', '#000000', '#CCCCCC', '2025-05-25 07:50:56',
+VALUES (3, 'Label3', 'Description for label 3', '#000000', '#CCCCCC', '2025-05-25 07:50:56',
         '2025-05-25 07:50:56');
 INSERT INTO label (id, name, description, text_color, background_color, created_at, updated_at)
-VALUES (4, 'Label 4', 'Description for label 4', '#000000', '#CCCCCC', '2025-05-26 07:50:56',
+VALUES (4, 'Label4', 'Description for label 4', '#000000', '#CCCCCC', '2025-05-26 07:50:56',
         '2025-05-26 07:50:56');
 INSERT INTO label (id, name, description, text_color, background_color, created_at, updated_at)
-VALUES (5, 'Label 5', 'Description for label 5', '#000000', '#CCCCCC', '2025-05-27 07:50:56',
+VALUES (5, 'Label5', 'Description for label 5', '#000000', '#CCCCCC', '2025-05-27 07:50:56',
         '2025-05-27 07:50:56');
 INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
 VALUES (1, 'Issue Title 1', 'Body of issue 1', 14, 3, True, '2025-05-23 07:50:56',
