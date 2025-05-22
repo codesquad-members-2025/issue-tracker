@@ -1,6 +1,8 @@
-package com.team5.issue_tracker.label.dto.response;
+package com.team5.issue_tracker.issue.dto.response;
 
 import java.util.List;
+
+import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

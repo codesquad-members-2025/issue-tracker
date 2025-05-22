@@ -3,7 +3,7 @@ package com.team5.issue_tracker.milestone.query;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import com.team5.issue_tracker.milestone.dto.response.IssueMilestonePageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueMilestonePageResponse;
 import com.team5.issue_tracker.milestone.dto.response.MilestoneCountResponse;
 import com.team5.issue_tracker.milestone.dto.response.MilestonePageResponse;
 import com.team5.issue_tracker.milestone.dto.response.MilestoneResponse;
