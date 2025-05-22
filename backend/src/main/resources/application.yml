@@ -27,3 +27,10 @@ cloud:
 logging:
   level:
     root: INFO
+
+springdoc:
+    api-docs:
+        path: /issue-tracker/api-docs
+    swagger-ui:
+        path: /issue-tracker/swagger-ui.html
+        url: /issue-tracker/api-docs
