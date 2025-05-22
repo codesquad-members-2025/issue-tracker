@@ -60,8 +60,8 @@ public class IssueController {
     }
 
     @PatchMapping("/status")
-    public ApiResponse<IssueResponseDto.BulkUpdateIssueStatusDto> updateIssueStatus(
-            @RequestBody IssueRequestDto.BulkUpdateIssueStatusDto requestDto) {
+    public ResponseEntity<ApiResponse<IssueResponseDto.BulkUpdateIssueStatusDto>> updateIssueStatus(
+            @RequestBody @Valid IssueRequestDto.BulkUpdateIssueStatusDto requestDto) {
 
         IssueResponseDto.BulkUpdateIssueStatusDto result = issueService.bulkUpdateIssueStatus(requestDto);
 

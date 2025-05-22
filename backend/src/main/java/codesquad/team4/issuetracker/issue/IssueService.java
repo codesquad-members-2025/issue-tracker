@@ -12,6 +12,7 @@ import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
+import codesquad.team4.issuetracker.exception.*;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
@@ -23,6 +24,7 @@ import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.label.LabelDao;
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
+import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.AssigneeDao;
@@ -39,9 +41,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import codesquad.team4.issuetracker.user.dto.UserDto;
+import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -180,10 +188,6 @@ public class IssueService {
     public IssueResponseDto.BulkUpdateIssueStatusDto bulkUpdateIssueStatus(IssueRequestDto.BulkUpdateIssueStatusDto request) {
         List<Long> issueIds = request.getIssuesId();
         boolean isOpen = request.isOpen();
-
-        if (issueIds == null || issueIds.isEmpty()) {
-            throw new IssueStatusUpdateException(ExceptionMessage.NO_ISSUE_IDS);
-        }
 
         List<Long> existingIds = issueDao.findExistingIssueIds(issueIds);
 
