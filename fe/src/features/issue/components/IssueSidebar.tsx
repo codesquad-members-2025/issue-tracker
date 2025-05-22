@@ -17,27 +17,25 @@ export default function IssueSidebar({
 }: SidebarProps) {
   return (
     <SidebarWrapper>
-      <SidebarSection title="담당자">
-        {assignees.length > 0 && (
-          <SectionList>
-            {assignees.map(assignee => (
-              <AssigneeWrapper key={assignee.id}>
-                <ProfileImage src={assignee.profileImage} alt="프로필 이미지" />
-                <Nickname>{assignee.nickname}</Nickname>
-              </AssigneeWrapper>
-            ))}
-          </SectionList>
-        )}
+      <SidebarSection title="담당자" isEmpty={assignees.length === 0}>
+        <SectionList>
+          {assignees.map(assignee => (
+            <AssigneeWrapper key={assignee.id}>
+              <ProfileImage src={assignee.profileImage} alt="프로필 이미지" />
+              <Nickname>{assignee.nickname}</Nickname>
+            </AssigneeWrapper>
+          ))}
+        </SectionList>
       </SidebarSection>
 
-      <SidebarSection title="레이블">
-        {labels.length > 0 && <LabelList>{renderLabelList(labels)}</LabelList>}
+      <SidebarSection title="레이블" isEmpty={assignees.length === 0}>
+        <LabelList>{renderLabelList(labels)}</LabelList>
       </SidebarSection>
 
-      <SidebarSection title="마일스톤">
+      <SidebarSection title="마일스톤" isEmpty={!milestone}>
         {milestone && (
-          <MilestoneProgressBar percentage={milestone?.progressRate}>
-            <MalestoneLabel>{milestone.name}</MalestoneLabel>
+          <MilestoneProgressBar percentage={milestone.progressRate}>
+            <MilestoneLabel>{milestone.name}</MilestoneLabel>
           </MilestoneProgressBar>
         )}
       </SidebarSection>
@@ -100,7 +98,7 @@ const AssigneeWrapper = styled.div`
   align-items: center;
 `;
 
-const MalestoneLabel = styled.span`
+const MilestoneLabel = styled.span`
   ${({ theme }) => theme.typography.displayMedium12};
   color: ${({ theme }) => theme.neutral.text.strong};
 `;

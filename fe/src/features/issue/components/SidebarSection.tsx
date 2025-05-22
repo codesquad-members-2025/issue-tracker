@@ -5,11 +5,13 @@ import { type ReactNode } from 'react';
 interface SidebarSectionProps {
   title: string;
   children: ReactNode;
+  isEmpty: boolean;
 }
 
 export default function SidebarSection({
   title,
   children,
+  isEmpty,
 }: SidebarSectionProps) {
   return (
     <Section>
@@ -17,7 +19,7 @@ export default function SidebarSection({
         {title}
         <PlusIcon />
       </SectionHeader>
-      {children}
+      {!isEmpty && children}
     </Section>
   );
 }
