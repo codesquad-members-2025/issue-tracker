@@ -13,5 +13,6 @@ public class IssuePageResponse {
   private Long total;
   private Long page;
   private Long perPage;
+  private String q;
   private List<IssueSummaryResponse> issues;
 }

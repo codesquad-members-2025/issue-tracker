@@ -53,7 +53,7 @@ public class IssueQueryService {
             labelMap, authorMap, milestoneMap);
 
     return new IssuePageResponse((long) issueSummaryResponseList.size(), 0L, //TODO: 페이지 기능
-        (long) issueSummaryResponseList.size(),
+        (long) issueSummaryResponseList.size(), searchRequest.toQueryString(),
         issueSummaryResponseList);
   }
 

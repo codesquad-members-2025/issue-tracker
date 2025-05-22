@@ -69,6 +69,6 @@ public class UserQueryRepository {
     MapSqlParameterSource params = new MapSqlParameterSource("username", username);
     List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);
 
-    return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    return result.isEmpty() ? Optional.of(-1L) : Optional.of(result.get(0));
   }
 }

@@ -12,7 +12,7 @@ public class IssueSearchRequestParser {
     IssueSearchRequest issueSearchRequest = new IssueSearchRequest();
     issueSearchRequest.setLabelNames(new HashSet<>());
 
-    if(q == null || q.isEmpty()) {
+    if (q == null || q.isEmpty()) {
       return issueSearchRequest; // 쿼리 문자열이 비어있으면 기본값 반환
     }
 
@@ -25,6 +25,9 @@ public class IssueSearchRequestParser {
       }
       String key = pair[0].trim();
       String value = pair[1].trim();
+      if (value.isEmpty()) {
+        continue; // value가 비어있으면 무시
+      }
       switch (key) {
         case "is" -> {
           if (!value.equalsIgnoreCase("open") && !value.equalsIgnoreCase("closed")) {

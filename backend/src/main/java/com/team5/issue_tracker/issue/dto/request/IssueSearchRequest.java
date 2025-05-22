@@ -17,4 +17,31 @@ public class IssueSearchRequest {
   private Set<String> labelNames;
   private String milestoneName;
   private String authorName;
+
+  public String toQueryString() {
+    StringBuilder queryString = new StringBuilder();
+    if (isOpen != null) {
+      queryString.append("is:").append(isOpen ? "open" : "closed").append(" ");
+    }
+
+    if (assigneeName != null && !assigneeName.isEmpty()) {
+      queryString.append("assignee:").append(assigneeName).append(" ");
+    }
+
+    if (labelNames != null && !labelNames.isEmpty()) {
+      for (String labelName : labelNames) {
+        queryString.append("label:").append(labelName).append(" ");
+      }
+    }
+
+    if (milestoneName != null && !milestoneName.isEmpty()) {
+      queryString.append("milestone:").append(milestoneName).append(" ");
+    }
+
+    if (authorName != null && !authorName.isEmpty()) {
+      queryString.append("author:").append(authorName).append(" ");
+    }
+
+    return queryString.toString().trim();
+  }
 }
