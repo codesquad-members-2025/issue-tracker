@@ -1,32 +1,36 @@
 package codesquad.team4.issuetracker.issue;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
-import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.CreateIssueDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @ExtendWith(MockitoExtension.class)
 public class IssueServiceTest {
@@ -55,8 +59,8 @@ public class IssueServiceTest {
                 .content("Test Content")
                 .authorId(1L)
                 .milestoneId(null)
-                .labelId(List.of(1L, 2L))
-                .assigneeId(List.of(1L, 2L));
+                .labelIds(Set.of(1L, 2L))
+                .assigneeIds(Set.of(1L, 2L));
     }
 
     @Test
@@ -70,7 +74,7 @@ public class IssueServiceTest {
                 .id(1L)
                 .title("Test Issue")
                 .content("Test Content")
-                .imageUrl(uploadUrl)
+                .FileUrl(uploadUrl)
                 .isOpen(true)
                 .authorId(1L)
                 .createdAt(LocalDateTime.now())
@@ -80,7 +84,7 @@ public class IssueServiceTest {
         given(issueRepository.save(any(Issue.class))).willReturn(issue);
 
         // when
-        CreateIssueDto response = issueService.createIssue(requestDto, uploadUrl);
+        ApiMessageDto response = issueService.createIssue(requestDto, uploadUrl);
 
         // then
         assertThat(response).isNotNull();
@@ -97,8 +101,8 @@ public class IssueServiceTest {
     public void testCreateIssue_NoLabelsAndAssignees() {
         // given
         IssueRequestDto.CreateIssueDto requestDto = requestDtoBuilder
-                .labelId(null)
-                .assigneeId(null)
+                .labelIds(null)
+                .assigneeIds(null)
                 .build();
         String uploadUrl = "http://example.com/uploaded_image.jpg";
 
@@ -106,7 +110,7 @@ public class IssueServiceTest {
                 .id(1L)
                 .title("Test Issue")
                 .content("Test Content")
-                .imageUrl(uploadUrl)
+                .FileUrl(uploadUrl)
                 .isOpen(true)
                 .authorId(1L)
                 .createdAt(LocalDateTime.now())
@@ -116,7 +120,7 @@ public class IssueServiceTest {
         given(issueRepository.save(any(Issue.class))).willReturn(issue);
 
         // when
-        CreateIssueDto response = issueService.createIssue(requestDto, uploadUrl);
+        ApiMessageDto response = issueService.createIssue(requestDto, uploadUrl);
 
         // then
         assertThat(response).isNotNull();
@@ -129,60 +133,48 @@ public class IssueServiceTest {
     }
 
     @Test
-    @DisplayName("상태 변경 성공: 모든 이슈 ID가 유효하면 상태가 정상적으로 변경된다")
-    public void testUpdateIssueStatus_Success() {
+    @DisplayName("이슈 상세 정보를 성공적으로 조회한다")
+    void successGetIssueDetailById() {
         // given
-        List<Long> issuesId = List.of(1L, 2L, 3L);
-        boolean isOpen = true;
+        Long issueId = 1L;
+        Map<String, Object> row = new HashMap<>();
+        row.put("issue_content", "이슈 내용");
+        row.put("issue_file_url", "https://example.com/image.png");
+        row.put("comment_id", 10L);
+        row.put("comment_content", "댓글 내용");
+        row.put("comment_file_url", "https://example.com/comment.png");
+        row.put("comment_created_at", Timestamp.valueOf(LocalDateTime.now()));
+        row.put("author_id", 2L);
+        row.put("author_nickname", "작성자");
+        row.put("author_profile", "https://example.com/profile.png");
 
-        IssueRequestDto.BulkUpdateIssueStatusDto requestDto = IssueRequestDto.BulkUpdateIssueStatusDto.builder()
-                .issuesId(issuesId)
-                .isOpen(isOpen)
-                .build();
-
-        String placeholders = "?, ?, ?";
-
-        List<Long> queryArgs = List.of(1L, 2L, 3L);
-        List<Object> updateArgs = List.of(isOpen, 1L, 2L, 3L);
-
-        given(issueDao.countExistingIssuesByIds(queryArgs, placeholders))
-                .willReturn(3);
-        given(issueDao.updateIssueStatus(placeholders, updateArgs))
-                .willReturn(3);
+        List<Map<String, Object>> mockResult = List.of(row);
+        given(issueDao.findIssueDetailById(issueId)).willReturn(mockResult);
 
         // when
-        IssueResponseDto.BulkUpdateIssueStatusDto result = issueService.bulkUpdateIssueStatus(requestDto);
+        IssueResponseDto.searchIssueDetailDto result = issueService.getIssueDetailById(issueId);
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.getIssuesId()).isEqualTo(issuesId);
-        assertThat(result.getMessage()).isEqualTo("이슈 상태가 변경되었습니다.");
+        assertThat(result.getContent()).isEqualTo("이슈 내용");
+        assertThat(result.getContentFileUrl()).isEqualTo("https://example.com/image.png");
+        assertThat(result.getComments()).hasSize(1);
+
+        CommentResponseDto.CommentInfo comment = result.getComments().get(0);
+        assertThat(comment.getCommentId()).isEqualTo(10L);
+        assertThat(comment.getContent()).isEqualTo("댓글 내용");
+        assertThat(comment.getAuthor().getNickname()).isEqualTo("작성자");
     }
 
     @Test
-    @DisplayName("상태 변경 실패: 일부 이슈 ID만 존재하면 예외가 발생한다")
-    public void testUpdateIssueStatus_InvalidIds_ThrowsException() {
+    @DisplayName("이슈가 존재하지 않으면 예외를 던진다")
+    void getIssueDetailByNotExistId() {
         // given
-        List<Long> issuesId = List.of(1L, 2L, 3L);
-        boolean isOpen = false;
-
-        IssueRequestDto.BulkUpdateIssueStatusDto requestDto = IssueRequestDto.BulkUpdateIssueStatusDto.builder()
-                .issuesId(issuesId)
-                .isOpen(isOpen)
-                .build();
-
-        String placeholders = "?, ?, ?";
-        List<Long> queryArgs = List.of(1L, 2L, 3L);
-
-        // 일부 ID만 존재한다고 가정 (ex. 2개)
-        given(issueDao.countExistingIssuesByIds(queryArgs, placeholders))
-                .willReturn(2);
+        Long issueId = 999L;
+        given(issueDao.findIssueDetailById(issueId)).willReturn(Collections.emptyList());
 
         // when & then
-        assertThatThrownBy(() -> issueService.bulkUpdateIssueStatus(requestDto))
-                .isInstanceOf(IssueStatusUpdateException.class)
-                .hasMessageContaining("요청한 이슈 ID가 존재하지 않습니다.");
+        assertThatThrownBy(() -> issueService.getIssueDetailById(issueId))
+                .isInstanceOf(IssueNotFoundException.class)
+                .hasMessageContaining("이슈를 찾을 수 없습니다. issueId = " + issueId);
     }
-
-
 }

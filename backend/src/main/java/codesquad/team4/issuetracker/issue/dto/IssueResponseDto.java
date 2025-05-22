@@ -1,10 +1,10 @@
 package codesquad.team4.issuetracker.issue.dto;
 
+import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import java.util.List;
 
-import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -40,7 +40,7 @@ public class IssueResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class CreateIssueDto {
+    public static class ApiMessageDto {
         private Long id;
         private String message;
     }
@@ -51,5 +51,15 @@ public class IssueResponseDto {
     public static class BulkUpdateIssueStatusDto {
         private List<Long> issuesId;
         private String message;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class searchIssueDetailDto {
+        private String content;
+        private String contentFileUrl;
+        private List<CommentResponseDto.CommentInfo> comments;
+        private Integer commentSize;
     }
 }
