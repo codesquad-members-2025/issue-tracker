@@ -81,3 +81,4 @@ jobs:
               -jar /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
 
             echo "🎉 실행 완료"
+            exit 0
