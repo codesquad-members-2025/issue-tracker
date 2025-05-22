@@ -23,13 +23,9 @@ jobs:
 
       - name: Build Backend (Skip tests)
         working-directory: backend
-        run: ./gradlew clean build -x test
-
-      - name: Set up SSH key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          ./gradlew clean build -x test
+          ls -l build/libs/
 
       - name: Upload jar to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -37,8 +33,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: backend/build/libs/issue-tracker-0.0.1-SNAPSHOT.jar
-          target: /home/ubuntu/issue-tracker/backend/build/libs/
+          source: backend/build/libs/
+          target: /home/ubuntu/issue-tracker/backend/build/libs
 
       - name: Deploy and run backend on EC2
         uses: appleboy/ssh-action@master
