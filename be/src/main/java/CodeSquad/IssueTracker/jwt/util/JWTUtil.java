@@ -4,6 +4,7 @@ import CodeSquad.IssueTracker.jwt.exception.JwtValidationException;
 import CodeSquad.IssueTracker.user.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,11 @@ public class JWTUtil {
     ) {
         this.accessSecretKey = accessSecretKey;
         this.refreshSecretKey = refreshSecretKey;
+    }
+
+    @PostConstruct
+    public void logKeys() {
+        System.out.println("✅ JWT_ACCESS_KEY from @Value = " + accessSecretKey);
     }
 
     public static final long ACCESS_EXPIRATION_TIME = 86400000;
