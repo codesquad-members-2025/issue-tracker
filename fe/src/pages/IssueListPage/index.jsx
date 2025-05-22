@@ -22,6 +22,8 @@ import deepEqualFast from '@/units/deepEqualFast/deepEqualFast';
 import useLabelStore from '@/stores/labelStore';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import { useAuthStore } from '@/stores/authStore';
+import { mapToUnifiedId } from '@/utils/mapToUnifiedId/mapToUnifiedId';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -113,7 +115,10 @@ export default function IssueListPage() {
   useEffect(() => {
     if (!response?.data) return;
     // const fetchedData = response.data;
-    const { issues, users, labels, milestones, metaData } = response.data;
+    const { issues, users, labels: rawLabels, milestones: rawMilestones, metaData } = response.data;
+
+    const labels = mapToUnifiedId(rawLabels);
+    const milestones = mapToUnifiedId(rawMilestones);
 
     const currentData = issues;
     const prevData = prevDataRef.current;

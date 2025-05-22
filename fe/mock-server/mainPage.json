@@ -20,18 +20,18 @@
       ],
       "labels": [
         {
-          "id": 1,
+          "labelId": 1,
           "name": "bug",
           "color": "#ff0000"
         },
         {
-          "id": 2,
+          "labelId": 2,
           "name": "urgent",
           "color": "#ffcc00"
         }
       ],
       "milestone": {
-        "id": 5,
+        "milestoneId": 5,
         "name": "v1.0 릴리즈"
       },
       "lastModifiedAt": "2025-05-12T09:00:00Z"
@@ -52,13 +52,13 @@
       ],
       "labels": [
         {
-          "id": 3,
+          "labelId": 3,
           "name": "feature",
           "color": "#00ff00"
         }
       ],
       "milestone": {
-        "id": 6,
+        "milestoneId": 6,
         "name": "v1.1 릴리즈"
       },
       "lastModifiedAt": "2025-05-15T14:30:00Z"
@@ -79,18 +79,18 @@
       ],
       "labels": [
         {
-          "id": 1,
+          "labelId": 1,
           "name": "bug",
           "color": "#ff0000"
         },
         {
-          "id": 4,
+          "labelId": 4,
           "name": "performance",
           "color": "#0000ff"
         }
       ],
       "milestone": {
-        "id": 7,
+        "milestoneId": 7,
         "name": "v0.9 릴리즈"
       },
       "lastModifiedAt": "2025-04-20T08:00:00Z"
@@ -106,7 +106,7 @@
       "assignees": [],
       "labels": [
         {
-          "id": 5,
+          "labelId": 5,
           "name": "documentation",
           "color": "#ffa500"
         }
@@ -134,18 +134,18 @@
       ],
       "labels": [
         {
-          "id": 6,
+          "labelId": 6,
           "name": "security",
           "color": "#800000"
         },
         {
-          "id": 2,
+          "labelId": 2,
           "name": "urgent",
           "color": "#ffcc00"
         }
       ],
       "milestone": {
-        "id": 6,
+        "milestoneId": 6,
         "name": "v1.1 릴리즈"
       },
       "lastModifiedAt": "2025-05-20T10:00:00Z"
@@ -167,13 +167,13 @@
       ],
       "labels": [
         {
-          "id": 3,
+          "labelId": 3,
           "name": "feature",
           "color": "#00ff00"
         }
       ],
       "milestone": {
-        "id": 6,
+        "milestoneId": 6,
         "name": "v1.1 릴리즈"
       },
       "lastModifiedAt": "2025-05-22T17:45:00Z"
@@ -195,13 +195,13 @@
       ],
       "labels": [
         {
-          "id": 3,
+          "labelId": 3,
           "name": "feature",
           "color": "#00ff00"
         }
       ],
       "milestone": {
-        "id": 5,
+        "milestoneId": 5,
         "name": "v1.0 릴리즈"
       },
       "lastModifiedAt": "2025-05-23T09:15:00Z"
@@ -228,13 +228,13 @@
       ],
       "labels": [
         {
-          "id": 1,
+          "labelId": 1,
           "name": "bug",
           "color": "#ff0000"
         }
       ],
       "milestone": {
-        "id": 7,
+        "milestoneId": 7,
         "name": "v0.9 릴리즈"
       },
       "lastModifiedAt": "2025-05-24T11:30:00Z"
@@ -256,13 +256,13 @@
       ],
       "labels": [
         {
-          "id": 3,
+          "labelId": 3,
           "name": "feature",
           "color": "#00ff00"
         }
       ],
       "milestone": {
-        "id": 6,
+        "milestoneId": 6,
         "name": "v1.1 릴리즈"
       },
       "lastModifiedAt": "2025-05-25T08:20:00Z"
@@ -284,18 +284,18 @@
       ],
       "labels": [
         {
-          "id": 1,
+          "labelId": 1,
           "name": "bug",
           "color": "#ff0000"
         },
         {
-          "id": 6,
+          "labelId": 6,
           "name": "security",
           "color": "#800000"
         }
       ],
       "milestone": {
-        "id": 5,
+        "milestoneId": 5,
         "name": "v1.0 릴리즈"
       },
       "lastModifiedAt": "2025-05-26T13:40:00Z"
@@ -317,13 +317,13 @@
       ],
       "labels": [
         {
-          "id": 5,
+          "labelId": 5,
           "name": "documentation",
           "color": "#ffa500"
         }
       ],
       "milestone": {
-        "id": 6,
+        "milestoneId": 6,
         "name": "v1.1 릴리즈"
       },
       "lastModifiedAt": "2025-05-27T16:55:00Z"
@@ -345,13 +345,13 @@
       ],
       "labels": [
         {
-          "id": 3,
+          "labelId": 3,
           "name": "feature",
           "color": "#00ff00"
         }
       ],
       "milestone": {
-        "id": 6,
+        "milestoneId": 6,
         "name": "v1.1 릴리즈"
       },
       "lastModifiedAt": "2025-05-28T19:10:00Z"
@@ -373,13 +373,13 @@
       ],
       "labels": [
         {
-          "id": 3,
+          "labelId": 3,
           "name": "feature",
           "color": "#00ff00"
         }
       ],
       "milestone": {
-        "id": 5,
+        "milestoneId": 5,
         "name": "v1.0 릴리즈"
       },
       "lastModifiedAt": "2025-05-29T11:05:00Z"
@@ -406,13 +406,13 @@
       ],
       "labels": [
         {
-          "id": 4,
+          "labelId": 4,
           "name": "performance",
           "color": "#0000ff"
         }
       ],
       "milestone": {
-        "id": 7,
+        "milestoneId": 7,
         "name": "v0.9 릴리즈"
       },
       "lastModifiedAt": "2025-05-30T15:30:00Z"
@@ -434,13 +434,13 @@
       ],
       "labels": [
         {
-          "id": 1,
+          "labelId": 1,
           "name": "bug",
           "color": "#ff0000"
         }
       ],
       "milestone": {
-        "id": 5,
+        "milestoneId": 5,
         "name": "v1.0 릴리즈"
       },
       "lastModifiedAt": "2025-05-31T20:00:00Z"
@@ -486,37 +486,37 @@
   ],
   "labels": [
     {
-      "id": 1,
+      "labelId": 1,
       "name": "bug",
       "color": "#ff0000",
       "description": "버그 관련"
     },
     {
-      "id": 2,
+      "labelId": 2,
       "name": "urgent",
       "color": "#ffcc00",
       "description": "긴급 처리 필요"
     },
     {
-      "id": 3,
+      "labelId": 3,
       "name": "feature",
       "color": "#00ff00",
       "description": "기능 요청"
     },
     {
-      "id": 4,
+      "labelId": 4,
       "name": "performance",
       "color": "#0000ff",
       "description": "성능 관련"
     },
     {
-      "id": 5,
+      "labelId": 5,
       "name": "documentation",
       "color": "#ffa500",
       "description": "문서 관련"
     },
     {
-      "id": 6,
+      "labelId": 6,
       "name": "security",
       "color": "#800000",
       "description": "보안 관련"
@@ -524,21 +524,21 @@
   ],
   "milestones": [
     {
-      "id": 5,
+      "milestoneId": 5,
       "name": "v1.0 릴리즈",
       "description": "최초 버전 릴리즈",
       "endDate": "2025-06-01T00:00:00Z",
       "isOpen": true
     },
     {
-      "id": 6,
+      "milestoneId": 6,
       "name": "v1.1 릴리즈",
       "description": "기능 추가 및 개선",
       "endDate": "2025-07-01T00:00:00Z",
       "isOpen": true
     },
     {
-      "id": 7,
+      "milestoneId": 7,
       "name": "v0.9 릴리즈",
       "description": "베타 버전",
       "endDate": "2025-04-30T00:00:00Z",
