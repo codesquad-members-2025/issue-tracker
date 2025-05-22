@@ -9,8 +9,6 @@ import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelQueryRepository;
-import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
-import codesquad.team01.issuetracker.milestone.repository.MilestoneQueryRepository;
 import codesquad.team01.issuetracker.user.dto.UserDto;
 import codesquad.team01.issuetracker.user.repository.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,6 @@ public class IssueService {
 	private final IssueQueryRepository issueQueryRepository;
 	private final UserQueryRepository userQueryRepository;
 	private final LabelQueryRepository labelQueryRepository;
-	private final MilestoneQueryRepository milestoneQueryRepository;
 
 	private final IssueAssembler issueAssembler;
 
@@ -111,36 +108,5 @@ public class IssueService {
 			response.open(), response.closed());
 
 		return response;
-	}
-
-	public LabelDto.LabelFilterListResponse findLabelsForFilter() {
-
-		List<LabelDto.LabelFilterResponse> labels = labelQueryRepository.findLabelsForFilter();
-
-		return LabelDto.LabelFilterListResponse.builder()
-			.totalCount(labels.size())
-			.labels(labels)
-			.build();
-	}
-
-	public MilestoneDto.MilestoneFilterListResponse findMilestonesForFilter() {
-
-		List<MilestoneDto.MilestoneFilterResponse> milestones =
-			milestoneQueryRepository.findMilestonesForFilter();
-
-		return MilestoneDto.MilestoneFilterListResponse.builder()
-			.totalCount(milestones.size())
-			.milestones(milestones)
-			.build();
-	}
-
-	public UserDto.UserFilterListResponse findUsersForFilter() {
-
-		List<UserDto.WriterResponse> users = userQueryRepository.findUsersForFilter();
-
-		return UserDto.UserFilterListResponse.builder()
-			.totalCount(users.size())
-			.users(users)
-			.build();
 	}
 }

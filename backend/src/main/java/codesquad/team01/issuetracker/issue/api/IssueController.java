@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import codesquad.team01.issuetracker.common.dto.ApiResponse;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.service.IssueService;
-import codesquad.team01.issuetracker.label.dto.LabelDto;
-import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
-import codesquad.team01.issuetracker.user.dto.UserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,29 +57,6 @@ public class IssueController {
 		);
 
 		log.info("조건에 부합하는 열린 이슈 개수= {}, 닫힌 이슈 개수= {}", response.open(), response.closed());
-		return ResponseEntity.ok(ApiResponse.success(response));
-	}
-
-	// 이슈의 메타데이터인 것 같아 IssueController에 두었는데, 이것들도 각각의 controller에서 구현해야하는지
-	// 이것 또한 드라이빙 테이블 기준??
-	@GetMapping("/filters/labels")
-	public ResponseEntity<ApiResponse<LabelDto.LabelFilterListResponse>> getLabels() {
-		LabelDto.LabelFilterListResponse response = issueService.findLabelsForFilter();
-		log.info("레이블 목록 개수= {}", response.totalCount());
-		return ResponseEntity.ok(ApiResponse.success(response));
-	}
-
-	@GetMapping("/filters/milestones")
-	public ResponseEntity<ApiResponse<MilestoneDto.MilestoneFilterListResponse>> getMilestones() {
-		MilestoneDto.MilestoneFilterListResponse response = issueService.findMilestonesForFilter();
-		log.info("마일스톤 목록 개수= {}", response.totalCount());
-		return ResponseEntity.ok(ApiResponse.success(response));
-	}
-
-	@GetMapping("/filters/users")
-	public ResponseEntity<ApiResponse<UserDto.UserFilterListResponse>> getUsers() {
-		UserDto.UserFilterListResponse response = issueService.findUsersForFilter();
-		log.info("사용자 목록 개수= {}", response.totalCount());
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }
