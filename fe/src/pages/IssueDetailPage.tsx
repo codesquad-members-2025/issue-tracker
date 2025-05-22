@@ -16,13 +16,13 @@ export default function IssueDetailPage() {
   const navigate = useNavigate();
 
   const {
-    data: issueDetailData,
+    issueDetail,
     isLoading: isIssueDetailLoading,
     isError: isIssueDetailError,
   } = useIssueDetail(issueId);
 
   const {
-    data: commentData,
+    commentList,
     isLoading: isCommentLoading,
     isError: isCommentError,
   } = useIssueComments(issueId);
@@ -38,28 +38,28 @@ export default function IssueDetailPage() {
   if (isIssueDetailLoading || isCommentLoading) return <div>로딩 중...</div>;
 
   if (isIssueDetailError || isCommentError) return <div>에러 발생</div>;
-  if (!issueDetailData || !commentData) return;
+  if (!issueDetail || !commentList) return;
 
   return (
     <VerticalStack>
       <IssueHeader
-        {...issueDetailData}
-        issueNumber={issueDetailData.id}
-        commentCount={commentData?.length ?? 0}
+        {...issueDetail}
+        issueNumber={issueDetail.id}
+        commentCount={commentList.length}
       />
       <Divider />
       <MainArea>
         <IssueMainSection
-          comments={commentData ?? []}
-          content={issueDetailData.content}
-          createdAt={issueDetailData.createdAt}
-          author={issueDetailData.author}
+          comments={commentList}
+          content={issueDetail.content}
+          createdAt={issueDetail.createdAt}
+          author={issueDetail.author}
         />
         <SideSection>
           <IssueSidebar
-            assignees={issueDetailData.assignees}
-            labels={issueDetailData.labels}
-            milestone={issueDetailData.milestone}
+            assignees={issueDetail.assignees}
+            labels={issueDetail.labels}
+            milestone={issueDetail.milestone}
           />
           <TabItem icon={<TrashIcon />} label="이슈 삭제" />
         </SideSection>

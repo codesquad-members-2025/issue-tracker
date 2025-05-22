@@ -16,19 +16,16 @@ export default function IssueListContainer({
   onChangeTab,
 }: IssueListContainerProps) {
   const query = buildIssueQuery(selected);
-  const { data: issues, isFetching, isError, error } = useIssues(query);
+  const { issueList, openCount, closeCount, isFetching, isError, error } =
+    useIssues(query);
 
-  const prevIssues = usePreviousWhen(issues?.issues ?? [], !isFetching);
-  const prevOpenCount = usePreviousWhen(issues?.openCount ?? 0, !isFetching);
-  const prevCloseCount = usePreviousWhen(issues?.closeCount ?? 0, !isFetching);
+  const prevIssues = usePreviousWhen(issueList, !isFetching);
+  const prevOpenCount = usePreviousWhen(openCount, !isFetching);
+  const prevCloseCount = usePreviousWhen(closeCount, !isFetching);
 
-  const displayIssues = isFetching ? prevIssues : (issues?.issues ?? []);
-  const displayOpenCount = isFetching
-    ? prevOpenCount
-    : (issues?.openCount ?? 0);
-  const displayCloseCount = isFetching
-    ? prevCloseCount
-    : (issues?.closeCount ?? 0);
+  const displayIssues = isFetching ? prevIssues : issueList;
+  const displayOpenCount = isFetching ? prevOpenCount : openCount;
+  const displayCloseCount = isFetching ? prevCloseCount : closeCount;
 
   if (isError) {
     console.error('[이슈 목록 로딩 에러]', error);
