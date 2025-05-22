@@ -21,10 +21,9 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
 		    SELECT 
 		        ia.issue_id,
 		        u.id as assignee_id,
-		        f.url as assignee_profile_image_url
+		        u.profile_image_url as assignee_profile_image_url
 		    FROM issue_assignee ia
 		    JOIN users u ON ia.user_id = u.id
-		    LEFT JOIN file f ON u.profile_image_id = f.id
 		    WHERE ia.issue_id IN (:issueIds)
 		""";
 
