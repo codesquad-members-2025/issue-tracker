@@ -25,7 +25,8 @@ jobs:
           ./gradlew clean build
 
       - name: 📦 Check JAR Output
-        run: ls -lh be/build/libs/
+        run: |
+          ls -lh be/build/libs/
 
       - name: 🚚 Copy JAR to EC2
         uses: appleboy/scp-action@master
@@ -36,56 +37,29 @@ jobs:
           source: "./be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar"
           target: "/home/ubuntu/upload/"
 
-      - name: ✏️ Write .env and launch.sh on EC2
+      - name: 🚀 Run Spring Boot App on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "📄 .env 파일 생성"
+            echo "🛑 Stop previous app"
+            pkill -f 'java -jar' || true
+
+            echo "🧹 Clean previous app"
+            rm -f /home/ubuntu/app.jar
+            mv /home/ubuntu/upload/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app.jar
+
+            echo "🔑 Writing .env file"
             cat <<EOF > /home/ubuntu/.env
-JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
-JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
-AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-AWS_REGION=${{ secrets.AWS_REGION }}
-S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
-EOF
+            JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
+            JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
+            EOF
 
-            echo "🚀 launch.sh 파일 생성"
-            cat <<'EOL' > /home/ubuntu/launch.sh
-#!/bin/bash
-source /home/ubuntu/.env
-
-echo "🛑 기존 Spring Boot 종료"
-pkill -f 'java -jar' || true
-
-echo "📦 JAR 복사"
-JAR_PATH=$(find /home/ubuntu/upload -name "IssueTracker-0.0.1-SNAPSHOT.jar" | head -n 1)
-mv "$JAR_PATH" /home/ubuntu/app.jar
-
-echo "🚀 Spring Boot 실행"
-nohup java \
-  -Dspring.profiles.active=dev \
-  -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
-  -DJWT_REFRESH_KEY=$JWT_REFRESH_KEY \
-  -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-  -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-  -DAWS_REGION=$AWS_REGION \
-  -DS3_BUCKET_NAME=$S3_BUCKET_NAME \
-  -jar /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
-EOL
-
-            chmod +x /home/ubuntu/launch.sh
-            echo "✅ 파일 생성 완료"
-
-      - name: 🔥 Run launch.sh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            bash /home/ubuntu/launch.sh
-            echo "✅ 애플리케이션 실행됨"
+            echo "🚀 Run Spring Boot"
+            nohup bash -c 'source /home/ubuntu/.env && java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar' > /home/ubuntu/app.log 2>&1 &
