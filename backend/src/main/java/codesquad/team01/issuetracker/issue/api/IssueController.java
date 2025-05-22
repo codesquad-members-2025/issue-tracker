@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import codesquad.team01.issuetracker.common.dto.ApiResponse;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.service.IssueService;
+import codesquad.team01.issuetracker.label.dto.LabelDto;
+import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
+import codesquad.team01.issuetracker.user.dto.UserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +60,24 @@ public class IssueController {
 		);
 
 		log.info("조건에 부합하는 열린 이슈 개수= {}, 닫힌 이슈 개수= {}", response.open(), response.closed());
+		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	@GetMapping("/issue-metadata/labels")
+	public ResponseEntity<ApiResponse<LabelDto.FilterLabelListResponse>> getLabels() {
+		LabelDto.FilterLabelListResponse response = issueService.findLabels();
+		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	@GetMapping("/issue-metadata/milestones")
+	public ResponseEntity<ApiResponse<MilestoneDto.FilterMilestoneListResponse>> getMilestones() {
+		MilestoneDto.FilterMilestoneListResponse response = issueService.findMilestones();
+		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	@GetMapping("/issue-metadata/uesrs")
+	public ResponseEntity<ApiResponse<UserDto.FilterUserListResponse>> getUsers() {
+		UserDto.FilterUserListResponse response = issueService.findUsers();
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }
