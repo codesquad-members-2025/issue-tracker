@@ -47,12 +47,21 @@ jobs:
             echo "🧹 기존 app.jar 제거"
             rm -rf /home/ubuntu/app.jar
 
-            echo "📦 JAR 파일 이동"
-            mv /home/ubuntu/upload/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app.jar
+            echo "🔍 JAR 경로 자동 탐색"
+            JAR_PATH=$(find /home/ubuntu/upload -name "IssueTracker-0.0.1-SNAPSHOT.jar" | head -n 1)
 
-            echo "✅ 최종 파일 확인"
+            echo "👉 발견된 경로: $JAR_PATH"
+
+            if [ -z "$JAR_PATH" ]; then
+              echo "❌ JAR 파일을 찾을 수 없습니다"
+              exit 1
+            fi
+
+            echo "📦 app.jar로 이동"
+            mv "$JAR_PATH" /home/ubuntu/app.jar
+
+            echo "✅ 최종 JAR 파일 위치"
             ls -lh /home/ubuntu/app.jar
-            [ -f /home/ubuntu/app.jar ] || exit 1
 
       - name: Run JAR on EC2
         uses: appleboy/ssh-action@master
