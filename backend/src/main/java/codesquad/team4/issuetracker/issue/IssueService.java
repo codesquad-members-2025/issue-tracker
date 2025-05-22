@@ -1,22 +1,13 @@
 package codesquad.team4.issuetracker.issue;
 
-import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
-
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
-import codesquad.team4.issuetracker.exception.AssigneeNotFoundException;
-import codesquad.team4.issuetracker.exception.IssueNotFoundException;
-import codesquad.team4.issuetracker.exception.LabelNotFoundException;
-import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
-import codesquad.team4.issuetracker.exception.ExceptionMessage;
-import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
-import codesquad.team4.issuetracker.exception.*;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
@@ -28,23 +19,11 @@ import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.label.LabelDao;
 import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
-import codesquad.team4.issuetracker.label.dto.LabelDto;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.AssigneeDao;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
-import codesquad.team4.issuetracker.user.dto.UserDto;
-import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
 
 @Service
 @RequiredArgsConstructor
