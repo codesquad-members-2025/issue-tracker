@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class IssueTrackerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IssueTrackerApplication.class, args);
 		String accessKey = System.getenv("JWT_ACCESS_KEY");
 		String refreshKey = System.getenv("JWT_REFRESH_KEY");
 
