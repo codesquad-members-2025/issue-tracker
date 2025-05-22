@@ -51,5 +51,10 @@ public class TestDataHelper {
             VALUES (?, ?, ?)
         """, id, issueId, assigneeId);
     }
-
+    public static void insertComment(JdbcTemplate jdbcTemplate, Long id, String content, Long authorId, Long issueId, String fileUrl) {
+        jdbcTemplate.update("""
+        INSERT INTO comment (comment_id, content, author_id, issue_id, file_url)
+        VALUES (?, ?, ?, ?, ?)
+    """, id, content, authorId, issueId, fileUrl);
+    }
 }
