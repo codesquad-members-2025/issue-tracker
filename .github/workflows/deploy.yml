@@ -24,10 +24,22 @@ jobs:
           cd be
           ./gradlew clean build
 
-      - name: Confirm JAR Build
+      - name: Check JAR locally
         run: |
-          echo "✅ JAR 파일 확인:"
+          echo "✅ 빌드된 JAR 확인:"
           ls -lh be/build/libs/
+
+      - name: Delete existing app.jar if directory exists (on EC2)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            if [ -d "/home/ubuntu/app.jar" ]; then
+              echo "🧹 디렉토리 app.jar 제거"
+              rm -rf /home/ubuntu/app.jar
+            fi
 
       - name: Copy JAR to EC2
         uses: appleboy/scp-action@master
@@ -38,19 +50,19 @@ jobs:
           source: "./be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar"
           target: "/home/ubuntu/app.jar"
 
-      - name: Confirm JAR Exists on EC2
+      - name: Verify app.jar is file (on EC2)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "📦 복사된 JAR 확인"
+            echo "📦 복사된 JAR 확인:"
             ls -lh /home/ubuntu/
             if [ -f /home/ubuntu/app.jar ]; then
-              echo "✅ app.jar 파일 존재함"
+              echo "✅ app.jar 파일 존재 확인 완료"
             else
-              echo "❌ app.jar 복사 실패 또는 디렉토리로 잘못 생성됨"
+              echo "❌ app.jar 복사 실패 (파일 아님)"
               exit 1
             fi
 
@@ -64,8 +76,7 @@ jobs:
             echo "🛑 기존 프로세스 종료 시도"
             pkill -f 'java -jar' || true
 
-            echo "🚀 새 JAR 실행"
+            echo "🚀 새 JAR 실행 시작"
             nohup java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
-
             echo "✅ 실행 명령 전송 완료"
             exit 0
