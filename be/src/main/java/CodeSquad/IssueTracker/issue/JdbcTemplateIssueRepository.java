@@ -58,7 +58,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository{
                 .addValue("content",updateParam.getContent())
                 .addValue("isOpen",updateParam.getIsOpen())
                 .addValue("timestamp",updateParam.getTimestamp())
-                .addValue("mildstondId",updateParam.getMilestoneId())
+                .addValue("milestoneId",updateParam.getMilestoneId())
                 .addValue("assigneeId",updateParam.getAssigneeId())
                 .addValue("id",issueId);
         template.update(sql, param);
