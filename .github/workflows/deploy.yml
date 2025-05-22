@@ -45,44 +45,39 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🧼 기존 app.jar 제거"
-            rm -rf /home/ubuntu/app.jar
-
+            rm -f /home/ubuntu/app.jar
             echo "🔍 JAR 경로 탐색"
             JAR_PATH=$(find /home/ubuntu/upload -name "IssueTracker-0.0.1-SNAPSHOT.jar" | head -n 1)
             echo "🔎 찾은 경로: $JAR_PATH"
-
             if [ -z "$JAR_PATH" ]; then
               echo "❌ JAR 파일이 존재하지 않습니다"
               exit 1
             fi
-
             echo "📦 app.jar로 이동"
             mv "$JAR_PATH" /home/ubuntu/app.jar
-
             echo "✅ 복사 확인"
             ls -lh /home/ubuntu/app.jar
 
-      - name: 🚀 Run Spring Boot app with env variables
+      - name: 🚀 Run Spring Boot app with JVM env variables
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # 환경 변수 설정
-            export JWT_ACCESS_KEY="${{ secrets.JWT_ACCESS_KEY }}"
-            export JWT_REFRESH_KEY="${{ secrets.JWT_REFRESH_KEY }}"
-            export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
-            export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-            export AWS_REGION="${{ secrets.AWS_REGION }}"
-            export S3_BUCKET_NAME="${{ secrets.S3_BUCKET_NAME }}"
-
-            # 기존 프로세스 종료
+            echo "🛑 기존 Spring Boot 프로세스 종료"
             pkill -f 'java -jar' || true
+            sleep 2
 
-            # JAR 실행
-            nohup java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
-
+            echo "🚀 Spring Boot 실행"
+            nohup java \
+              -Dspring.profiles.active=dev \
+              -DJWT_ACCESS_KEY="${{ secrets.JWT_ACCESS_KEY }}" \
+              -DJWT_REFRESH_KEY="${{ secrets.JWT_REFRESH_KEY }}" \
+              -DAWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
+              -DAWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+              -DAWS_REGION="${{ secrets.AWS_REGION }}" \
+              -DS3_BUCKET_NAME="${{ secrets.S3_BUCKET_NAME }}" \
+              -jar /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
 
             echo "🎉 실행 완료"
-            exit 0
