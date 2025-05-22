@@ -251,17 +251,21 @@ public class IssueService {
         //기존 이미지를 삭제하는 것인지 확인
         String newFileUrl = determineNewFileUrl(request, uploadUrl, oldIssue);
 
-        Issue updated = oldIssue.toBuilder()
+        Issue updated = createupdatedIssue(request, oldIssue, newFileUrl);
+
+        issueRepository.save(updated);
+
+        return createMessageResult(updated.getId(), UPDATE_ISSUE);
+    }
+
+    private  Issue createupdatedIssue(IssueUpdateDto request, Issue oldIssue, String newFileUrl) {
+        return oldIssue.toBuilder()
                 .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
                 .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
                 .FileUrl(newFileUrl)
                 .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
                 .build();
-
-        issueRepository.save(updated);
-
-        return createMessageResult(updated.getId(), UPDATE_ISSUE);
     }
 
     private String determineNewFileUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
@@ -358,5 +362,12 @@ public class IssueService {
             foundIds.forEach(missing::remove);
             throw new AssigneeNotFoundException(missing);
         }
+    }
+
+    public void deleteIssue(Long issueId) {
+        if (!issueRepository.existsById(issueId)) {
+            throw new IssueNotFoundException(issueId);
+        }
+        issueRepository.deleteById(issueId);
     }
 }
