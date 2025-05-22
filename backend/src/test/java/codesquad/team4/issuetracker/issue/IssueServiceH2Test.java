@@ -1,7 +1,9 @@
 package codesquad.team4.issuetracker.issue;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
@@ -120,5 +122,16 @@ class IssueServiceH2Test {
         assertThat(actual.getIssues().get(1).getAssignees()).hasSize(1);
         assertThat(actual.getPage()).isEqualTo(0);
         assertThat(actual.getSize()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 이슈를 삭제하려 하면 에러가 발생한다")
+    void deleteNotExistIssue() {
+        //given
+        Long issueId = 999L;
+
+        //when & then
+        assertThatThrownBy(() -> issueService.deleteIssue(issueId))
+                .isInstanceOf(IssueNotFoundException.class);
     }
 }
