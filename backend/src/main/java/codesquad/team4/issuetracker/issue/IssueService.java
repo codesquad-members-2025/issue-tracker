@@ -1,13 +1,9 @@
 package codesquad.team4.issuetracker.issue;
 
-import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
-
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
-import codesquad.team4.issuetracker.exception.ExceptionMessage;
-import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
@@ -30,18 +26,15 @@ import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
 
 @Service
 @RequiredArgsConstructor
@@ -181,19 +174,18 @@ public class IssueService {
         List<Long> issueIds = request.getIssuesId();
         boolean isOpen = request.isOpen();
 
-        if (issueIds == null || issueIds.isEmpty()) {
-            throw new IssueStatusUpdateException(ExceptionMessage.NO_ISSUE_IDS);
-        }
-
-        List<Long> existingIds = issueDao.findExistingIssueIds(issueIds);
+        Set<Long> existingIdsSet = issueDao.findExistingIssueIds(issueIds);
+        List<Long> existingIds = new ArrayList<>(existingIdsSet);
 
         List<Long> missingIds = issueIds.stream()
-                .filter(id -> !existingIds.contains(id))
-                .toList();
+            .filter(id -> !existingIdsSet.contains(id))
+            .toList();
 
-        if (!existingIds.isEmpty()) {
+
+        if (!existingIdsSet.isEmpty()) {
             issueDao.updateIssueStatusByIds(isOpen, existingIds);
         }
+
         String message = missingIds.isEmpty()
                 ? UPDATE_ISSUESTATUS
                 : String.format(ISSUE_PARTIALLY_UPDATED, missingIds);

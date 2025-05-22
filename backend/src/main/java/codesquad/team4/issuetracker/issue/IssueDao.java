@@ -1,5 +1,11 @@
     package codesquad.team4.issuetracker.issue;
 
+    import lombok.RequiredArgsConstructor;
+    import org.springframework.jdbc.core.JdbcTemplate;
+    import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+    import org.springframework.stereotype.Repository;
+
+    import java.util.*;
     import java.util.ArrayList;
     import java.util.List;
     import java.util.Map;
@@ -51,12 +57,13 @@
             );
         }
 
-        public List<Long> findExistingIssueIds(List<Long> issueIds) {
+        public Set<Long> findExistingIssueIds(List<Long> issueIds) {
             String placeholders = issueIds.stream().map(id -> "?").collect(Collectors.joining(", "));
             String sql = "SELECT issue_id FROM issue WHERE issue_id IN (" + placeholders + ")";
-            return jdbcTemplate.query(sql,
-                    (rs, rowNum) -> rs.getLong("issue_id"),
-                    issueIds.toArray());
+            List<Long> results = jdbcTemplate.query(sql,
+                (rs, rowNum) -> rs.getLong("issue_id"),
+                issueIds.toArray());
+            return new HashSet<>(results);
         }
 
         public int updateIssueStatusByIds(boolean isOpen, List<Long> issueIds) {
