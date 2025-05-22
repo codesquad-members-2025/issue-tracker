@@ -39,7 +39,7 @@
     {
       "id": 2,
       "title": "UI 개선 요청",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 102,
         "nickname": "alice"

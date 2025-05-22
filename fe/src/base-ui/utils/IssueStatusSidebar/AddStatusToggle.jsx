@@ -1,0 +1,182 @@
+// useFilterModalStore의 filterEntry에서 데이터를 가져와서 렌더링한다.
+
+import styled from 'styled-components';
+import { useState } from 'react';
+import React from 'react';
+import { typography } from '@/styles/foundation';
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경 어두움 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const ToggleContainer = styled.div`
+  display: flex;
+  width: 224px;
+  flex-direction: column;
+  position: relative;
+`;
+
+const MenuTriggerButton = styled.button`
+  ${typography.available.medium16};
+  color: ${({ theme }) => theme.text.default};
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    transition: transform 0.3s;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    width: 8px;
+    height: 8px;
+    transform: rotate(-45deg);
+    margin-left: auto;
+  }
+
+  ${(props) =>
+    props.open &&
+    css`
+      &::after {
+        transform: rotate(45deg);
+      }
+    `}
+`;
+
+const SubMenuContainer = styled.div`
+  display: ${(props) => (props.open ? 'block' : 'none')};
+`;
+
+const SubMenuWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const SubMenuButton = styled.button`
+  ${typography.available.medium16};
+  color: ${({ theme, $isSelect }) => ($isSelect ? theme.text.strong : theme.text.default)};
+  display: flex;
+  align-items: center;
+  height: 50px;
+  display: flex;
+  gap: 8px;
+
+  &:hover {
+    color: ${({ theme }) => theme.text.strong};
+  }
+  img {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+/*onClick 함수의 매개변수는 Postman에 제시되어 있는 이슈 디테일의 GET 요청시 응답값과 동일한 형태로 전달한다.
+ *
+ *
+ *
+ *
+ *-----------> 토글의 하나의 아이템 버튼 만들어야함!!getToggleButton함수 마저 만들기
+ *
+ *
+ *
+ *
+ */
+
+//이 버튼을 구성하는 아이템들은 초기에 서버로부터 받아온 테이터에서 업데이트한 filterStore의 프로퍼티를 가져온다.
+//selected는 이슈디테일 스토어의 프로퍼티(배열)을 입력 받는다.
+function getToggleButton(toggleType, item, onClick, selected) {
+  switch (toggleType) {
+    case 'label':
+      return (
+        <SubMenuButton
+          id={item.id}
+          $isSelect={selected.some((selectedId) => selectedId === item.id)}
+          onClick={() => onClick(toggleType, item.id)}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="10" cy="10" r="10" fill={item.color} />
+          </svg>
+          <span>{item.name}</span>
+        </SubMenuButton>
+      );
+    case 'milestone':
+      return (
+        <SubMenuButton
+          id={item.id}
+          $isSelect={selected.some((selectedId) => selectedId === item.id)}
+          onClick={() => onClick(toggleType, item.id)}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M7.75 0C7.94891 0 8.13968 0.0790176 8.28033 0.21967C8.42098 0.360322 8.5 0.551088 8.5 0.75V3H12.134C12.548 3 12.948 3.147 13.264 3.414L15.334 5.164C15.5282 5.32828 15.6842 5.53291 15.7912 5.76364C15.8982 5.99437 15.9537 6.24566 15.9537 6.5C15.9537 6.75434 15.8982 7.00563 15.7912 7.23636C15.6842 7.46709 15.5282 7.67172 15.334 7.836L13.264 9.586C12.9481 9.85325 12.5478 9.99993 12.134 10H8.5V15.25C8.5 15.4489 8.42098 15.6397 8.28033 15.7803C8.13968 15.921 7.94891 16 7.75 16C7.55109 16 7.36032 15.921 7.21967 15.7803C7.07902 15.6397 7 15.4489 7 15.25V10H2.75C2.28587 10 1.84075 9.81563 1.51256 9.48744C1.18437 9.15925 1 8.71413 1 8.25V4.75C1 3.784 1.784 3 2.75 3H7V0.75C7 0.551088 7.07902 0.360322 7.21967 0.21967C7.36032 0.0790176 7.55109 0 7.75 0ZM7.75 8.5H12.134C12.1931 8.49965 12.2501 8.47839 12.295 8.44L14.365 6.69C14.3924 6.66653 14.4145 6.63739 14.4296 6.60459C14.4447 6.57179 14.4525 6.53611 14.4525 6.5C14.4525 6.46389 14.4447 6.42821 14.4296 6.39541C14.4145 6.36261 14.3924 6.33347 14.365 6.31L12.295 4.56C12.2501 4.52161 12.1931 4.50035 12.134 4.5H2.75C2.6837 4.5 2.62011 4.52634 2.57322 4.57322C2.52634 4.62011 2.5 4.6837 2.5 4.75V8.25C2.5 8.388 2.612 8.5 2.75 8.5H7.75Z"
+              fill="currentColor"
+            />
+          </svg>
+          <span>{item.name}</span>
+        </SubMenuButton>
+      );
+    default:
+      return (
+        <SubMenuButton
+          id={item.id}
+          $isSelect={selected.some((selectedId) => selectedId === item.id)}
+          onClick={() => onClick(toggleType, item.id)}
+        >
+          <img src={item.imgUrl} alt={item.nickname} />
+
+          <span>{item.name}</span>
+        </SubMenuButton>
+      );
+  }
+}
+
+export default function AddStatusToggle({ toggleType, triggerButtonLabel, itemsArr, onClick }) {
+  const [open, setOpen] = useState(false);
+
+  const handleToggle = (e) => {
+    setOpen((prev) => !prev);
+  };
+
+  return (
+    <ToggleContainer>
+      <MenuTriggerButton onClick={handleToggle}>{triggerButtonLabel}</MenuTriggerButton>
+      <SubMenuContainer open={open}>
+        <SubMenuWrapper>
+          {itemsArr.map((item) => {
+            return (
+              <React.Fragment key={item.id}>
+                {getToggleButton(toggleType, item, onClick, selected)}
+              </React.Fragment>
+            );
+          })}
+        </SubMenuWrapper>
+      </SubMenuContainer>
+      <Overlay />
+    </ToggleContainer>
+  );
+}
