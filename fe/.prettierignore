@@ -1,0 +1,10 @@
+dist
+node_modules
+
+eslint.config.js
+vite.config.ts
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+
+prettier.config.js
