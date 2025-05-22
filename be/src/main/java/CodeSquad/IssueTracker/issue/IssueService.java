@@ -1,18 +1,26 @@
 package CodeSquad.IssueTracker.issue;
 
+import CodeSquad.IssueTracker.comment.Comment;
+import CodeSquad.IssueTracker.comment.CommentService;
+import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
 import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
+import CodeSquad.IssueTracker.issue.dto.IssueDetailResponse;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
-import CodeSquad.IssueTracker.issue.issueimage.IssueImage;
-import CodeSquad.IssueTracker.issue.issueimage.IssueImageRepository;
-import CodeSquad.IssueTracker.issue.issueimage.IssueImageService;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeService;
+import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
 import CodeSquad.IssueTracker.issueLabel.IssueLabelService;
+import CodeSquad.IssueTracker.issueLabel.dto.IssueLabelResponse;
+import CodeSquad.IssueTracker.milestone.MilestoneService;
+import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
+import CodeSquad.IssueTracker.user.User;
+import CodeSquad.IssueTracker.user.UserService;
 import CodeSquad.IssueTracker.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +31,10 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final IssueAssigneeService issueAssigneeService;
     private final IssueLabelService issueLabelService;
-    private final IssueImageService issueImageService;
+    private final UserService userService;
+    private final MilestoneService milestoneService;
+    private final CommentService commentService;
+    private final S3Uploader s3Uploader;
 
     public Issue save(Issue issue){
         return issueRepository.save(issue);
@@ -41,32 +52,57 @@ public class IssueService {
         return issueRepository.findAll();
     }
 
-    public Issue createIssue(IssueCreateRequest request, List<MultipartFile> files) {
-        // 1. 이슈 저장
+    public IssueDetailResponse createIssue(IssueCreateRequest request, List<MultipartFile> files, String loginId) throws IOException {
+        User author = userService.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + loginId));
+
         Issue issue = new Issue();
         issue.setTitle(request.getTitle());
         issue.setContent(request.getContent());
+        issue.setAuthorId(author.getId()); // ✅ 여기서 ID를 찾아서 넣음
         issue.setMilestoneId(request.getMilestoneId());
+        issue.setIsOpen(true);
+        issue.setLastModifiedAt(LocalDateTime.now());
 
-        Issue savedIssue = issueRepository.save(issue);
-
-        // 2. 이슈-담당자 관계 저장
-        if (!request.getAssigneeIds().isEmpty()) {
-            issueAssigneeService.assignAssignees(savedIssue.getIssueId(), request.getAssigneeIds());
+        if (files != null && !files.isEmpty()) {
+            MultipartFile file = files.get(0);
+            String imageUrl = s3Uploader.upload(file);
+            issue.setImageUrl(imageUrl);
         }
 
-        // 3. 라벨 관계 저장
-        if(!request.getLabelIds().isEmpty()){
-            issueLabelService.assignLabels(savedIssue.getIssueId(), request.getLabelIds());
+        Issue saved = issueRepository.save(issue);
+
+        if (request.getAssigneeIds() != null && !request.getAssigneeIds().isEmpty()) {
+            issueAssigneeService.assignAssignees(saved.getIssueId(), request.getAssigneeIds());
         }
 
-        // 4. 이미지 URL 저장 로직 추가해야함 하 언제하냐
-        if (files != null) {
-            issueImageService.uploadAndSaveImages(savedIssue.getIssueId(), files);
+        if (request.getLabelIds() != null && !request.getLabelIds().isEmpty()) {
+            issueLabelService.assignLabels(saved.getIssueId(), request.getLabelIds());
         }
 
-        return savedIssue;
+        return toDetailResponse(issue);
     }
+
+    public IssueDetailResponse toDetailResponse(Issue issue) {
+        IssueDetailResponse response = new IssueDetailResponse();
+        response.setIssue(issue);
+
+        // ✅ 1. Assignees
+        List<IssueAssigneeResponse> issueAssignees = issueAssigneeService.findAssigneeResponsesByIssueId(issue.getIssueId());
+
+
+        // ✅ 2. Labels
+        List<IssueLabelResponse> issueLabels = issueLabelService.findIssueLabelResponsesByIssueId(issue.getIssueId());
+
+        // ✅ 3. Milestone
+        List<MilestoneResponse> milestones = milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
+
+        // ✅ 4. Comments
+        List<CommentResponseDto> comments = commentService.findCommentResponsesByIssueId(issue.getIssueId());
+
+        return response;
+    }
+
 
 
 
