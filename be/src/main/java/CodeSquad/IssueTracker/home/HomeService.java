@@ -21,11 +21,9 @@ public class HomeService {
     public HomeResponseDto getHomeData(IssueFilterRequestDto filterRequestDto) {
         return new HomeResponseDto(
                 issueService.findIssuesByFilter(filterRequestDto),
+                userService.findAllUserDetails(),
                 labelService.findAll(),
-                milestoneService.findAll(),
-                userService.findAll()
+                milestoneService.findAll()
         );
     }
-
-
 }
