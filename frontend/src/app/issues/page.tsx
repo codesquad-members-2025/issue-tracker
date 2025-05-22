@@ -3,12 +3,10 @@
 
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import Logo from "@components/header/Logo";
-import Profile from "@components/header/Profile";
+import Header from "@components/header/Header";
 import Button from "@components/issue/Button";
 import { FilterGroup, FilterDropdown } from "@components/filter/FilterGroup";
 import IssueListComponent from "@components/issue/IssueList";
-import ThemeToggleBtn from "@components/theme/ThemeToggleBtn";
 import type { Issue } from "@/types/issue";
 import Link from "next/link";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -21,14 +19,14 @@ const Page = styled.div`
   background-color: ${({ theme }) => theme.colors.surface.default};
 `;
 
-const TopBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  height: 5.875rem;
-  margin-bottom: 2rem;
-`;
+// const TopBar = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   position: relative;
+//   height: 5.875rem;
+//   margin-bottom: 2rem;
+// `;
 
 const Toolbar = styled.div`
   display: flex;
@@ -201,11 +199,7 @@ export default function IssuesPage() {
 
   return (
     <Page>
-      <TopBar>
-        <Logo />
-        <ThemeToggleBtn />
-        <Profile />
-      </TopBar>
+      {/* <Header /> */}
 
       <Toolbar>
         <LeftControls>
