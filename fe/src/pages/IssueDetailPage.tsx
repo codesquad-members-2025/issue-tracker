@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
+import TrashIcon from '@/assets/icons/trash.svg?react';
 import useIssueDetail from '@/features/issue/hooks/useIssueDetail';
 import useIssueComments from '@/features/issue/hooks/useIssueComments';
 import Divider from '@/shared/components/Divider';
 import IssueHeader from '@/features/issue/components/detail/IssueHeader';
 import IssueMainSection from '@/features/issue/components/detail/IssueMainSection';
-import Sidebar from '@/features/issue/components/Sidebar';
+import IssueSidebar from '@/features/issue/components/IssueSidebar';
 import VerticalStack from '@/layouts/VerticalStack';
 
 export default function IssueDetailPage() {
@@ -54,7 +55,14 @@ export default function IssueDetailPage() {
           createdAt={issueDetailData.createdAt}
           author={issueDetailData.author}
         />
-        <Sidebar />
+        <SideSection>
+          <IssueSidebar
+            assignees={issueDetailData.assignees}
+            labels={issueDetailData.labels}
+            milestone={issueDetailData.milestone}
+          />
+          <TabItem icon={<TrashIcon />} label="이슈 삭제" />
+        </SideSection>
       </MainArea>
     </VerticalStack>
   );
@@ -62,5 +70,59 @@ export default function IssueDetailPage() {
 
 const MainArea = styled.div`
   display: flex;
+  align-items: flex-start;
   gap: 32px;
+`;
+
+const SideSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+`;
+
+interface TabItemProps {
+  icon: React.ReactNode;
+  label: string;
+}
+
+// TODO 공용으로 분리 및 onClick 추가
+function TabItem({ icon, label }: TabItemProps) {
+  return (
+    <TabButton>
+      <IconWrapper>{icon}</IconWrapper>
+      <Label>{label}</Label>
+    </TabButton>
+  );
+}
+
+const TabButton = styled.button<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  margin-right: 16px;
+  color: ${({ theme }) => theme.danger.text.default};
+  ${({ theme }) => theme.typography.availableMedium12};
+
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const IconWrapper = styled.span`
+  display: flex;
+  align-items: center;
+  color: inherit;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
+const Label = styled.span`
+  color: inherit;
 `;
