@@ -1,5 +1,8 @@
 package codesquad.team01.issuetracker.label.dto;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import codesquad.team01.issuetracker.label.domain.LabelTextColor;
 import lombok.Builder;
 
@@ -15,8 +18,14 @@ public class LabelDto {
 	public record ListItemResponse(
 		Integer id,
 		String name,
+		String description,
 		String color,
 		String textColor
+	) {
+	}
+
+	public record ListResponse(
+		List<ListItemResponse> labels
 	) {
 	}
 
@@ -31,12 +40,14 @@ public class LabelDto {
 	) {
 	}
 
-	public record LabelResponse(
-		int id,
+	public record LabelListItem(
+		Integer id,
 		String name,
 		String description,
 		String color,
-		String textColor
+		String textColor,
+		LocalDateTime createdAt,
+		LocalDateTime updatedAt
 	) {
 	}
 }
