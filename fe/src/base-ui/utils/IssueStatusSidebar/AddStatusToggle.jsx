@@ -86,14 +86,18 @@ const SubMenuButton = styled.button`
   }
 `;
 
-export default function AddStatusToggle({ toggleType, triggerButtonLabel, itemsArr, onClick }) {
+export default function AddStatusToggle({
+  toggleType,
+  triggerButtonLabel,
+  itemsArr,
+  pageTypeContext,
+}) {
   const [open, setOpen] = useState(false);
   const { toggleAssignee, toggleLabel, toggleMilestone } = useIssueDetailStore((state) => ({
     toggleAssignee: state.toggleAssignee,
     toggleLabel: state.toggleLabel,
     toggleMilestone: state.toggleMilestone,
   }));
-
   const fetchData = useDataFetch();
 
   function handleToggleOption(type, id) {
@@ -110,6 +114,11 @@ export default function AddStatusToggle({ toggleType, triggerButtonLabel, itemsA
   function handleCloseOverlay(context) {
     setOpen((prev) => !prev);
     if (context === 'detail') {
+      /*
+      BE 에서 API 나와야 적용 가능
+      - PATCH 할때 구조 협의 후 구현 ***TODO***      
+      - fetchData()
+      */
     }
   }
   function handleToggle() {
@@ -124,13 +133,13 @@ export default function AddStatusToggle({ toggleType, triggerButtonLabel, itemsA
           {itemsArr.map((item) => {
             return (
               <React.Fragment key={item.id}>
-                {getToggleButton(toggleType, item, onClick, selected)}
+                {getToggleButton(toggleType, item, handleToggleOption, selected)}
               </React.Fragment>
             );
           })}
         </SubMenuWrapper>
       </SubMenuContainer>
-      <Overlay />
+      <Overlay onClick={() => handleCloseOverlay(pageTypeContext)} />
     </ToggleContainer>
   );
 }
