@@ -2,8 +2,8 @@
 "use client";
 
 import styled from "@emotion/styled";
-import IssueTabFilter from "./IssueTabFilter";
-import { FilterGroup, FilterDropdown } from "@components/FilterGroup";
+import IssueOpenTabFilter from "../filter/IssueOpenTabFilter";
+import { FilterGroup, FilterDropdown } from "@components/filter/FilterGroup";
 // import ChevronDownIcon from "@/assets/icons/chevronDown.svg?react";
 
 const HeaderWrapper = styled.div`
@@ -69,7 +69,7 @@ export default function IssueListHeader({
         <Checkbox type="checkbox" />
         {/* TODO 공통 체크박스로 변경 */}
 
-        <IssueTabFilter
+        <IssueOpenTabFilter
           openCount={openCount}
           closeCount={closeCount}
           selected={selected}

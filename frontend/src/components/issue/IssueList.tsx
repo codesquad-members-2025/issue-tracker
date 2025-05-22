@@ -2,8 +2,8 @@
 "use client";
 
 import styled from "@emotion/styled";
-import IssueItem from "@/components/IssueItem";
-import IssueListHeader from "@components/IssueListHeader";
+import IssueItem from "@components/issue/IssueItem";
+import IssueListHeader from "@components/issue/IssueListHeader";
 import type { Issue } from "@/types/issue";
 import Link from "next/link";
 

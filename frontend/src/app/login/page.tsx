@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useThemeStore } from "@lib/useThemeStore";
 import styled from "@emotion/styled";
 import theme from "@/styles/theme";
-import ThemeToggleBtn from "@components/ThemeToggleBtn";
+import ThemeToggleBtn from "@components/theme/ThemeToggleBtn";
 
 const Container = styled.div`
   display: flex;

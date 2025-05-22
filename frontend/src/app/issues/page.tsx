@@ -3,12 +3,12 @@
 
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import Logo from "@/components/Logo";
-import Profile from "@/components/Profile";
-import Button from "@/components/Button";
-import { FilterGroup, FilterDropdown } from "@components/FilterGroup";
-import IssueListComponent from "@/components/IssueList";
-import ThemeToggleBtn from "@/components/ThemeToggleBtn";
+import Logo from "@components/header/Logo";
+import Profile from "@components/header/Profile";
+import Button from "@components/issue/Button";
+import { FilterGroup, FilterDropdown } from "@components/filter/FilterGroup";
+import IssueListComponent from "@components/issue/IssueList";
+import ThemeToggleBtn from "@components/theme/ThemeToggleBtn";
 import type { Issue } from "@/types/issue";
 import Link from "next/link";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -16,8 +16,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const Page = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  padding: 0 5rem;
+  /* height: 100vh; */
+  padding: 1rem 5rem 5rem 5rem;
   background-color: ${({ theme }) => theme.colors.surface.default};
 `;
 
@@ -81,9 +81,76 @@ const MileStoneMoveBtn = styled(FilterDropdown)`
 
 export default function IssuesPage() {
   const [issues, setIssues] = useState<Issue[]>([]);
+
+  // 무한 스크롤에 필요한 상태 관리
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasNext, setHasNext] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // 필터에 대한 상태 관리
+  // const [popupType, setPopupType] = useState<
+  //   null | "assignee" | "label" | "milestone" | "writer"
+  // >(null);
+
+  // // 필터 옵션 상태
+  // const [filterOptions, setFilterOptions] = useState({
+  //   assignee: [],
+  //   label: [],
+  //   milestone: [],
+  //   writer: [],
+  // });
+
+  // // 선택된 필터 상태
+  // const [selectedFilters, setSelectedFilters] = useState({
+  //   assignee: undefined,
+  //   label: undefined,
+  //   milestone: undefined,
+  //   writer: undefined,
+  // });
+
+  // 필터 데이터 비동기 요청
+  // const fetchFilterOptions = async () => {
+  //   try {
+  //     const [labelRes, milestoneRes, userRes] = await Promise.all([
+  //       fetch("/api/v1/issue-metadata/labels"),
+  //       fetch("/api/v1/issue-metadata/milestones"),
+  //       fetch("/api/v1/issue-metadata/users"),
+  //     ]);
+
+  //     const [labelJson, milestoneJson, userJson] = await Promise.all([
+  //       labelRes.json(),
+  //       milestoneRes.json(),
+  //       userRes.json(),
+  //     ]);
+
+  //     const authors: { id: string; label: string }[] = [...new Set(issues.map((i) => i.writerName))].map(
+  //       (name, idx) => ({
+  //         id: String(idx + 1),
+  //         label: name,
+  //       })
+  //     );
+
+  //     setFilterOptions({
+  //       label: labelJson.data.labels.map((l) => ({
+  //         id: String(l.id),
+  //         label: l.name,
+  //         color: l.color,
+  //       })),
+  //       milestone: milestoneJson.data.milestones.map((m) => ({
+  //         id: String(m.id),
+  //         label: m.title,
+  //       })),
+  //       assignee: userJson.data.users.map((u) => ({
+  //         id: String(u.id),
+  //         label: u.username,
+  //         iconUrl: u.profileImageUrl,
+  //       })),
+  //       writer: authors,
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   // fetch("/api/v1/issues?state=open")
   useEffect(() => {

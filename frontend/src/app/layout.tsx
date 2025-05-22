@@ -1,6 +1,6 @@
 import EmotionProvider from "../styles/emotionProvider";
 import GlobalStyles from "@/styles/globalStyles";
-import ThemeProvider from "@/components/ThemeProvider";
+import ThemeProvider from "@components/theme/ThemeProvider";
 import ClientProviders from "@/components/ClientProviders";
 
 // export const metadata = {
