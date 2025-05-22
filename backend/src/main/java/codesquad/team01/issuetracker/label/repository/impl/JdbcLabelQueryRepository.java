@@ -50,8 +50,8 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 		.labelTextColor(LabelTextColor.fromTextColorStr(rs.getString("label_text_color")))
 		.build();
 
-	private final RowMapper<LabelDto.FilterLabelListItemResponse> filterLabelListItemResponseRowMapper =
-		(rs, rowNum) -> LabelDto.FilterLabelListItemResponse.builder()
+	private final RowMapper<LabelDto.LabelFilterResponse> filterLabelListItemResponseRowMapper =
+		(rs, rowNum) -> LabelDto.LabelFilterResponse.builder()
 			.id(rs.getInt("label_id"))
 			.name(rs.getString("label_name"))
 			.color(rs.getString("label_color"))
@@ -68,7 +68,7 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 	}
 
 	@Override
-	public List<LabelDto.FilterLabelListItemResponse> findLabelList() {
+	public List<LabelDto.LabelFilterResponse> findLabelList() {
 		return jdbcTemplate.query(FILTER_LABEL_LIST_QUERY, filterLabelListItemResponseRowMapper);
 	}
 }

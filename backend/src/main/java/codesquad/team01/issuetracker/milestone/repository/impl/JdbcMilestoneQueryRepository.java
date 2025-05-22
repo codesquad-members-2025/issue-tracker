@@ -25,14 +25,14 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
 		ORDER BY m.title ASC
 		""";
 
-	private final RowMapper<MilestoneDto.FilterMilestoneListItemResponse> filterMilestoneListItemResponseRowMapper =
-		(rs, rowNum) -> MilestoneDto.FilterMilestoneListItemResponse.builder()
+	private final RowMapper<MilestoneDto.MilestoneFilterResponse> filterMilestoneListItemResponseRowMapper =
+		(rs, rowNum) -> MilestoneDto.MilestoneFilterResponse.builder()
 			.id(rs.getInt("milestone_id"))
 			.title(rs.getString("milestone_title"))
 			.build();
 
 	@Override
-	public List<MilestoneDto.FilterMilestoneListItemResponse> findMilestoneList() {
+	public List<MilestoneDto.MilestoneFilterResponse> findMilestoneList() {
 		return jdbcTemplate.query(FILTER_MILESTONE_LIST_QUERY, filterMilestoneListItemResponseRowMapper);
 	}
 }

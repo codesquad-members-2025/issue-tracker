@@ -7,5 +7,5 @@ import codesquad.team01.issuetracker.label.dto.LabelDto;
 public interface LabelQueryRepository {
 	List<LabelDto.IssueLabelRow> findLabelsByIssueIds(List<Integer> issueIds);
 
-	List<LabelDto.FilterLabelListItemResponse> findLabelList();
+	List<LabelDto.LabelFilterResponse> findLabelList();
 }

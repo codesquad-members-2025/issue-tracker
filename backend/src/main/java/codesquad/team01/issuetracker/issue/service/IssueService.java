@@ -113,31 +113,31 @@ public class IssueService {
 		return response;
 	}
 
-	public LabelDto.FilterLabelListResponse findLabelsForFilter() {
+	public LabelDto.LabelFilterListResponse findLabelsForFilter() {
 
-		List<LabelDto.FilterLabelListItemResponse> labelList = labelQueryRepository.findLabelList();
+		List<LabelDto.LabelFilterResponse> labelList = labelQueryRepository.findLabelList();
 
-		return LabelDto.FilterLabelListResponse.builder()
+		return LabelDto.LabelFilterListResponse.builder()
 			.totalCount(labelList.size())
 			.labels(labelList)
 			.build();
 	}
 
-	public MilestoneDto.FilterMilestoneListResponse findMilestonesForFilter() {
+	public MilestoneDto.MilestoneFilterListResponse findMilestonesForFilter() {
 
-		List<MilestoneDto.FilterMilestoneListItemResponse> milestoneList = milestoneQueryRepository.findMilestoneList();
+		List<MilestoneDto.MilestoneFilterResponse> milestoneList = milestoneQueryRepository.findMilestoneList();
 
-		return MilestoneDto.FilterMilestoneListResponse.builder()
+		return MilestoneDto.MilestoneFilterListResponse.builder()
 			.totalCount(milestoneList.size())
 			.milestones(milestoneList)
 			.build();
 	}
 
-	public UserDto.FilterUserListResponse findUsersForFilter() {
+	public UserDto.UserFilterListResponse findUsersForFilter() {
 
 		List<UserDto.WriterResponse> userList = userQueryRepository.findUserList();
 
-		return UserDto.FilterUserListResponse.builder()
+		return UserDto.UserFilterListResponse.builder()
 			.totalCount(userList.size())
 			.users(userList)
 			.build();

@@ -21,7 +21,7 @@ public class MilestoneDto {
 	}
 
 	@Builder
-	public record FilterMilestoneListItemResponse(
+	public record MilestoneFilterResponse(
 		Integer id,
 
 		String title
@@ -29,9 +29,9 @@ public class MilestoneDto {
 	}
 
 	@Builder
-	public record FilterMilestoneListResponse(
+	public record MilestoneFilterListResponse(
 		int totalCount,
-		List<FilterMilestoneListItemResponse> milestones
+		List<MilestoneFilterResponse> milestones
 	) {
 	}
 }

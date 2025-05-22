@@ -24,7 +24,7 @@ public class LabelDto {
 	}
 
 	@Builder
-	public record FilterLabelListItemResponse(
+	public record LabelFilterResponse(
 		Integer id,
 
 		String name,
@@ -33,9 +33,9 @@ public class LabelDto {
 	}
 
 	@Builder
-	public record FilterLabelListResponse(
+	public record LabelFilterListResponse(
 		int totalCount,
-		List<FilterLabelListItemResponse> labels
+		List<LabelFilterResponse> labels
 	) {
 	}
 
