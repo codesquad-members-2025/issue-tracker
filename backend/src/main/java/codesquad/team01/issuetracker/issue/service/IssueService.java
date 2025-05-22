@@ -9,6 +9,8 @@ import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelQueryRepository;
+import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
+import codesquad.team01.issuetracker.milestone.repository.MilestoneQueryRepository;
 import codesquad.team01.issuetracker.user.dto.UserDto;
 import codesquad.team01.issuetracker.user.repository.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class IssueService {
 	private final IssueQueryRepository issueQueryRepository;
 	private final UserQueryRepository userQueryRepository;
 	private final LabelQueryRepository labelQueryRepository;
+	private final MilestoneQueryRepository milestoneQueryRepository;
+
 	private final IssueAssembler issueAssembler;
 
 	public IssueDto.ListResponse findIssues(IssueState state, Integer writerId, Integer milestoneId,
@@ -107,5 +111,35 @@ public class IssueService {
 			response.open(), response.closed());
 
 		return response;
+	}
+
+	public LabelDto.FilterLabelListResponse findLabels() {
+
+		List<LabelDto.FilterLabelListItemResponse> labelList = labelQueryRepository.findLabelList();
+
+		return LabelDto.FilterLabelListResponse.builder()
+			.totalCount(labelList.size())
+			.labels(labelList)
+			.build();
+	}
+
+	public MilestoneDto.FilterMilestoneListResponse findMilestones() {
+
+		List<MilestoneDto.FilterMilestoneListItemResponse> milestoneList = milestoneQueryRepository.findMilestoneList();
+
+		return MilestoneDto.FilterMilestoneListResponse.builder()
+			.totalCount(milestoneList.size())
+			.milestones(milestoneList)
+			.build();
+	}
+
+	public UserDto.FilterUserListResponse findUsers() {
+
+		List<UserDto.WriterResponse> userList = userQueryRepository.findUserList();
+
+		return UserDto.FilterUserListResponse.builder()
+			.totalCount(userList.size())
+			.users(userList)
+			.build();
 	}
 }

@@ -75,7 +75,7 @@ public class IssueController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	@GetMapping("/issue-metadata/uesrs")
+	@GetMapping("/issue-metadata/users")
 	public ResponseEntity<ApiResponse<UserDto.FilterUserListResponse>> getUsers() {
 		UserDto.FilterUserListResponse response = issueService.findUsers();
 		return ResponseEntity.ok(ApiResponse.success(response));
