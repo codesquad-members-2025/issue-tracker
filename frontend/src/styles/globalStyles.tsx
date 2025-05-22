@@ -24,6 +24,14 @@ const base = css`
     background: var(--bg);
     color: var(--fg);
   }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .your-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export default function GlobalStyles() {

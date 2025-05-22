@@ -2,8 +2,8 @@
 "use client";
 
 import styled from "@emotion/styled";
-import IssueTabFilter from "./IssueTabFilter";
-import { FilterGroup, FilterDropdown } from "@components/FilterGroup";
+import IssueOpenTabFilter from "../filter/IssueOpenTabFilter";
+import { FilterGroup, FilterDropdown } from "@components/filter/FilterGroup";
 // import ChevronDownIcon from "@/assets/icons/chevronDown.svg?react";
 
 const HeaderWrapper = styled.div`
@@ -18,21 +18,23 @@ const HeaderWrapper = styled.div`
 
 const LeftSection = styled.div`
   display: flex;
+  justify-content: start;
   align-items: center;
   flex: 1;
-  gap: 32px;
+  gap: 2rem;
 `;
 
 const RightSection = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 1rem;
 `;
 
 const Checkbox = styled.input`
-  display: flex;
-  justify-content: center;
-  width: 16px;
-  height: 32px;
+  /* display: flex;
+  justify-content: start;
+  align-items: start; */
+  width: 1rem;
+  height: 1rem;
   cursor: pointer;
 `;
 
@@ -67,7 +69,7 @@ export default function IssueListHeader({
         <Checkbox type="checkbox" />
         {/* TODO 공통 체크박스로 변경 */}
 
-        <IssueTabFilter
+        <IssueOpenTabFilter
           openCount={openCount}
           closeCount={closeCount}
           selected={selected}

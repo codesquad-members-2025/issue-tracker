@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 // import OpenIcon from "@/assets/icons/archive.svg?react";
 // import ClosedIcon from "@/assets/icons/alertCircle.svg?react";
 
-const IssueTabWrapper = styled.div`
+const IssueOpenTabWrapper = styled.div`
   display: flex;
   gap: 24px;
 `;
@@ -50,7 +50,7 @@ interface TabItemProps {
   onClick: () => void;
 }
 
-interface IssueTabFilterProps {
+interface IssueOpenTabFilterProps {
   openCount: number;
   closeCount: number;
   selected: "open" | "closed";
@@ -66,14 +66,14 @@ function TabItem({ icon, label, active, onClick }: TabItemProps) {
   );
 }
 
-export default function IssueTabFilter({
+export default function IssueOpenTabFilter({
   openCount,
   closeCount,
   selected,
   onChangeTab,
-}: IssueTabFilterProps) {
+}: IssueOpenTabFilterProps) {
   return (
-    <IssueTabWrapper>
+    <IssueOpenTabWrapper>
       <TabItem
         // icon={<OpenIcon />}
         label={`열린 이슈 (${openCount})`}
@@ -86,6 +86,6 @@ export default function IssueTabFilter({
         active={selected === "closed"}
         onClick={() => onChangeTab("closed")}
       />
-    </IssueTabWrapper>
+    </IssueOpenTabWrapper>
   );
 }
