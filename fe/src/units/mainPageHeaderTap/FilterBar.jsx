@@ -61,7 +61,7 @@ export default function FilterBar() {
   const isActive = Object.keys(filteredObj).length > 0;
   const setFilter = useFilterStore((state) => state.setFilter);
   const initFilter = useFilterStore((state) => state.initFilter);
-  const userId = useAuthStore((state) => state.userId);
+  const userId = useAuthStore((state) => state.loginId);
   const applyQueryParams = useApplyQueryParams();
   const items = getMenuItems(filteredObj, userId, menuClickHandler);
 

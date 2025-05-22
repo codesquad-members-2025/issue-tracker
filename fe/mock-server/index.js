@@ -40,11 +40,11 @@ app.get('/', authMiddleware, async (req, res) => {
     }
 
     if (label) {
-      issues = issues.filter((i) => i.labels?.some((l) => String(l.id) === String(label)));
+      issues = issues.filter((i) => i.labels?.some((l) => String(l.labelId) === String(label)));
     }
 
     if (milestone) {
-      issues = issues.filter((i) => String(i.milestone?.id) === String(milestone));
+      issues = issues.filter((i) => String(i.milestone?.milestoneId) === String(milestone));
     }
 
     if (assignee) {
@@ -66,8 +66,8 @@ app.get('/', authMiddleware, async (req, res) => {
     // Create a filtered list of issues that ignore isOpen filter
     const baseFilteredIssues = json.issues.filter((i) => {
       if (author && String(i.author.id) !== String(author)) return false;
-      if (label && !i.labels?.some((l) => String(l.id) === String(label))) return false;
-      if (milestone && String(i.milestone?.id) !== String(milestone)) return false;
+      if (label && !i.labels?.some((l) => String(l.labelId) === String(label))) return false;
+      if (milestone && String(i.milestone?.milestoneId) !== String(milestone)) return false;
       if (assignee && !i.assignees?.some((a) => String(a.id) === String(assignee))) return false;
       return true;
     });
@@ -122,8 +122,8 @@ app.post('/login', async (req, res) => {
 
     // JWT-like access token payload
     const payload = {
-      sub: loginId,
-      loginId: loginId,
+      sub: user.id,
+      loginId: user.id,
       imgUrl: user.imgUrl,
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 3600,

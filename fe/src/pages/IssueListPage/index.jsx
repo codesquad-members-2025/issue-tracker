@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import useIssuesStore from '@/stores/issuesStore';
 import useDataFetch from '@/hooks/useDataFetch';
 import { ISSUES_URL } from '@/api/issues';
-import { TEST_ISSUES_URL } from '@/api/issues';
 import MainPageHeaderTap from '@/units/mainPageHeaderTap';
 import IsOpenFilter from '@/units/kanbanHeader/IsOpenFilter';
 import useFilterModalStore from '@/stores/detailFilterModalStore';
@@ -23,6 +22,8 @@ import deepEqualFast from '@/units/deepEqualFast/deepEqualFast';
 import useLabelStore from '@/stores/labelStore';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import { useAuthStore } from '@/stores/authStore';
+import { mapToUnifiedId } from '@/utils/mapToUnifiedId/mapToUnifiedId';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -108,13 +109,16 @@ export default function IssueListPage() {
       applyQueryParams(selectedFilters); // selectedFilters 초기값이 디폴트 필터임
     }
 
-    fetchData(`${TEST_ISSUES_URL}${location.search}`, getOptionWithToken(GEToptions, accessToken));
+    fetchData(`${ISSUES_URL}${location.search}`, getOptionWithToken(GEToptions, accessToken));
   }, [location.search]);
 
   useEffect(() => {
     if (!response?.data) return;
     // const fetchedData = response.data;
-    const { issues, users, labels, milestones, metaData } = response.data;
+    const { issues, users, labels: rawLabels, milestones: rawMilestones, metaData } = response.data;
+
+    const labels = mapToUnifiedId(rawLabels);
+    const milestones = mapToUnifiedId(rawMilestones);
 
     const currentData = issues;
     const prevData = prevDataRef.current;
@@ -151,7 +155,7 @@ export default function IssueListPage() {
               <StatusEditDropDown
                 onPatchSuccess={() =>
                   fetchData(
-                    `${TEST_ISSUES_URL}${location.search}`,
+                    `${ISSUES_URL}${location.search}`,
                     getOptionWithToken(GEToptions, accessToken),
                   )
                 }
