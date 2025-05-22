@@ -6,6 +6,10 @@ import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.exception.AssigneeNotFoundException;
+import codesquad.team4.issuetracker.exception.IssueNotFoundException;
+import codesquad.team4.issuetracker.exception.LabelNotFoundException;
+import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
 import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
@@ -189,15 +193,18 @@ public class IssueService {
         List<Long> issueIds = request.getIssuesId();
         boolean isOpen = request.isOpen();
 
-        List<Long> existingIds = issueDao.findExistingIssueIds(issueIds);
+        Set<Long> existingIdsSet = issueDao.findExistingIssueIds(issueIds);
+        List<Long> existingIds = new ArrayList<>(existingIdsSet);
 
         List<Long> missingIds = issueIds.stream()
-                .filter(id -> !existingIds.contains(id))
-                .toList();
+            .filter(id -> !existingIdsSet.contains(id))
+            .toList();
 
-        if (!existingIds.isEmpty()) {
+
+        if (!existingIdsSet.isEmpty()) {
             issueDao.updateIssueStatusByIds(isOpen, existingIds);
         }
+
         String message = missingIds.isEmpty()
                 ? UPDATE_ISSUESTATUS
                 : String.format(ISSUE_PARTIALLY_UPDATED, missingIds);
