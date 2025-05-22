@@ -53,9 +53,9 @@ spring:
   cloud:
     aws:
       s3:
-        bucket: my-issue-image-bucket
+        bucket: ${S3_BUCKET_NAME}
       region:
-        static: ap-northeast-2
+        static: ${AWS_REGION}
   sql:
     init:
       mode: always
