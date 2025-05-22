@@ -1,5 +1,7 @@
 package codesquad.team01.issuetracker.user.dto;
 
+import java.util.List;
+
 import lombok.Builder;
 
 public class UserDto {
@@ -35,6 +37,13 @@ public class UserDto {
 		public String profileImageUrl() {
 			return profileImageUrl != null ? profileImageUrl : DEFAULT_PROFILE_IMAGE_URL;
 		}
+	}
+
+	@Builder
+	public record FilterUserListResponse(
+		int totalCount,
+		List<WriterResponse> users // WriterResponse와 같이 데이터를 필요로 해서 임시로 넣음 - 추후 이름 변경 필요
+	) {
 	}
 
 	/**
