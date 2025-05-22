@@ -1,6 +1,13 @@
 package CodeSquad.IssueTracker.issue;
 
+import CodeSquad.IssueTracker.home.dto.IssueFilterRequestDto;
+import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
+import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeRepository;
+import CodeSquad.IssueTracker.issueLabel.IssueLabelRepository;
+import CodeSquad.IssueTracker.milestone.dto.SummaryMilestoneDto;
+import CodeSquad.IssueTracker.user.UserRepository;
+import CodeSquad.IssueTracker.user.dto.SummaryUserDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -18,12 +25,19 @@ import java.util.Optional;
 @Repository
 public class JdbcTemplateIssueRepository implements IssueRepository{
 
+    private final IssueAssigneeRepository issueAssigneeRepository;
+    private final IssueLabelRepository issueLabelRepository;
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-        public JdbcTemplateIssueRepository(DataSource dataSource) {
-            this.template = new NamedParameterJdbcTemplate(dataSource);
-            this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+    public JdbcTemplateIssueRepository(DataSource dataSource,
+                                       UserRepository userRepository,
+                                       IssueAssigneeRepository issueAssigneeRepository,
+                                       IssueLabelRepository issueLabelRepository) {
+        this.template = new NamedParameterJdbcTemplate(dataSource);
+        this.issueAssigneeRepository = issueAssigneeRepository;
+        this.issueLabelRepository = issueLabelRepository;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("issues")
                 .usingGeneratedKeyColumns("id");
     }
@@ -64,6 +78,77 @@ public class JdbcTemplateIssueRepository implements IssueRepository{
         return template.query(sql, issueRowMapper());
     }
 
+    @Override
+    public List<FilteredIssueDto> findIssuesByFilter(IssueFilterRequestDto filterRequestDto) {
+        StringBuilder issueSql = new StringBuilder();
+        issueSql.append("SELECT DISTINCT i.issue_id, i.title, i.is_open, i.author_id, u.nick_name, i.milestone_id, m.name AS milestone_name, i.last_modified_at\n")
+                .append("FROM issues i\n")
+                .append("LEFT JOIN milestones m ON i.milestone_id = m.milestone_id\n")
+                .append("LEFT JOIN users u ON i.author_id = u.id\n")
+                .append("LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id\n")
+                .append("LEFT JOIN issue_label il ON i.issue_id = il.issue_id\n");
+
+        boolean hasWhere = false;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        // 이슈 열림/닫힘 상태 필터링
+        if (filterRequestDto.getIsOpen() != null) {
+            issueSql.append(hasWhere ? "AND " : "WHERE ");
+            issueSql.append("i.is_open = :isOpen ");
+            params.addValue("isOpen", filterRequestDto.getIsOpen());
+            hasWhere = true;
+        }
+
+        // 작성자 필터링
+        if (filterRequestDto.getAuthor() != null) {
+            issueSql.append(hasWhere ? "AND " : "WHERE ");
+            issueSql.append("i.author_id = :authorId ");
+            params.addValue("authorId", filterRequestDto.getAuthor());
+            hasWhere = true;
+        }
+
+        // 마일스톤 필터링
+        if (filterRequestDto.getMilestone() != null) {
+            issueSql.append(hasWhere ? "AND " : "WHERE ");
+            issueSql.append("i.milestone_id = :milestoneId");
+            params.addValue("milestoneId", filterRequestDto.getMilestone());
+            hasWhere = true;
+        }
+
+        // 레이블 필터링
+        if (filterRequestDto.getLabel() != null) {
+            issueSql.append(hasWhere ? "AND " : "WHERE ");
+            issueSql.append("il.label_id = :labelId");
+            params.addValue("labelId", filterRequestDto.getLabel());
+            hasWhere = true;
+        }
+
+        // 담당자 필터링
+        if (filterRequestDto.getAssignee() != null) {
+            issueSql.append(hasWhere ? "AND " : "WHERE ");
+            issueSql.append("ia.assignee_id = :assigneeId");
+            params.addValue("assigneeId", filterRequestDto.getAssignee());
+            hasWhere = true;
+        }
+
+        List<FilteredIssueDto> issues = template.query(issueSql.toString(), params, (rs, rowNum) -> {
+            FilteredIssueDto dto = new FilteredIssueDto();
+            dto.setIssueId(rs.getLong("issue_id"));
+            dto.setTitle(rs.getString("title"));
+            dto.setIsOpen(rs.getBoolean("is_open"));
+            dto.setAuthor(new SummaryUserDto(rs.getLong("author_id"), rs.getString("nick_name")));
+            dto.setMilestone(new SummaryMilestoneDto(rs.getLong("milestone_id"), rs.getString("milestone_name")));
+            dto.setLastModifiedAt(rs.getTimestamp("last_modified_at").toLocalDateTime());
+            return dto;
+        });
+
+        for (FilteredIssueDto issue : issues) {
+            issue.setAssignees(issueAssigneeRepository.findSummaryAssigneeByIssueId(issue.getIssueId()));
+            issue.setLabels(issueLabelRepository.findSummaryLabelByIssueId(issue.getIssueId()));
+        }
+
+        return issues;
+    }
 
     private RowMapper<Issue> issueRowMapper(){
         return BeanPropertyRowMapper.newInstance(Issue.class);
