@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 import Logo from '@/assets/logoMedium.svg?react';
 import DarkModeToggle from './DarkModeToggle';
 
@@ -6,7 +7,9 @@ export default function Header() {
   return (
     <Wrapper>
       <LeftSection>
-        <StyledLogo />
+        <Link to="/">
+          <StyledLogo />
+        </Link>
         <DarkModeToggle />
       </LeftSection>
       <Profile profileImageUrl="/images/sampleProfile.png" />
