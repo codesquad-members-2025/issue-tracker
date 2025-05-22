@@ -12,37 +12,55 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH Key
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build Backend (Skip tests)
+        working-directory: backend
+        run: ./gradlew clean build -x test
+
+      - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      - name: Deploy and Run on EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-          
-          # 로그 디렉토리 준비
-          sudo mkdir -p /var/log/issue-tracker
-          sudo chown $(whoami):$(whoami) /var/log/issue-tracker
+      - name: Upload jar to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          source: backend/build/libs/issue-tracker-0.0.1-SNAPSHOT.jar
+          target: /home/ubuntu/issue-tracker/backend/build/libs/
 
-          # 프로젝트 디렉토리로 이동
-          cd ~/issue-tracker
+      - name: Deploy and run backend on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            PROJECT_NAME="issue-tracker"
+            BACKEND_DIR="/home/ubuntu/$PROJECT_NAME"
+            JAR_NAME="issue-tracker-0.0.1-SNAPSHOT.jar"
+            BUILD_DIR="$BACKEND_DIR/backend/build/libs"
+            LOG_FILE="/home/ubuntu/nohup.out"
 
-          # 최신 코드 pull
-          git checkout main
-          git pull origin main
+            echo "🛑 기존 백엔드 종료..."
+            PID=$(pgrep -f $JAR_NAME) || true
+            if [ -n "$PID" ]; then
+              kill -9 $PID
+              echo "✅ 종료 완료 (PID=$PID)"
+            else
+              echo "⚠️ 실행 중인 백엔드 없음"
+            fi
 
-          # 빌드
-          chmod +x ./gradlew
-          ./gradlew -p backend build -x test
-
-          # 기존 실행 중인 서버 종료
-          pkill -f 'java -jar' || true
-
-          # 실행
-          nohup java -jar backend/build/libs/backend-0.0.1-SNAPSHOT.jar > /var/log/issue-tracker/app.log 2>&1 &
-          EOF
+            echo "🚀 백엔드 실행 중..."
+            nohup java -jar $BUILD_DIR/$JAR_NAME > $LOG_FILE 2>&1 &
