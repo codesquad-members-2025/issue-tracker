@@ -27,16 +27,7 @@ jobs:
       - name: 📦 Check JAR Output
         run: ls -lh be/build/libs/
 
-      - name: 🚚 Copy JAR to EC2 (upload/)
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "./be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar"
-          target: "/home/ubuntu/upload/"
-
-      - name: 🔐 Create .env and upload to EC2
+      - name: 🔐 Create .env file from GitHub Secrets
         run: |
           echo "JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}" > .env
           echo "JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}" >> .env
@@ -54,6 +45,15 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: ".env"
           target: "/home/ubuntu/"
+
+      - name: 🚚 Upload JAR to EC2 (upload/)
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar"
+          target: "/home/ubuntu/upload/"
 
       - name: 🧹 Move JAR to /home/ubuntu/app.jar
         uses: appleboy/ssh-action@master
@@ -89,10 +89,15 @@ jobs:
             echo "🛑 기존 Spring Boot 프로세스 종료"
             pkill -f 'java -jar' || true
 
-            echo "🔄 .env 환경변수 로드"
-            source /home/ubuntu/.env
+            echo "🚀 Spring Boot 애플리케이션 실행 (.env 포함)"
+            bash -c '
+              set -a
+              source /home/ubuntu/.env
+              set +a
+              nohup java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
+            '
 
-            echo "🚀 Spring Boot 애플리케이션 실행"
-            nohup java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
+            echo "⌛ 안정화 대기 중..."
+            sleep 5
 
-            echo "✅ 실행 완료"
+            echo "🎉 배포 완료"
