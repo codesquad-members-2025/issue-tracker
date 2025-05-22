@@ -45,7 +45,7 @@ public class CommentController {
         return ApiResponse.success(response);
     }
 
-    @DeleteMapping("/{issue-id}/{cpmment-id}")
+    @DeleteMapping("/{issue-id}/{comment-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable("issue-id") Long issueId, @PathVariable("comment-id") Long commentId) {
         commentService.deleteComment(issueId, commentId);
