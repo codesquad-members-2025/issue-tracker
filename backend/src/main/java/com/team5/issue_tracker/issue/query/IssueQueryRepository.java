@@ -38,14 +38,19 @@ public class IssueQueryRepository {
     }
 
     if (searchCondition.getAssigneeId() != null) {
-      whereClauses.add("i.assignee_id = :assigneeId");
+      whereClauses.add("EXISTS (" +
+          " SELECT 1 FROM issue_assignee ia" +
+          " WHERE ia.issue_id = i.id" +
+          " AND ia.assignee_id = :assigneeId" +
+          ")"
+      );
       params.addValue("assigneeId", searchCondition.getAssigneeId());
     }
 
-//    if (searchCondition.getLabelId() != null && !searchCondition.getLabelId().isEmpty()) {
-//      whereClauses.add("i.id IN (SELECT issue_id FROM issue_label WHERE label_id IN (:labelIds))");
-//      params.addValue("labelIds", searchCondition.getLabelId());
-//    } todo : 조금 어려운 부분이라 라벨 검색은 나중에 구현
+    if (searchCondition.getLabelId() != null && !searchCondition.getLabelId().isEmpty()) {
+      whereClauses.add("i.id IN (SELECT issue_id FROM issue_label WHERE label_id IN (:labelIds))");
+      params.addValue("labelIds", searchCondition.getLabelId());
+    }
 
     if (searchCondition.getMilestoneId() != null) {
       whereClauses.add("i.milestone_id = :milestoneId");
