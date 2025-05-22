@@ -1,4 +1,21 @@
-// useFilterModalStore의 filterEntry에서 데이터를 가져와서 렌더링한다.
+//
+
+/*
+# 사용가이드
+
+## 입력
+- toggleType -> 어떤 토글 타입 버튼인지 문자열로 입력한다.(ex. 'label' or 'milestone')
+- triggerButtonLabel -> 토글의 트리거 버튼에 어떤 문구를 보여줄 건지 입력한다. (ex. "레이블", "마일스톤")_ 주로 유저에게 보여줄 문구를 작성한다.
+- itemsArr -> useFilterModalStore의 filterEntry에서 데이터를 입력한다. (ex. 라벨의 객체 배열, 마일스톤의 객체 배열...)
+- pageTypeContext -> 어떤 페이지 타입에서 사용되는지 입력한다. (ex. 'detail' 문자열로 입력
+
+
+## 로직
+해당 컴포넌트에서 다음의 로직이 알아서 실행됩니다.
+- 이슈 디테일 스토어 업데이트
+- 서버에 PATCH 요청
+
+*/
 
 import styled from 'styled-components';
 import { useState } from 'react';
@@ -16,7 +33,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* 배경 어두움 */
+  background-color: rgba(0, 0, 0, 0.3); /* 배경 어두움 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,6 +55,7 @@ const MenuTriggerButton = styled.button`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  z-index: 1000;
 
   &::after {
     content: '';
@@ -61,6 +79,7 @@ const MenuTriggerButton = styled.button`
 
 const SubMenuContainer = styled.div`
   display: ${(props) => (props.open ? 'block' : 'none')};
+  z-index: 1000;
 `;
 
 const SubMenuWrapper = styled.div`
@@ -68,29 +87,12 @@ const SubMenuWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const SubMenuButton = styled.button`
-  ${typography.available.medium16};
-  color: ${({ theme, $isSelect }) => ($isSelect ? theme.text.strong : theme.text.default)};
-  display: flex;
-  align-items: center;
-  height: 50px;
-  display: flex;
-  gap: 8px;
-
-  &:hover {
-    color: ${({ theme }) => theme.text.strong};
-  }
-  img {
-    width: 20px;
-    height: 20px;
-  }
-`;
 
 export default function AddStatusToggle({
   toggleType,
   triggerButtonLabel,
   itemsArr,
-  pageTypeContext,
+  pageTypeContext = null,
 }) {
   const [open, setOpen] = useState(false);
   const { toggleAssignee, toggleLabel, toggleMilestone } = useIssueDetailStore((state) => ({
