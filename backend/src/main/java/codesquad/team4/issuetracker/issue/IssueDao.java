@@ -4,10 +4,8 @@
     import java.util.List;
     import java.util.Map;
     import java.util.stream.Collectors;
-
     import lombok.RequiredArgsConstructor;
     import org.springframework.jdbc.core.JdbcTemplate;
-    import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
     import org.springframework.stereotype.Repository;
 
     @Repository
@@ -15,10 +13,8 @@
     public class IssueDao {
 
         private final JdbcTemplate jdbcTemplate;
-        private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-        public List<Map<String, Object>> findIssuesByOpenStatus(boolean isOpen, int page, int size){
-            int offset = Math.max(0, (page - 1) * size);
+        public List<Map<String, Object>> findIssuesByOpenStatus(boolean isOpen){
 
             String sql = """
                 SELECT i.issue_id AS issue_id,
@@ -42,10 +38,9 @@
                 LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
                 LEFT JOIN `user` a ON ia.assignee_id = a.user_id
                 WHERE i.is_open = ?
-                LIMIT ? OFFSET ?
             """;
 
-            return jdbcTemplate.queryForList(sql, isOpen, size, offset);
+            return jdbcTemplate.queryForList(sql, isOpen);
         }
 
         public int countIssuesByOpenStatus(boolean isOpen) {

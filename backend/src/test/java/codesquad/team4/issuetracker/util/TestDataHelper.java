@@ -37,4 +37,19 @@ public class TestDataHelper {
         VALUES (?, ?, ?)
     """, id, title, color);
     }
+
+    public static void insertIssueLabel(JdbcTemplate jdbcTemplate, Long id, Long issueId, Long labelId) {
+        jdbcTemplate.update("""
+            INSERT INTO issue_label (issue_label_id, issue_id, label_id)
+            VALUES (?, ?, ?)
+        """, id, issueId, labelId);
+    }
+
+    public static void insertIssueAssignee(JdbcTemplate jdbcTemplate, Long id, Long issueId, Long assigneeId) {
+        jdbcTemplate.update("""
+            INSERT INTO issue_assignee (issue_assignee_id, issue_id, assignee_id)
+            VALUES (?, ?, ?)
+        """, id, issueId, assigneeId);
+    }
+
 }

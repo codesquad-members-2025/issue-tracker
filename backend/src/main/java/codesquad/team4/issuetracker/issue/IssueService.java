@@ -63,7 +63,7 @@ public class IssueService {
     private final MilestoneRepository milestoneRepository;
 
     public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
-        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen, page, size);
+        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen);
 
         Map<Long, IssueResponseDto.IssueInfo> issueMap = new LinkedHashMap<>();
         Map<Long, Set<UserInfo>> assigneeMap = new HashMap<>();
@@ -77,7 +77,7 @@ public class IssueService {
             addIssueToMap(row, issueMap, issueId, assigneeMap, labelMap);
         }
 
-        List<IssueResponseDto.IssueInfo> issues = new ArrayList<>(issueMap.values());
+        List<IssueInfo> issues = pagenateList(page, size, issueMap);
 
         int totalElements = issueDao.countIssuesByOpenStatus(isOpen);
         int totalPages = (int) Math.ceil((double) totalElements / size);
@@ -89,6 +89,16 @@ public class IssueService {
                 .totalElements(totalElements)
                 .totalPages(totalPages)
                 .build();
+    }
+
+    private List<IssueInfo> pagenateList(int page, int size, Map<Long, IssueInfo> issueMap) {
+        List<IssueInfo> issues = new ArrayList<>(issueMap.values());
+        int offset = page * size;
+
+        if (issues.size() <= offset) return List.of(); // 페이지가 범위 밖일 때 빈 리스트
+
+        int toIndex = Math.min(offset + size, issues.size()); // size 넘어가면 안 되니까 min
+        return issues.subList(offset, toIndex);
     }
 
     private void addIssueToMap(Map<String, Object> row, Map<Long, IssueInfo> issueMap, Long issueId,

@@ -1,8 +1,12 @@
 package codesquad.team4.issuetracker.issue;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.util.TestDataHelper;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,10 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest
@@ -91,4 +91,30 @@ class IssueServiceH2Test {
         assertThat(status.getClosedCount()).isEqualTo(2);
     }
 
+    @Test
+    @DisplayName("이슈를 조회할때 페이징 정보와 이슈 정보를 가져온다")
+    void issueListPageInfoTest() {
+        //given
+        TestDataHelper.insertUser(jdbcTemplate, 2L, "사용자2");
+        TestDataHelper.insertLabel(jdbcTemplate, 1L, "라벨1", "color");
+        TestDataHelper.insertLabel(jdbcTemplate, 2L, "라벨2", "color");
+        TestDataHelper.insertIssueLabel(jdbcTemplate, 1L, 1L, 1L);
+        TestDataHelper.insertIssueLabel(jdbcTemplate, 2L, 2L, 1L);
+        TestDataHelper.insertIssueLabel(jdbcTemplate, 3L, 2L, 2L);
+        TestDataHelper.insertIssueAssignee(jdbcTemplate, 1L, 1L, 1L);
+        TestDataHelper.insertIssueAssignee(jdbcTemplate, 2L, 1L, 2L);
+        TestDataHelper.insertIssueAssignee(jdbcTemplate, 3L, 2L, 1L);
+
+        //when
+        IssueResponseDto.IssueListDto actual = issueService.getIssues(true, 0, 2);
+
+        //then
+        assertThat(actual.getIssues()).hasSize(2);
+        assertThat(actual.getIssues().get(0).getLabels()).hasSize(1);
+        assertThat(actual.getIssues().get(0).getAssignees()).hasSize(2);
+        assertThat(actual.getIssues().get(1).getLabels()).hasSize(2);
+        assertThat(actual.getIssues().get(1).getAssignees()).hasSize(1);
+        assertThat(actual.getPage()).isEqualTo(0);
+        assertThat(actual.getSize()).isEqualTo(2);
+    }
 }
