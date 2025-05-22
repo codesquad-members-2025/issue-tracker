@@ -28,7 +28,7 @@ jobs:
         run: |
           ls -lh be/build/libs/
 
-      - name: Copy JAR to EC2 (into /upload dir)
+      - name: Upload JAR to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -57,11 +57,24 @@ jobs:
               exit 1
             fi
 
-            echo "📦 app.jar로 이동"
             mv "$JAR_PATH" /home/ubuntu/app.jar
-
-            echo "✅ 최종 JAR 파일 위치"
             ls -lh /home/ubuntu/app.jar
+
+      - name: Generate .env file on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "📦 .env 파일 생성"
+            cat > /home/ubuntu/.env <<EOL
+            JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
+            JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            EOL
 
       - name: Run JAR on EC2
         uses: appleboy/ssh-action@master
@@ -73,6 +86,13 @@ jobs:
             echo "🛑 기존 프로세스 종료"
             pkill -f 'java -jar' || true
 
-            echo "🚀 애플리케이션 실행"
+            echo "🌍 환경 변수 로딩"
+            set -a
+            source /home/ubuntu/.env
+            set +a
+
+            echo "🚀 JAR 실행"
             nohup java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
+
+            echo "✅ 배포 완료"
             exit 0
