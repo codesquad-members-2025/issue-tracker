@@ -32,8 +32,7 @@ public class MilestoneServiceTest {
         milestone.setDescription("첫 번째 배포 마일스톤");
         milestone.setEndDate(LocalDateTime.of(2025, 6, 1, 0, 0));
         milestone.setIsOpen(true);
-        milestone.setCreatedAt(LocalDateTime.now());
-        milestone.setUpdatedAt(LocalDateTime.now());
+        milestone.setLastModifiedAt(LocalDateTime.now());
 
         Milestone saved = milestoneRepository.save(milestone);
         Optional<Milestone> found = milestoneRepository.findById(saved.getMilestoneId());
