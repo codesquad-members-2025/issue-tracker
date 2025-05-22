@@ -30,8 +30,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: "backend/"
-          target: "/home/ubuntu/issue-tracker/backend"
+          source: "backend/build/libs/*.jar"
+          target: "/home/ubuntu/issue-tracker/backend/build/libs"
 
       - name: Run on EC2
         uses: appleboy/ssh-action@master
@@ -40,7 +40,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd /home/ubuntu/issue-tracker/backend
-            ./gradlew build -x test
+            cd /home/ubuntu/issue-tracker/backend/build/libs
             pkill -f 'java -jar' || true
-            nohup java -jar build/libs/*.jar > log.txt 2>&1 &
+            nohup java -jar *.jar > /home/ubuntu/issue-tracker/backend/log.txt 2>&1 &
+            
