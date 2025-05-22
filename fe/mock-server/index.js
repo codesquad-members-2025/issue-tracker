@@ -122,8 +122,8 @@ app.post('/login', async (req, res) => {
 
     // JWT-like access token payload
     const payload = {
-      sub: loginId,
-      loginId: loginId,
+      sub: user.id,
+      loginId: user.id,
       imgUrl: user.imgUrl,
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 3600,
