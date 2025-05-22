@@ -1,8 +1,9 @@
 package CodeSquad.IssueTracker.issue;
 
-import CodeSquad.IssueTracker.comment.Comment;
 import CodeSquad.IssueTracker.comment.CommentService;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
+import CodeSquad.IssueTracker.home.dto.IssueFilterRequestDto;
+import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
 import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueDetailResponse;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
@@ -103,9 +104,7 @@ public class IssueService {
         return response;
     }
 
-
-
-
-
-
+    public Iterable<FilteredIssueDto> findIssuesByFilter(IssueFilterRequestDto filterRequestDto) {
+        return issueRepository.findIssuesByFilter(filterRequestDto);
+    }
 }
