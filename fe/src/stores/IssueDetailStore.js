@@ -59,3 +59,5 @@ const useIssueDetailStore = create(
     },
   })),
 );
+
+export default useIssueDetailStore;

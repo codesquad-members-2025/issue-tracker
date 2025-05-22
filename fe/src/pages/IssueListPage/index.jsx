@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import useIssuesStore from '@/stores/issuesStore';
 import useDataFetch from '@/hooks/useDataFetch';
 import { ISSUES_URL } from '@/api/issues';
-import { TEST_ISSUES_URL } from '@/api/issues';
 import MainPageHeaderTap from '@/units/mainPageHeaderTap';
 import IsOpenFilter from '@/units/kanbanHeader/IsOpenFilter';
 import useFilterModalStore from '@/stores/detailFilterModalStore';
@@ -108,7 +107,7 @@ export default function IssueListPage() {
       applyQueryParams(selectedFilters); // selectedFilters 초기값이 디폴트 필터임
     }
 
-    fetchData(`${TEST_ISSUES_URL}${location.search}`, getOptionWithToken(GEToptions, accessToken));
+    fetchData(`${ISSUES_URL}${location.search}`, getOptionWithToken(GEToptions, accessToken));
   }, [location.search]);
 
   useEffect(() => {
@@ -151,7 +150,7 @@ export default function IssueListPage() {
               <StatusEditDropDown
                 onPatchSuccess={() =>
                   fetchData(
-                    `${TEST_ISSUES_URL}${location.search}`,
+                    `${ISSUES_URL}${location.search}`,
                     getOptionWithToken(GEToptions, accessToken),
                   )
                 }

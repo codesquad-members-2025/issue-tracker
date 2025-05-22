@@ -1,8 +1,7 @@
 import { DropdownMenuTemplate } from '@/utils/dropDown/DropdownMenuTemplate';
 import useCheckBoxStore from '@/stores/useCheckBoxStore';
 import useDataFetch from '@/hooks/useDataFetch';
-import { TEST_TOGGLE_STATUS_URL } from '@/api/toggleStatus';
-import { TEST_ISSUES_URL } from '@/api/issues';
+import { TOGGLE_STATUS_URL } from '@/api/toggleStatus';
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
@@ -40,7 +39,7 @@ export default function StatusEditDropDown({ onPatchSuccess }) {
       label: '선택한 이슈 열기',
       isSelected: true,
       onClick: () => {
-        fetchData(TEST_TOGGLE_STATUS_URL, getOptionWithToken(optionObject, accessToken));
+        fetchData(TOGGLE_STATUS_URL, getOptionWithToken(optionObject, accessToken));
         patchRef.current = true;
       },
     },
@@ -48,7 +47,7 @@ export default function StatusEditDropDown({ onPatchSuccess }) {
       label: '선택한 이슈 닫기',
       isSelected: true,
       onClick: () => {
-        fetchData(TEST_TOGGLE_STATUS_URL, getOptionWithToken(optionObject, accessToken));
+        fetchData(TOGGLE_STATUS_URL, getOptionWithToken(optionObject, accessToken));
         patchRef.current = true;
       },
     },
