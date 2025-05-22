@@ -1,32 +1,29 @@
 package codesquad.team01.issuetracker.auth.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import codesquad.team01.issuetracker.auth.domain.User;
-import codesquad.team01.issuetracker.auth.dto.LoginResponse;
+import codesquad.team01.issuetracker.auth.client.GitHubClient;
+import codesquad.team01.issuetracker.auth.dto.AuthDto;
 import codesquad.team01.issuetracker.auth.dto.LoginResponseDto;
-import codesquad.team01.issuetracker.auth.repository.UserRepository;
 import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
+import codesquad.team01.issuetracker.user.domain.User;
+import codesquad.team01.issuetracker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
+	private final GitHubClient gitHubClient;
 	private final UserRepository userRepository;
 	private final GithubOAuthProperties properties;
 	private final RestTemplate restTemplate;
 
+	private final String GITHUB = "github";
 	private final TokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
 	public final String CLIENT_ID = "client_id";
@@ -36,45 +33,40 @@ public class AuthService {
 	public final String ID = "id";
 	public final String LOGIN = "login";
 	public final String AVATAR_URL = "avatar_url";
-	public final String GITHUB = "github";
 	public final String ACCESS_TOKEN = "access_token";
 
-	// 깃헙에서 받은 authorization code 받은 후 access token 요청하고 사용자 정보 요청
-	public LoginResponse loginWithGitHub(String code) {
+	public AuthDto.LoginResponse loginWithGitHub(String code) {
 		// 깃헙에 access token 요청
-		Map<String, String> tokenRequest = Map.of(CLIENT_ID, properties.getClientId(), CLIENT_SECRET,
-			properties.getClientSecret(), AUTHORIZATION_CODE, code, REDIRECT_URI, properties.getRedirectUri());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-		HttpEntity<Map<String, String>> request = new HttpEntity<>(tokenRequest, headers);
-
-		ResponseEntity<Map> tokenResponse = restTemplate.postForEntity(properties.getTokenUri(), request, Map.class);
-		String accessToken = (String)tokenResponse.getBody().get(ACCESS_TOKEN);
+		log.info("Starting GitHub login flow with code={}", code);
+		String accessToken = gitHubClient.fetchAccessToken(code);
 
 		// 사용자 정보 요청
-		HttpHeaders authHeaders = new HttpHeaders();
-		authHeaders.setBearerAuth((accessToken));
-		HttpEntity<Void> userRequest = new HttpEntity<>(authHeaders);
+		log.debug("Received access token");
+		AuthDto.GitHubUser gitHubUser = gitHubClient.fetchUserInfo(accessToken);
+		log.info("Fetched user info: id={}, githubId={}", gitHubUser.id(), gitHubUser.githubId());
 
-		ResponseEntity<Map> userResponse = restTemplate.exchange(properties.getUserInfoUri(), HttpMethod.GET,
-			userRequest, Map.class);
-		Map<String, Object> userMap = userResponse.getBody();
-		Long githubId = ((Number)userMap.get(ID)).longValue();
-		String loginId = (String)userMap.get(LOGIN);
-		String avatarUrl = (String)userMap.get(AVATAR_URL);
+		User oauthUser = findOrCreateUser(gitHubUser);
+		log.info("Created LoginResponse for userId={}", oauthUser.getId());
 
-		// 사용자 저장(회원가입) 혹은 업데이트
-		User user = userRepository.findByLoginId(loginId)
-			.orElseGet(() -> userRepository.save(User.builder()
-				.loginId(loginId)
-				.providerId(githubId)
-				.authProvider(GITHUB)
-				.username(loginId)
-				.email(null)
-				.build()));
+		// todo : 임시조치. 지토가 넘겨받아서 수정할 예정
+		return new AuthDto.LoginResponse(
+			oauthUser.getId(),
+			oauthUser.getEmail()
+		);
+	}
 
-		// 로그인 응답 생성
-		return new LoginResponse(Long.parseLong(String.valueOf(user.getId())), user.getLoginId(), avatarUrl);
+	private User findOrCreateUser(AuthDto.GitHubUser gitHubUser) {
+		return userRepository
+			.findByProviderIdAndAuthProvider(gitHubUser.id(), GITHUB)
+			.orElseGet(() -> userRepository.save(
+				User.builder()
+					.loginId(null)
+					.username(gitHubUser.githubId())
+					.email(gitHubUser.email())
+					.providerId(gitHubUser.id())
+					.authProvider(GITHUB)
+					.build()
+			));
 	}
 
 	public LoginResponseDto login(String loginId, String password) {
@@ -96,7 +88,3 @@ public class AuthService {
 	}
 
 }
-
-
-
-

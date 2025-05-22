@@ -1,4 +1,4 @@
-package codesquad.team01.issuetracker.auth.domain;
+package codesquad.team01.issuetracker.user.domain;
 
 import java.time.LocalDateTime;
 
@@ -10,17 +10,21 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Data
-@Builder
+@Table("users")
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("users")
+@ToString(of = {"id", "loginId", "username"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
 	@Id
+	@EqualsAndHashCode.Include
 	private Integer id;
 
 	@Column("login_id")
@@ -32,24 +36,30 @@ public class User {
 
 	private String password;
 
+	private Long providerId;
+
 	@CreatedDate
-	@Column("created_at")
 	private LocalDateTime createdAt;
 
 	@LastModifiedDate
-	@Column("updated_at")
 	private LocalDateTime updatedAt;
 
-	@Column("provider_id")
-	private Long providerId;
+	private String authProvider;
 
-	@Column("auth_provider")
-	private String authProvider; //local or github
-
-	@Column("profile_image_url")
 	private String profileImageUrl;
 
-	@Column("deleted_at")
-	private LocalDateTime deletedAt;
-
+	@Builder
+	public User(String loginId,
+		String username,
+		String email,
+		String password,
+		Long providerId,
+		String authProvider) {
+		this.loginId = loginId;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.providerId = providerId;
+		this.authProvider = authProvider;
+	}
 }

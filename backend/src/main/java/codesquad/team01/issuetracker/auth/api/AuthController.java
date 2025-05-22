@@ -2,6 +2,7 @@ package codesquad.team01.issuetracker.auth.api;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquad.team01.issuetracker.auth.dto.AuthDto;
 import codesquad.team01.issuetracker.auth.dto.LoginRequest;
-import codesquad.team01.issuetracker.auth.dto.LoginResponse;
 import codesquad.team01.issuetracker.auth.dto.LoginResponseDto;
 import codesquad.team01.issuetracker.auth.service.AuthService;
 import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
@@ -29,13 +30,19 @@ public class AuthController {
 	// Authorization endpoint
 	@GetMapping("/api/v1/oauth/github/login")
 	public void redirectToGithub(HttpServletResponse response, HttpSession session) throws IOException {
-		URI githubUri = authorizationUrlBuilder.buildAuthorizeUri(session);
+		// CSRF 방지용 state 생성 및 세션 저장
+		String state = UUID.randomUUID().toString();
+		session.setAttribute("oauth_state", state);
+
+		// URL 생성
+		URI githubUri = authorizationUrlBuilder.buildAuthorizeUri(state);
+
 		response.sendRedirect(githubUri.toString());
 	}
 
 	// Redirect(Callback) endpoint
 	@GetMapping("/api/v1/oauth/callback")
-	public LoginResponse githubCallback(
+	public AuthDto.LoginResponse githubCallback(
 		@RequestParam("code") String code,
 		@RequestParam("state") String state,
 		HttpSession session) {

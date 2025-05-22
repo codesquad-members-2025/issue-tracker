@@ -5,7 +5,6 @@ import jakarta.annotation.Nullable;
 public class AuthDto {
 
 	private AuthDto() {
-
 	}
 
 	public record GitHubUser(
