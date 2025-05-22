@@ -73,8 +73,8 @@ public class IssueQueryRepository {
             rs.getLong("id"),
             rs.getString("title"),
             rs.getBoolean("is_open"),
-            rs.getTimestamp("created_at").toLocalDateTime(),
-            rs.getTimestamp("updated_at").toLocalDateTime()
+            rs.getTimestamp("created_at").toInstant(),
+            rs.getTimestamp("updated_at").toInstant()
         )
     );
   }
