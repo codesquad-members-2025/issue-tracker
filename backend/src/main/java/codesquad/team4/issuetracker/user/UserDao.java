@@ -28,12 +28,6 @@ public class UserDao {
         );
     }
 
-    public void deleteAllByIssueId(Long issueId) {
-        String sql = "DELETE FROM issue_assignee WHERE issue_id = :issueId";
-        Map<String, Object> params = Map.of("issueId", issueId);
-        namedParameterJdbcTemplate.update(sql, params);
-    }
-
     public List<Long> findExistingAssigneeIds(Set<Long> assigneeIds) {
         String sql = "SELECT user_id FROM `user` WHERE user_id IN (:ids)";
         Map<String, Object> params = Map.of("ids", assigneeIds);

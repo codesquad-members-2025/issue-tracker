@@ -3,7 +3,7 @@ package codesquad.team4.issuetracker.comment;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
-import codesquad.team4.issuetracker.exception.CommentNotFoundException;
+import codesquad.team4.issuetracker.exception.notfound.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ public class CommentService {
     public CommentResponseDto.CreateCommentDto createComment(CommentRequestDto.CreateCommentDto request, String uploadUrl) {
         Comment comment = Comment.builder()
                 .content(request.getContent())
-                .imageUrl(uploadUrl)
+                .fileUrl(uploadUrl)
                 .issueId(request.getIssueId())
                 .authorId(request.getAuthorId())
                 .createdAt(LocalDateTime.now())
@@ -44,7 +44,7 @@ public class CommentService {
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
 
         comment.updateContent(request.getContent());
-        comment.updateImageUrl(uploadUrl);
+        comment.updateFileUrl(uploadUrl);
 
         commentRepository.save(comment);
 

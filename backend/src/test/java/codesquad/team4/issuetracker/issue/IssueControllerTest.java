@@ -1,16 +1,24 @@
 package codesquad.team4.issuetracker.issue;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import codesquad.team4.issuetracker.aws.S3FileService;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
-import codesquad.team4.issuetracker.exception.FileUploadException;
-import codesquad.team4.issuetracker.exception.IssueNotFoundException;
-import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
+import codesquad.team4.issuetracker.exception.badrequest.FileUploadException;
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
+import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Optional;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(IssueController.class)
 class IssueControllerTest {
@@ -61,7 +60,7 @@ class IssueControllerTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "image.png", "image/png", "image-content".getBytes());
 
-        given(s3FileService.uploadFile(any(), eq("issue/"))).willReturn(Optional.of("https://fake-s3-url/image.png"));
+        given(s3FileService.uploadFile(any(), eq("issue/"))).willReturn("https://fake-s3-url/image.png");
 
         ApiMessageDto responseDto = ApiMessageDto.builder()
                 .id(1L)

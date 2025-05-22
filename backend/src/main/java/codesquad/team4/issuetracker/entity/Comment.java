@@ -20,8 +20,8 @@ public class Comment {
     @Column("content")
     private String content;
 
-    @Column("image_url")
-    private String imageUrl;
+    @Column("file_url")
+    private String fileUrl;
 
     @Column("issue_id")
     private Long issueId;
@@ -39,7 +39,7 @@ public class Comment {
         this.content = content;
     }
 
-    public void updateImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void updateFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 }

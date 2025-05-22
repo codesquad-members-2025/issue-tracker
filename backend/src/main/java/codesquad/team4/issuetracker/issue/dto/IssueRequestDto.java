@@ -19,8 +19,8 @@ public class IssueRequestDto {
         private String content;
         @NotNull
         private Long authorId;
-        private Set<Long> assigneeId;
-        private Set<Long> labelId;
+        private Set<Long> assigneeIds;
+        private Set<Long> labelIds;
         private Long milestoneId;
     }
 

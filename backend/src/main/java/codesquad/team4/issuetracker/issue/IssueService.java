@@ -1,27 +1,34 @@
 package codesquad.team4.issuetracker.issue;
 
+import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
+
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
-import codesquad.team4.issuetracker.exception.AssigneeNotFoundException;
-import codesquad.team4.issuetracker.exception.IssueNotFoundException;
-import codesquad.team4.issuetracker.exception.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
-import codesquad.team4.issuetracker.exception.LabelNotFoundException;
-import codesquad.team4.issuetracker.exception.MilestoneNotFoundException;
+import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
+import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
+import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
+import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueInfo;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.searchIssueDetailDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.label.LabelDao;
+import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
+import codesquad.team4.issuetracker.user.AssigneeDao;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
+import codesquad.team4.issuetracker.user.dto.UserDto;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -31,12 +38,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import codesquad.team4.issuetracker.label.dto.LabelDto;
-import codesquad.team4.issuetracker.user.dto.UserDto;
-import java.util.Optional;
 import java.util.Set;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,75 +56,30 @@ public class IssueService {
     private final IssueDao issueDao;
     private final LabelDao labelDao;
     private final UserDao userDao;
+    private final AssigneeDao assigneeDao;
     private final IssueRepository issueRepository;
     private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
     private final MilestoneRepository milestoneRepository;
 
     public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
-        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen, page, size);
+        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen);
 
-        Map<Long, IssueResponseDto.IssueInfo.IssueInfoBuilder> issueMap = new LinkedHashMap<>();
+        Map<Long, IssueResponseDto.IssueInfo> issueMap = new LinkedHashMap<>();
         Map<Long, Set<UserInfo>> assigneeMap = new HashMap<>();
         Map<Long, Set<LabelDto.LabelInfo>> labelMap = new HashMap<>();
 
         for (Map<String, Object> row : rows) {
             Long issueId = (Long) row.get("issue_id");
 
-            issueMap.computeIfAbsent(issueId, id ->
-                    IssueResponseDto.IssueInfo.builder()
-                            .id(issueId)
-                            .title((String) row.get("title"))
-                            .author(UserDto.UserInfo.builder()
-                                    .id((Long) row.get("author_id"))
-                                    .nickname((String) row.get("author_nickname"))
-                                    .profileImage((String) row.get("author_profile"))
-                                    .build())
-                            .assignees(new HashSet<>())
-                            .labels(new HashSet<>())
-                            .milestone(MilestoneDto.MilestoneInfo.builder()
-                                    .id((Long) row.get("milestone_id"))
-                                    .title((String) row.get("milestone_title"))
-                                    .build())
-            );
-
-            Long assigneeId = (Long) row.get("assignee_id");
-            if (assigneeId != null) {
-                UserDto.UserInfo assignee = UserDto.UserInfo.builder()
-                        .id(assigneeId)
-                        .nickname((String) row.get("assignee_nickname"))
-                        .profileImage((String) row.get("assignee_profile"))
-                        .build();
-
-                assigneeMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(assignee);
-            }
-
-
-            Long labelId = (Long) row.get("label_id");
-            if (labelId != null) {
-                LabelDto.LabelInfo label = LabelDto.LabelInfo.builder()
-                        .id(labelId)
-                        .name((String) row.get("label_name"))
-                        .color((String) row.get("label_color"))
-                        .build();
-
-                labelMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(label);
-            }
+            addAssigneeToMap(row, assigneeMap, issueId);
+            addLabelToMap(row, labelMap, issueId);
+            addIssueToMap(row, issueMap, issueId, assigneeMap, labelMap);
         }
-        List<IssueResponseDto.IssueInfo> issues = new ArrayList<>();
 
-        for (Map.Entry<Long, IssueResponseDto.IssueInfo.IssueInfoBuilder> entry : issueMap.entrySet()) {
-            Long issueId = entry.getKey();
-            IssueResponseDto.IssueInfo.IssueInfoBuilder builder = entry.getValue();
-
-            builder.assignees(assigneeMap.getOrDefault(issueId, Set.of()));
-            builder.labels(labelMap.getOrDefault(issueId, Set.of()));
-
-            issues.add(builder.build());
-        }
+        List<IssueInfo> issues = pagenateList(page, size, issueMap);
 
         int totalElements = issueDao.countIssuesByOpenStatus(isOpen);
-
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
         return IssueResponseDto.IssueListDto.builder()
@@ -134,12 +91,69 @@ public class IssueService {
                 .build();
     }
 
+    private List<IssueInfo> pagenateList(int page, int size, Map<Long, IssueInfo> issueMap) {
+        List<IssueInfo> issues = new ArrayList<>(issueMap.values());
+        int offset = page * size;
+
+        if (issues.size() <= offset) return List.of(); // 페이지가 범위 밖일 때 빈 리스트
+
+        int toIndex = Math.min(offset + size, issues.size()); // size 넘어가면 안 되니까 min
+        return issues.subList(offset, toIndex);
+    }
+
+    private void addIssueToMap(Map<String, Object> row, Map<Long, IssueInfo> issueMap, Long issueId,
+                                  Map<Long, Set<UserInfo>> assigneeMap, Map<Long, Set<LabelInfo>> labelMap) {
+        issueMap.computeIfAbsent(issueId, id ->
+                IssueInfo.builder()
+                        .id(issueId)
+                        .title((String) row.get("title"))
+                        .author(UserInfo.builder()
+                                .id((Long) row.get("author_id"))
+                                .nickname((String) row.get("author_nickname"))
+                                .profileImage((String) row.get("author_profile"))
+                                .build())
+                        .assignees(assigneeMap.getOrDefault(issueId, Set.of()))
+                        .labels(labelMap.getOrDefault(issueId, Set.of()))
+                        .milestone(MilestoneDto.MilestoneInfo.builder()
+                                .id((Long) row.get("milestone_id"))
+                                .title((String) row.get("milestone_title"))
+                                .build())
+                        .build()
+        );
+    }
+
+    private void addLabelToMap(Map<String, Object> row, Map<Long, Set<LabelInfo>> labelMap, Long issueId) {
+        Long labelId = (Long) row.get("label_id");
+        if (labelId != null) {
+            LabelInfo label = LabelInfo.builder()
+                    .id(labelId)
+                    .name((String) row.get("label_name"))
+                    .color((String) row.get("label_color"))
+                    .build();
+
+            labelMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(label);
+        }
+    }
+
+    private void addAssigneeToMap(Map<String, Object> row, Map<Long, Set<UserInfo>> assigneeMap, Long issueId) {
+        Long assigneeId = (Long) row.get("assignee_id");
+        if (assigneeId != null) {
+            UserInfo assignee = UserInfo.builder()
+                    .id(assigneeId)
+                    .nickname((String) row.get("assignee_nickname"))
+                    .profileImage((String) row.get("assignee_profile"))
+                    .build();
+
+            assigneeMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(assignee);
+        }
+    }
+
     @Transactional
     public ApiMessageDto createIssue(IssueRequestDto.CreateIssueDto request, String uploadUrl) {
         Issue issue = Issue.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .imageUrl(uploadUrl)
+                .FileUrl(uploadUrl)
                 .isOpen(true)
                 .authorId(request.getAuthorId())
                 .milestoneId(request.getMilestoneId())
@@ -151,12 +165,12 @@ public class IssueService {
 
         Long issueId = savedIssue.getId();
 
-        if(request.getLabelId() != null) {
-            addNewLabels(issueId, request.getLabelId());
+        if(request.getLabelIds() != null) {
+            addNewLabels(issueId, request.getLabelIds());
         }
 
-        if(request.getAssigneeId() != null) {
-            addNewAssignees(issueId, request.getAssigneeId());
+        if(request.getAssigneeIds() != null) {
+            addNewAssignees(issueId, request.getAssigneeIds());
         }
 
         return createMessageResult(issueId, CREATE_ISSUE);
@@ -207,14 +221,14 @@ public class IssueService {
         }
 
         String issueContent = (String) issueById.get(0).get("issue_content");
-        String issueImage = (String) issueById.get(0).get("issue_image_url");
+        String issueImage = (String) issueById.get(0).get("issue_file_url");
 
         List<CommentResponseDto.CommentInfo> comments = issueById.stream()
                 .filter(row -> row.get("comment_id") != null) // 댓글이 없는 경우 필터링
                 .map(row -> CommentResponseDto.CommentInfo.builder()
                         .commentId((Long) row.get("comment_id"))
                         .content((String) row.get("comment_content"))
-                        .imageUrl((String) row.get("comment_image_url"))
+                        .fileUrl((String) row.get("comment_file_url"))
                         .createdAt(((Timestamp) row.get("comment_created_at")).toLocalDateTime())
                         .author(UserDto.UserInfo.builder()
                                 .id((Long) row.get("author_id"))
@@ -226,7 +240,7 @@ public class IssueService {
 
         return IssueResponseDto.searchIssueDetailDto.builder()
                 .content(issueContent)
-                .contentImageUrl(issueImage)
+                .contentFileUrl(issueImage)
                 .comments(comments)
                 .commentSize(comments.size())
                 .build();
@@ -243,12 +257,12 @@ public class IssueService {
         }
 
         //기존 이미지를 삭제하는 것인지 확인
-        Optional<String> newImageUrl = determineNewImageUrl(request, uploadUrl, oldIssue);
+        String newFileUrl = determineNewFileUrl(request, uploadUrl, oldIssue);
 
         Issue updated = oldIssue.toBuilder()
                 .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
                 .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
-                .imageUrl(newImageUrl.orElse(null))
+                .FileUrl(newFileUrl)
                 .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
                 .build();
@@ -258,15 +272,15 @@ public class IssueService {
         return createMessageResult(updated.getId(), UPDATE_ISSUE);
     }
 
-    private Optional<String> determineNewImageUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
-        String newImageUrl = oldIssue.getImageUrl();
+    private String determineNewFileUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
+        String newFileUrl = oldIssue.getFileUrl();
 
         if (Boolean.TRUE.equals(request.getRemoveImage())) {
-            newImageUrl = null;
-        } else if (uploadUrl != null && !uploadUrl.isBlank()) {
-            newImageUrl = uploadUrl;
+            newFileUrl = EMPTY_STRING;
+        } else if (!uploadUrl.isBlank()) {
+            newFileUrl = uploadUrl;
         }
-        return Optional.ofNullable(newImageUrl);
+        return newFileUrl;
     }
 
     @Transactional
@@ -286,7 +300,7 @@ public class IssueService {
         return createMessageResult(issueId, UPDATE_ISSUE_LABEL);
     }
 
-    private static ApiMessageDto createMessageResult(Long id, String message) {
+    private ApiMessageDto createMessageResult(Long id, String message) {
         return ApiMessageDto.builder()
                 .id(id)
                 .message(message)
@@ -323,7 +337,7 @@ public class IssueService {
         validateAssigneeIdsExist(assigneeIds);
 
         // 기존 매핑 삭제
-        userDao.deleteAllByIssueId(issueId);
+        assigneeDao.deleteAllByIssueId(issueId);
 
         // 새 담당자 매핑 추가
         addNewAssignees(issueId, assigneeIds);

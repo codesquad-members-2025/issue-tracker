@@ -10,8 +10,7 @@ import static org.mockito.Mockito.verify;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
-import codesquad.team4.issuetracker.exception.CommentNotFoundException;
-import jakarta.validation.ConstraintViolationException;
+import codesquad.team4.issuetracker.exception.notfound.CommentNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,7 +50,7 @@ public class CommentServiceTest {
         Comment comment = Comment.builder()
                 .id(1L)
                 .content("Test Test")
-                .imageUrl(uploadUrl)
+                .fileUrl(uploadUrl)
                 .authorId(1L)
                 .issueId(1L)
                 .createdAt(LocalDateTime.now())
@@ -81,7 +80,7 @@ public class CommentServiceTest {
         Comment comment = Comment.builder()
                 .id(2L)
                 .content("댓글 내용")
-                .imageUrl(uploadUrl)
+                .fileUrl(uploadUrl)
                 .authorId(1L)
                 .issueId(1L)
                 .createdAt(LocalDateTime.now())
@@ -111,7 +110,7 @@ public class CommentServiceTest {
                 .issueId(10L)
                 .authorId(5L)
                 .content("이전 댓글")
-                .imageUrl("old.png")
+                .fileUrl("old.png")
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -130,7 +129,7 @@ public class CommentServiceTest {
         assertThat(result.getId()).isEqualTo(commentId);
         assertThat(result.getMessage()).isEqualTo("댓글이 수정되었습니다.");
         assertThat(existingComment.getContent()).isEqualTo("수정된 댓글");
-        assertThat(existingComment.getImageUrl()).isEqualTo(uploadUrl);
+        assertThat(existingComment.getFileUrl()).isEqualTo(uploadUrl);
     }
 
     @Test

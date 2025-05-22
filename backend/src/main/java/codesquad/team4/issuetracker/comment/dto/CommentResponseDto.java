@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import software.amazon.awssdk.annotations.NotNull;
 
 public class CommentResponseDto {
 
@@ -16,7 +15,7 @@ public class CommentResponseDto {
         private Long commentId;
         private String content;
         private UserDto.UserInfo author;
-        private String imageUrl;
+        private String fileUrl;
         private LocalDateTime createdAt;
     }
 
