@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar"
-          target: "/home/ubuntu/app.jar"  # 고정된 파일명으로 복사
+          target: "/home/ubuntu/"
 
       - name: Run JAR on EC2
         uses: appleboy/ssh-action@master
@@ -41,5 +41,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             pkill -f 'java -jar' || true
+            mv /home/ubuntu/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app.jar
             nohup java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
             exit 0
