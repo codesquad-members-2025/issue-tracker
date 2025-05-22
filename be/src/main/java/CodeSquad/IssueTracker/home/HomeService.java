@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.home;
 
+import CodeSquad.IssueTracker.home.dto.IssueFilterRequestDto;
 import CodeSquad.IssueTracker.home.dto.HomeResponseDto;
 import CodeSquad.IssueTracker.issue.IssueService;
 import CodeSquad.IssueTracker.label.LabelService;
@@ -17,9 +18,9 @@ public class HomeService {
     private final MilestoneService milestoneService;
     private final UserService userService;
 
-    public HomeResponseDto getHomeData() {
+    public HomeResponseDto getHomeData(IssueFilterRequestDto filterRequestDto) {
         return new HomeResponseDto(
-                issueService.findAll(),
+                issueService.findIssuesByFilter(filterRequestDto),
                 labelService.findAll(),
                 milestoneService.findAll(),
                 userService.findAll()
