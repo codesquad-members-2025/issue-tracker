@@ -6,10 +6,10 @@ import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
-import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
-import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
+import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
@@ -17,10 +17,12 @@ import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
+import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueInfo;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.searchIssueDetailDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.label.LabelDao;
 import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.AssigneeDao;
@@ -63,67 +65,21 @@ public class IssueService {
     public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
         List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen, page, size);
 
-        Map<Long, IssueResponseDto.IssueInfo.IssueInfoBuilder> issueMap = new LinkedHashMap<>();
+        Map<Long, IssueResponseDto.IssueInfo> issueMap = new LinkedHashMap<>();
         Map<Long, Set<UserInfo>> assigneeMap = new HashMap<>();
         Map<Long, Set<LabelDto.LabelInfo>> labelMap = new HashMap<>();
 
         for (Map<String, Object> row : rows) {
             Long issueId = (Long) row.get("issue_id");
 
-            issueMap.computeIfAbsent(issueId, id ->
-                    IssueResponseDto.IssueInfo.builder()
-                            .id(issueId)
-                            .title((String) row.get("title"))
-                            .author(UserDto.UserInfo.builder()
-                                    .id((Long) row.get("author_id"))
-                                    .nickname((String) row.get("author_nickname"))
-                                    .profileImage((String) row.get("author_profile"))
-                                    .build())
-                            .assignees(new HashSet<>())
-                            .labels(new HashSet<>())
-                            .milestone(MilestoneDto.MilestoneInfo.builder()
-                                    .id((Long) row.get("milestone_id"))
-                                    .title((String) row.get("milestone_title"))
-                                    .build())
-            );
-
-            Long assigneeId = (Long) row.get("assignee_id");
-            if (assigneeId != null) {
-                UserDto.UserInfo assignee = UserDto.UserInfo.builder()
-                        .id(assigneeId)
-                        .nickname((String) row.get("assignee_nickname"))
-                        .profileImage((String) row.get("assignee_profile"))
-                        .build();
-
-                assigneeMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(assignee);
-            }
-
-
-            Long labelId = (Long) row.get("label_id");
-            if (labelId != null) {
-                LabelDto.LabelInfo label = LabelDto.LabelInfo.builder()
-                        .id(labelId)
-                        .name((String) row.get("label_name"))
-                        .color((String) row.get("label_color"))
-                        .build();
-
-                labelMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(label);
-            }
+            addAssigneeToMap(row, assigneeMap, issueId);
+            addLabelToMap(row, labelMap, issueId);
+            addIssueToMap(row, issueMap, issueId, assigneeMap, labelMap);
         }
-        List<IssueResponseDto.IssueInfo> issues = new ArrayList<>();
 
-        for (Map.Entry<Long, IssueResponseDto.IssueInfo.IssueInfoBuilder> entry : issueMap.entrySet()) {
-            Long issueId = entry.getKey();
-            IssueResponseDto.IssueInfo.IssueInfoBuilder builder = entry.getValue();
-
-            builder.assignees(assigneeMap.getOrDefault(issueId, Set.of()));
-            builder.labels(labelMap.getOrDefault(issueId, Set.of()));
-
-            issues.add(builder.build());
-        }
+        List<IssueResponseDto.IssueInfo> issues = new ArrayList<>(issueMap.values());
 
         int totalElements = issueDao.countIssuesByOpenStatus(isOpen);
-
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
         return IssueResponseDto.IssueListDto.builder()
@@ -133,6 +89,53 @@ public class IssueService {
                 .totalElements(totalElements)
                 .totalPages(totalPages)
                 .build();
+    }
+
+    private void addIssueToMap(Map<String, Object> row, Map<Long, IssueInfo> issueMap, Long issueId,
+                                  Map<Long, Set<UserInfo>> assigneeMap, Map<Long, Set<LabelInfo>> labelMap) {
+        issueMap.computeIfAbsent(issueId, id ->
+                IssueInfo.builder()
+                        .id(issueId)
+                        .title((String) row.get("title"))
+                        .author(UserInfo.builder()
+                                .id((Long) row.get("author_id"))
+                                .nickname((String) row.get("author_nickname"))
+                                .profileImage((String) row.get("author_profile"))
+                                .build())
+                        .assignees(assigneeMap.getOrDefault(issueId, Set.of()))
+                        .labels(labelMap.getOrDefault(issueId, Set.of()))
+                        .milestone(MilestoneDto.MilestoneInfo.builder()
+                                .id((Long) row.get("milestone_id"))
+                                .title((String) row.get("milestone_title"))
+                                .build())
+                        .build()
+        );
+    }
+
+    private void addLabelToMap(Map<String, Object> row, Map<Long, Set<LabelInfo>> labelMap, Long issueId) {
+        Long labelId = (Long) row.get("label_id");
+        if (labelId != null) {
+            LabelInfo label = LabelInfo.builder()
+                    .id(labelId)
+                    .name((String) row.get("label_name"))
+                    .color((String) row.get("label_color"))
+                    .build();
+
+            labelMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(label);
+        }
+    }
+
+    private void addAssigneeToMap(Map<String, Object> row, Map<Long, Set<UserInfo>> assigneeMap, Long issueId) {
+        Long assigneeId = (Long) row.get("assignee_id");
+        if (assigneeId != null) {
+            UserInfo assignee = UserInfo.builder()
+                    .id(assigneeId)
+                    .nickname((String) row.get("assignee_nickname"))
+                    .profileImage((String) row.get("assignee_profile"))
+                    .build();
+
+            assigneeMap.computeIfAbsent(issueId, k -> new HashSet<>()).add(assignee);
+        }
     }
 
     @Transactional
