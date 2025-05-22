@@ -62,7 +62,7 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
 	}
 
 	@Override
-	public List<UserDto.WriterResponse> findUserList() {
+	public List<UserDto.WriterResponse> findUsersForFilter() {
 		return jdbcTemplate.query(FILTER_USER_LIST_QUERY, filterUserListItemResponseRowMapper);
 	}
 }

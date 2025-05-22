@@ -68,7 +68,7 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 	}
 
 	@Override
-	public List<LabelDto.LabelFilterResponse> findLabelList() {
+	public List<LabelDto.LabelFilterResponse> findLabelsForFilter() {
 		return jdbcTemplate.query(FILTER_LABEL_LIST_QUERY, filterLabelListItemResponseRowMapper);
 	}
 }

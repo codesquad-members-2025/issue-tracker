@@ -32,7 +32,7 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
 			.build();
 
 	@Override
-	public List<MilestoneDto.MilestoneFilterResponse> findMilestoneList() {
+	public List<MilestoneDto.MilestoneFilterResponse> findMilestonesForFilter() {
 		return jdbcTemplate.query(FILTER_MILESTONE_LIST_QUERY, filterMilestoneListItemResponseRowMapper);
 	}
 }
