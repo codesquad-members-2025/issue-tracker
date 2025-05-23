@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { getAccessibleLabelStyle } from '@/shared/utils/color';
+import Profile from '@/shared/components/Profile';
 import { type Assignee, type Milestone, type Label } from '../types/issue';
 import SidebarSection from './SidebarSection';
 import MilestoneProgressBar from '@/shared/components/MilestoneProgressBar';
@@ -20,10 +21,12 @@ export default function IssueSidebar({
       <SidebarSection title="담당자" isEmpty={assignees.length === 0}>
         <SectionList>
           {assignees.map(assignee => (
-            <AssigneeWrapper key={assignee.id}>
-              <ProfileImage src={assignee.profileImage} alt="프로필 이미지" />
-              <Nickname>{assignee.nickname}</Nickname>
-            </AssigneeWrapper>
+            <Profile
+              key={assignee.id}
+              size="sm"
+              name={assignee.nickname}
+              imageUrl={assignee.profileImage}
+            />
           ))}
         </SectionList>
       </SidebarSection>
@@ -78,24 +81,6 @@ const SectionList = styled.div`
 
   ${({ theme }) => theme.typography.availableMedium12};
   color: ${({ theme }) => theme.neutral.text.strong};
-`;
-
-// TODO profile 공통 컴포넌트 분리
-const ProfileImage = styled.img`
-  width: 20px;
-  height: 19px;
-  border-radius: ${({ theme }) => theme.radius.half};
-`;
-
-const Nickname = styled.span`
-  ${({ theme }) => theme.typography.displayMedium16};
-  color: ${({ theme }) => theme.neutral.text.default};
-`;
-
-const AssigneeWrapper = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
 `;
 
 const MilestoneLabel = styled.span`

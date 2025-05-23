@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
+import Profile from './Profile';
 import Logo from '@/assets/logoMedium.svg?react';
 import DarkModeToggle from './DarkModeToggle';
 
@@ -12,7 +13,8 @@ export default function Header() {
         </Link>
         <DarkModeToggle />
       </LeftSection>
-      <Profile profileImageUrl="/images/sampleProfile.png" />
+      {/* 로그인 기능 구현시 유저 정보(이미지,id등) 전달 */}
+      <Profile size="md" />
     </Wrapper>
   );
 }
@@ -34,21 +36,4 @@ const StyledLogo = styled(Logo)`
   width: 199px;
   height: 40px;
   color: ${({ theme }) => theme.neutral.text.strong};
-`;
-
-// TODO profile 공통 컴포넌트 분리
-interface Props {
-  profileImageUrl: string;
-}
-
-const Profile = ({ profileImageUrl }: Props) => {
-  return <Avatar src={profileImageUrl} alt="user-profile" />;
-};
-
-const Avatar = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 1px solid white;
-  object-fit: cover;
 `;

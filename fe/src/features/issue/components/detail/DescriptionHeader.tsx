@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { getTimeAgoString } from '@/shared/utils/time';
+import Profile from '@/shared/components/Profile';
 import EditIcon from '@/assets/icons/edit.svg?react';
 import SmileIcon from '@/assets/icons/smile.svg?react';
 
@@ -19,8 +20,7 @@ export default function WriterInfo({
   return (
     <Container>
       <LeftSection>
-        <ProfileImage src={profileImageUrl} alt="프로필 이미지" />
-        <Nickname>{nickname}</Nickname>
+        <Profile size="md" name={nickname} imageUrl={profileImageUrl} />
         <CreatedAt>{getTimeAgoString(createdAt)}</CreatedAt>
       </LeftSection>
 
@@ -57,17 +57,6 @@ const RightSection = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-`;
-
-const ProfileImage = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: ${({ theme }) => theme.radius.half};
-`;
-
-const Nickname = styled.span`
-  ${({ theme }) => theme.typography.displayMedium16};
-  color: ${({ theme }) => theme.neutral.text.default};
 `;
 
 const CreatedAt = styled.span`
