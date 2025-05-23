@@ -2,6 +2,7 @@ package codesquad.team4.issuetracker.label;
 
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.entity.Label;
+import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.label.dto.LabelRequestDto;
 import codesquad.team4.issuetracker.label.dto.LabelResponseDto;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +41,25 @@ public class LabelService {
         labelRepository.save(label);
     }
 
+    @Transactional
+    public void updateLabel(Long labelId, LabelRequestDto.CreateLabelDto request) {
+        labelRepository.findById(labelId)
+            .orElseThrow(() -> new LabelNotFoundException(labelId));
 
+        Label updatedLabel = Label.builder()
+            .id(labelId)
+            .name(request.getName())
+            .description(request.getDescription())
+            .color(request.getColor())
+            .build();
+
+        labelRepository.save(updatedLabel);
+    }
+
+    @Transactional
+    public void deleteLabel(Long labelId) {
+        if (!labelRepository.existsById(labelId)) {
+            throw new LabelNotFoundException(labelId);
+        }
+    }
 }

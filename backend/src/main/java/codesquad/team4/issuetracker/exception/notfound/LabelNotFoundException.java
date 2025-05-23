@@ -9,4 +9,6 @@ public class LabelNotFoundException extends DataNotFoundException {
     public LabelNotFoundException(Set<Long> labelIds) {
         super(NOT_FOUND_LABEL + labelIds);
     }
+
+    public LabelNotFoundException(Long labelId) { super(NOT_FOUND_LABEL + labelId);}
 }

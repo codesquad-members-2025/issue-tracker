@@ -21,10 +21,24 @@ public class LabelController {
         return ApiResponse.success(result);
     }
 
-    @PostMapping(value = "")
+    @PostMapping( "")
     @ResponseStatus(HttpStatus.CREATED)
     public void createLabel(@RequestBody @Valid LabelRequestDto.CreateLabelDto request) {
         labelService.createLabel(request);
+    }
+
+    @PutMapping("/{label-id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateLabel(
+        @PathVariable("label-id") Long labelId,
+        @RequestBody @Valid LabelRequestDto.CreateLabelDto request) {
+        labelService.updateLabel(labelId, request);
+    }
+
+    @DeleteMapping("/{label-id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLabel(@PathVariable("label-id") Long labelId) {
+        labelService.deleteLabel(labelId);
     }
 
 }
