@@ -237,7 +237,7 @@ VALUES (22, 2, 6);
 INSERT INTO issue_assignee (id, issue_id, assignee_id)
 VALUES (23, 3, 7);
 INSERT INTO issue_assignee (id, issue_id, assignee_id)
-VALUES (24, 4, 8);
+VALUES (24, 4, 9);
 INSERT INTO issue_assignee (id, issue_id, assignee_id)
 VALUES (25, 5, 9);
 INSERT INTO issue_assignee (id, issue_id, assignee_id)
