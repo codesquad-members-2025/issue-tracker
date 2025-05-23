@@ -1,8 +1,5 @@
 "use client";
 
-import EmotionProvider from "../styles/emotionProvider";
-import GlobalStyles from "@/styles/globalStyles";
-import ThemeProvider from "@components/theme/ThemeProvider";
 import ClientProviders from "@/components/ClientProviders";
 
 export default function RootLayout({
@@ -13,9 +10,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body suppressHydrationWarning>
-        <ClientProviders>
-          {children}
-        </ClientProviders>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );
