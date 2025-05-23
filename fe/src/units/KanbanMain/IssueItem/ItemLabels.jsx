@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Label from '@/base-ui/utils/Label';
 import useLabelStore from '@/stores/labelStore';
+import { typography } from '@/styles/foundation';
 
 const Labels = styled.div`
   display: flex;
@@ -19,6 +20,7 @@ const TooltipWrapper = styled.div`
 `;
 
 const Tooltip = styled.span`
+  ${typography.display.medium12}
   visibility: hidden;
   opacity: 0;
   background-color: ${({ theme }) => theme.text.strong};
@@ -32,7 +34,6 @@ const Tooltip = styled.span`
   left: 50%;
   transform: translateX(-50%);
   transition: opacity 0.2s ease-in-out;
-  font-size: 12px;
   white-space: nowrap;
 `;
 
