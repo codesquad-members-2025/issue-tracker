@@ -10,27 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: ✅ Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20' # 현재 react-router 7.x는 Node 20 이상 요구
 
       - name: 📝 Create .env.production
         run: |
-          cat <<EOF > fe/.env.production
-          VITE_API_BASE_URL=http://${{ secrets.EC2_HOST }}:8080
-          EOF
+          echo "VITE_API_BASE_URL=http://${{ secrets.EC2_HOST }}:8080" > fe/.env.production
+          echo "[env] VITE_API_BASE_URL=http://${{ secrets.EC2_HOST }}:8080"
 
-      - name: Install dependencies & build
+      - name: 📦 Install dependencies & build
         run: |
           cd fe
           npm ci
           npm run build
 
-      - name: Sync build to S3
+      - name: 🚀 Sync build to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
           args: --delete
