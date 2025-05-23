@@ -5,17 +5,17 @@ import Profile from '@/shared/components/Profile';
 import EditIcon from '@/assets/icons/edit.svg?react';
 import SmileIcon from '@/assets/icons/smile.svg?react';
 
-interface WriterInfoProps {
+interface DescriptionHeaderProps {
   author: Author;
   createdAt: string;
   isAuthor: boolean;
 }
 
-export default function WriterInfo({
+export default function DescriptionHeader({
   author,
   createdAt,
   isAuthor = false,
-}: WriterInfoProps) {
+}: DescriptionHeaderProps) {
   const { id, nickname, profileImage } = author;
   return (
     <Container>
