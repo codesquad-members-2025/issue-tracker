@@ -93,4 +93,19 @@ public class IssueService {
 				.build())
 			.build();
 	}
+
+	public IssueDto.CountResponse countIssues(
+		Integer writerId, Integer milestoneId, List<Integer> labelIds, List<Integer> assigneeIds) {
+
+		log.debug("이슈 개수 조회: writerId={}, milestoneId={}, labelIds={}, assigneeIds={}",
+			writerId, milestoneId, labelIds, assigneeIds);
+
+		IssueDto.CountResponse response =
+			issueQueryRepository.countIssuesWithFilters(writerId, milestoneId, labelIds, assigneeIds);
+
+		log.debug("이슈 개수 조회 결과: 열린 이슈={}개, 닫힌 이슈={}개",
+			response.open(), response.closed());
+
+		return response;
+	}
 }

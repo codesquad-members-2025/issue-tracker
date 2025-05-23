@@ -13,4 +13,6 @@ public interface IssueQueryRepository {
 		IssueState state, Integer writerId, Integer milestoneId,
 		List<Integer> labelIds, List<Integer> assigneeIds, IssueDto.CursorData cursor);
 
+	IssueDto.CountResponse countIssuesWithFilters(Integer writerId, Integer milestoneId,
+		List<Integer> labelIds, List<Integer> assigneeIds);
 }

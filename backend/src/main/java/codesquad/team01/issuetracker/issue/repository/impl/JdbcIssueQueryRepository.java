@@ -1,6 +1,8 @@
 package codesquad.team01.issuetracker.issue.repository.impl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -29,14 +31,22 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 		    i.updated_at as issue_updated_at,
 		    u.id as writer_id,
 		    u.username as writer_username,
-		    f.url as writer_profile_image_url,
+		    u.profile_image_url as writer_profile_image_url,
 		    m.id as milestone_id,
 		    m.title as milestone_title
 		FROM issue i
 		JOIN users u ON i.writer_id = u.id
-		LEFT JOIN file f ON u.profile_image_id = f.id
 		LEFT JOIN milestone m ON i.milestone_id = m.id
 		WHERE 1=1 
+		AND i.deleted_at IS NULL
+		""";
+
+	private static final String BASE_COUNT_ISSUES_QUERY = """
+		SELECT 
+			i.state,
+			COUNT(*) as count
+		FROM issue i
+		WHERE 1=1
 		AND i.deleted_at IS NULL
 		""";
 
@@ -70,45 +80,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 		sql.append(" AND i.state = :state ");
 		params.addValue("state", state.name());
 
-		// writerId
-		if (writerId != null) {
-			sql.append(" AND i.writer_id = :writerId");
-			params.addValue("writerId", writerId);
-		}
-
-		// milestoneId
-		if (milestoneId != null) {
-			sql.append(" AND i.milestone_id = :milestoneId");
-			params.addValue("milestoneId", milestoneId);
-		}
-
-		// labelIds - AND
-		if (labelIds != null && !labelIds.isEmpty()) {
-			for (int i = 0; i < labelIds.size(); i++) {
-				sql.append("""
-					AND EXISTS (
-					   SELECT 1 FROM issue_label il2 
-					   WHERE il2.issue_id = i.id 
-					   AND il2.label_id = :labelId""").append(i).append("""
-					)
-					""");
-				params.addValue("labelId" + i, labelIds.get(i));
-			}
-		}
-
-		// assigneeIds - AND
-		if (assigneeIds != null && !assigneeIds.isEmpty()) {
-			for (int i = 0; i < assigneeIds.size(); i++) {
-				sql.append("""
-					AND EXISTS (
-					   SELECT 1 FROM issue_assignee ia2 
-					   WHERE ia2.issue_id = i.id 
-					   AND ia2.user_id = :assigneeId""").append(i).append("""
-					)
-					""");
-				params.addValue("assigneeId" + i, assigneeIds.get(i));
-			}
-		}
+		appendFilterConditions(sql, params, writerId, milestoneId, labelIds, assigneeIds);
 
 		// 무한스크롤 커서
 		if (cursor != null) {
@@ -127,5 +99,77 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 		params.addValue("pageSize", PAGE_SIZE + 1); // 다음 페이지 존재 여부 확인을 위해 +1
 
 		return jdbcTemplate.query(sql.toString(), params, issueRowMapper);
+	}
+
+	private final RowMapper<IssueDto.StateCountRow> stateCountRowMapper = (rs, rowNum) ->
+		IssueDto.StateCountRow.builder()
+			.state(rs.getString("state"))
+			.count(rs.getInt("count"))
+			.build();
+
+	@Override
+	public IssueDto.CountResponse countIssuesWithFilters(Integer writerId, Integer milestoneId,
+		List<Integer> labelIds, List<Integer> assigneeIds) {
+
+		StringBuilder sql = new StringBuilder(BASE_COUNT_ISSUES_QUERY);
+		MapSqlParameterSource params = new MapSqlParameterSource();
+
+		appendFilterConditions(sql, params, writerId, milestoneId, labelIds, assigneeIds);
+
+		sql.append(" GROUP BY i.state");
+
+		List<IssueDto.StateCountRow> results = jdbcTemplate.query(sql.toString(), params, stateCountRowMapper);
+
+		Map<IssueState, Integer> countByState = results.stream()
+			.collect(Collectors.toMap(
+				row -> IssueState.fromStateStr(row.state()),
+				IssueDto.StateCountRow::count
+			));
+
+		return IssueDto.CountResponse.builder()
+			.open(countByState.getOrDefault(IssueState.OPEN, 0))
+			.closed(countByState.getOrDefault(IssueState.CLOSED, 0))
+			.build();
+	}
+
+	private void appendFilterConditions(StringBuilder sql, MapSqlParameterSource params,
+		Integer writerId, Integer milestoneId,
+		List<Integer> labelIds, List<Integer> assigneeIds) {
+
+		// 작성자
+		if (writerId != null) {
+			sql.append(" AND i.writer_id = :writerId");
+			params.addValue("writerId", writerId);
+		}
+
+		// 마일스톤
+		if (milestoneId != null) {
+			sql.append(" AND i.milestone_id = :milestoneId");
+			params.addValue("milestoneId", milestoneId);
+		}
+
+		// 레이블
+		if (labelIds != null && !labelIds.isEmpty()) {
+			for (int i = 0; i < labelIds.size(); i++) {
+				sql.append("""
+					AND EXISTS (
+					   SELECT 1 FROM issue_label il2 
+					   WHERE il2.issue_id = i.id 
+					   AND il2.label_id = :labelId""").append(i).append(")\n");
+				params.addValue("labelId" + i, labelIds.get(i));
+			}
+		}
+
+		// 담당자
+		if (assigneeIds != null && !assigneeIds.isEmpty()) {
+			for (int i = 0; i < assigneeIds.size(); i++) {
+				sql.append("""
+					AND EXISTS (
+					   SELECT 1 FROM issue_assignee ia2 
+					   WHERE ia2.issue_id = i.id 
+					   AND ia2.user_id = :assigneeId""").append(i).append(")\n");
+				params.addValue("assigneeId" + i, assigneeIds.get(i));
+			}
+		}
 	}
 }
