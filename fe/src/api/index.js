@@ -2,3 +2,4 @@
 const BE_Port = 8080;
 const FE_Port = 5001;
 export const BASE_URL = `http://localhost:${BE_Port}`;
+// export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
