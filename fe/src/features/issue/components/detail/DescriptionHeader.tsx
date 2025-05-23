@@ -1,26 +1,26 @@
 import styled from '@emotion/styled';
 import { getTimeAgoString } from '@/shared/utils/time';
+import type { Author } from '../../types/issue';
 import Profile from '@/shared/components/Profile';
 import EditIcon from '@/assets/icons/edit.svg?react';
 import SmileIcon from '@/assets/icons/smile.svg?react';
 
 interface WriterInfoProps {
-  profileImageUrl: string;
-  nickname: string;
+  author: Author;
   createdAt: string;
   isAuthor: boolean;
 }
 
 export default function WriterInfo({
-  profileImageUrl,
-  nickname,
+  author,
   createdAt,
   isAuthor = false,
 }: WriterInfoProps) {
+  const { id, nickname, profileImage } = author;
   return (
     <Container>
       <LeftSection>
-        <Profile size="md" name={nickname} imageUrl={profileImageUrl} />
+        <Profile id={id} size="md" name={nickname} imageUrl={profileImage} />
         <CreatedAt>{getTimeAgoString(createdAt)}</CreatedAt>
       </LeftSection>
 

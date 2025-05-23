@@ -17,8 +17,7 @@ export default function DescriptionBox({
   return (
     <Wrapper>
       <DescriptionHeader
-        profileImageUrl={author.profileImage}
-        nickname={author.nickname}
+        author={author}
         createdAt={createdAt}
         isAuthor={true} //TODO 로그인 기능 구현시 변경
       />
