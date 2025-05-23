@@ -7,8 +7,10 @@ import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
 import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueDetailResponse;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
+import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeRepository;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeService;
 import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
+import CodeSquad.IssueTracker.issueLabel.IssueLabelRepository;
 import CodeSquad.IssueTracker.issueLabel.IssueLabelService;
 import CodeSquad.IssueTracker.issueLabel.dto.IssueLabelResponse;
 import CodeSquad.IssueTracker.milestone.MilestoneService;
@@ -30,6 +32,8 @@ import java.util.Optional;
 public class IssueService {
 
     private final IssueRepository issueRepository;
+    private final IssueAssigneeRepository issueAssigneeRepository;
+    private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeService issueAssigneeService;
     private final IssueLabelService issueLabelService;
     private final UserService userService;
@@ -110,6 +114,13 @@ public class IssueService {
     }
 
     public Iterable<FilteredIssueDto> findIssuesByFilter(IssueFilterRequestDto filterRequestDto) {
-        return issueRepository.findIssuesByFilter(filterRequestDto);
+        List<FilteredIssueDto> issues = issueRepository.findIssuesByFilter(filterRequestDto);
+
+        for (FilteredIssueDto issue : issues) {
+            issue.setAssignees(issueAssigneeRepository.findSummaryAssigneeByIssueId(issue.getIssueId()));
+            issue.setLabels(issueLabelRepository.findSummaryLabelByIssueId(issue.getIssueId()));
+        }
+
+        return issues;
     }
 }

@@ -23,10 +23,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class JdbcTemplateIssueRepository implements IssueRepository{
+public class JdbcTemplateIssueRepository implements IssueRepository {
 
-    private final IssueAssigneeRepository issueAssigneeRepository;
-    private final IssueLabelRepository issueLabelRepository;
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -35,8 +33,6 @@ public class JdbcTemplateIssueRepository implements IssueRepository{
                                        IssueAssigneeRepository issueAssigneeRepository,
                                        IssueLabelRepository issueLabelRepository) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
-        this.issueAssigneeRepository = issueAssigneeRepository;
-        this.issueLabelRepository = issueLabelRepository;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("issues")
                 .usingGeneratedKeyColumns("id");
@@ -52,15 +48,15 @@ public class JdbcTemplateIssueRepository implements IssueRepository{
 
     @Override
     public void update(Long issueId, IssueUpdateDto updateParam) {
-        String sql = "UPDATE issues SET title = :title, content = :content, is_Open = :isOpen, timestamp = :timestamp, assignee_Id = :assigneeId, milestone_Id = :milestoneId WHERE id = :id" ;
+        String sql = "UPDATE issues SET title = :title, content = :content, is_Open = :isOpen, timestamp = :timestamp, assignee_Id = :assigneeId, milestone_Id = :milestoneId WHERE id = :id";
         SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("title",updateParam.getTitle())
-                .addValue("content",updateParam.getContent())
-                .addValue("isOpen",updateParam.getIsOpen())
-                .addValue("timestamp",updateParam.getTimestamp())
-                .addValue("milestoneId",updateParam.getMilestoneId())
-                .addValue("assigneeId",updateParam.getAssigneeId())
-                .addValue("id",issueId);
+                .addValue("title", updateParam.getTitle())
+                .addValue("content", updateParam.getContent())
+                .addValue("isOpen", updateParam.getIsOpen())
+                .addValue("timestamp", updateParam.getTimestamp())
+                .addValue("milestoneId", updateParam.getMilestoneId())
+                .addValue("assigneeId", updateParam.getAssigneeId())
+                .addValue("id", issueId);
         template.update(sql, param);
     }
 
@@ -142,15 +138,10 @@ public class JdbcTemplateIssueRepository implements IssueRepository{
             return dto;
         });
 
-        for (FilteredIssueDto issue : issues) {
-            issue.setAssignees(issueAssigneeRepository.findSummaryAssigneeByIssueId(issue.getIssueId()));
-            issue.setLabels(issueLabelRepository.findSummaryLabelByIssueId(issue.getIssueId()));
-        }
-
         return issues;
     }
 
-    private RowMapper<Issue> issueRowMapper(){
+    private RowMapper<Issue> issueRowMapper() {
         return BeanPropertyRowMapper.newInstance(Issue.class);
     }
 }
