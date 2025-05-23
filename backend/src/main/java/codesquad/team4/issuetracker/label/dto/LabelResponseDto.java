@@ -1,6 +1,5 @@
 package codesquad.team4.issuetracker.label.dto;
 
-import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -8,7 +7,7 @@ import lombok.Getter;
 
 import java.util.List;
 
-public class LabelDto {
+public class LabelResponseDto {
 
     @AllArgsConstructor
     @Getter
@@ -27,4 +26,5 @@ public class LabelDto {
         private List<LabelInfo> labels;
         private int count;
     }
+
 }
