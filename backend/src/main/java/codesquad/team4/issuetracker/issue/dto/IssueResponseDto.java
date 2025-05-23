@@ -1,7 +1,7 @@
 package codesquad.team4.issuetracker.issue.dto;
 
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
-import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
+import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import lombok.AllArgsConstructor;
