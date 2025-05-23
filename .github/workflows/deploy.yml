@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
 
 jobs:
   deploy-backend:
@@ -46,7 +45,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🛑 Stop previous app"
-            (pkill -f 'java -jar' || echo "No process to kill") || true
+            pkill -f 'java -jar' || true
 
             echo "🧹 Clean previous app"
             rm -f /home/ubuntu/app.jar
@@ -54,18 +53,18 @@ jobs:
 
             echo "🔑 Writing .env file"
             cat <<EOF > /home/ubuntu/.env
-            export JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
-            export JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
-            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            export AWS_REGION=${{ secrets.AWS_REGION }}
-            export S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
+            JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
+            JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             EOF
 
-            echo "📤 Load env"
-            source /home/ubuntu/.env
-
-            echo "🚀 Run Spring Boot"
+            echo "🚀 Starting Spring Boot"
+            cd /home/ubuntu
+            source .env
             nohup java \
               -Dspring.profiles.active=dev \
               -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
@@ -74,9 +73,6 @@ jobs:
               -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
               -DAWS_REGION=$AWS_REGION \
               -Dcloud.aws.region.static=$AWS_REGION \
-              -DS3_BUCKET_NAME=$S3_BUCKET_NAME \
-              -jar /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
-
-            echo "📄 Tail latest logs"
-            sleep 3
-            tail -n 30 /home/ubuntu/app.log
+              -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
+              -Dspring.datasource.password=$DB_PASSWORD \
+              -jar app.jar > app.log 2>&1 &
