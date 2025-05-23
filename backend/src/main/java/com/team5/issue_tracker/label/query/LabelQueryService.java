@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.team5.issue_tracker.label.dto.response.LabelPageResponse;
 import com.team5.issue_tracker.label.dto.response.LabelResponse;
 import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
-import com.team5.issue_tracker.label.dto.response.IssueLabelPageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueLabelPageResponse;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,6 +1,7 @@
 package com.team5.issue_tracker.label.query;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,6 +45,10 @@ public class LabelQueryRepository {
   }
 
   public Map<Long, List<LabelSummaryResponse>> getLabelListByIssueIds(List<Long> issueIds) {
+    if (issueIds == null || issueIds.isEmpty()) {
+      return Collections.emptyMap(); // 빈 결과 반환
+    }
+
     String labelSql = """
         SELECT 
             i.id AS issue_id,

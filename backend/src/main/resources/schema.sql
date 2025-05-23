@@ -13,8 +13,8 @@ CREATE TABLE milestone
     name        VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     is_open     BOOLEAN      NOT NULL,
-    created_at  DATETIME     NOT NULL,
-    updated_at  DATETIME     NOT NULL
+    created_at  TIMESTAMP     NOT NULL,
+    updated_at  TIMESTAMP     NOT NULL
 );
 CREATE TABLE user
 (
@@ -23,8 +23,8 @@ CREATE TABLE user
     email      VARCHAR(255) NOT NULL UNIQUE,
     image_url  VARCHAR(255),
     password   VARCHAR(255) NOT NULL,
-    created_at DATETIME     NOT NULL,
-    updated_at DATETIME     NOT NULL
+    created_at TIMESTAMP     NOT NULL,
+    updated_at TIMESTAMP     NOT NULL
 );
 CREATE TABLE issue
 (
@@ -34,8 +34,8 @@ CREATE TABLE issue
     user_id      BIGINT       NOT NULL,
     milestone_id BIGINT,
     is_open      BOOLEAN      NOT NULL,
-    created_at   DATETIME     NOT NULL,
-    updated_at   DATETIME     NOT NULL,
+    created_at   TIMESTAMP     NOT NULL,
+    updated_at   TIMESTAMP     NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
     FOREIGN KEY (milestone_id) REFERENCES milestone (id) ON DELETE SET NULL
 );
@@ -45,8 +45,8 @@ CREATE TABLE comment
     user_id    BIGINT,
     issue_id   BIGINT   NOT NULL,
     content    TEXT     NOT NULL,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL,
     FOREIGN KEY (issue_id) REFERENCES issue (id) ON DELETE CASCADE
 );
@@ -57,8 +57,8 @@ CREATE TABLE label
     description      TEXT,
     text_color       VARCHAR(50)  NOT NULL,
     background_color VARCHAR(50)  NOT NULL,
-    created_at       DATETIME     NOT NULL,
-    updated_at       DATETIME     NOT NULL
+    created_at       TIMESTAMP     NOT NULL,
+    updated_at       TIMESTAMP     NOT NULL
 );
 CREATE TABLE issue_label
 (

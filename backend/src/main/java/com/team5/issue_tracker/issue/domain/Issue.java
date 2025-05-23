@@ -1,6 +1,6 @@
 package com.team5.issue_tracker.issue.domain;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.Getter;
 
@@ -19,8 +19,8 @@ public class Issue {
 
   private final Long userId;
   //todo: 글로벌 서비스를 위한 자료형 변경
-  private final LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+  private final Instant createdAt;
+  private Instant updatedAt;
 
   public Issue(String title, String body, Long userId, Long milestoneId, boolean isOpen) {
     this.title = title;
@@ -28,13 +28,13 @@ public class Issue {
     this.userId = userId;
     this.milestoneId = milestoneId;
     this.isOpen = isOpen;
-    this.createdAt = LocalDateTime.now();
-    this.updatedAt = LocalDateTime.now();
+    this.createdAt = Instant.now();
+    this.updatedAt = Instant.now();
   }
 
   @PersistenceConstructor
   public Issue(String title, String body, Long userId, Long milestoneId, boolean isOpen,
-      LocalDateTime createdAt, LocalDateTime updatedAt) {
+      Instant createdAt, Instant updatedAt) {
     this.title = title;
     this.body = body;
     this.userId = userId;
@@ -49,6 +49,6 @@ public class Issue {
     this.body = body;
     this.milestoneId = milestoneId;
     this.isOpen = isOpen;
-    this.updatedAt = LocalDateTime.now();
+    this.updatedAt = Instant.now();
   }
 }

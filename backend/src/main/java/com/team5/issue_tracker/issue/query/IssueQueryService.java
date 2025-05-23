@@ -53,7 +53,7 @@ public class IssueQueryService {
             labelMap, authorMap, milestoneMap);
 
     return new IssuePageResponse((long) issueSummaryResponseList.size(), 0L, //TODO: 페이지 기능
-        (long) issueSummaryResponseList.size(),
+        (long) issueSummaryResponseList.size(), searchRequest.toQueryString(),
         issueSummaryResponseList);
   }
 
@@ -65,11 +65,14 @@ public class IssueQueryService {
   }
 
   private IssueSearchCondition getCondition(IssueSearchRequest searchRequest) {
-    Long assigneeId = userQueryRepository.getUserIdByUsername(searchRequest.getAssigneeName());
+    Long assigneeId =
+        userQueryRepository.getUserIdByUsername(searchRequest.getAssigneeName()).orElse(null);
     List<Long> labelIds = labelQueryRepository.getLabelIdsByNames(searchRequest.getLabelNames());
     Long milestoneId =
-        milestoneQueryRepository.getMilestoneIdByName(searchRequest.getMilestoneName());
-    Long authorId = userQueryRepository.getUserIdByUsername(searchRequest.getAuthorName());
+        milestoneQueryRepository.getMilestoneIdByName(searchRequest.getMilestoneName())
+            .orElse(null);
+    Long authorId =
+        userQueryRepository.getUserIdByUsername(searchRequest.getAuthorName()).orElse(null);
     log.info("assigneeId: {}, labelIds: {}, milestoneId: {}, authorId: {}",
         assigneeId, labelIds, milestoneId, authorId);
 

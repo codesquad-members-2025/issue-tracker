@@ -1,6 +1,6 @@
 package com.team5.issue_tracker.issue.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
@@ -21,7 +21,7 @@ public class IssueSummaryResponse {
   private List<LabelSummaryResponse> labels;
   private UserSummaryResponse author;
   private MilestoneSummaryResponse milestone;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+  private Instant createdAt;
+  private Instant updatedAt;
   private Long commentsCount;
 }

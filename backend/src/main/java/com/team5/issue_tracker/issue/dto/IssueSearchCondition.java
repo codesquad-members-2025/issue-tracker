@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class IssueSearchCondition {
   private Boolean isOpen;
   private Long assigneeId;
-  private List<Long> labelId;
+  private List<Long> labelIds;
   private Long milestoneId;
   private Long authorId;
 }
