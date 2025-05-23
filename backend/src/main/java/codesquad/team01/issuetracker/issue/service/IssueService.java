@@ -22,6 +22,7 @@ public class IssueService {
 	private final IssueQueryRepository issueQueryRepository;
 	private final UserQueryRepository userQueryRepository;
 	private final LabelQueryRepository labelQueryRepository;
+
 	private final IssueAssembler issueAssembler;
 
 	public IssueDto.ListResponse findIssues(IssueState state, Integer writerId, Integer milestoneId,

@@ -8,4 +8,6 @@ public interface UserQueryRepository {
 
 	List<UserDto.IssueAssigneeRow> findAssigneesByIssueIds(List<Integer> issueIds);
 
+	List<UserDto.WriterResponse> findUsersForFilter();
+
 }

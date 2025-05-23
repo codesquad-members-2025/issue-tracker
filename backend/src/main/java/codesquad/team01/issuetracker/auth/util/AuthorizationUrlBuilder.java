@@ -1,12 +1,12 @@
 package codesquad.team01.issuetracker.auth.util;
 
-import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
-import lombok.RequiredArgsConstructor;
+import java.net.URI;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor

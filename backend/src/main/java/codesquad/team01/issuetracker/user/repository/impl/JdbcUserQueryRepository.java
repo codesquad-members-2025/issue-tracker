@@ -25,6 +25,17 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
 		    FROM issue_assignee ia
 		    JOIN users u ON ia.user_id = u.id
 		    WHERE ia.issue_id IN (:issueIds)
+		    AND u.deleted_at IS NULL
+		""";
+
+	private static final String FILTER_USER_LIST_QUERY = """
+			SELECT
+				u.id as users_id,
+				u.username as users_username,
+				u.profile_image_url as users_profile_image_url
+			FROM users u
+			WHERE u.deleted_at IS NULL
+			ORDER BY u.username ASC
 		""";
 
 	private final RowMapper<UserDto.IssueAssigneeRow> assigneeRowMapper = (rs, rowNum) -> UserDto.IssueAssigneeRow.builder()
@@ -32,6 +43,13 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
 		.assigneeId(rs.getInt("assignee_id"))
 		.assigneeProfileImageUrl(rs.getString("assignee_profile_image_url"))
 		.build();
+
+	private final RowMapper<UserDto.WriterResponse> filterUserListItemResponseRowMapper =
+		(rs, rowNum) -> UserDto.WriterResponse.builder()
+			.id(rs.getInt("users_id"))
+			.username(rs.getString("users_username"))
+			.profileImageUrl(rs.getString("users_profile_image_url"))
+			.build();
 
 	@Override
 	public List<UserDto.IssueAssigneeRow> findAssigneesByIssueIds(List<Integer> issueIds) {
@@ -41,5 +59,10 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
 		}
 		MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
 		return jdbcTemplate.query(ASSIGNEE_QUERY, params, assigneeRowMapper);
+	}
+
+	@Override
+	public List<UserDto.WriterResponse> findUsersForFilter() {
+		return jdbcTemplate.query(FILTER_USER_LIST_QUERY, filterUserListItemResponseRowMapper);
 	}
 }

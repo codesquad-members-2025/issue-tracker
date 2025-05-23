@@ -9,10 +9,6 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 
-
-import java.util.Optional;
-
-
 @Configuration
 @EnableJdbcAuditing
 public class DataJdbcConfig {

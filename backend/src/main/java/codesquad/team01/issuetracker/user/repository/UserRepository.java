@@ -12,4 +12,5 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 	Optional<User> findByLoginId(Integer id);
 
 	Optional<User> findByProviderIdAndAuthProvider(Long providerId, String authProvider);
+
 }
