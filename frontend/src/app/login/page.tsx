@@ -113,6 +113,34 @@ const SignupLink = styled(Link)`
 export default function LoginPage() {
   const isDarkMode = useThemeStore((state) => state.isDark);
 
+  const handleGitHubLogin = async () => {
+    try {
+      // const res = await fetch("/api/v1/oauth/github/login", {
+      const res = await fetch(
+        "http://localhost:8080//api/v1/oauth/github/login",
+        {
+          method: "GET",
+          redirect: "manual",
+        }
+      );
+
+      if (res.status === 302) {
+        const location = res.headers.get("Location");
+        if (location) {
+          window.location.href = location; // GitHub 로그인 페이지로 이동
+        } else {
+          alert("리다이렉트 주소를 가져올 수 없습니다.");
+        }
+      } else {
+        const errorJson = await res.json();
+        alert(errorJson.message || "로그인 중 오류가 발생했습니다.");
+      }
+    } catch (err) {
+      console.error("GitHub 로그인 실패:", err);
+      alert("GitHub 로그인 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <Container>
       <ThemeToggleBtn />
@@ -135,7 +163,9 @@ export default function LoginPage() {
         )}
       </Logo>
 
-      <SocialButton>GitHub 계정으로 로그인</SocialButton>
+      <SocialButton onClick={handleGitHubLogin}>
+        GitHub 계정으로 로그인
+      </SocialButton>
 
       <Divider>
         <span>or</span>
