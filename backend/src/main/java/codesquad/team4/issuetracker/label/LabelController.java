@@ -1,12 +1,13 @@
 package codesquad.team4.issuetracker.label;
 
-import codesquad.team4.issuetracker.label.dto.LabelDto;
-import codesquad.team4.issuetracker.label.dto.LabelDto.LabelFilter;
+import codesquad.team4.issuetracker.label.dto.LabelRequestDto;
+import codesquad.team4.issuetracker.label.dto.LabelResponseDto;
+import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelFilter;
 import codesquad.team4.issuetracker.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,8 +17,14 @@ public class LabelController {
 
     @GetMapping("/filter")
     public ApiResponse<LabelFilter> getFilterLabels() {
-        LabelDto.LabelFilter result = labelService.getFilterLabels();
+        LabelResponseDto.LabelFilter result = labelService.getFilterLabels();
         return ApiResponse.success(result);
+    }
+
+    @PostMapping(value = "")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createLabel(@RequestBody @Valid LabelRequestDto.CreateLabelDto request) {
+        labelService.createLabel(request);
     }
 
 }
