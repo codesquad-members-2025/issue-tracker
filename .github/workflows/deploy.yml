@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   deploy-backend:
@@ -53,13 +54,27 @@ jobs:
 
             echo "🔑 Writing .env file"
             cat <<EOF > /home/ubuntu/.env
-            JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
-            JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
-            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            AWS_REGION=${{ secrets.AWS_REGION }}
-            S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
+            export JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
+            export JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
+            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            export AWS_REGION=${{ secrets.AWS_REGION }}
+            export S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
             EOF
 
+            echo "📤 Load environment variables"
+            source /home/ubuntu/.env
+
             echo "🚀 Run Spring Boot"
-            nohup bash -c 'source /home/ubuntu/.env && java -jar -Dspring.profiles.active=dev /home/ubuntu/app.jar' > /home/ubuntu/app.log 2>&1 &
+            nohup java \
+              -Dspring.profiles.active=dev \
+              -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
+              -DJWT_REFRESH_KEY=$JWT_REFRESH_KEY \
+              -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+              -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+              -DAWS_REGION=$AWS_REGION \
+              -DS3_BUCKET_NAME=$S3_BUCKET_NAME \
+              -jar /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
+
+            echo "📄 Print last 20 lines of app.log"
+            tail -n 20 /home/ubuntu/app.log
