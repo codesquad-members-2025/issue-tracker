@@ -157,13 +157,10 @@ export default function IssuesPage() {
   // fetch("/api/v1/issues?state=open")
   useEffect(() => {
     fetchIssueCounts();
-  }, []);
+  }, [fetchIssueCounts]);
 
   useEffect(() => {
     fetchIssues();
-  }, []);
-
-  useEffect(() => {
     fetchMoreIssues();
   }, []);
 

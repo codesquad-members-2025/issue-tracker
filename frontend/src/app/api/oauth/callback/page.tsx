@@ -20,7 +20,7 @@ export default function OAuthCallbackPage() {
     const exchangeToken = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/v1/oauth/callback?code=${code}&state=${state}`
+          `https://localhost:8080/api/v1/oauth/callback?code=${code}&state=${state}`
           //   `api/v1/oauth/callback?code=${code}&state=${state}`
         );
         const json = await res.json();
