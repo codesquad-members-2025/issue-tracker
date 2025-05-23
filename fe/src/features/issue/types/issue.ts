@@ -37,13 +37,15 @@ export interface Assignee {
   profileImage: string;
 }
 
+export interface Author {
+  id: number;
+  nickname: string;
+  profileImage: string;
+}
+
 export interface IssueDetailResponse {
   id: number;
-  author: {
-    id: number;
-    nickname: string;
-    profileImage: string;
-  };
+  author: Author;
   title: string;
   content: string | null;
   labels: Label[];
