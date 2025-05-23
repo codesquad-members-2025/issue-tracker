@@ -3,6 +3,6 @@ export default function getOptionWithToken(options, token) {
     ...options.headers,
     Authorization: `Bearer ${token}`,
   };
-  const option = { ...options, headers };
+  const option = { ...options, headers, credentials: 'include',};
   return option;
 }
