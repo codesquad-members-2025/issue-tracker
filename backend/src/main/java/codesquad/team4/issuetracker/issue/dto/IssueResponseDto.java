@@ -3,13 +3,13 @@ package codesquad.team4.issuetracker.issue.dto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
-import java.util.List;
-
 import codesquad.team4.issuetracker.user.dto.UserDto;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.Set;
 
 public class IssueResponseDto {
 

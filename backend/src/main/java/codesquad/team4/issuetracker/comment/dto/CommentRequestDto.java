@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.comment.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class CommentRequestDto {
     @Getter
     @Builder
     public static class UpdateCommentDto {
-        @NotNull
+        @NotEmpty
         private String content;
     }
 }

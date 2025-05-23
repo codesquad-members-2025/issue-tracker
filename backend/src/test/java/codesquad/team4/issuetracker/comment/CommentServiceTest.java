@@ -1,12 +1,5 @@
 package codesquad.team4.issuetracker.comment;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
@@ -21,6 +14,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class CommentServiceTest {
@@ -148,6 +148,43 @@ public class CommentServiceTest {
                 commentService.updateComment(commentId, request, "dummy.png")
         ).isInstanceOf(CommentNotFoundException.class)
                 .hasMessageContaining("댓글을 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 성공")
+    void testDeleteComment_success() {
+        // given
+        Long issueId = 1L;
+        Long commentId = 2L;
+
+        Comment comment = Comment.builder()
+                .id(commentId)
+                .issueId(issueId)
+                .authorId(1L)
+                .content("삭제할 댓글.")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+        // when
+        commentService.deleteComment(issueId, commentId);
+
+        // then
+        verify(commentRepository, times(1)).findById(commentId);
+        verify(commentRepository, times(1)).deleteById(commentId);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 댓글을 삭제하려 하면 에러가 발생한다")
+    void deleteNotExistComment() {
+        //given
+        Long issueId = 1L;
+        Long commentId = 999L;
+
+        //when & then
+        assertThatThrownBy(() -> commentService.deleteComment(issueId, commentId))
+                .isInstanceOf(CommentNotFoundException.class);
     }
 
 }

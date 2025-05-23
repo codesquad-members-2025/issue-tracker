@@ -1,8 +1,11 @@
     package codesquad.team4.issuetracker.issue;
 
+    import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
     import java.util.ArrayList;
+    import java.util.HashSet;
     import java.util.List;
     import java.util.Map;
+    import java.util.Set;
     import java.util.stream.Collectors;
     import lombok.RequiredArgsConstructor;
     import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,9 +17,9 @@
 
         private final JdbcTemplate jdbcTemplate;
 
-        public List<Map<String, Object>> findIssuesByOpenStatus(boolean isOpen){
+        public List<Map<String, Object>> findIssuesByOpenStatus(IssueRequestDto.IssueFilterParamDto dto){
 
-            String sql = """
+            StringBuilder sql = new StringBuilder("""
                 SELECT i.issue_id AS issue_id,
                        i.title,
                        u.user_id AS author_id,
@@ -38,9 +41,33 @@
                 LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
                 LEFT JOIN `user` a ON ia.assignee_id = a.user_id
                 WHERE i.is_open = ?
-            """;
+            """);
 
-            return jdbcTemplate.queryForList(sql, isOpen);
+            List<Object> params = new ArrayList<>();
+            params.add(dto.getIsOpen());
+
+            if (dto.getAuthorId() != null) {
+                sql.append(" AND i.author_id = ?");
+                params.add(dto.getAuthorId());
+            }
+
+            if (dto.getAssigneeId() != null) {
+                sql.append(" AND a.user_id = ?");
+                params.add(dto.getAssigneeId());
+            }
+
+            if (dto.getCommentAuthorId() != null) {
+                sql.append("""
+                    AND EXISTS (
+                        SELECT 1 FROM comment c
+                        WHERE c.issue_id = i.issue_id
+                        AND c.author_id = ?
+                    )
+                """);
+                params.add(dto.getCommentAuthorId());
+            }
+
+            return jdbcTemplate.queryForList(sql.toString(), params.toArray());
         }
 
         public int countIssuesByOpenStatus(boolean isOpen) {
@@ -51,12 +78,13 @@
             );
         }
 
-        public List<Long> findExistingIssueIds(List<Long> issueIds) {
+        public Set<Long> findExistingIssueIds(List<Long> issueIds) {
             String placeholders = issueIds.stream().map(id -> "?").collect(Collectors.joining(", "));
             String sql = "SELECT issue_id FROM issue WHERE issue_id IN (" + placeholders + ")";
-            return jdbcTemplate.query(sql,
-                    (rs, rowNum) -> rs.getLong("issue_id"),
-                    issueIds.toArray());
+            List<Long> results = jdbcTemplate.query(sql,
+                (rs, rowNum) -> rs.getLong("issue_id"),
+                issueIds.toArray());
+            return new HashSet<>(results);
         }
 
         public int updateIssueStatusByIds(boolean isOpen, List<Long> issueIds) {

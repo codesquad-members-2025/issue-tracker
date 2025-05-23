@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.issue;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -11,8 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import codesquad.team4.issuetracker.aws.S3FileService;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.exception.badrequest.FileUploadException;
-import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidFilteringConditionException;
 import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
@@ -21,12 +23,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @WebMvcTest(IssueController.class)
 class IssueControllerTest {
@@ -209,5 +214,50 @@ class IssueControllerTest {
                 .andExpect(jsonPath("$.data.comments[0].author.nickname").value("작성자1"))
                 .andExpect(jsonPath("$.data.comments[1].content").value("댓글2"))
                 .andExpect(jsonPath("$.data.comments[1].author.nickname").value("작성자2"));
+    }
+
+    @Test
+    @DisplayName("isOpen이 없는 경우 400 에러가 발생한다")
+    void BadRequestWhenIsOpenIsMissing() throws Exception {
+        mockMvc.perform(get("/api/issues")
+                .param("authorId", "1"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "1, 2, ''",          // author + assignee
+        "1, '', 3",     // author + comment
+        "'', 2, 3",   // assignee + comment
+        "1, 2, 3" // all
+    })
+    @DisplayName("isOpen 외 필터링 조건이 2개 이상이면 400 BAD REQUEST를 응답한다")
+    void BadRequestWhenMultipleFilters(
+        //given
+        String authorId,
+        String assigneeId,
+        String commentAuthorId) throws Exception {
+
+        MockHttpServletRequestBuilder request = get("/api/issues")
+            .param("isOpen", "true")
+            .param("page", "0")
+            .param("size", "10");
+
+        if (!authorId.isEmpty()) {
+            request = request.param("authorId", authorId);
+        }
+        if (!assigneeId.isEmpty()) {
+            request = request.param("assigneeId", assigneeId);
+        }
+        if (!commentAuthorId.isEmpty()) {
+            request = request.param("commentAuthorId", commentAuthorId);
+        }
+
+        //when & then
+        mockMvc.perform(request)
+            .andExpect(status().isBadRequest())
+            .andExpect(result -> assertThat(result.getResolvedException())
+                .isInstanceOf(InvalidFilteringConditionException.class)
+                .hasMessageContaining("하나만 사용할"));
     }
 }
