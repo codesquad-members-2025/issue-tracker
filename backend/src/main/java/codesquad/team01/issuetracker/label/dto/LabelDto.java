@@ -1,5 +1,7 @@
 package codesquad.team01.issuetracker.label.dto;
 
+import java.util.List;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class LabelDto {
 	@Builder
 	public record ListItemResponse(
 		Integer id,
+
 		String name,
 		String description,
 		String color,
@@ -37,6 +40,22 @@ public class LabelDto {
 		String labelName,
 		String labelColor,
 		LabelTextColor labelTextColor
+	) {
+	}
+
+	@Builder
+	public record LabelFilterResponse(
+		Integer id,
+
+		String name,
+		String color
+	) {
+	}
+
+	@Builder
+	public record LabelFilterListResponse(
+		int totalCount,
+		List<LabelFilterResponse> labels
 	) {
 	}
 

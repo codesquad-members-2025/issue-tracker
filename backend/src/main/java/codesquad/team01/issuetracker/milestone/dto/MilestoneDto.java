@@ -1,5 +1,7 @@
 package codesquad.team01.issuetracker.milestone.dto;
 
+import java.util.List;
+
 import lombok.Builder;
 
 public class MilestoneDto {
@@ -15,6 +17,21 @@ public class MilestoneDto {
 		Integer id,
 
 		String title
+	) {
+	}
+
+	@Builder
+	public record MilestoneFilterResponse(
+		Integer id,
+
+		String title
+	) {
+	}
+
+	@Builder
+	public record MilestoneFilterListResponse(
+		int totalCount,
+		List<MilestoneFilterResponse> milestones
 	) {
 	}
 }

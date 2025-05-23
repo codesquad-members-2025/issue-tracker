@@ -28,6 +28,17 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 		    FROM issue_label il
 		    JOIN label l ON il.label_id = l.id
 		    WHERE il.issue_id IN (:issueIds)
+			AND l.deleted_at IS NULL
+		""";
+
+	private static final String FILTER_LABEL_LIST_QUERY = """
+		SELECT 
+			l.id as label_id,
+			l.name as label_name,
+			l.color as label_color
+		FROM label l
+		WHERE l.deleted_at IS NULL
+		ORDER BY l.name ASC
 		""";
 
 	private final RowMapper<LabelDto.IssueLabelRow> labelRowMapper = (rs, rowNum) -> LabelDto.IssueLabelRow.builder()
@@ -39,6 +50,13 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 		.labelTextColor(LabelTextColor.fromTextColorStr(rs.getString("label_text_color")))
 		.build();
 
+	private final RowMapper<LabelDto.LabelFilterResponse> filterLabelListItemResponseRowMapper =
+		(rs, rowNum) -> LabelDto.LabelFilterResponse.builder()
+			.id(rs.getInt("label_id"))
+			.name(rs.getString("label_name"))
+			.color(rs.getString("label_color"))
+			.build();
+
 	@Override
 	public List<LabelDto.IssueLabelRow> findLabelsByIssueIds(List<Integer> issueIds) {
 
@@ -47,5 +65,10 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 		}
 		MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
 		return jdbcTemplate.query(LABEL_QUERY, params, labelRowMapper);
+	}
+
+	@Override
+	public List<LabelDto.LabelFilterResponse> findLabelsForFilter() {
+		return jdbcTemplate.query(FILTER_LABEL_LIST_QUERY, filterLabelListItemResponseRowMapper);
 	}
 }

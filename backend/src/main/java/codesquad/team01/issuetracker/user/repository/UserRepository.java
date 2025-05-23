@@ -9,7 +9,8 @@ import codesquad.team01.issuetracker.user.domain.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
-	Optional<User> findByLoginId(Integer id);
+	Optional<User> findByLoginId(String id);
 
 	Optional<User> findByProviderIdAndAuthProvider(Long providerId, String authProvider);
+
 }

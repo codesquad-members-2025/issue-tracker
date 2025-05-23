@@ -33,10 +33,25 @@ public class IssueDto {
 	/**
 	 * 요청 DTO
 	 */
-	// 조회 필터 쿼리 요청 DTO
 
+	// 열린/닫힌 이슈 개수 조회 필터 쿼리 요청 DTO
 	@Builder
-	public record QueryRequest(
+	public record CountQueryRequest(
+		@Positive(message = "작성자 ID는 양수여야 합니다")
+		Integer writerId,
+
+		@Positive(message = "마일스톤 ID는 양수여야 합니다")
+		Integer milestoneId,
+
+		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
+
+		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds
+	) {
+	}
+
+	// 이슈 조회 필터 쿼리 요청 DTO
+	@Builder
+	public record ListQueryRequest(
 		@Pattern(regexp = "^(open|closed)$", message = "state는 'open' 또는 'closed'만 가능합니다")
 		String state,
 
@@ -118,6 +133,14 @@ public class IssueDto {
 	) {
 	}
 
+	// 상태별 이슈 개수 응답 DTO
+	@Builder
+	public record CountResponse(
+		int open,
+		int closed
+	) {
+	}
+
 	/**
 	 * DB 조회용 DTO
 	 */
@@ -142,6 +165,14 @@ public class IssueDto {
 		Integer milestoneId,
 
 		String milestoneTitle
+	) {
+	}
+
+	// 상태별 이슈 개수 행 DTO
+	@Builder
+	public record StateCountRow(
+		String state,
+		int count
 	) {
 	}
 
