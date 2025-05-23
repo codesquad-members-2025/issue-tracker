@@ -9,17 +9,15 @@ import org.springframework.web.filter.CorsFilter;
 public class FilterConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
-    private final CorsFilter corsFilter;
 
-    public FilterConfig(JwtAuthFilter jwtAuthFilter, CorsFilter corsFilter) {
+
+    public FilterConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
-        this.corsFilter = corsFilter;
     }
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(corsFilter);
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(0);
         return registrationBean;
