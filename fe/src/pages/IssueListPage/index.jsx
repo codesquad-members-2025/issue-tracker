@@ -23,6 +23,7 @@ import useLabelStore from '@/stores/labelStore';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import { useAuthStore } from '@/stores/authStore';
 import { mapToUnifiedId } from '@/utils/mapToUnifiedId/mapToUnifiedId';
+import { mapIssueListToUnifiedId } from '@/utils/mapToUnifiedId/mapIssueListToUnifiedId';
 
 const Container = styled.div`
   display: flex;
@@ -115,10 +116,17 @@ export default function IssueListPage() {
   useEffect(() => {
     if (!response?.data) return;
     // const fetchedData = response.data;
-    const { issues, users, labels: rawLabels, milestones: rawMilestones, metaData } = response.data;
+    const {
+      issues: rawIssues,
+      users,
+      labels: rawLabels,
+      milestones: rawMilestones,
+      metaData,
+    } = response.data;
 
     const labels = mapToUnifiedId(rawLabels);
     const milestones = mapToUnifiedId(rawMilestones);
+    const issues = mapIssueListToUnifiedId(rawIssues);
 
     const currentData = issues;
     const prevData = prevDataRef.current;
