@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🛑 Stop previous app"
-            pkill -f 'java -jar' || true
+            (pkill -f 'java -jar' || echo "No process to kill") || true
 
             echo "🧹 Clean previous app"
             rm -f /home/ubuntu/app.jar
@@ -62,7 +62,7 @@ jobs:
             export S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
             EOF
 
-            echo "📤 Load environment variables"
+            echo "📤 Load env"
             source /home/ubuntu/.env
 
             echo "🚀 Run Spring Boot"
@@ -73,8 +73,10 @@ jobs:
               -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
               -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
               -DAWS_REGION=$AWS_REGION \
+              -Dcloud.aws.region.static=$AWS_REGION \
               -DS3_BUCKET_NAME=$S3_BUCKET_NAME \
               -jar /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
 
-            echo "📄 Print last 20 lines of app.log"
-            tail -n 20 /home/ubuntu/app.log
+            echo "📄 Tail latest logs"
+            sleep 3
+            tail -n 30 /home/ubuntu/app.log
