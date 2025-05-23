@@ -18,6 +18,12 @@ jobs:
         with:
           node-version: '18'
 
+      - name: 📝 Create .env.production
+        run: |
+          cat <<EOF > fe/.env.production
+          VITE_API_BASE_URL=http://${{ secrets.EC2_HOST }}:8080
+          EOF
+
       - name: Install dependencies & build
         run: |
           cd fe
