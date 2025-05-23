@@ -26,7 +26,6 @@ import { GetToggleButton } from './getToggleButton';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import AuthorInform from '../AuthorInform'; //상세 이슈 페이지에서 사이드바 PATCH요청시 필요
 import GetSelectedElements from './SelectedElements';
-import { shallow } from 'zustand/shallow';
 import { issueDetailStoreSelectorMap, toggleSelectorMap } from './storeMannager';
 
 const Overlay = styled.div`

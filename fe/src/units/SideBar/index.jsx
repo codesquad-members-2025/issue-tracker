@@ -11,6 +11,7 @@ const Container = styled.div`
   border: 1px solid ${({ theme }) => theme.border.default};
   border-radius: 16px;
   background-color: ${({ theme }) => theme.surface.strong};
+  padding: 32px;
 `;
 
 export default function SideBar({ pageType = null }) {
