@@ -1,5 +1,7 @@
 package codesquad.team01.issuetracker.user.dto;
 
+import java.util.List;
+
 import lombok.Builder;
 
 public class UserDto {
@@ -15,6 +17,9 @@ public class UserDto {
 	// 이슈 목록 - 작성자 응답 DTO
 	@Builder
 	public record WriterResponse(
+		// 처음엔 작성자 응답 DTO로 생성했지만
+		// 현재 담당자, 작성자 필터 db 조회용 dto, 응답용 dto의 역할도 하고 있음
+		// 이럴 경우 더 만들지? 이름을 범용적으로 바꿀지?
 		Integer id,
 
 		String username,
@@ -35,6 +40,14 @@ public class UserDto {
 		public String profileImageUrl() {
 			return profileImageUrl != null ? profileImageUrl : DEFAULT_PROFILE_IMAGE_URL;
 		}
+	}
+
+	@Builder
+	public record UserFilterListResponse(
+		int totalCount,
+		List<WriterResponse> users // WriterResponse와 같이 데이터를 필요로 해서 임시로 넣음
+
+	) {
 	}
 
 	/**

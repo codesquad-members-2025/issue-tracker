@@ -1,5 +1,7 @@
 package codesquad.team01.issuetracker.label.dto;
 
+import java.util.List;
+
 import codesquad.team01.issuetracker.label.domain.LabelTextColor;
 import lombok.Builder;
 
@@ -18,6 +20,22 @@ public class LabelDto {
 		String name,
 		String color,
 		String textColor
+	) {
+	}
+
+	@Builder
+	public record LabelFilterResponse(
+		Integer id,
+
+		String name,
+		String color
+	) {
+	}
+
+	@Builder
+	public record LabelFilterListResponse(
+		int totalCount,
+		List<LabelFilterResponse> labels
 	) {
 	}
 

@@ -41,7 +41,7 @@ public class TokenService {
 				// 만료되지 않았으면 DB 토큰 그대로
 				refreshToken = existing.getToken();
 			} else {
-				// 만료됐으면 새로 발급 → DB 업데이트
+				// 만료됐으면 새로 발급함 (DB 업데이트)
 				refreshToken = jwtUtil.createRefreshToken(id);
 				RefreshToken updated = RefreshToken.builder()
 					.id(existing.getId())
@@ -51,7 +51,7 @@ public class TokenService {
 				refreshTokenRepository.save(updated);
 			}
 		} else {
-			// 기록 없으면 새로 발급
+			// 없으면 새로 발급
 			refreshToken = jwtUtil.createRefreshToken(id);
 			RefreshToken created = RefreshToken.builder()
 				.userId(id)

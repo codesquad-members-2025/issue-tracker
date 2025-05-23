@@ -1,11 +1,12 @@
 package codesquad.team01.issuetracker;
 
-import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
 
 @EnableConfigurationProperties(GithubOAuthProperties.class)
 @SpringBootApplication
