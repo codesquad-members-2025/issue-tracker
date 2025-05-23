@@ -6,8 +6,6 @@ import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
-import codesquad.team4.issuetracker.exception.ExceptionMessage;
-import codesquad.team4.issuetracker.exception.badrequest.IssueStatusUpdateException;
 import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
@@ -62,8 +60,8 @@ public class IssueService {
     private final IssueAssigneeRepository issueAssigneeRepository;
     private final MilestoneRepository milestoneRepository;
 
-    public IssueResponseDto.IssueListDto getIssues(boolean isOpen, int page, int size) {
-        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(isOpen);
+    public IssueResponseDto.IssueListDto getIssues(IssueRequestDto.IssueFilterParamDto params, int page, int size) {
+        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(params);
 
         Map<Long, IssueResponseDto.IssueInfo> issueMap = new LinkedHashMap<>();
         Map<Long, Set<UserInfo>> assigneeMap = new HashMap<>();
@@ -79,7 +77,7 @@ public class IssueService {
 
         List<IssueInfo> issues = pagenateList(page, size, issueMap);
 
-        int totalElements = issueDao.countIssuesByOpenStatus(isOpen);
+        int totalElements = issueDao.countIssuesByOpenStatus(params.getIsOpen());
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
         return IssueResponseDto.IssueListDto.builder()
@@ -181,19 +179,18 @@ public class IssueService {
         List<Long> issueIds = request.getIssuesId();
         boolean isOpen = request.isOpen();
 
-        if (issueIds == null || issueIds.isEmpty()) {
-            throw new IssueStatusUpdateException(ExceptionMessage.NO_ISSUE_IDS);
-        }
-
-        List<Long> existingIds = issueDao.findExistingIssueIds(issueIds);
+        Set<Long> existingIdsSet = issueDao.findExistingIssueIds(issueIds);
+        List<Long> existingIds = new ArrayList<>(existingIdsSet);
 
         List<Long> missingIds = issueIds.stream()
-                .filter(id -> !existingIds.contains(id))
-                .toList();
+            .filter(id -> !existingIdsSet.contains(id))
+            .toList();
 
-        if (!existingIds.isEmpty()) {
+
+        if (!existingIdsSet.isEmpty()) {
             issueDao.updateIssueStatusByIds(isOpen, existingIds);
         }
+
         String message = missingIds.isEmpty()
                 ? UPDATE_ISSUESTATUS
                 : String.format(ISSUE_PARTIALLY_UPDATED, missingIds);
@@ -259,17 +256,21 @@ public class IssueService {
         //기존 이미지를 삭제하는 것인지 확인
         String newFileUrl = determineNewFileUrl(request, uploadUrl, oldIssue);
 
-        Issue updated = oldIssue.toBuilder()
+        Issue updated = createupdatedIssue(request, oldIssue, newFileUrl);
+
+        issueRepository.save(updated);
+
+        return createMessageResult(updated.getId(), UPDATE_ISSUE);
+    }
+
+    private  Issue createupdatedIssue(IssueUpdateDto request, Issue oldIssue, String newFileUrl) {
+        return oldIssue.toBuilder()
                 .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
                 .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
                 .FileUrl(newFileUrl)
                 .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
                 .build();
-
-        issueRepository.save(updated);
-
-        return createMessageResult(updated.getId(), UPDATE_ISSUE);
     }
 
     private String determineNewFileUrl(IssueUpdateDto request, String uploadUrl, Issue oldIssue) {
@@ -366,5 +367,12 @@ public class IssueService {
             foundIds.forEach(missing::remove);
             throw new AssigneeNotFoundException(missing);
         }
+    }
+
+    public void deleteIssue(Long issueId) {
+        if (!issueRepository.existsById(issueId)) {
+            throw new IssueNotFoundException(issueId);
+        }
+        issueRepository.deleteById(issueId);
     }
 }

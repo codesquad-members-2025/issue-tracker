@@ -7,13 +7,9 @@ import codesquad.team4.issuetracker.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -47,5 +43,11 @@ public class CommentController {
 
         CommentResponseDto.UpdateCommentDto response = commentService.updateComment(commentId, request, uploadUrl);
         return ApiResponse.success(response);
+    }
+
+    @DeleteMapping("/{issue-id}/{comment-id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@PathVariable("issue-id") Long issueId, @PathVariable("comment-id") Long commentId) {
+        commentService.deleteComment(issueId, commentId);
     }
 }

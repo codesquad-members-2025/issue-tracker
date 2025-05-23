@@ -3,11 +3,13 @@ package codesquad.team4.issuetracker.exception;
 import codesquad.team4.issuetracker.exception.badrequest.InvalidRequestException;
 import codesquad.team4.issuetracker.exception.notfound.DataNotFoundException;
 import codesquad.team4.issuetracker.response.ApiResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Hidden
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
