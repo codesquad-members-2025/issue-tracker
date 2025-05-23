@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.team01.issuetracker.auth.dto.AuthDto;
-import codesquad.team01.issuetracker.auth.dto.LoginRequest;
-import codesquad.team01.issuetracker.auth.dto.LoginResponseDto;
 import codesquad.team01.issuetracker.auth.service.AuthService;
 import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,7 +56,7 @@ public class AuthController {
 	//자체 로그인
 	//에러 발생 시 API Response 적용 예정
 	@PostMapping("/api/v1/auth/login")
-	public LoginResponseDto login(@RequestBody @Valid LoginRequest request) {
-		return authService.login(request.getLoginId(), request.getPassword());
+	public AuthDto.LoginResponse login(@RequestBody @Valid AuthDto.LoginRequest request) {
+		return authService.login(request.loginId(), request.password());
 	}
 }
