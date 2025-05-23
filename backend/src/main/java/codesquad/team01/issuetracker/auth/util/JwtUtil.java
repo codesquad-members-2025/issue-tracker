@@ -10,11 +10,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -75,6 +81,26 @@ public class JwtUtil {
 
 	public long getAccessTokenExpiresInSeconds() {
 		return accessTokenValidity / 1000;
+	}
+
+	public boolean validateRefreshToken(String token) {
+		try {
+			Jwts.parser()
+				.setSigningKey(SECRET_KEY.getBytes())
+				.parseClaimsJws(token); // 유효하지 않으면 예외 발생
+			return true;
+		} catch (ExpiredJwtException e) {
+			log.info("Refresh token이 만료되었습니다");
+		} catch (UnsupportedJwtException e) {
+			log.info("지원하지 않는 JWT 형식입니다");
+		} catch (MalformedJwtException e) {
+			log.info("토큰이 올바르지 않거나 Base64 디코딩이 불가능합니다");
+		} catch (SignatureException e) {
+			log.info("서명 검증이 실패하였습니다");
+		} catch (IllegalArgumentException e) {
+			log.info("메서드에 잘못된 인자값이 있습니다");
+		}
+		return false;
 	}
 
 }
