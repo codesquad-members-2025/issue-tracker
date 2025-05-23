@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { someHandler } from '@/utils/common/someHandler';
 
 const useIssueDetailStore = create(
   immer((set) => ({
@@ -25,35 +26,37 @@ const useIssueDetailStore = create(
     milestone: {},
     comments: [],
     //클릭하는 순간 적용
-    toggleAssignee: (id) => {
+    toggleAssignee: (item) => {
       set((state) => {
         const assignees = state.assignees;
-        if (assignees.includes(id)) {
-          state.assignees = assignees.filter((assigneeId) => assigneeId !== id);
+        if (someHandler(assignees, item.id)) {
+          state.assignees = assignees.filter(({ id }) => id !== item.id);
         } else {
-          state.assignees.push(id);
+          state.assignees.push(item);
         }
       });
     },
 
-    toggleLabel: (id) => {
+    toggleLabel: (item) => {
       set((state) => {
         const labels = state.labels;
-        if (labels.includes(id)) {
-          state.labels = labels.filter((labelId) => labelId !== id);
+        if (someHandler(labels, item.id)) {
+          state.labels = labels.filter(({ id }) => id !== item.id);
         } else {
-          state.labels.push(id);
+          state.labels.push(item);
         }
       });
     },
 
-    toggleMilestone: (id) => {
+    toggleMilestone: (item) => {
       set((state) => {
         const milestone = state.milestone;
-        if (state.issue.milestoneId === id) {
+        if (milestone?.id === item.id) {
+          state.milestone = {};
           state.issue.milestoneId = null;
         } else {
-          state.issue.milestoneId = id;
+          state.milestone = item;
+          state.issue.milestoneId = item.id;
         }
       });
     },

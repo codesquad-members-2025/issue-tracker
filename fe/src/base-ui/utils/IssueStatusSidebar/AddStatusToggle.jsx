@@ -1,5 +1,4 @@
 //
-
 /*
 # 사용가이드
 
@@ -18,14 +17,17 @@
 */
 
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import React from 'react';
 import { typography } from '@/styles/foundation';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import useDataFetch from '@/hooks/useDataFetch';
-import { getToggleButton } from './getToggleButton';
+import { GetToggleButton } from './getToggleButton';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
-import AuthorInform from '../AuthorInform';
+import AuthorInform from '../AuthorInform'; //상세 이슈 페이지에서 사이드바 PATCH요청시 필요
+import GetSelectedElements from './SelectedElements';
+import { shallow } from 'zustand/shallow';
+import { issueDetailStoreSelectorMap, toggleSelectorMap } from './storeMannager';
 
 const Overlay = styled.div`
   position: fixed;
@@ -33,7 +35,6 @@ const Overlay = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3); /* 배경 어두움 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -88,6 +89,7 @@ const SubMenuWrapper = styled.div`
   align-items: center;
 `;
 
+//itemsArr는 객체배열을 받는다/
 export default function AddStatusToggle({
   toggleType,
   triggerButtonLabel,
@@ -95,23 +97,37 @@ export default function AddStatusToggle({
   pageTypeContext = null,
 }) {
   const [open, setOpen] = useState(false);
-  const { toggleAssignee, toggleLabel, toggleMilestone } = useIssueDetailStore((state) => ({
-    toggleAssignee: state.toggleAssignee,
-    toggleLabel: state.toggleLabel,
-    toggleMilestone: state.toggleMilestone,
-  }));
-  const fetchData = useDataFetch();
+  // const { toggleAssignee, toggleLabel, toggleMilestone } = useIssueDetailStore(
+  //   (state) => ({
+  //     toggleAssignee: state.toggleAssignee,
+  //     toggleLabel: state.toggleLabel,
+  //     toggleMilestone: state.toggleMilestone,
+  //   }),
+  //   shallow,
+  // );
 
-  function handleToggleOption(type, id) {
-    switch (type) {
-      case 'label':
-        toggleLabel(id);
-      case 'milestone':
-        toggleMilestone(id);
-      default:
-        toggleAssignee(id);
-    }
-  }
+  const toggleStatus = useIssueDetailStore(toggleSelectorMap[toggleType]);
+
+  // 현재 선택 항목을 항상 구독해 둔다. (detail 이외의 페이지라도 isSelected 계산에 사용)
+  const selected = useIssueDetailStore(issueDetailStoreSelectorMap[toggleType]);
+
+  const fetchType = '이슈 상세';
+  // const fetchData = useDataFetch({ fetchType });
+
+  // function handleToggleOption(type, item) {
+  //   switch (type) {
+  //     case 'label':
+  //       toggleLabel(item);
+  //       break;
+  //     case 'milestone':
+  //       toggleMilestone(item);
+  //       break;
+
+  //     default:
+  //       toggleAssignee(item);
+  //       break;
+  //   }
+  // }
 
   function handleCloseOverlay(context) {
     setOpen((prev) => !prev);
@@ -133,15 +149,25 @@ export default function AddStatusToggle({
       <SubMenuContainer open={open}>
         <SubMenuWrapper>
           {itemsArr.map((item) => {
+            const isSelected =
+              toggleType === 'milestone'
+                ? selected?.id === item.id
+                : Array.isArray(selected) && selected.some((v) => v.id === item.id);
+
             return (
-              <React.Fragment key={item.id}>
-                {getToggleButton(toggleType, item, handleToggleOption, selected)}
-              </React.Fragment>
+              <GetToggleButton
+                key={item.id}
+                toggleType={toggleType}
+                item={item}
+                isSelected={isSelected}
+                onClick={toggleStatus}
+              />
             );
           })}
         </SubMenuWrapper>
       </SubMenuContainer>
-      <Overlay onClick={() => handleCloseOverlay(pageTypeContext)} />
+      {open && <Overlay onClick={() => handleCloseOverlay(pageTypeContext)} />}
+      {!open && <GetSelectedElements type={toggleType} />}
     </ToggleContainer>
   );
 }

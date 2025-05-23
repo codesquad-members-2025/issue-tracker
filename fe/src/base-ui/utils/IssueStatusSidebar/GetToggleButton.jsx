@@ -1,6 +1,7 @@
 //이 버튼을 구성하는 아이템들은 초기에 서버로부터 받아온 테이터에서 업데이트한 filterStore의 프로퍼티를 가져온다.
 //selected는 이슈디테일 스토어의 프로퍼티(배열)을 입력 받는다.
 import styled from 'styled-components';
+import { typography } from '@/styles/foundation';
 
 const SubMenuButton = styled.button`
   ${typography.available.medium16};
@@ -10,6 +11,7 @@ const SubMenuButton = styled.button`
   height: 50px;
   display: flex;
   gap: 8px;
+  z-index: 1000;
 
   &:hover {
     color: ${({ theme }) => theme.text.strong};
@@ -20,15 +22,12 @@ const SubMenuButton = styled.button`
   }
 `;
 
-export function getToggleButton(toggleType, item, onClick, selected) {
+//버튼 한개 생성
+export function GetToggleButton({ toggleType, item, onClick, isSelected }) {
   switch (toggleType) {
     case 'label':
       return (
-        <SubMenuButton
-          id={item.id}
-          $isSelect={selected.some((selectedId) => selectedId === item.id)}
-          onClick={() => onClick(toggleType, item.id)}
-        >
+        <SubMenuButton id={item.id} $isSelect={isSelected} onClick={() => onClick(item)}>
           <svg
             width="20"
             height="20"
@@ -43,11 +42,7 @@ export function getToggleButton(toggleType, item, onClick, selected) {
       );
     case 'milestone':
       return (
-        <SubMenuButton
-          id={item.id}
-          $isSelect={selected.some((selectedId) => selectedId === item.id)}
-          onClick={() => onClick(toggleType, item.id)}
-        >
+        <SubMenuButton id={item.id} $isSelect={isSelected} onClick={() => onClick(item)}>
           <svg
             width="20"
             height="20"
@@ -67,11 +62,7 @@ export function getToggleButton(toggleType, item, onClick, selected) {
       );
     default:
       return (
-        <SubMenuButton
-          id={item.id}
-          $isSelect={selected.some((selectedId) => selectedId === item.id)}
-          onClick={() => onClick(toggleType, item.id)}
-        >
+        <SubMenuButton id={item.id} $isSelect={isSelected} onClick={() => onClick(item)}>
           <img src={item.imgUrl} alt={item.nickname} />
 
           <span>{item.name}</span>
