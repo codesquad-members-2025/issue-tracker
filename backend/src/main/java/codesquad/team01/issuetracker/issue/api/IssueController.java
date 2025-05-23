@@ -2,6 +2,8 @@ package codesquad.team01.issuetracker.issue.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,6 +48,22 @@ public class IssueController {
 		IssueDto.CountResponse response = issueService.countIssues(request);
 
 		log.info(response.toString());
+		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	@PatchMapping("/issues/batch")
+	public ResponseEntity<ApiResponse<IssueDto.BatchUpdateResponse>> batchUpdateIssueState(
+		@RequestBody @Valid IssueDto.BatchUpdateRequest request) {
+
+		log.info("이슈 일괄 상태 변경 요청 - 선택된 이슈 Id 목록: {}, 변경할 상태: {}",
+			request.issueIds(), request.action());
+
+		IssueDto.BatchUpdateResponse response =
+			issueService.batchUpdateIssueState(request.issueIds(), request.action());
+
+		log.info("이슈 일괄 상태 변경 완료 - 총 개수: {}, 성공: {}개, 실패: {}개, 상태 변경 실패한 이슈 id 목록: {}",
+			response.totalCount(), response.successCount(), response.failedCount(), response.failedIssueIds());
+
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }
