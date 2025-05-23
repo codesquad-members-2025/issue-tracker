@@ -4,7 +4,6 @@ import EmotionProvider from "../styles/emotionProvider";
 import GlobalStyles from "@/styles/globalStyles";
 import ThemeProvider from "@components/theme/ThemeProvider";
 import ClientProviders from "@/components/ClientProviders";
-import Header from "@components/header/Header";
 
 export default function RootLayout({
   children,
@@ -15,7 +14,6 @@ export default function RootLayout({
     <html lang="ko">
       <body suppressHydrationWarning>
         <ClientProviders>
-          <Header />
           {children}
         </ClientProviders>
       </body>
