@@ -44,11 +44,11 @@ public class JdbcTemplateIssueLabelRepository implements IssueLabelRepository {
     public List<IssueLabelResponse> returnedIssueLabelResponsesByIssueId(Long issueId) {
         String sql = """
         SELECT
-            l.label_id,
-            l.name,
-            l.color
-        FROM issue_label il
-        JOIN labels l ON il.label_id = l.label_id
+            l.id AS label_id,
+            l.name AS name,
+            l.color AS color
+        FROM issue_labels il
+        JOIN labels l ON il.label_id = l.id
         WHERE il.issue_id = :issueId    
                 """;
 
