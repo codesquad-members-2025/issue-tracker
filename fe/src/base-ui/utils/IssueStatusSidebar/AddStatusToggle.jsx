@@ -41,8 +41,9 @@ const Overlay = styled.div`
 `;
 
 const ToggleContainer = styled.div`
+  padding: 32px;
   display: flex;
-  width: 224px;
+  width: 100%;
   flex-direction: column;
   position: relative;
 `;
@@ -64,17 +65,9 @@ const MenuTriggerButton = styled.button`
     border-bottom: 2px solid currentColor;
     width: 8px;
     height: 8px;
-    transform: rotate(-45deg);
+    transform: ${({ $open }) => ($open ? 'rotate(45deg)' : ' rotate(-45deg)')};
     margin-left: auto;
   }
-
-  ${(props) =>
-    props.open &&
-    css`
-      &::after {
-        transform: rotate(45deg);
-      }
-    `}
 `;
 
 const SubMenuContainer = styled.div`
@@ -144,7 +137,9 @@ export default function AddStatusToggle({
 
   return (
     <ToggleContainer>
-      <MenuTriggerButton onClick={handleToggle}>{triggerButtonLabel}</MenuTriggerButton>
+      <MenuTriggerButton $open={open} onClick={handleToggle}>
+        {triggerButtonLabel}
+      </MenuTriggerButton>
       <SubMenuContainer open={open}>
         <SubMenuWrapper>
           {itemsArr.map((item) => {

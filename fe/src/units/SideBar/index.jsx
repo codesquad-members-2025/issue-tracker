@@ -6,12 +6,12 @@ import AddStatusToggle from '@/base-ui/utils/IssueStatusSidebar/AddStatusToggle'
 
 const Container = styled.div`
   display: flex;
+  width: 288px;
   flex-direction: column;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.border.default};
   border-radius: 16px;
   background-color: ${({ theme }) => theme.surface.strong};
-  padding: 32px;
 `;
 
 export default function SideBar({ pageType = null }) {
