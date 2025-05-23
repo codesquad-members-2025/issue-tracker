@@ -46,6 +46,8 @@ public class User {
 
 	private String authProvider;
 
+	private String profileImageUrl;
+
 	@Builder
 	public User(String loginId,
 		String username,
