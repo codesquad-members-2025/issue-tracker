@@ -1,25 +1,27 @@
 package CodeSquad.IssueTracker.jwt.filter;
 
-import CodeSquad.config.SimpleCORSFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class FilterConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final CorsFilter corsFilter;
 
-    public FilterConfig(JwtAuthFilter jwtAuthFilter) {
+    public FilterConfig(JwtAuthFilter jwtAuthFilter, CorsFilter corsFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.corsFilter = corsFilter;
     }
 
     @Bean
-    public FilterRegistrationBean<SimpleCORSFilter> corsFilter() {
-        FilterRegistrationBean<SimpleCORSFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new SimpleCORSFilter());
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
+        FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(corsFilter);
         registrationBean.addUrlPatterns("/*");
-        registrationBean.setOrder(0); // CORS 필터가 제일 먼저 실행됨
+        registrationBean.setOrder(0);
         return registrationBean;
     }
 
@@ -28,7 +30,7 @@ public class FilterConfig {
         FilterRegistrationBean<JwtAuthFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtAuthFilter);
         registrationBean.addUrlPatterns("/*");
-        registrationBean.setOrder(1); // 두 번째로 실행됨
+        registrationBean.setOrder(1);
         return registrationBean;
     }
 }
