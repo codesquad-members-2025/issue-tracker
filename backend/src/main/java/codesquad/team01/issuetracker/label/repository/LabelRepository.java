@@ -12,15 +12,14 @@ import codesquad.team01.issuetracker.label.dto.LabelDto;
 @Repository
 public interface LabelRepository extends CrudRepository<Label, Integer> {
 	@Query("""
-		SELECT id,
-		name,
-		description,
-		color,
-		text_color,
-		created_at,
-		updated_at
+		SELECT 
+			id,
+			name,
+			description,
+			color,
+			text_color
 		FROM label
 		WHERE deleted_at IS NULL
 		""")
-	List<LabelDto.LabelListItem> findAllLabels();
+	List<LabelDto.ListItemResponse> findLabels();
 }

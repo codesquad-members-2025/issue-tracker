@@ -13,19 +13,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @RestController
 public class LabelController {
 
 	private final LabelService labelService;
 
-	@GetMapping("/labels")
+	@GetMapping("/v1/labels")
 	public ResponseEntity<ApiResponse<LabelDto.ListResponse>> getLabels() {
-		LabelDto.ListResponse listResponse = labelService.getAllLabels();
+		LabelDto.ListResponse listResponse = labelService.getLabels();
 		return ResponseEntity.ok(ApiResponse.success(listResponse));
 	}
 
-	@GetMapping("/filters/labels")
+	@GetMapping("/v1/filters/labels")
 	public ResponseEntity<ApiResponse<LabelDto.LabelFilterListResponse>> getLabelFilter() {
 		LabelDto.LabelFilterListResponse response = labelService.findLabelsForFilter();
 		log.info("레이블 목록 개수= {}", response.totalCount());
