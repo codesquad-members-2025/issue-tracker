@@ -21,13 +21,19 @@ const ListContainer = styled.div`
 
 interface IssueListProps {
   issues: Issue[];
+  openCount: number;
+  closeCount: number;
 }
 
-const IssueList: React.FC<IssueListProps> = ({ issues }) => (
+const IssueList: React.FC<IssueListProps> = ({
+  issues,
+  openCount,
+  closeCount,
+}) => (
   <Container>
     <IssueListHeader
-      openCount={0}
-      closeCount={0}
+      openCount={openCount}
+      closeCount={closeCount}
       selected="open"
       onChangeTab={() => {}}
     />

@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import Header from "@components/header/Header";
 import Button from "@components/issue/Button";
 import { FilterGroup, FilterDropdown } from "@components/filter/FilterGroup";
 import IssueListComponent from "@components/issue/IssueList";
@@ -14,19 +13,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const Page = styled.div`
   display: flex;
   flex-direction: column;
-  /* height: 100vh; */
   padding: 1rem 5rem 5rem 5rem;
   background-color: ${({ theme }) => theme.colors.surface.default};
 `;
-
-// const TopBar = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   position: relative;
-//   height: 5.875rem;
-//   margin-bottom: 2rem;
-// `;
 
 const Toolbar = styled.div`
   display: flex;
@@ -84,6 +73,21 @@ export default function IssuesPage() {
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasNext, setHasNext] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // 열린 이슈, 닫힌 이슈 개수(이슈 카운트) 상태 관리
+  const [issueCounts, setIssueCounts] = useState({ open: 0, closed: 0 });
+
+  // 이슈 카운트 API 호출
+  const fetchIssueCounts = async () => {
+    try {
+      const res = await fetch("/api/v1/issues/counts");
+      if (!res.ok) throw new Error("이슈 카운트 API 호출 실패");
+      const json = await res.json();
+      setIssueCounts(json.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // 필터에 대한 상태 관리
   // const [popupType, setPopupType] = useState<
@@ -151,6 +155,10 @@ export default function IssuesPage() {
   // };
 
   // fetch("/api/v1/issues?state=open")
+  useEffect(() => {
+    fetchIssueCounts();
+  }, []);
+
   useEffect(() => {
     fetchIssues();
   }, []);
@@ -257,7 +265,11 @@ export default function IssuesPage() {
           </p>
         }
       >
-        <IssueListComponent issues={issues} />
+        <IssueListComponent
+          issues={issues}
+          openCount={issueCounts.open}
+          closeCount={issueCounts.closed}
+        />
       </InfiniteScroll>
     </Page>
   );
