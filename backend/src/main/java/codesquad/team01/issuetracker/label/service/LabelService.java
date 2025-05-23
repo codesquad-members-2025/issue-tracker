@@ -1,7 +1,5 @@
 package codesquad.team01.issuetracker.label.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import codesquad.team01.issuetracker.label.dto.LabelDto;
@@ -14,7 +12,7 @@ public class LabelService {
 
 	private final LabelRepository labelRepository;
 
-	public List<LabelDto.ListResponse> getAllLabels() {
+	public LabelDto.ListResponse getAllLabels() {
 		var items = labelRepository.findAllLabels().stream()
 			.map(label -> new LabelDto.ListItemResponse(
 				label.id(),
@@ -24,6 +22,6 @@ public class LabelService {
 				label.textColor()
 			))
 			.toList();
-		return List.of(new LabelDto.ListResponse(items));
+		return new LabelDto.ListResponse(items);
 	}
 }
