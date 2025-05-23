@@ -28,8 +28,8 @@ jobs:
           # 프로젝트 디렉토리로 이동
           cd ~/issue-tracker  # EC2에 clone해둔 경로
           # 최신 코드 가져오기
-          git checkout dev-be 
-          git pull origin dev-be
+          git fetch origin dev-be
+          git rebase origin/dev-be || git reset --hard origin/dev-be
           # 빌드 및 실행
           chmod +x ./gradlew
           ./gradlew -p backend build -x test
@@ -38,8 +38,5 @@ jobs:
           # 서버 재실행 (환경변수 주입 포함)
           nohup java -jar \
           -Dspring.profiles.active=prod \
-          -Dspring.datasource.url=$DB_URL \
-          -Dspring.datasource.username=$DB_USERNAME \
-          -Dspring.datasource.password=$DB_PASSWORD \
           backend/build/libs/backend-0.0.1-SNAPSHOT.jar > /var/log/issue-tracker/app.log 2>&1 &
           EOF

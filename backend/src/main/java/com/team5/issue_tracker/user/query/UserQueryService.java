@@ -6,16 +6,14 @@ import org.springframework.stereotype.Service;
 import com.team5.issue_tracker.user.dto.UserPageResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserQueryService {
   private final UserQueryRepository userQueryRepository;
-
-  public UserQueryService(UserQueryRepository userQueryRepository) {
-    this.userQueryRepository = userQueryRepository;
-  }
 
   public UserPageResponse getAllUsers() {
     log.debug("전체 유저 조회 요청");

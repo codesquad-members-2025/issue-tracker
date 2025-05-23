@@ -1,20 +1,16 @@
 package com.team5.issue_tracker.issue.query;
 
-import com.team5.issue_tracker.issue.dto.response.IssueSummaryResponse;
-import com.team5.issue_tracker.label.dto.LabelResponse;
-import com.team5.issue_tracker.milestone.dto.MilestoneResponse;
+import com.team5.issue_tracker.issue.dto.IssueQueryDto;
+import com.team5.issue_tracker.issue.dto.IssueSearchCondition;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,92 +18,60 @@ public class IssueQueryRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public List<IssueSummaryResponse> findAllIssues() {
-    // 1. 이슈 목록 전체 조회
-    String issueSql = """
-        SELECT 
-            i.id AS issue_id,
-            i.title,
-            i.is_open,
-            i.created_at,
-            i.updated_at,
-            u.id AS user_id,
-            u.username,
-            u.image_url,
-            m.id AS milestone_id,
-            m.name AS milestone_title,
-            (SELECT COUNT(*) FROM comment c WHERE c.issue_id = i.id) AS comments_count
-        FROM issue i
-        JOIN user u ON i.user_id = u.id
-        LEFT JOIN milestone m ON i.milestone_id = m.id
-        ORDER BY i.created_at DESC
-        """;
+  public List<IssueQueryDto> findIssuesByCondition(IssueSearchCondition searchCondition) {
+    StringBuilder issueSql = new StringBuilder("""
+            SELECT 
+                i.id,
+                i.title,
+                i.is_open,
+                i.created_at,
+                i.updated_at
+            FROM issue i
+        """);
 
-    List<IssueSummaryResponse> issues =
-        jdbcTemplate.query(issueSql, (rs, rowNum) -> mapToIssueListItem(rs));
+    List<String> whereClauses = new ArrayList<>();
+    MapSqlParameterSource params = new MapSqlParameterSource();
 
-    // 2. issue ID 목록 추출
-    List<Long> issueIds = issues.stream().map(IssueSummaryResponse::getId).toList();
-    if (issueIds.isEmpty()) {
-      return issues;
+    if (searchCondition.getIsOpen() != null) {
+      whereClauses.add("i.is_open = :isOpen");
+      params.addValue("isOpen", searchCondition.getIsOpen());
     }
 
-    // 3. 라벨 전체 조회 (IN 쿼리)
-    Map<Long, List<LabelResponse>> labelMap = findLabelsByIssueIds(issueIds);
-
-    // 4. 이슈에 라벨 붙이기
-    for (IssueSummaryResponse issue : issues) {
-      List<LabelResponse> labels = labelMap.getOrDefault(issue.getId(), List.of());
-      issue.getLabels().addAll(labels); // 생성자에서 리스트 초기화해놔야 가능
+    if (searchCondition.getAssigneeId() != null) {
+      whereClauses.add("i.assignee_id = :assigneeId");
+      params.addValue("assigneeId", searchCondition.getAssigneeId());
     }
 
-    return issues;
-  }
+//    if (searchCondition.getLabelId() != null && !searchCondition.getLabelId().isEmpty()) {
+//      whereClauses.add("i.id IN (SELECT issue_id FROM issue_label WHERE label_id IN (:labelIds))");
+//      params.addValue("labelIds", searchCondition.getLabelId());
+//    } todo : 조금 어려운 부분이라 라벨 검색은 나중에 구현
 
-  private IssueSummaryResponse mapToIssueListItem(ResultSet rs) throws SQLException {
-    return new IssueSummaryResponse(
-        rs.getLong("issue_id"),
-        rs.getString("title"),
-        rs.getBoolean("is_open"),
-        new ArrayList<>(), // 라벨은 나중에 채움
-        new UserSummaryResponse(
-            rs.getLong("user_id"),
-            rs.getString("username"),
-            rs.getString("image_url")
-        ),
-        rs.getObject("milestone_id") != null
-            ? new MilestoneResponse(
-            rs.getLong("milestone_id"),
-            rs.getString("milestone_title")
+    if (searchCondition.getMilestoneId() != null) {
+      whereClauses.add("i.milestone_id = :milestoneId");
+      params.addValue("milestoneId", searchCondition.getMilestoneId());
+    }
+
+    if (searchCondition.getAuthorId() != null) {
+      whereClauses.add("i.user_id = :authorId");
+      params.addValue("authorId", searchCondition.getAuthorId());
+    }
+
+    if (!whereClauses.isEmpty()) {
+      issueSql.append(" WHERE ").append(String.join(" AND ", whereClauses));
+    }
+
+    issueSql.append(" ORDER BY i.created_at DESC");
+
+    return jdbcTemplate.query(issueSql.toString(), params, (rs, rowNum) ->
+        new IssueQueryDto(
+            rs.getLong("id"),
+            rs.getString("title"),
+            rs.getBoolean("is_open"),
+            rs.getTimestamp("created_at").toLocalDateTime(),
+            rs.getTimestamp("updated_at").toLocalDateTime()
         )
-            : null,
-        rs.getTimestamp("created_at").toLocalDateTime(),
-        rs.getTimestamp("updated_at").toLocalDateTime(),
-        rs.getLong("comments_count")
     );
-  }
-
-  private Map<Long, List<LabelResponse>> findLabelsByIssueIds(List<Long> issueIds) {
-    String sql = """
-        SELECT il.issue_id, l.id AS label_id, l.name, l.color
-        FROM issue_label il
-        JOIN label l ON il.label_id = l.id
-        WHERE il.issue_id IN (:issueIds)
-        """;
-
-    MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
-
-    List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, params);
-
-    return rows.stream()
-        .collect(Collectors.groupingBy(
-            row -> ((Number) row.get("issue_id")).longValue(),
-            Collectors.mapping(row -> new LabelResponse(
-                ((Number) row.get("label_id")).longValue(),
-                (String) row.get("name"),
-                (String) row.get("color")
-            ), Collectors.toList())
-        ));
   }
 
   public List<UserSummaryResponse> findDistinctAuthors() {

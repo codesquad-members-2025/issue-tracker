@@ -1,10 +1,16 @@
 package com.team5.issue_tracker.issue.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team5.issue_tracker.issue.domain.Issue;
+import com.team5.issue_tracker.issue.domain.IssueAssignee;
+import com.team5.issue_tracker.issue.domain.IssueLabel;
 import com.team5.issue_tracker.issue.dto.request.IssueCreateRequest;
+import com.team5.issue_tracker.issue.repository.IssueAssigneeRepository;
+import com.team5.issue_tracker.issue.repository.IssueLabelRepository;
 import com.team5.issue_tracker.issue.repository.IssueRepository;
 import com.team5.issue_tracker.user.service.UserService;
 
@@ -14,35 +20,37 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueService {
   private final IssueRepository issueRepository;
+  private final IssueLabelRepository issueLabelRepository;
+  private final IssueAssigneeRepository issueAssigneeRepository;
   private final UserService userService;
 
   @Transactional
-  public Issue createIssue(IssueCreateRequest request, Long userId) {
-    checkIssueCreateRequest(request, userId);
+  public Long createIssue(IssueCreateRequest request) {
+    Long userId = 1L; // TODO: 유저가 없으니 우선 임시데이터 넣음!, 유저가 없으면 생성 불가!
+    if (!userService.existsById(userId)) {
+      throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+    } //TODO: 커스텀 에러 만들지 고민중
 
-    Issue issue = new Issue(
-        request.getTitle(),
-        request.getBody(),
-        null,
-        userId,
-        request.getMilestone(),
-        true
-    );
+    Issue issue =
+        new Issue(request.getTitle(), request.getBody(), userId, request.getMilestoneId(), true);
+    Issue savedIssue = issueRepository.save(issue);
 
-    return issueRepository.save(issue);
+    Long savedIssueID = savedIssue.getId();
+    saveIssueLabels(savedIssueID, request.getLabelIds());
+    saveIssueAssignees(savedIssueID, request.getAssigneeIds());
+
+    return savedIssueID;
   }
 
-  private void checkIssueCreateRequest(IssueCreateRequest request, Long userId) {
-    if (!userService.existsById(userId)) {
-      throw new IllegalArgumentException("작성자가 존재하지 않습니다.");
+  private void saveIssueLabels(Long issueId, List<Long> labelIds) {
+    for (Long labelId : labelIds) {
+      issueLabelRepository.save(new IssueLabel(issueId, labelId));
     }
+  }
 
-    if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
-      throw new IllegalArgumentException("제목을 작성해주세요.");
-    }
-
-    if (request.getBody() == null || request.getBody().trim().isEmpty()) {
-      throw new IllegalArgumentException("본문을 작성해주세요.");
+  private void saveIssueAssignees(Long issueId, List<Long> assigneeIds) {
+    for (Long assigneeId : assigneeIds) {
+      issueAssigneeRepository.save(new IssueAssignee(issueId, assigneeId));
     }
   }
 }
