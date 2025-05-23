@@ -98,7 +98,7 @@ public class JwtUtil {
 		} catch (SignatureException e) {
 			log.info("서명 검증이 실패하였습니다");
 		} catch (IllegalArgumentException e) {
-			log.info("메서드에 잘못된 인자값이 있습니다");
+			log.info("메서드에 잘못된 인자가 있습니다");
 		}
 		return false;
 	}
