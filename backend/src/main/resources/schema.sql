@@ -14,7 +14,7 @@ CREATE TABLE `user`
     `login`             VARCHAR(255) NULL,
     `password`          VARCHAR(255) NULL,
     `nickname`          VARCHAR(255) NOT NULL,
-    `profile_image_url` VARCHAR(255) NULL,
+    `profile_image_url` VARCHAR(1000) NULL,
     `uuid`              VARCHAR(255) NOT NULL,
     `created_at`        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
