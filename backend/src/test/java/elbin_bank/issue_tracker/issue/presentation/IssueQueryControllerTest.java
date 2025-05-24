@@ -1,9 +1,9 @@
 package elbin_bank.issue_tracker.issue.presentation;
 
-import elbin_bank.issue_tracker.issue.application.query.GetFilteredIssueListService;
-import elbin_bank.issue_tracker.issue.application.query.dto.IssueSummaryDto;
+import elbin_bank.issue_tracker.issue.application.query.IssueQueryService;
+import elbin_bank.issue_tracker.issue.application.query.dto.IssueDto;
 import elbin_bank.issue_tracker.issue.application.query.dto.IssuesResponseDto;
-import elbin_bank.issue_tracker.label.application.query.dto.LabelsDto;
+import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +28,17 @@ class IssueQueryControllerTest {
 
     @SuppressWarnings("removal")
     @MockBean
-    private GetFilteredIssueListService getFilteredIssueListService;
+    private IssueQueryService issueQueryService;
 
     @Test
     @DisplayName("GET /api/v1/issues?q=쿼리 → 200 OK 응답 맡 state:oepn인 목록 반환")
     void list_success() throws Exception {
         // given
-        IssueSummaryDto dto = new IssueSummaryDto(
+        IssueDto dto = new IssueDto(
                 1L,
                 "작성자1",
                 "이슈 제목",
-                List.of(new LabelsDto(1L, "bug", "f00", "버그")),
+                List.of(new LabelProjection(1L, "bug", "f00", "버그")),
                 false,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
@@ -47,7 +47,7 @@ class IssueQueryControllerTest {
         );
         IssuesResponseDto response = new IssuesResponseDto(List.of(dto), 1, 0);
 
-        when(getFilteredIssueListService.find(anyString())).thenReturn(response);
+        when(issueQueryService.getFilteredIssues(anyString())).thenReturn(response);
 
         // when & then
         mockMvc.perform(get("/api/v1/issues")

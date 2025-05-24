@@ -15,15 +15,9 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Label extends BaseEntity {
 
     @Id
-    private Long id;
-
-    @Column("name")
+    private long id;
     private String name;
-
-    @Column("description")
     private String description;
-
-    @Column("color")
     private String color;
 
 }
