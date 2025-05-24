@@ -20,15 +20,9 @@ public class Milestone extends BaseEntity {
 
     @Id
     private Long id;
-
-    @Column("is_closed")
     private boolean isClosed;
-
     private String title;
-
     private String description;
-
-    @Column("expired_at")
     private LocalDate expiredAt;
 
 }
