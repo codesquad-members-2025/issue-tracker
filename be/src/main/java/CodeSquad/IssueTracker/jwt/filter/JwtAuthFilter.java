@@ -26,12 +26,14 @@ public class JwtAuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
-        String requestURI =  httpRequest.getRequestURI();
+        setCorsHeaders(httpResponse);
 
         if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
             httpResponse.setStatus(HttpServletResponse.SC_OK);
             return;
         }
+
+        String requestURI =  httpRequest.getRequestURI();
 
         // 특정 URL 경로는 필터를 적용하지 않도록 처리
         if (requestURI.equals("/login") || requestURI.equals("/signup")) {
@@ -71,4 +73,12 @@ public class JwtAuthFilter implements Filter {
 
         filterChain.doFilter(httpRequest, httpResponse);
     }
+
+    private void setCorsHeaders(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+    }
+
 }
