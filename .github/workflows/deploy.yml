@@ -1,4 +1,4 @@
-name: Deploy Fullstack App to EC2
+name: Deploy Spring Boot Backend to EC2
 
 on:
   push:
@@ -6,68 +6,53 @@ on:
       - main
 
 jobs:
-  deploy-fullstack:
+  deploy-backend:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Checkout code"
+      - name: ✅ Checkout code
         uses: actions/checkout@v3
 
-      - name: "Setup JDK 21"
+      - name: ☕ Setup JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: "Setup Node.js"
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: "Build Spring Boot Backend"
+      - name: 🏗️ Build with Gradle
         run: |
           cd be
           ./gradlew clean build
-          cd ..
 
-      - name: "Build React Frontend"
+      - name: 📦 Check JAR Output
         run: |
-          cd fe
-          echo "VITE_API_BASE_URL=/api" > .env.production
-          npm ci
-          npm run build
-          cd ..
+          ls -lh be/build/libs/
 
-      - name: "Copy Artifacts to EC2"
+      - name: 🚚 Copy JAR to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "./be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar,./fe/dist,./nginx.conf"
-          target: "/home/ubuntu/upload"
+          source: "./be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar"
+          target: "/home/ubuntu/upload/"
 
-      - name: "Run App on EC2"
+      - name: 🚀 Run Spring Boot App on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "Kill existing app"
+            echo "🛑 Stop previous app"
             pkill -f 'java -jar' || true
 
-            echo "Prepare app directory"
-            sudo rm -rf /home/ubuntu/app
-            sudo mkdir -p /home/ubuntu/app/frontend
+            echo "🧹 Clean previous app"
+            rm -f /home/ubuntu/app.jar
+            mv /home/ubuntu/upload/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app.jar
 
-            echo "Move artifacts"
-            sudo mv /home/ubuntu/upload/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app/app.jar
-            sudo cp -r /home/ubuntu/upload/dist/* /home/ubuntu/app/frontend/
-            sudo mv /home/ubuntu/upload/nginx.conf /etc/nginx/sites-available/default
-
-            echo "Create .env file"
-            sudo tee /home/ubuntu/.env > /dev/null <<EOF
+            echo "🔑 Writing .env file"
+            cat <<EOF > /home/ubuntu/.env
             JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
             JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -77,9 +62,9 @@ jobs:
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             EOF
 
-            echo "Start Spring Boot app"
+            echo "🚀 Starting Spring Boot"
             cd /home/ubuntu
-            set -o allexport && source .env && set +o allexport
+            source .env
             nohup java \
               -Dspring.profiles.active=dev \
               -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
@@ -90,7 +75,4 @@ jobs:
               -Dcloud.aws.region.static=$AWS_REGION \
               -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
               -Dspring.datasource.password=$DB_PASSWORD \
-              -jar app/app.jar > app.log 2>&1 &
-
-            echo "Reload Nginx"
-            sudo nginx -t && sudo nginx -s reload
+              -jar app.jar > app.log 2>&1 &
