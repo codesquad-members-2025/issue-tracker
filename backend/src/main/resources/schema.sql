@@ -24,14 +24,16 @@ CREATE TABLE `user`
 
 CREATE TABLE `milestone`
 (
-    `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `is_closed`   BOOLEAN      NOT NULL,
-    `title`       VARCHAR(255) NOT NULL,
-    `description` TEXT NULL,
-    `expired_at`  DATE NULL,
-    `created_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at`  DATETIME NULL
+    `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `is_closed`     BOOLEAN      NOT NULL,
+    `title`         VARCHAR(255) NOT NULL,
+    `description`   TEXT NULL,
+    `expired_at`    DATE NULL,
+    `total_issues`  BIGINT       NOT NULL DEFAULT 0,
+    `closed_issues` BIGINT       NOT NULL DEFAULT 0,
+    `created_at`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`    DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`    DATETIME NULL
 );
 
 CREATE TABLE `issue`
