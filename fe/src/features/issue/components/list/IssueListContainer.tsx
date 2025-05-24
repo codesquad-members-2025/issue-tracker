@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { type IssueStatus } from '../../types/issue';
 import useIssues from '../../hooks/useIssues';
-import usePreviousWhen from '@/shared/hooks/usePreviousWhen';
 import { buildIssueQuery } from '../../utils';
 import IssueListHeader from './IssueListHeader';
 import IssueListContent from './IssueListContent';
@@ -19,13 +18,9 @@ export default function IssueListContainer({
   const { issueList, openCount, closeCount, isFetching, isError, error } =
     useIssues(query);
 
-  const prevIssues = usePreviousWhen(issueList, !isFetching);
-  const prevOpenCount = usePreviousWhen(openCount, !isFetching);
-  const prevCloseCount = usePreviousWhen(closeCount, !isFetching);
-
-  const displayIssues = isFetching ? prevIssues : issueList;
-  const displayOpenCount = isFetching ? prevOpenCount : openCount;
-  const displayCloseCount = isFetching ? prevCloseCount : closeCount;
+  const displayIssues = issueList ?? [];
+  const displayOpenCount = openCount ?? 0;
+  const displayCloseCount = closeCount ?? 0;
 
   if (isError) {
     console.error('[이슈 목록 로딩 에러]', error);
