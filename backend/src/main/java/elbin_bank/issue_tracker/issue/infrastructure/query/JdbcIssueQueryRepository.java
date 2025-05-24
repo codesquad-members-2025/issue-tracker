@@ -6,12 +6,14 @@ import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetai
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.FilterStrategyContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -94,7 +96,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
     }
 
     @Override
-    public IssueDetailBaseProjection findById(Long id) {
+    public Optional<IssueDetailBaseProjection> findById(Long id) {
         String sql = """
                     SELECT i.id,
                            i.author_id,
@@ -116,26 +118,32 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
                 """;
         var params = new MapSqlParameterSource("id", id);
 
-        return jdbc.queryForObject(
-                sql,
-                params,
-                (rs, rn) -> new IssueDetailBaseProjection(
-                        rs.getLong("id"),
-                        rs.getLong("author_id"),
-                        rs.getString("authorNickname"),
-                        rs.getString("authorProfileImage"),
-                        rs.getString("title"),
-                        rs.getString("contents"),
-                        rs.getObject("milestone_id", Long.class),
-                        rs.getString("milestoneName"),
-                        rs.getObject("milestoneProgressRate", Integer.class),
-                        rs.getBoolean("is_closed"),
-                        rs.getTimestamp("created_at").toLocalDateTime(),
-                        rs.getTimestamp("updated_at") != null
-                                ? rs.getTimestamp("updated_at").toLocalDateTime()
-                                : null
-                )
-        );
+        try {
+            IssueDetailBaseProjection proj = jdbc.queryForObject(
+                    sql,
+                    params,
+                    (rs, rn) -> new IssueDetailBaseProjection(
+                            rs.getLong("id"),
+                            rs.getLong("author_id"),
+                            rs.getString("authorNickname"),
+                            rs.getString("authorProfileImage"),
+                            rs.getString("title"),
+                            rs.getString("contents"),
+                            rs.getObject("milestone_id", Long.class),
+                            rs.getString("milestoneName"),
+                            rs.getObject("milestoneProgressRate", Integer.class),
+                            rs.getBoolean("is_closed"),
+                            rs.getTimestamp("created_at").toLocalDateTime(),
+                            rs.getTimestamp("updated_at") != null
+                                    ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                    : null
+                    )
+            );
+
+            return Optional.of(proj);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
 }

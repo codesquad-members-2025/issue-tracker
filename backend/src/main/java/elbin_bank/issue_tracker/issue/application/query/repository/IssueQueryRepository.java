@@ -6,6 +6,7 @@ import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProje
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface IssueQueryRepository {
 
@@ -15,6 +16,6 @@ public interface IssueQueryRepository {
 
     IssueCountProjection countIssueOpenAndClosed();
 
-    IssueDetailBaseProjection findById(Long id);
+    Optional<IssueDetailBaseProjection> findById(Long id);
 
 }
