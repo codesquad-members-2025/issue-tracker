@@ -1,6 +1,5 @@
 package CodeSquad.IssueTracker.config;
 
-
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +27,7 @@ public class CorsGlobalConfig {
         source.registerCorsConfiguration("/**", config);
 
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-        bean.setOrder(0); // ⭐ 다른 필터보다 먼저 실행되도록
+        bean.setOrder(0); // 가장 먼저 실행되게 설정
         return bean;
     }
 }
-
