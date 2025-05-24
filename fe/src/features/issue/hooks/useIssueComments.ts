@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import fetchIssueComments from '../api/getIssueComments';
-import { type Comment } from '../types/issue';
+import { type CommentsResponse } from '../types/issue';
 
 export default function useIssueComments(issueId: number) {
-  const { data, ...rest } = useQuery<Comment[]>({
+  const { data, ...rest } = useQuery<CommentsResponse>({
     queryKey: ['issueComments', issueId],
     queryFn: () => fetchIssueComments(issueId),
     enabled: !!issueId,
@@ -11,7 +11,7 @@ export default function useIssueComments(issueId: number) {
   });
 
   return {
-    commentList: data ?? [],
+    commentList: data?.comments ?? [],
     ...rest,
   };
 }

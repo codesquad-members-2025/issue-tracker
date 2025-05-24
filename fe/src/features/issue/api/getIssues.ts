@@ -9,24 +9,17 @@ export async function getIssues(filterQuery: string): Promise<IssuesResponse> {
     credentials: 'include',
   });
 
-  switch (res.status) {
-    case 200:
-      return res.json();
+  const statusCodeHandler: Record<number, () => Promise<IssuesResponse>> = {
+    200: async () => await res.json(),
+    400: () =>
+      Promise.reject(new Error('잘못된 요청입니다 (query string 오류)')),
+    401: () => Promise.reject(new Error('로그인이 필요합니다')),
+    404: () => Promise.reject(new Error('요청한 경로가 존재하지 않습니다')),
+    500: () => Promise.reject(new Error('서버 오류가 발생했습니다')),
+  };
 
-    case 400:
-      throw new Error('잘못된 요청입니다 (query string 오류)');
+  const defaultHandler = () =>
+    Promise.reject(new Error(`예상치 못한 오류 (status: ${res.status})`));
 
-    case 401:
-      // window.location.href = '/login'; //TODO 로그인 기능 구현시 수정
-      throw new Error('로그인이 필요합니다');
-
-    case 404:
-      throw new Error('요청한 경로가 존재하지 않습니다');
-
-    case 500:
-      throw new Error('서버 오류가 발생했습니다');
-
-    default:
-      throw new Error(`예상치 못한 오류 (status: ${res.status})`);
-  }
+  return (statusCodeHandler[res.status] ?? defaultHandler)();
 }

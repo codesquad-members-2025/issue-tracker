@@ -27,15 +27,15 @@ describe('getIssueComments', () => {
     );
 
     const result = await getIssueComments(101);
-    expect(result).toHaveLength(1);
-    expect(result[0].author.nickname).toBe('jjinbbangS2');
+    expect(result.comments).toHaveLength(1);
+    expect(result.comments[0].author.nickname).toBe('jjinbbangS2');
   });
 
   it('should throw error when status is 404', async () => {
     fetchMocker.mockResponseOnce('', { status: 404 });
 
     await expect(() => getIssueComments(999)).rejects.toThrow(
-      '요청한 이슈가 존재하지 않습니다',
+      '요청한 댓글이 존재하지 않습니다',
     );
   });
 });
