@@ -2,6 +2,7 @@ package elbin_bank.issue_tracker.issue.infrastructure.query;
 
 import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRepository;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailBaseProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.FilterStrategyContext;
 import lombok.RequiredArgsConstructor;
@@ -89,6 +90,51 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
         return jdbc.queryForObject(
                 "SELECT open_count, closed_count FROM issue_status_count WHERE id=1",
                 Map.of(), (rs, rn) -> new IssueCountProjection(rs.getLong(1), rs.getLong(2))
+        );
+    }
+
+    @Override
+    public IssueDetailBaseProjection findById(Long id) {
+        String sql = """
+                    SELECT i.id,
+                           i.author_id,
+                           u.nickname    AS authorNickname,
+                           u.profile_image_url AS authorProfileImage,
+                           i.title,
+                           i.contents,
+                           i.milestone_id,
+                           m.title       AS milestoneName,
+                           m.progress_rate AS milestoneProgressRate,
+                           i.is_closed,
+                           i.created_at,
+                           i.updated_at
+                      FROM issue i
+                 JOIN `user` u ON i.author_id = u.id AND u.deleted_at IS NULL
+                 LEFT JOIN milestone m ON i.milestone_id = m.id AND m.deleted_at IS NULL
+                     WHERE i.id = :id
+                       AND i.deleted_at IS NULL
+                """;
+        var params = new MapSqlParameterSource("id", id);
+
+        return jdbc.queryForObject(
+                sql,
+                params,
+                (rs, rn) -> new IssueDetailBaseProjection(
+                        rs.getLong("id"),
+                        rs.getLong("author_id"),
+                        rs.getString("authorNickname"),
+                        rs.getString("authorProfileImage"),
+                        rs.getString("title"),
+                        rs.getString("contents"),
+                        rs.getObject("milestone_id", Long.class),
+                        rs.getString("milestoneName"),
+                        rs.getObject("milestoneProgressRate", Integer.class),
+                        rs.getBoolean("is_closed"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("updated_at") != null
+                                ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                : null
+                )
         );
     }
 

@@ -1,6 +1,7 @@
 package elbin_bank.issue_tracker.issue.application.query.repository;
 
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailBaseProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 
 import java.util.List;
@@ -13,5 +14,7 @@ public interface IssueQueryRepository {
     Map<Long, List<String>> findAssigneesByIssueIds(List<Long> issueIds);
 
     IssueCountProjection countIssueOpenAndClosed();
+
+    IssueDetailBaseProjection findById(Long id);
 
 }
