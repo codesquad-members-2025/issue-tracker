@@ -59,8 +59,11 @@ jobs:
             echo "💚 Prepare deploy directory"
             rm -rf /home/ubuntu/app
             mkdir -p /home/ubuntu/app/frontend
+
             mv /home/ubuntu/upload/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app/app.jar
-            mv /home/ubuntu/upload/* /home/ubuntu/app/frontend/
+            mv /home/ubuntu/upload/index.html /home/ubuntu/app/frontend/
+            mv /home/ubuntu/upload/assets /home/ubuntu/app/frontend/
+            mv /home/ubuntu/upload/nginx.conf /home/ubuntu/nginx.conf
 
             echo "💚 Create .env file"
             cat <<EOF > /home/ubuntu/.env
@@ -89,5 +92,6 @@ jobs:
               -jar app/app.jar > app.log 2>&1 &
 
             echo "📄 Setup Nginx"
-            sudo cp /home/ubuntu/upload/nginx.conf /etc/nginx/sites-available/default
+            sudo cp /home/ubuntu/nginx.conf /etc/nginx/sites-available/default
             sudo nginx -s reload
+          
