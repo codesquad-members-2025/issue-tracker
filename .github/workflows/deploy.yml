@@ -57,7 +57,7 @@ jobs:
             echo "💚 Kill existing app"
             pkill -f 'java -jar' || true
 
-            echo "💚 Prepare app directory"
+            echo "💚 Create app directory"
             rm -rf /home/ubuntu/app
             mkdir -p /home/ubuntu/app/frontend
 
@@ -66,15 +66,40 @@ jobs:
             mv /home/ubuntu/upload/dist/* /home/ubuntu/app/frontend/
             mv /home/ubuntu/upload/nginx.conf /home/ubuntu/nginx.conf
 
-            echo "💚 Create .env file"
-            cat <<EOF > /home/ubuntu/.env
-            JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
-            JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
-            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            AWS_REGION=${{ secrets.AWS_REGION }}
-            S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            echo "💚 Write nginx config to default"
+            sudo tee /etc/nginx/sites-available/default > /dev/null <<EOF
+            server {
+                listen 80;
+                server_name _;
+
+                root /home/ubuntu/app/frontend;
+                index index.html;
+
+                location / {
+                    try_files \$uri /index.html;
+                }
+
+                location /api/ {
+                    proxy_pass http://localhost:8080;
+                    proxy_http_version 1.1;
+                    proxy_set_header Host \$host;
+                    proxy_set_header X-Real-IP \$remote_addr;
+                    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto \$scheme;
+                    add_header Access-Control-Allow-Origin *;
+                }
+            }
+  EOF
+  
+  echo "💚 Create .env file"
+  cat <<EOF > /home/ubuntu/.env
+  JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
+  JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
+  AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION=${{ secrets.AWS_REGION }}
+  S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
+  DB_PASSWORD=${{ secrets.DB_PASSWORD }}
   EOF
   
   echo "🚀 Start Spring Boot app"
@@ -93,5 +118,4 @@ jobs:
   -jar app/app.jar > app.log 2>&1 &
   
   echo "📄 Apply Nginx config"
-  sudo cp /home/ubuntu/nginx.conf /etc/nginx/sites-available/default
   sudo nginx -t && sudo nginx -s reload
