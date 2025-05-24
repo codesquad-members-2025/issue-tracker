@@ -58,22 +58,24 @@ jobs:
             pkill -f 'java -jar' || true
 
             echo "Prepare app directory"
-            rm -rf /home/ubuntu/app
-            mkdir -p /home/ubuntu/app/frontend
+            sudo rm -rf /home/ubuntu/app
+            sudo mkdir -p /home/ubuntu/app/frontend
 
             echo "Move artifacts"
-            mv /home/ubuntu/upload/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app/app.jar
-            mv /home/ubuntu/upload/dist/* /home/ubuntu/app/frontend/
+            sudo mv /home/ubuntu/upload/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app/app.jar
+            sudo cp -r /home/ubuntu/upload/dist/* /home/ubuntu/app/frontend/
             sudo mv /home/ubuntu/upload/nginx.conf /etc/nginx/sites-available/default
 
             echo "Create .env file"
-            echo "JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}" >> /home/ubuntu/.env
-            echo "JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}" >> /home/ubuntu/.env
-            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> /home/ubuntu/.env
-            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> /home/ubuntu/.env
-            echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> /home/ubuntu/.env
-            echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> /home/ubuntu/.env
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> /home/ubuntu/.env
+            sudo tee /home/ubuntu/.env > /dev/null <<EOF
+            JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
+            JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            EOF
 
             echo "Start Spring Boot app"
             cd /home/ubuntu
