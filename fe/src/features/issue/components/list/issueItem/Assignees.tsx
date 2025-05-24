@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import Profile from '@/shared/components/Profile';
 
 interface Props {
   assigneesProfileImages: string[];
@@ -8,12 +9,7 @@ const Assignees = ({ assigneesProfileImages }: Props) => {
   return (
     <AvatarStack>
       {assigneesProfileImages.slice(0, 5).map((url, idx) => (
-        <AssigneeAvatar
-          key={idx}
-          src={url}
-          alt={`assignee-${idx}`}
-          style={{ zIndex: 5 - idx }}
-        />
+        <Profile key={idx} size="sm" imageUrl={url} />
       ))}
       {assigneesProfileImages.length > 5 && (
         <ExtraText>+{assigneesProfileImages.length - 5}</ExtraText>
@@ -28,18 +24,18 @@ const AvatarStack = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-`;
 
-const AssigneeAvatar = styled.img`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid white;
-  position: relative;
-  margin-left: -8px;
+  & > * {
+    margin-left: -8px;
+    position: relative;
+  }
 
-  &:first-of-type {
+  & > *:first-of-type {
     margin-left: 0;
+  }
+
+  & > * {
+    z-index: calc(10 - var(--order));
   }
 `;
 

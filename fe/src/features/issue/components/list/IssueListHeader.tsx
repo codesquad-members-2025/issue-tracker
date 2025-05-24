@@ -59,7 +59,7 @@ const LeftSection = styled.div`
 
 const RightSection = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 32px;
 `;
 
 const Checkbox = styled.input`

@@ -24,3 +24,52 @@ export interface IssuesResponse {
   openCount: number;
   closeCount: number;
 }
+
+export interface Milestone {
+  id: number;
+  name: string;
+  progressRate: number;
+}
+
+export interface Assignee {
+  id: number;
+  nickname: string;
+  profileImage: string;
+}
+
+export interface Author {
+  id: number;
+  nickname: string;
+  profileImage: string;
+}
+
+export interface IssueDetailResponse {
+  id: number;
+  author: Author;
+  title: string;
+  content: string | null;
+  labels: Label[];
+  milestone: Milestone | null;
+  assignees: Assignee[];
+  isClosed: boolean;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface CommentAuthor {
+  id: number;
+  nickname: string;
+  profileImage: string;
+}
+
+export interface Comment {
+  id: number;
+  author: CommentAuthor;
+  content: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface CommentsResponse {
+  comments: Comment[];
+}

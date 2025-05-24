@@ -28,7 +28,7 @@ const IssueItem = ({
             <IconWrapper>
               <StatusIcon isClosed={isClosed} />
             </IconWrapper>
-            <TitleWithLabels title={title} labels={labels} />
+            <TitleWithLabels issueId={id} title={title} labels={labels} />
           </TitleRow>
           <MetaInfo
             id={id}

@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <IssueListPage /> },
       { path: 'issues/:id', element: <IssueDetailPage /> },
-      { path: 'new', element: <NewIssuePage /> },
+      { path: 'issues/new', element: <NewIssuePage /> },
       { path: 'labels', element: <LabelsPage /> },
       { path: 'milestones', element: <MilestonesPage /> },
     ],
