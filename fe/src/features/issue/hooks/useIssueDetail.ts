@@ -10,7 +10,7 @@ export default function useIssueDetail(issueId: number) {
   });
 
   return {
-    issueDetail: data ?? null,
+    data,
     ...rest,
   };
 }

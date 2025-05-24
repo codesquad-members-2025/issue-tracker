@@ -15,12 +15,11 @@ export default function IssueListContainer({
   onChangeTab,
 }: IssueListContainerProps) {
   const query = buildIssueQuery(selected);
-  const { issueList, openCount, closeCount, isFetching, isError, error } =
-    useIssues(query);
+  const { data, isFetching, isError, error } = useIssues(query);
 
-  const displayIssues = issueList ?? [];
-  const displayOpenCount = openCount ?? 0;
-  const displayCloseCount = closeCount ?? 0;
+  const displayIssues = data?.issues ?? [];
+  const displayOpenCount = data?.openCount ?? 0;
+  const displayCloseCount = data?.closeCount ?? 0;
 
   if (isError) {
     console.error('[이슈 목록 로딩 에러]', error);

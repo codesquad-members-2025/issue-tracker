@@ -11,7 +11,7 @@ export default function useIssueComments(issueId: number) {
   });
 
   return {
-    commentList: data?.comments ?? [],
+    data: data?.comments,
     ...rest,
   };
 }

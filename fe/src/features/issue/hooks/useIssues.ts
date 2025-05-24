@@ -9,9 +9,7 @@ export default function useIssues(filterQuery: string) {
   });
 
   return {
-    issueList: data?.issues,
-    openCount: data?.openCount,
-    closeCount: data?.closeCount,
+    data,
     ...rest,
   };
 }

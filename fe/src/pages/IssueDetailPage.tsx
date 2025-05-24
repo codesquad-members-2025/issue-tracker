@@ -16,13 +16,13 @@ export default function IssueDetailPage() {
   const navigate = useNavigate();
 
   const {
-    issueDetail,
+    data: issueDetail,
     isLoading: isIssueDetailLoading,
     isError: isIssueDetailError,
   } = useIssueDetail(issueId);
 
   const {
-    commentList,
+    data: commentList,
     isLoading: isCommentLoading,
     isError: isCommentError,
   } = useIssueComments(issueId);
