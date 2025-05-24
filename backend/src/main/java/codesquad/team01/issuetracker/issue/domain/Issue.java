@@ -1,36 +1,44 @@
 package codesquad.team01.issuetracker.issue.domain;
 
-import lombok.*;
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
+import codesquad.team01.issuetracker.common.domain.BaseEntity;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table("Issue")
-@Builder
-public class Issue {
+@Table("issue")
+public class Issue extends BaseEntity {
 
-    @Id
-    private Long id;
+	@Id
+	private Integer id;
 
-    private String title;
-    private String content;
+	private String title;
+	private String content;
 
-    @Builder.Default
-    private boolean isOpen = true;
+	private IssueState state = IssueState.OPEN;
 
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+	private LocalDateTime closedAt;
 
-    @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
+	private Integer writerId;
 
-    private LocalDateTime closedAt;
+	private Integer milestoneId;
 
-    private Long writerId;
+	@Builder
+	private Issue(String title, String content, IssueState state,
+		LocalDateTime closedAt, Integer writerId, Integer milestoneId) {
 
-    private Long milestoneId;
+		this.title = title;
+		this.content = content;
+		this.state = state != null ? state : IssueState.OPEN; // 생성자에 들어가야하는지? 생성될 때 기본으로 open 아닌지? 이슈 생성 작업 때 고민해보자
+		this.closedAt = closedAt;
+		this.writerId = writerId;
+		this.milestoneId = milestoneId;
+	}
 }

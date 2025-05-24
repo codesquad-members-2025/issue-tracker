@@ -1,6 +1,7 @@
 package codesquad.team01.issuetracker.auth.dto;
 
-import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class AuthDto {
 
@@ -23,9 +24,18 @@ public class AuthDto {
 	) {
 	}
 
-	public record LoginResponse(
-		int id,
-		@Nullable String email
+	public record LoginRequest(
+		@NotNull String loginId,
+		@NotBlank String password
 	) {
+
 	}
+
+	public record LoginResponse(
+		String accessToken,
+		String refreshToken
+	) {
+
+	}
+
 }
