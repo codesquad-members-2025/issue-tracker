@@ -28,11 +28,12 @@ jobs:
         run: |
           cd be
           ./gradlew clean build
+          cd ..
 
       - name: 🏢 Build React Frontend
         run: |
           cd fe
-          echo "VITE_API_BASE_URL=http://localhost:8080" > .env.production
+          echo "VITE_API_BASE_URL=/api" > .env.production
           npm ci
           npm run build
           cd ..
@@ -43,7 +44,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "./be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar,./fe/dist/*,./nginx.conf"
+          source: "./be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar,./fe/dist,./nginx.conf"
           target: "/home/ubuntu/upload"
 
       - name: 🚀 Run App on EC2
@@ -56,13 +57,13 @@ jobs:
             echo "💚 Kill existing app"
             pkill -f 'java -jar' || true
 
-            echo "💚 Prepare deploy directory"
+            echo "💚 Prepare app directory"
             rm -rf /home/ubuntu/app
             mkdir -p /home/ubuntu/app/frontend
 
+            echo "💚 Move artifacts"
             mv /home/ubuntu/upload/IssueTracker-0.0.1-SNAPSHOT.jar /home/ubuntu/app/app.jar
-            mv /home/ubuntu/upload/index.html /home/ubuntu/app/frontend/
-            mv /home/ubuntu/upload/assets /home/ubuntu/app/frontend/
+            mv /home/ubuntu/upload/dist/* /home/ubuntu/app/frontend/
             mv /home/ubuntu/upload/nginx.conf /home/ubuntu/nginx.conf
 
             echo "💚 Create .env file"
@@ -74,24 +75,23 @@ jobs:
             AWS_REGION=${{ secrets.AWS_REGION }}
             S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            EOF
-
-            echo "🚀 Start Spring Boot app"
-            cd /home/ubuntu
-            source .env
-            nohup java \
-              -Dspring.profiles.active=dev \
-              -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
-              -DJWT_REFRESH_KEY=$JWT_REFRESH_KEY \
-              -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-              -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-              -DAWS_REGION=$AWS_REGION \
-              -Dcloud.aws.region.static=$AWS_REGION \
-              -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
-              -Dspring.datasource.password=$DB_PASSWORD \
-              -jar app/app.jar > app.log 2>&1 &
-
-            echo "📄 Setup Nginx"
-            sudo cp /home/ubuntu/nginx.conf /etc/nginx/sites-available/default
-            sudo nginx -s reload
-          
+  EOF
+  
+  echo "🚀 Start Spring Boot app"
+  cd /home/ubuntu
+  source .env
+  nohup java \
+  -Dspring.profiles.active=dev \
+  -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
+  -DJWT_REFRESH_KEY=$JWT_REFRESH_KEY \
+  -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  -DAWS_REGION=$AWS_REGION \
+  -Dcloud.aws.region.static=$AWS_REGION \
+  -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
+  -Dspring.datasource.password=$DB_PASSWORD \
+  -jar app/app.jar > app.log 2>&1 &
+  
+  echo "📄 Apply Nginx config"
+  sudo cp /home/ubuntu/nginx.conf /etc/nginx/sites-available/default
+  sudo nginx -t && sudo nginx -s reload
