@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import java.util.List;
 
-public class MilestoneDto {
+public class MilestoneResponseDto {
 
     @AllArgsConstructor
     @Getter
@@ -22,5 +22,13 @@ public class MilestoneDto {
     public static class MilestoneFilter {
         private List<MilestoneInfo> milestones;
         private int count;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class MilestoneCountDto {
+        private Integer openCount;
+        private Integer closedCount;
     }
 }
