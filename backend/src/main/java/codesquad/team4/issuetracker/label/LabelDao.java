@@ -45,6 +45,7 @@ public class LabelDao {
         String sql = """
         SELECT label_id, name, description, color
         FROM label
+        ORDER BY created_at DESC
     """;
         return jdbcTemplate.query(sql, (rs, rowNum) ->
             LabelResponseDto.LabelDto.builder()
