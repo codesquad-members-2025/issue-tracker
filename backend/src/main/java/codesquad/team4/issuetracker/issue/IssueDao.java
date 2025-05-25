@@ -70,7 +70,7 @@
             return jdbcTemplate.queryForList(sql.toString(), params.toArray());
         }
 
-        public int countIssuesByOpenStatus(boolean isOpen) {
+        public Integer countIssuesByOpenStatus(boolean isOpen) {
             return jdbcTemplate.queryForObject(
                     "SELECT COUNT(*) FROM issue WHERE is_open = ?",
                     Integer.class,

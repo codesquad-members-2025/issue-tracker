@@ -1,14 +1,11 @@
 package codesquad.team4.issuetracker.label.dto;
 
-import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
-import codesquad.team4.issuetracker.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.Set;
 
 public class LabelResponseDto {
 

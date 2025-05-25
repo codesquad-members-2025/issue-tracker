@@ -1,7 +1,7 @@
 package codesquad.team4.issuetracker.milestone;
 
-import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
-import codesquad.team4.issuetracker.milestone.dto.MilestoneDto.MilestoneInfo;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto.MilestoneInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +12,22 @@ import java.util.List;
 public class MilestoneService {
     private final MilestoneDao milestoneDao;
 
-    public MilestoneDto.MilestoneFilter getFilterMilestones() {
+    public MilestoneResponseDto.MilestoneFilter getFilterMilestones() {
         List<MilestoneInfo> milestones = milestoneDao.findMilestoneForFiltering();
 
-        return MilestoneDto.MilestoneFilter.builder()
+        return MilestoneResponseDto.MilestoneFilter.builder()
                 .milestones(milestones)
                 .count(milestones.size())
                 .build();
+    }
+
+    public MilestoneResponseDto.MilestoneCountDto getMilestoneCount() {
+        Integer openCount = milestoneDao.countMilestonesByOpenStatus(true);
+        Integer closedCount = milestoneDao.countMilestonesByOpenStatus(false);
+
+        return MilestoneResponseDto.MilestoneCountDto.builder()
+            .openCount(openCount != null ? openCount : 0)
+            .closedCount(closedCount != null ? closedCount : 0)
+            .build();
     }
 }
