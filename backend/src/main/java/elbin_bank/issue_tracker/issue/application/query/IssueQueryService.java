@@ -1,10 +1,15 @@
 package elbin_bank.issue_tracker.issue.application.query;
 
-import elbin_bank.issue_tracker.issue.application.query.dto.IssueDto;
+import elbin_bank.issue_tracker.issue.application.query.dto.IssueDetailResponseDto;
 import elbin_bank.issue_tracker.issue.application.query.dto.IssuesResponseDto;
+import elbin_bank.issue_tracker.issue.application.query.mapper.IssueDtoMapper;
 import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRepository;
+import elbin_bank.issue_tracker.issue.exception.IssueDetailNotFoundException;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
+import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.FilterStrategyContext;
 import elbin_bank.issue_tracker.label.application.query.repository.LabelQueryRepository;
 import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import lombok.RequiredArgsConstructor;
@@ -20,29 +25,23 @@ public class IssueQueryService {
 
     private final IssueQueryRepository issueQueryRepository;
     private final LabelQueryRepository labelQueryRepository;
+    private final IssueDtoMapper issueDtoMapper;
+    private final FilterStrategyContext filterStrategyContext;
 
     @Transactional(readOnly = true)
     public IssuesResponseDto getFilteredIssues(String q) {
         String rawQuery = normalize(q);
+//        FilterStrategyContext.SqlAndParams sql = filterStrategyContext.buildSql(rawQuery);
         List<IssueProjection> issues = issueQueryRepository.findIssues(rawQuery);
 
         List<Long> ids = issues.stream().map(IssueProjection::id).toList();
 
         Map<Long, List<LabelProjection>> labels = labelQueryRepository.findByIssueIds(ids);
-        Map<Long, List<String>> assigneeNames = issueQueryRepository.findAssigneesByIssueIds(ids);
+        Map<Long, List<String>> assigneeNames = issueQueryRepository.findAssigneeNamesByIssueIds(ids);
 
         IssueCountProjection issueCount = issueQueryRepository.countIssueOpenAndClosed();
 
-        return new IssuesResponseDto(issues.stream()
-                .map(b -> new IssueDto(
-                        b.id(), b.author(), b.title(),
-                        labels.getOrDefault(b.id(), List.of()),
-                        b.isClosed(), b.createdAt(), b.updatedAt(),
-                        assigneeNames.getOrDefault(b.id(), List.of()),
-                        b.milestone()
-                )).toList(),
-                issueCount.openCount(),
-                issueCount.closedCount());
+        return issueDtoMapper.toIssuesResponseDto(issues, labels, assigneeNames, issueCount);
     }
 
     private String normalize(String raw) {
@@ -56,6 +55,16 @@ public class IssueQueryService {
             return "";
         }
         return q;
+    }
+
+    @Transactional(readOnly = true)
+    public IssueDetailResponseDto getIssue(long id) {
+        IssueDetailProjection issue = issueQueryRepository.findById(id)
+                .orElseThrow(() -> new IssueDetailNotFoundException(id));
+        List<LabelProjection> labels = labelQueryRepository.findByIssueIds(List.of(id)).getOrDefault(id, List.of());
+        List<UserInfoProjection> assignees = issueQueryRepository.findAssigneesByIssueId(id);
+
+        return issueDtoMapper.toIssueDetailDto(issue, labels, assignees);
     }
 
 }
