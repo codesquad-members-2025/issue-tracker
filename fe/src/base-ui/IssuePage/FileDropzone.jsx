@@ -1,6 +1,7 @@
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
+import useIssueDetailStore from '@/stores/IssueDetailStore';
 
 const Zone = styled.div`
   ${typography.available.medium16}
@@ -22,13 +23,12 @@ const AcceptedFilesWrapper = styled.div`
   flex-direction: column;
 `;
 
-export default function FileDropzone({ onFiles }) {
+export default function FileDropzone({ onFiles, files }) {
   const {
     getRootProps,
     getInputProps,
     isDragActive,
     isDragReject,
-    acceptedFiles, // 필요하면 썸네일 즉시 만들 수 있음
     fileRejections, // 거절된 파일 목록
   } = useDropzone({
     onDrop: (accepted) => onFiles(accepted), // ✅ Zustand 액션 주입
@@ -36,8 +36,6 @@ export default function FileDropzone({ onFiles }) {
     maxSize: 5 * 1024 * 1024, // 5 MB
     multiple: true,
   });
-
-  const fileNames = acceptedFiles.map((f) => f.name);
 
   return (
     <Zone {...getRootProps()} $active={isDragActive}>
@@ -74,10 +72,10 @@ export default function FileDropzone({ onFiles }) {
         </Label>
       )}
 
-      {fileNames.length > 0 && (
+      {files?.length > 0 && (
         <AcceptedFilesWrapper>
-          {fileNames.map((name) => {
-            return <span key={name}>{name}</span>;
+          {files.map((f) => {
+            return <span key={f.name}>{f.name}</span>;
           })}
         </AcceptedFilesWrapper>
       )}

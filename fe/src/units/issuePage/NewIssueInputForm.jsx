@@ -41,6 +41,7 @@ export default function NewIssueInputForm() {
         commentValue={issue.comment}
         changeHandler={(e) => commentChangeHandler(e.target.value)}
         setFiles={setFiles}
+        files={issue.files}
       />
     </InputWrapper>
   );

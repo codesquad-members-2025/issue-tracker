@@ -72,9 +72,12 @@ const useIssueDetailStore = create(
       });
     },
 
-    setFiles: (files) =>
+    setFiles: (newFiles) =>
       set((state) => {
-        state.issue.files = files;
+        const map = new Map();
+        state.issue.files.forEach((f) => map.set(f.name, f));
+        newFiles.forEach((f) => map.set(f.name, f));
+        state.issue.files = Array.from(map.values());
       }),
   })),
 );
