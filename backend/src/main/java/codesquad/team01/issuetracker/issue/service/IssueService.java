@@ -108,4 +108,12 @@ public class IssueService {
 
 		return response;
 	}
+
+	public IssueDto.BatchUpdateResponse batchUpdateIssueState(
+		List<Integer> issueIds, IssueState action) {
+
+		IssueDto.BatchUpdateResponse batchUpdateResponse =
+			issueQueryRepository.batchUpdateIssueState(issueIds, action);
+
+	}
 }

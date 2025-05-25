@@ -59,7 +59,7 @@ public class IssueController {
 			request.issueIds(), request.action());
 
 		IssueDto.BatchUpdateResponse response =
-			issueService.batchUpdateIssueState(request.issueIds(), request.action());
+			issueService.batchUpdateIssueState(request.issueIds(), request.getTargetState());
 
 		log.info("이슈 일괄 상태 변경 완료 - 총 개수: {}, 성공: {}개, 실패: {}개, 상태 변경 실패한 이슈 id 목록: {}",
 			response.totalCount(), response.successCount(), response.failedCount(), response.failedIssueIds());

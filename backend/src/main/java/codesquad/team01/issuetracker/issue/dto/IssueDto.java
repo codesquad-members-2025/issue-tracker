@@ -24,7 +24,6 @@ public class IssueDto {
 	/**
 	 * 요청 DTO
 	 */
-
 	// 열린/닫힌 이슈 개수 조회 필터 쿼리 요청 DTO
 	@Builder
 	public record CountQueryRequest(
@@ -82,6 +81,19 @@ public class IssueDto {
 		}
 	}
 
+	@Builder
+	public record BatchUpdateRequest(
+
+		List<@Positive(message = "이슈 ID는 양수여야 합니다") Integer> issueIds,
+
+		@Pattern(regexp = "^(open|close)$", message = "action은 'open' 또는 'close'만 가능합니다")
+		String action
+	) {
+		public IssueState getTargetState() {
+			return "close".equals(action) ? IssueState.CLOSED : IssueState.OPEN;
+		}
+	}
+
 	/**
 	 * 응답 DTO
 	 */
@@ -99,7 +111,6 @@ public class IssueDto {
 	@Builder
 	public static class ListItemResponse {
 		private final int id;
-
 		private final String title;
 		private final String state;
 		private final LocalDateTime createdAt;
@@ -129,6 +140,15 @@ public class IssueDto {
 		}
 	}
 
+	@Builder
+	public record BatchUpdateResponse(
+		int totalCount,
+		int successCount,
+		int failedCount,
+		List<Integer> failedIssueIds
+	) {
+	}
+
 	/**
 	 * DB 조회용 DTO
 	 */
@@ -137,7 +157,6 @@ public class IssueDto {
 	public record BaseRow(
 		// issue
 		int issueId,
-
 		String issueTitle,
 		IssueState issueState,
 		LocalDateTime issueCreatedAt,
@@ -145,13 +164,11 @@ public class IssueDto {
 
 		// writerId
 		int writerId,
-
 		String writerUsername,
 		String writerProfileImageUrl,
 
 		// milestoneId - nullable
 		Integer milestoneId,
-
 		String milestoneTitle
 	) {
 	}
@@ -174,7 +191,7 @@ public class IssueDto {
 		List<UserDto.AssigneeResponse> assignees,
 		List<LabelDto.FilterListItemResponse> labels
 	) {
-		public ListItemResponse toListItemResponse() { // Mapper 클래스로 따로 뺄지 고민
+		public ListItemResponse toListItemResponse() {
 			return IssueDto.ListItemResponse.builder()
 				.id(baseInfo.issueId())
 				.title(baseInfo.issueTitle())

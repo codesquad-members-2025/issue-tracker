@@ -14,4 +14,6 @@ public interface IssueQueryRepository {
 
 	IssueDto.CountResponse countIssuesWithFilters(Integer writerId, Integer milestoneId,
 		List<Integer> labelIds, List<Integer> assigneeIds);
+
+	// IssueDto.BatchUpdateResponse batchUpdateIssueState(List<Integer> issueIds, IssueState action);
 }
