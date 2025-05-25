@@ -12,8 +12,8 @@ import codesquad.team01.issuetracker.auth.repository.RefreshTokenRepository;
 import codesquad.team01.issuetracker.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class TokenService {
 
 	private final JwtUtil jwtUtil;

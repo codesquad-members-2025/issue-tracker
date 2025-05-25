@@ -1,75 +1,71 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.5'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.issue-tracker'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Spring Boot 스타터
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
-	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    // Validation
+    implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
+    // MapStruct (코드 생성용)
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    // Lombok과 MapStruct 바인딩
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
-	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-
-	// MapStruct
-	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-
-	// Lombok과 MapStruct를 함께 사용하기 위한 바인딩
-	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-
-    // Jackson 의존성 추가
+    // Jackson (JSON 처리)
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // Spring Security 암호화 (PasswordEncoder 등)
+    implementation 'org.springframework.security:spring-security-crypto'
+
+    // 개발 도구
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // DB 커넥터
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j' //
-	testImplementation 'org.springframework.boot:spring-boot-starter-test' //
-
-
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	//JWT 의존성
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'  // JSON 처리를 위한 모듈
-
-	//passwordEncoder 의존성
-	implementation 'org.springframework.security:spring-security-crypto'
-
 }
 
+
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
