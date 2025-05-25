@@ -95,8 +95,6 @@ CREATE TABLE `issue_label`
 
 CREATE TABLE issue_status_count
 (
-    id           BIGINT UNSIGNED NOT NULL PRIMARY KEY CHECK (id = 1),
-    open_count   BIGINT    NOT NULL DEFAULT 0,
-    closed_count BIGINT    NOT NULL DEFAULT 0,
-    updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    status_key  VARCHAR(20) NOT NULL PRIMARY KEY,
+    issue_count BIGINT      NOT NULL DEFAULT 0
 );

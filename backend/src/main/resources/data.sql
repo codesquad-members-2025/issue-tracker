@@ -49,5 +49,6 @@ VALUES (1, 1),
        (5, 5);
 
 -- ▶ issue_status_count 테이블
-INSERT INTO `issue_status_count` (`id`, `open_count`, `closed_count`)
-VALUES (1, 4, 1);
+INSERT INTO issue_status_count (status_key, issue_count)
+VALUES ('OPEN', 4),
+       ('CLOSED', 1);
