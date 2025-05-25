@@ -35,4 +35,8 @@ public class Milestone {
 
     @Column("updated_at")
     private LocalDateTime updatedAt;
+
+    public void updateStatus(boolean isOpen) {
+        this.isOpen = isOpen;
+    }
 }

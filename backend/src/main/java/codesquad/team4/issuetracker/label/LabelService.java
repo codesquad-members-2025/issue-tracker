@@ -51,8 +51,9 @@ public class LabelService {
 
     @Transactional
     public void updateLabel(Long labelId, LabelRequestDto.CreateLabelDto request) {
-        labelRepository.findById(labelId)
-            .orElseThrow(() -> new LabelNotFoundException(labelId));
+        if (!labelRepository.existsById(labelId)) {
+            throw new LabelNotFoundException(labelId);
+        }
 
         Label updatedLabel = Label.builder()
             .id(labelId)

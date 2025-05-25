@@ -1,6 +1,7 @@
 package codesquad.team4.issuetracker.milestone;
 
 import codesquad.team4.issuetracker.entity.Milestone;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidCommentAccessException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.label.LabelRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneRequestDto;
@@ -88,8 +89,9 @@ public class MilestoneService {
 
     @Transactional
     public void updateMilestone(Long milestoneId, MilestoneRequestDto.CreateMilestoneDto request) {
-        milestoneRepository.findById(milestoneId)
-            .orElseThrow(() -> new MilestoneNotFoundException(milestoneId));
+        if (!milestoneRepository.existsById(milestoneId)) {
+            throw new MilestoneNotFoundException(milestoneId);
+        }
 
         Milestone updatedMilestone = Milestone.builder()
             .id(milestoneId)
@@ -107,5 +109,15 @@ public class MilestoneService {
             throw new MilestoneNotFoundException(milestoneId);
         }
         milestoneRepository.deleteById(milestoneId);
+    }
+
+    @Transactional
+    public void closeMilestone(Long milestoneId) {
+        Milestone milestone = milestoneRepository.findById(milestoneId)
+            .orElseThrow(() -> new MilestoneNotFoundException(milestoneId));
+
+        milestone.updateStatus(false);
+
+        milestoneRepository.save(milestone);
     }
 }

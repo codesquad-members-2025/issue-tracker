@@ -49,8 +49,13 @@ public class MilestoneController {
 
     @DeleteMapping("/{milestone-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleted(@PathVariable("milestone-id") Long milestoneId) {
+    public void deleteMilestone(@PathVariable("milestone-id") Long milestoneId) {
         milestoneService.deleteMilestone(milestoneId);
     }
 
+    @PatchMapping("/{milestone-id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void closeMilestone(@PathVariable("milestone-id") Long milestoneId) {
+        milestoneService.closeMilestone(milestoneId);
+    }
 }
