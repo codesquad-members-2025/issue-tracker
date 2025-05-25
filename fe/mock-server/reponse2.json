@@ -7,10 +7,10 @@
         "id": 1,
         "title": "로그인 오류",
         "isOpen": true,
-        "author": { "id": 101, "nickname": "devchan" },
+        "author": { "id": 101, "nickName": "devchan" },
         "assignees": [
-          { "id": 102, "nickname": "alice" },
-          { "id": 103, "nickname": "bob" }
+          { "id": 102, "nickName": "alice" },
+          { "id": 103, "nickName": "bob" }
         ],
         "labels": [
           { "id": 1, "name": "bug", "color": "#ff0000" },
@@ -23,8 +23,8 @@
         "id": 2,
         "title": "UI 개선 요청",
         "isOpen": true,
-        "author": { "id": 102, "nickname": "alice" },
-        "assignees": [{ "id": 104, "nickname": "charlie" }],
+        "author": { "id": 102, "nickName": "alice" },
+        "assignees": [{ "id": 104, "nickName": "charlie" }],
         "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
         "milestone": { "id": 6, "name": "v1.1 릴리즈" },
         "lastModifiedAt": "2025-05-15T14:30:00Z"
@@ -33,7 +33,7 @@
         "id": 4,
         "title": "문서화 업데이트 필요",
         "isOpen": true,
-        "author": { "id": 104, "nickname": "charlie" },
+        "author": { "id": 104, "nickName": "charlie" },
         "assignees": [],
         "labels": [{ "id": 5, "name": "documentation", "color": "#ffa500" }],
         "milestone": null,
@@ -43,10 +43,10 @@
         "id": 5,
         "title": "보안 취약점 발견",
         "isOpen": true,
-        "author": { "id": 105, "nickname": "david" },
+        "author": { "id": 105, "nickName": "david" },
         "assignees": [
-          { "id": 102, "nickname": "alice" },
-          { "id": 103, "nickname": "bob" }
+          { "id": 102, "nickName": "alice" },
+          { "id": 103, "nickName": "bob" }
         ],
         "labels": [
           { "id": 6, "name": "security", "color": "#800000" },
@@ -59,12 +59,12 @@
         "id": 7,
         "title": "이메일 알림 기능 추가",
         "isOpen": true,
-        "author": { "id": 103, "nickname": "bob" },
+        "author": { "id": 103, "nickName": "bob" },
         "assignees": [
           {
             "id": 104,
-            "nickname": "charlie",
-            "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
+            "nickName": "charlie",
+            "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
           }
         ],
         "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
@@ -75,12 +75,12 @@
         "id": 9,
         "title": "접근성 개선",
         "isOpen": true,
-        "author": { "id": 105, "nickname": "david" },
+        "author": { "id": 105, "nickName": "david" },
         "assignees": [
           {
             "id": 106,
-            "nickname": "eve",
-            "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
+            "nickName": "eve",
+            "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
           }
         ],
         "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
@@ -91,12 +91,12 @@
         "id": 11,
         "title": "릴리즈 노트 자동 생성",
         "isOpen": true,
-        "author": { "id": 102, "nickname": "alice" },
+        "author": { "id": 102, "nickName": "alice" },
         "assignees": [
           {
             "id": 103,
-            "nickname": "bob",
-            "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
+            "nickName": "bob",
+            "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
           }
         ],
         "labels": [{ "id": 5, "name": "documentation", "color": "#ffa500" }],
@@ -107,12 +107,12 @@
         "id": 13,
         "title": "로그아웃 버튼 위치 변경",
         "isOpen": true,
-        "author": { "id": 104, "nickname": "charlie" },
+        "author": { "id": 104, "nickName": "charlie" },
         "assignees": [
           {
             "id": 105,
-            "nickname": "david",
-            "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
+            "nickName": "david",
+            "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
           }
         ],
         "labels": [{ "id": 3, "name": "feature", "color": "#00ff00" }],
@@ -123,12 +123,12 @@
         "id": 15,
         "title": "마일스톤 삭제 오류",
         "isOpen": true,
-        "author": { "id": 101, "nickname": "devchan" },
+        "author": { "id": 101, "nickName": "devchan" },
         "assignees": [
           {
             "id": 102,
-            "nickname": "alice",
-            "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+            "nickName": "alice",
+            "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
           }
         ],
         "labels": [{ "id": 1, "name": "bug", "color": "#ff0000" }],
@@ -139,39 +139,39 @@
     "users": [
       {
         "id": 101,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "email": "devchan@example.com",
-        "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
       },
       {
         "id": 102,
-        "nickname": "alice",
+        "nickName": "alice",
         "email": "alice@example.com",
-        "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+        "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
       },
       {
         "id": 103,
-        "nickname": "bob",
+        "nickName": "bob",
         "email": "bob@example.com",
-        "imgUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
+        "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
       },
       {
         "id": 104,
-        "nickname": "charlie",
+        "nickName": "charlie",
         "email": "charlie@example.com",
-        "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
+        "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
       },
       {
         "id": 105,
-        "nickname": "david",
+        "nickName": "david",
         "email": "david@example.com",
-        "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
+        "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
       },
       {
         "id": 106,
-        "nickname": "eve",
+        "nickName": "eve",
         "email": "eve@example.com",
-        "imgUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
+        "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
       }
     ],
     "labels": [

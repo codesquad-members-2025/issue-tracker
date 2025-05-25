@@ -104,7 +104,7 @@ app.post('/login', async (req, res) => {
     const filePath = path.join(__dirname, 'mainPage.json');
     const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
-    const user = json.users.find((u) => u.nickname === loginId);
+    const user = json.users.find((u) => u.nickName === loginId);
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -124,7 +124,7 @@ app.post('/login', async (req, res) => {
     const payload = {
       sub: user.id,
       loginId: user.id,
-      imgUrl: user.imgUrl,
+      profileImageUrl: user.profileImageUrl,
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 3600,
     };

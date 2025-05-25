@@ -22,7 +22,7 @@ import React from 'react';
 import { typography } from '@/styles/foundation';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import useDataFetch from '@/hooks/useDataFetch';
-import { GetToggleButton } from './getToggleButton';
+import { GetToggleButton } from './GetToggleButton';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import AuthorInform from '../AuthorInform'; //상세 이슈 페이지에서 사이드바 PATCH요청시 필요
 import GetSelectedElements from './SelectedElements';

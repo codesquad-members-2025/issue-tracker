@@ -1,5 +1,5 @@
 /*
-로그인 ID (nickname)
+로그인 ID (nickName)
 비밀번호
 devchan - 1234
 alice - 1234
@@ -16,19 +16,19 @@ import { immer } from 'zustand/middleware/immer';
 export const useAuthStore = create(
   immer((set) => ({
     loginId: null,
-    imgUrl: null,
+    profileImageUrl: null,
     accessToken: null,
 
     resetUser: () =>
       set((state) => {
         state.loginId = null;
-        state.imgUrl = null;
+        state.profileImageUrl = null;
         state.accessToken = null;
       }),
-    setUser: (loginId, imgUrl, accessToken) =>
+    setUser: (loginId, profileImageUrl, accessToken) =>
       set((state) => {
         state.loginId = loginId;
-        state.imgUrl = imgUrl;
+        state.profileImageUrl = profileImageUrl;
         state.accessToken = accessToken;
       }),
   })),
