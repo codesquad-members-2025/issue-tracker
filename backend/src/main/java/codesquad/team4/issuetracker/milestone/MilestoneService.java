@@ -1,9 +1,14 @@
 package codesquad.team4.issuetracker.milestone;
 
+import codesquad.team4.issuetracker.entity.Milestone;
+import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
+import codesquad.team4.issuetracker.label.LabelRepository;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneRequestDto;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto.MilestoneInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -14,6 +19,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MilestoneService {
     private final MilestoneDao milestoneDao;
+    private final MilestoneRepository milestoneRepository;
+    private final LabelRepository labelRepository;
 
     public MilestoneResponseDto.MilestoneFilter getFilterMilestones() {
         List<MilestoneInfo> milestones = milestoneDao.findMilestoneForFiltering();
@@ -66,5 +73,39 @@ public class MilestoneService {
         return MilestoneResponseDto.MilestoneListDto.builder()
             .milestones(result)
             .build();
+    }
+
+    @Transactional
+    public void createMilestone(MilestoneRequestDto.CreateMilestoneDto request) {
+        Milestone milestone = Milestone.builder()
+            .name(request.getName())
+            .description(request.getDescription())
+            .endDate(request.getEndDate())
+            .build();
+
+        milestoneRepository.save(milestone);
+    }
+
+    @Transactional
+    public void updateMilestone(Long milestoneId, MilestoneRequestDto.CreateMilestoneDto request) {
+        milestoneRepository.findById(milestoneId)
+            .orElseThrow(() -> new MilestoneNotFoundException(milestoneId));
+
+        Milestone updatedMilestone = Milestone.builder()
+            .id(milestoneId)
+            .name(request.getName())
+            .description(request.getDescription())
+            .endDate(request.getEndDate())
+            .build();
+
+        milestoneRepository.save(updatedMilestone);
+    }
+
+    @Transactional
+    public void deleteMilestone(Long milestoneId) {
+        if (!milestoneRepository.existsById(milestoneId)) {
+            throw new MilestoneNotFoundException(milestoneId);
+        }
+        milestoneRepository.deleteById(milestoneId);
     }
 }

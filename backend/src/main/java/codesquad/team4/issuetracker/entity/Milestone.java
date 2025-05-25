@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,7 @@ public class Milestone {
     private String description;
 
     @Column("end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column("is_open")
     private boolean isOpen;
