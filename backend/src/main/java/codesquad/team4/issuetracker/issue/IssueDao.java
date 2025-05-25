@@ -115,6 +115,7 @@
                 LEFT JOIN comment c ON i.issue_id = c.issue_id
                 LEFT JOIN `user` u ON u.user_id = c.author_id
                 where i.issue_id = ?
+                ORDER BY c.created_at DESC
             """;
 
             return jdbcTemplate.queryForList(sql, issueId);
