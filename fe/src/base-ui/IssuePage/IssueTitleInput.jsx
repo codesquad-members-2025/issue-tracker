@@ -12,8 +12,7 @@ import { typography } from '@/styles/foundation';
 const Container = styled.div`
   display: flex;
   flex-direction: ${({ $type }) => ($type === 'new' ? 'column' : 'row')};
-  align-items: flex-start;
-  padding: 8px 16px;
+  padding: ${({ $isEmpty }) => ($isEmpty ? '16px' : '8px 16px')};
   width: 100%;
   height: ${({ $type }) => ($type === 'new' ? '56px' : '40px')};
   background-color: ${({ $isEmpty, theme }) =>
@@ -30,7 +29,6 @@ const TitleGuideLabel = styled.div`
 const TitleInput = styled.input`
   ${typography.display.medium16}
   color: ${({ theme }) => theme.text.default};
-  padding: 16px;
 `;
 // 상위에서 prop을 받아서 value를 보여준다.
 export function IssueTitleInput({ titleLabel, titleType, titleValue, changeHandler }) {

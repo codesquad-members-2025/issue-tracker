@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
-import useDebounce from '@/hooks/useDebounce';
+import useTypingStatus from '@/hooks/useTypingStatus';
+import FileDropzone from './FileDropzone';
 
 const Container = styled.div`
   display: flex;
@@ -8,6 +9,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   border-radius: 16px;
+  border: ${({ theme, $isEmpty }) => !$isEmpty && `1px solid ${theme.border.active}`};
   background-color: ${({ $isEmpty, theme }) =>
     $isEmpty ? theme.surface.bold : theme.surface.strong};
   width: 100%;
@@ -24,6 +26,7 @@ const TextArea = styled.textarea`
   color: ${({ theme }) => theme.text.default};
   padding: 16px;
   min-height: ${({ $type }) => ($type === 'new' ? '500px' : '92px')};
+  width: 100%;
   border-bottom: 1px dashed ${({ theme }) => theme.border.default};
   resize: vertical;
 `;
@@ -39,7 +42,7 @@ const TypingCount = styled.span`
 `;
 
 const Bottom = styled.div`
-  height: 52px;
+  min-height: 52px;
   padding-left: 16px;
   display: flex;
   align-items: center;
@@ -50,8 +53,14 @@ function countNumber(str) {
   return number;
 }
 
-export default function CommentInput({ commentLabel, commentType, commentValue, changeHandler }) {
-  const isDebounce = useDebounce(commentValue);
+export default function CommentInput({
+  commentLabel,
+  commentType,
+  commentValue,
+  changeHandler,
+  setFiles,
+}) {
+  const isDebounce = useTypingStatus(commentValue);
   const isEmpty = !commentValue;
 
   return (
@@ -64,7 +73,9 @@ export default function CommentInput({ commentLabel, commentType, commentValue, 
         $type={commentType}
       />
       {isDebounce && <TypingCount>{`띄어쓰기 포함 ${countNumber(commentValue)}자`}</TypingCount>}
-      <Bottom></Bottom>
+      <Bottom>
+        <FileDropzone onFiles={setFiles} />
+      </Bottom>
     </Container>
   );
 }

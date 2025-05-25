@@ -9,7 +9,7 @@ const useIssueDetailStore = create(
       id: '',
       title: '',
       comment: '',
-      imageUrl: '',
+      files: [],
       authorId: null,
       milestoneId: null,
       isOpen: '',
@@ -71,6 +71,11 @@ const useIssueDetailStore = create(
         state.issue.comment = value;
       });
     },
+
+    setFiles: (files) =>
+      set((state) => {
+        state.issue.files = files;
+      }),
   })),
 );
 

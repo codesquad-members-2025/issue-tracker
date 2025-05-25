@@ -3,6 +3,8 @@ import NewIssueTile from '@/base-ui/IssuePage/NewIssueTile';
 import SideBar from '@/units/SideBar';
 import UserAvatar from '@/base-ui/utils/UserBadge';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
+import NewIssueInputForm from '@/units/issuePage/NewIssueInputForm';
+import { useAuthStore } from '@/stores/authStore';
 
 const Body = styled.form`
   display: flex;
@@ -22,10 +24,15 @@ export default function NewIssuePage() {
   const issue = useIssueDetailStore((s) => s.issue);
   const titleText = '새로운 이슈 작성';
 
+  function submitHandler() {
+    console.log('test');
+  }
+
   return (
     <Body onSubmit={submitHandler}>
       <NewIssueTile title={titleText} />
       <Main>
+        <NewIssueInputForm />
         <SideBar />
       </Main>
     </Body>

@@ -8,21 +8,24 @@ const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 912px;
 `;
 
 export default function NewIssueInputForm() {
   const issue = useIssueDetailStore((s) => s.issue);
 
-  // const titleChangeHandler = useIssueDetailStore((s) => s.changeTitle);
-  // const commentChangeHandler = useIssueDetailStore((s) => s.changeComment);
+  const titleChangeHandler = useIssueDetailStore((s) => s.changeTitle);
+  const commentChangeHandler = useIssueDetailStore((s) => s.changeComment);
+  const setFiles = useIssueDetailStore((s) => s.setFiles);
 
-  const { titleChangeHandler, commentChangeHandler } = useIssueDetailStore(
-    (s) => ({
-      titleChangeHandler: s.changeTitle,
-      commentChangeHandler: s.changeComment,
-    }),
-    shallow,
-  );
+  // const { titleChangeHandler, commentChangeHandler } = useIssueDetailStore(
+  //   (s) => ({
+  //     titleChangeHandler: s.changeTitle,
+  //     commentChangeHandler: s.changeComment,
+  //   }),
+  //   shallow,
+  // );
+  // -> 왜 shallow 를 사용해도 무한 루프 에러가 발생할까?
 
   return (
     <InputWrapper>
@@ -37,6 +40,7 @@ export default function NewIssueInputForm() {
         commentType="new"
         commentValue={issue.comment}
         changeHandler={(e) => commentChangeHandler(e.target.value)}
+        setFiles={setFiles}
       />
     </InputWrapper>
   );
