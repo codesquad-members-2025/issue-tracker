@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class MilestoneResponseDto {
@@ -30,5 +31,25 @@ public class MilestoneResponseDto {
     public static class MilestoneCountDto {
         private Integer openCount;
         private Integer closedCount;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class MilestoneDto {
+        private Long id;
+        private String name;
+        private String description;
+        private LocalDate endDate;
+        private double progress;
+        private int openIssues;
+        private int closedIssues;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class MilestoneListDto {
+        private List<MilestoneDto> milestones;
     }
 }
