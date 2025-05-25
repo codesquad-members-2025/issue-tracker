@@ -6,12 +6,12 @@ VALUES (101, 'alice', 'pass1', 'Alice', 'https://cdn.com/alice.png', 'uuid-alice
        (104, 'dan', 'pass4', 'Dan', 'https://cdn.com/dan.png', 'uuid-dan'),
        (105, 'eve', 'pass5', 'Eve', 'https://cdn.com/eve.png', 'uuid-eve');
 -- ▶ milestone 테이블
-INSERT INTO `milestone` (`is_closed`, `title`, `description`, `expired_at`)
-VALUES (FALSE, 'v1.0', '첫 번째 릴리즈', '2025-06-01'),
-       (TRUE, 'hotfix', '긴급 수정', '2025-05-20'),
-       (FALSE, 'v2.0', '두 번째 버전', NULL),
-       (FALSE, 'v3.0 Planning', '기획중', NULL),
-       (TRUE, 'legacy-support', '이전 버전 유지보수', '2025-04-15');
+INSERT INTO `milestone` (`is_closed`, `title`, `description`, `expired_at`, `total_issues`, `closed_issues`)
+VALUES (FALSE, 'v1.0', '첫 번째 릴리즈', '2025-06-01', 10, 3),
+       (TRUE, 'hotfix', '긴급 수정', '2025-05-20', 4, 2),
+       (FALSE, 'v2.0', '두 번째 버전', NULL, 1, 1),
+       (FALSE, 'v3.0 Planning', '기획중', NULL, 453, 12),
+       (TRUE, 'legacy-support', '이전 버전 유지보수', '2025-04-15', 11, 10);
 -- ▶ label 테이블
 INSERT INTO `label` (`name`, `description`, `color`)
 VALUES ('bug', '버그 관련', '#d73a4a'),
