@@ -3,6 +3,7 @@ import { formatCreatedMessage } from '@/features/issue/utils';
 import ClosedIcon from '@/assets/icons/archive.svg?react';
 import EditIcon from '@/assets/icons/edit.svg?react';
 import AlertCircleIcon from '@/assets/icons/alertCircle.svg?react';
+import Button from '@/shared/components/Button';
 
 interface IssueHeaderProps {
   isClosed: boolean;
@@ -44,14 +45,26 @@ export default function IssueHeader({
         </IssueMetaWrapper>
       </LeftSection>
       <RightSection>
-        <StyledButton>
-          <EditIcon />
-          <StyledLabel>제목 편집</StyledLabel>
-        </StyledButton>
-        <StyledButton>
-          <ClosedIcon />
-          <StyledLabel>{isClosed ? '이슈 열기' : '이슈 닫기'}</StyledLabel>
-        </StyledButton>
+        <Button
+          variant="outline"
+          size="small"
+          icon={<EditIcon />}
+          onClick={() => {
+            /* 편집 로직 */
+          }}
+        >
+          제목 편집
+        </Button>
+        <Button
+          variant="outline"
+          size="small"
+          icon={<ClosedIcon />}
+          onClick={() => {
+            /* 이슈 열기/닫기 토글 로직 */
+          }}
+        >
+          {isClosed ? '이슈 열기' : '이슈 닫기'}
+        </Button>
       </RightSection>
     </HeaderWrapper>
   );
@@ -104,27 +117,6 @@ const CommentCount = styled.span`
   margin-left: 24px;
   color: ${({ theme }) => theme.neutral.text.weak};
   ${({ theme }) => theme.typography.displayMedium16};
-`;
-
-//TODO 공용 버튼 생성시 StyledButton, IsClosedButton 통합
-const StyledButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 128px;
-  height: 40px;
-  padding: 12px 0;
-  border: 1px solid ${({ theme }) => theme.palette.blue};
-  border-radius: ${({ theme }) => theme.radius.medium};
-  color: ${({ theme }) => theme.palette.blue};
-  ${({ theme }) => theme.typography.availableMedium12};
-
-  cursor: pointer;
-`;
-
-const StyledLabel = styled.span`
-  padding: 0 4px;
-  ${({ theme }) => theme.typography.availableMedium12};
 `;
 
 const IsClosedButton = styled.button`

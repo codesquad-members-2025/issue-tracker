@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import { type ReactNode } from 'react';
+import Button from './Button';
 
 interface TabItemProps {
   icon: ReactNode;
@@ -16,36 +16,14 @@ export default function TabItem({
   isActive = false,
 }: TabItemProps) {
   return (
-    <TabItemWrapper onClick={onClick} isActive={isActive}>
-      {icon}
-      <TabLabel isActive={isActive}>{`${label}(${count})`}</TabLabel>
-    </TabItemWrapper>
+    <Button
+      variant="ghost"
+      fullWidth={true}
+      icon={icon}
+      selected={isActive}
+      onClick={onClick}
+    >
+      {`${label}(${count})`}
+    </Button>
   );
 }
-
-const TabItemWrapper = styled.button<{ isActive: boolean }>`
-  width: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 0;
-
-  cursor: pointer;
-
-  background-color: ${({ isActive, theme }) =>
-    isActive ? theme.neutral.surface.bold : theme.neutral.surface.default};
-  color: ${({ isActive, theme }) =>
-    isActive ? theme.neutral.text.strong : theme.neutral.text.default};
-
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-`;
-
-const TabLabel = styled.span<{ isActive: boolean }>`
-  ${({ isActive, theme }) =>
-    isActive
-      ? theme.typography.selectedBold16
-      : theme.typography.availableMedium16};
-`;

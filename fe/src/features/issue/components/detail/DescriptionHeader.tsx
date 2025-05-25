@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { getTimeAgoString } from '@/shared/utils/time';
 import type { Author } from '../../types/issue';
+import Button from '@/shared/components/Button';
 import Profile from '@/shared/components/Profile';
 import EditIcon from '@/assets/icons/edit.svg?react';
 import SmileIcon from '@/assets/icons/smile.svg?react';
@@ -26,14 +27,27 @@ export default function DescriptionHeader({
 
       <RightSection>
         {isAuthor && <AuthorTag>작성자</AuthorTag>}
-        <IconButton variant="edit">
-          <EditIcon />
+        <Button
+          variant="ghost"
+          size="small"
+          icon={<EditIcon />}
+          onClick={() => {
+            /* 편집 로직 */
+          }}
+        >
           편집
-        </IconButton>
-        <IconButton variant="reaction">
-          <SmileIcon />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="small"
+          icon={<SmileIcon />}
+          onClick={() => {
+            /* 반응 로직 */
+          }}
+        >
           반응
-        </IconButton>
+        </Button>
       </RightSection>
     </Container>
   );
@@ -71,17 +85,4 @@ const AuthorTag = styled.span`
   border-radius: ${({ theme }) => theme.radius.medium};
   ${({ theme }) => theme.typography.displayMedium12};
   color: ${({ theme }) => theme.neutral.text.weak};
-`;
-
-//TODO 공용 버튼 컴포넌트 구현시 통합
-const IconButton = styled.button<{ variant: 'edit' | 'reaction' }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  height: 100%;
-  color: ${({ theme }) => theme.neutral.text.default};
-  ${({ theme }) => theme.typography.availableMedium12};
-
-  cursor: pointer;
 `;
