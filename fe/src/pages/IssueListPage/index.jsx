@@ -21,7 +21,6 @@ import StatusEditDropDown from '@/units/kanbanHeader/StatusEditDropDown';
 import deepEqualFast from '@/units/deepEqualFast/deepEqualFast';
 import useLabelStore from '@/stores/labelStore';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
-import { useAuthStore } from '@/stores/authStore';
 import { mapToUnifiedId } from '@/utils/mapToUnifiedId/mapToUnifiedId';
 import { mapIssueListToUnifiedId } from '@/utils/mapToUnifiedId/mapIssueListToUnifiedId';
 
@@ -97,7 +96,7 @@ export default function IssueListPage() {
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const isSelected = getIsSelected(checkBoxEntry);
   const setLabels = useLabelStore((state) => state.setLabels);
-  const accessToken = useAuthStore((state) => state.accessToken);
+  const accessToken = localStorage.getItem('token');
   const GEToptions = {
     method: 'GET',
     headers: {

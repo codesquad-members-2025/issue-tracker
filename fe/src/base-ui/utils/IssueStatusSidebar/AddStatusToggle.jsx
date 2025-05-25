@@ -147,7 +147,7 @@ export default function AddStatusToggle({
       </MenuTriggerButton>
       <SubMenuContainer open={open}>
         <SubMenuWrapper>
-          {itemsArr.map((item) => {
+          {itemsArr?.map((item) => {
             const isSelected =
               toggleType === 'milestone'
                 ? selected?.id === item.id
