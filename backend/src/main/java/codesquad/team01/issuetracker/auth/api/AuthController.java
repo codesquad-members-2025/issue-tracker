@@ -5,6 +5,8 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +15,7 @@ import codesquad.team01.issuetracker.auth.service.AuthService;
 import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -48,5 +51,12 @@ public class AuthController {
 		session.removeAttribute("oauth_state");
 
 		return authService.loginWithGitHub(code);
+	}
+
+	//자체 로그인
+	//에러 발생 시 API Response 적용 예정
+	@PostMapping("/api/v1/auth/login")
+	public AuthDto.LoginResponse login(@RequestBody @Valid AuthDto.LoginRequest request) {
+		return authService.login(request.loginId(), request.password());
 	}
 }
