@@ -1,8 +1,9 @@
 package elbin_bank.issue_tracker.issue.infrastructure.query;
 
 import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRepository;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
-import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailBaseProjection;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.FilterStrategyContext;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +12,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -64,7 +63,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
     }
 
     @Override
-    public Map<Long, List<String>> findAssigneesByIssueIds(List<Long> issueIds) {
+    public Map<Long, List<String>> findAssigneeNamesByIssueIds(List<Long> issueIds) {
         String sql = """
                     SELECT a.issue_id, u.profile_image_url
                       FROM assignee a
@@ -88,6 +87,30 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
     }
 
     @Override
+    public List<UserInfoProjection> findAssigneesByIssueId(long id) {
+        String sql = """
+                    SELECT u.id            AS id,
+                           u.nickname      AS nickname,
+                           u.profile_image_url AS profileImage
+                      FROM assignee a
+                 JOIN `user` u ON a.user_id = u.id
+                              AND u.deleted_at IS NULL
+                     WHERE a.issue_id = :id
+                """;
+
+        var params = new MapSqlParameterSource("id", id);
+        return jdbc.query(
+                sql,
+                params,
+                (rs, rowNum) -> new UserInfoProjection(
+                        rs.getLong("id"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage")
+                )
+        );
+    }
+
+    @Override
     public IssueCountProjection countIssueOpenAndClosed() {
         return jdbc.queryForObject(
                 "SELECT open_count, closed_count FROM issue_status_count WHERE id=1",
@@ -96,33 +119,34 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
     }
 
     @Override
-    public Optional<IssueDetailBaseProjection> findById(Long id) {
+    public Optional<IssueDetailProjection> findById(long id) {
         String sql = """
                     SELECT i.id,
                            i.author_id,
-                           u.nickname    AS authorNickname,
+                           u.nickname          AS authorNickname,
                            u.profile_image_url AS authorProfileImage,
                            i.title,
                            i.contents,
                            i.milestone_id,
-                           m.title       AS milestoneName,
-                           m.progress_rate AS milestoneProgressRate,
+                           m.title             AS milestoneName,
+                           m.total_issues      AS milestoneTotalIssues,
+                           m.closed_issues     AS milestoneClosedIssues,
                            i.is_closed,
                            i.created_at,
                            i.updated_at
                       FROM issue i
-                 JOIN `user` u ON i.author_id = u.id AND u.deleted_at IS NULL
-                 LEFT JOIN milestone m ON i.milestone_id = m.id AND m.deleted_at IS NULL
+                 JOIN `user` u  ON i.author_id = u.id AND u.deleted_at IS NULL
+                 LEFT JOIN milestone m
+                        ON i.milestone_id = m.id AND m.deleted_at IS NULL
                      WHERE i.id = :id
                        AND i.deleted_at IS NULL
                 """;
         var params = new MapSqlParameterSource("id", id);
 
         try {
-            IssueDetailBaseProjection proj = jdbc.queryForObject(
-                    sql,
-                    params,
-                    (rs, rn) -> new IssueDetailBaseProjection(
+            IssueDetailProjection proj = jdbc.queryForObject(
+                    sql, params,
+                    (rs, rn) -> new IssueDetailProjection(
                             rs.getLong("id"),
                             rs.getLong("author_id"),
                             rs.getString("authorNickname"),
@@ -131,7 +155,8 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
                             rs.getString("contents"),
                             rs.getObject("milestone_id", Long.class),
                             rs.getString("milestoneName"),
-                            rs.getObject("milestoneProgressRate", Integer.class),
+                            rs.getObject("milestoneTotalIssues", Long.class),
+                            rs.getObject("milestoneClosedIssues", Long.class),
                             rs.getBoolean("is_closed"),
                             rs.getTimestamp("created_at").toLocalDateTime(),
                             rs.getTimestamp("updated_at") != null
