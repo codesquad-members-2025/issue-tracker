@@ -69,5 +69,6 @@ public class LabelService {
         if (!labelRepository.existsById(labelId)) {
             throw new LabelNotFoundException(labelId);
         }
+        labelRepository.deleteById(labelId);
     }
 }
