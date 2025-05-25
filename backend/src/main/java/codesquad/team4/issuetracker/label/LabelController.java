@@ -21,6 +21,12 @@ public class LabelController {
         return ApiResponse.success(result);
     }
 
+    @GetMapping("")
+    public ApiResponse<LabelResponseDto.LabelListDto> showLableList() {
+         LabelResponseDto.LabelListDto labels = labelService.getAllLabels();
+         return ApiResponse.success(labels);
+    }
+
     @PostMapping( "")
     @ResponseStatus(HttpStatus.CREATED)
     public void createLabel(@RequestBody @Valid LabelRequestDto.CreateLabelDto request) {
@@ -40,5 +46,4 @@ public class LabelController {
     public void deleteLabel(@PathVariable("label-id") Long labelId) {
         labelService.deleteLabel(labelId);
     }
-
 }

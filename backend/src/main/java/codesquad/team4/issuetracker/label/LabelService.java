@@ -30,6 +30,14 @@ public class LabelService {
                 .build();
     }
 
+    public LabelResponseDto.LabelListDto getAllLabels() {
+        List<LabelResponseDto.LabelDto> labels = labelDao.findAllLabels();
+        return LabelResponseDto.LabelListDto.builder()
+            .labels(labels)
+            .build();
+
+    }
+
     @Transactional
     public void createLabel(LabelRequestDto.CreateLabelDto request) {
         Label label = Label.builder()
