@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import NewIssueTile from '@/base-ui/IssuePage/NewIssueTile';
 import SideBar from '@/units/SideBar';
 import UserAvatar from '@/base-ui/utils/UserBadge';
-import { IssueTitleInput } from '@/base-ui/IssuePage/NewIssueInput';
+import useIssueDetailStore from '@/stores/IssueDetailStore';
 
-const Body = styled.div`
+const Body = styled.form`
   display: flex;
   flex-direction: column;
   padding: 32px 80px 80px 80px;
@@ -18,20 +18,15 @@ const Main = styled.div`
   padding-top: 24px;
 `;
 
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
 export default function NewIssuePage() {
+  const issue = useIssueDetailStore((s) => s.issue);
   const titleText = '새로운 이슈 작성';
+
   return (
-    <Body>
+    <Body onSubmit={submitHandler}>
       <NewIssueTile title={titleText} />
       <Main>
         <SideBar />
-        <IssueTitleInput />
       </Main>
     </Body>
   );

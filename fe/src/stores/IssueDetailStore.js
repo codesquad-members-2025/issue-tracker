@@ -8,7 +8,7 @@ const useIssueDetailStore = create(
     issue: {
       id: '',
       title: '',
-      content: '',
+      comment: '',
       imageUrl: '',
       authorId: null,
       milestoneId: null,
@@ -58,6 +58,17 @@ const useIssueDetailStore = create(
           state.milestone = item;
           state.issue.milestoneId = item.id;
         }
+      });
+    },
+
+    changeTitle: (value) => {
+      set((state) => {
+        state.issue.title = value;
+      });
+    },
+    changeComment: (value) => {
+      set((state) => {
+        state.issue.comment = value;
       });
     },
   })),

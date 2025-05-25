@@ -37,8 +37,8 @@ export function IssueTitleInput({ titleLabel, titleType, titleValue, changeHandl
   const isEmpty = !titleValue;
   return (
     <Container $isEmpty={isEmpty} $type={titleType}>
-      {titleValue ? <TitleGuideLabel>{titleLabel}</TitleGuideLabel> : null}
-      <TitleInput placeholder="제목" value={titleValue} onChange={changeHandler} />;
+      {titleValue && <TitleGuideLabel>{titleLabel}</TitleGuideLabel>}
+      <TitleInput placeholder="제목" value={titleValue} onChange={changeHandler} />
     </Container>
   );
 }
