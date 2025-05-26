@@ -35,7 +35,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("issues")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("issue_id");
     }
 
     @Override
@@ -62,8 +62,8 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
 
     @Override
     public Optional<Issue> findById(Long issueId) {
-        String sql = "SELECT * FROM issues WHERE issueId = :issueId";
-        Map<String, Object> param = Map.of("id", issueId);
+        String sql = "SELECT * FROM issues WHERE issue_Id = :issueId";
+        Map<String, Object> param = Map.of("issueId", issueId);
         Issue issue = template.queryForObject(sql, param, issueRowMapper());
         return Optional.ofNullable(issue);
     }
