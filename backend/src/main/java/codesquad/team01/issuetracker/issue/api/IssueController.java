@@ -14,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @RestController
 public class IssueController {
 
 	private final IssueService issueService;
 
-	@GetMapping("/issues")
+	@GetMapping("/v1/issues")
 	public ResponseEntity<ApiResponse<IssueDto.ListResponse>> getIssues(
 		@Valid IssueDto.ListQueryRequest request) {
 
@@ -42,7 +42,7 @@ public class IssueController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	@GetMapping("/issues/count")
+	@GetMapping("/v1/issues/count")
 	public ResponseEntity<ApiResponse<IssueDto.CountResponse>> getIssuesCount(
 		@Valid IssueDto.CountQueryRequest request) {
 
