@@ -85,7 +85,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            # GitHub Secrets을 환경변수로 설정
+            # GitHub Secrets을 환경변수로 설정 # 추후 변경 필요 .env 파일로
             export DB_USERNAME="${{ secrets.DB_USERNAME }}"
             export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
             export OAUTH_GITHUB_CLIENT_ID="${{ secrets.OAUTH_GITHUB_CLIENT_ID }}"
