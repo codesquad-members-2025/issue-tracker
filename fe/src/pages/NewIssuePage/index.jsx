@@ -24,7 +24,8 @@ export default function NewIssuePage() {
   const issue = useIssueDetailStore((s) => s.issue);
   const titleText = '새로운 이슈 작성';
 
-  function submitHandler() {
+  function submitHandler(e) {
+    e.preventDefault();
     console.log('test');
   }
 

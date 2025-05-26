@@ -117,7 +117,7 @@
     {
       "id": 5,
       "title": "보안 취약점 발견",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 105,
         "nickName": "david"

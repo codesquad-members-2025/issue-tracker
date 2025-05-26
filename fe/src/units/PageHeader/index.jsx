@@ -48,12 +48,12 @@ export default function PageHeader() {
           >
             <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" />
           </svg>
-          <UserAvatar
-            avatarUrl={
-              'https://i.namu.wiki/i/Gdh52DwszzGUrmQmGkVxdh3HcJB9bSY3xKjhexBp6aWgR7GumtNvGdRNoSqAIba9MUuuwYFBIlRUVP4M6a9HYg.webp'
-            }
-          />
         </LogOut>
+        <UserAvatar
+          avatarUrl={
+            'https://i.namu.wiki/i/Gdh52DwszzGUrmQmGkVxdh3HcJB9bSY3xKjhexBp6aWgR7GumtNvGdRNoSqAIba9MUuuwYFBIlRUVP4M6a9HYg.webp'
+          }
+        />
       </Wrapper>
     </Container>
   );
