@@ -150,6 +150,71 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         return issues;
     }
 
+    @Override
+    public int countFilteredIssues(IssueFilterRequestDto filterRequestDto) {
+        StringBuilder countSql = new StringBuilder();
+        countSql.append("SELECT COUNT(DISTINCT i.issue_id) ")  // DISTINCT로 중복 제거
+                .append("FROM issues i ")
+                .append("LEFT JOIN milestones m ON i.milestone_id = m.milestone_id ")
+                .append("LEFT JOIN users u ON i.author_id = u.id ")
+                .append("LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id ")
+                .append("LEFT JOIN issue_label il ON i.issue_id = il.issue_id ")
+                .append("LEFT JOIN comments c ON i.issue_id = c.issue_id ");
+
+        boolean hasWhere = false;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        // 이슈 열림/닫힘 상태 필터링
+        if (filterRequestDto.getIsOpen() != null) {
+            countSql.append("WHERE ");
+            countSql.append("i.is_open = :isOpen ");
+            params.addValue("isOpen", filterRequestDto.getIsOpen());
+            hasWhere = true;
+        }
+
+        // 작성자 필터링
+        if (filterRequestDto.getAuthor() != null) {
+            countSql.append(hasWhere ? "AND " : "WHERE ");
+            countSql.append("i.author_id = :authorId ");
+            params.addValue("authorId", filterRequestDto.getAuthor());
+            hasWhere = true;
+        }
+
+        // 마일스톤 필터링
+        if (filterRequestDto.getMilestone() != null) {
+            countSql.append(hasWhere ? "AND " : "WHERE ");
+            countSql.append("i.milestone_id = :milestoneId");
+            params.addValue("milestoneId", filterRequestDto.getMilestone());
+            hasWhere = true;
+        }
+
+        // 레이블 필터링
+        if (filterRequestDto.getLabel() != null) {
+            countSql.append(hasWhere ? "AND " : "WHERE ");
+            countSql.append("il.label_id = :labelId");
+            params.addValue("labelId", filterRequestDto.getLabel());
+            hasWhere = true;
+        }
+
+        // 담당자 필터링
+        if (filterRequestDto.getAssignee() != null) {
+            countSql.append(hasWhere ? "AND " : "WHERE ");
+            countSql.append("ia.assignee_id = :assigneeId");
+            params.addValue("assigneeId", filterRequestDto.getAssignee());
+            hasWhere = true;
+        }
+
+        // 댓글 남긴 이슈 필터링
+        if (filterRequestDto.getCommentedBy() != null) {
+            countSql.append(hasWhere ? "AND " : "WHERE ");
+            countSql.append("c.author_id = :commentedBy");
+            params.addValue("commentedBy", filterRequestDto.getCommentedBy());
+        }
+
+        return template.queryForObject(countSql.toString(), params, Integer.class);
+    }
+
+
     private RowMapper<Issue> issueRowMapper() {
         return BeanPropertyRowMapper.newInstance(Issue.class);
     }

@@ -18,4 +18,6 @@ public interface IssueRepository {
     List<Issue> findAll();
 
     List<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterRequestDto filterRequestDto);
+
+    int countFilteredIssues(IssueFilterRequestDto filterRequestDto);
 }
