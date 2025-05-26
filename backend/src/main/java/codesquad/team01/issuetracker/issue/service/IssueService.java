@@ -113,7 +113,6 @@ public class IssueService {
 		List<Integer> issueIds, IssueState action) {
 
 		IssueDto.BatchUpdateResponse batchUpdateResponse =
-			issueQueryRepository.batchUpdateIssueState(issueIds, action);
-
+			issueRepository.batchUpdateIssueState(issueIds, action);
 	}
 }

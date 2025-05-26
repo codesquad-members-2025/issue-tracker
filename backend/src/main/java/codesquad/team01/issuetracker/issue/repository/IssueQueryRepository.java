@@ -2,10 +2,13 @@ package codesquad.team01.issuetracker.issue.repository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 
+@Repository
 public interface IssueQueryRepository {
 
 	List<IssueDto.BaseRow> findIssuesWithFilters(
