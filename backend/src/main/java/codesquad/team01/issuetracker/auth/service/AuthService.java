@@ -25,14 +25,6 @@ public class AuthService {
 	private final String GITHUB = "github";
 	private final TokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
-	private final String CLIENT_ID = "client_id";
-	private final String CLIENT_SECRET = "client_secret";
-	private final String AUTHORIZATION_CODE = "code";
-	private final String REDIRECT_URI = "redirect_uri";
-	private final String ID = "id";
-	private final String LOGIN = "login";
-	private final String AVATAR_URL = "avatar_url";
-	private final String ACCESS_TOKEN = "access_token";
 
 	public AuthDto.LoginResponse loginWithGitHub(String code) {
 		// 깃헙에 access token 요청
