@@ -36,6 +36,7 @@ export default function LoginPage() {
     fetchData(LOGIN_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ loginId: Id, password: pw }),
     });
   }
