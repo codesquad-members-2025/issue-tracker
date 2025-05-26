@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.label;
 
-import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.label.dto.LabelResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class LabelServiceTest {
     void setUp() {
         jdbcTemplate.update("""
             INSERT INTO label (label_id, name, color, description, created_at, updated_at)
-            VALUES 
+            VALUES
                 (1, 'bug', 'qww11', '버그 버그', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
                 (2, 'refactor', 'qq2q11', '리팩터링', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         """);
@@ -39,7 +39,7 @@ public class LabelServiceTest {
     @DisplayName("레이블 필터링 정보 조회")
     void 레이블_필터링_정보_조회() {
         // when
-        LabelDto.LabelFilter result = labelService.getFilterLabels();
+        LabelResponseDto.LabelFilter result = labelService.getFilterLabels();
 
         // then
         assertThat(result.getLabels()).hasSize(2);

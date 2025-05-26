@@ -1,11 +1,13 @@
 package codesquad.team4.issuetracker.issue.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.Set;
 
 public class IssueRequestDto {
 
@@ -28,7 +30,9 @@ public class IssueRequestDto {
     @Getter
     @Builder
     public static class BulkUpdateIssueStatusDto {
+        @NotEmpty
         private List<Long> issuesId;
+        @NotNull
         private boolean isOpen;
     }
 
@@ -55,5 +59,16 @@ public class IssueRequestDto {
     @Builder
     public static class IssueAssigneeUpdateDto {
         private Set<Long> assignees;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class IssueFilterParamDto {
+        private Long authorId;
+        private Long assigneeId;
+        private Long commentAuthorId;
+        @NotNull
+        private Boolean isOpen;
     }
 }

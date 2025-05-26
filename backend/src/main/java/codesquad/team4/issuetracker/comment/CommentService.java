@@ -3,6 +3,7 @@ package codesquad.team4.issuetracker.comment;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidCommentAccessException;
 import codesquad.team4.issuetracker.exception.notfound.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,16 @@ public class CommentService {
                 .id(commentId)
                 .message(UPDATE_COMMENT)
                 .build();
+    }
+
+    public void deleteComment(Long issueId, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
+
+        if (!comment.getIssueId().equals(issueId)) {
+            throw new InvalidCommentAccessException();
+        }
+
+        commentRepository.deleteById(commentId);
     }
 }

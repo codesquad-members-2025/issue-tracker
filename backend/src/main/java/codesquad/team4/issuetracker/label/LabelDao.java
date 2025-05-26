@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.label;
 
-import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.label.dto.LabelResponseDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,11 +16,11 @@ public class LabelDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<LabelDto.LabelInfo> findLabelForFiltering() {
+    public List<LabelResponseDto.LabelInfo> findLabelForFiltering() {
         String sql = "SELECT label_id, name, color FROM label";
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                LabelDto.LabelInfo.builder()
+                LabelResponseDto.LabelInfo.builder()
                         .id(rs.getLong("label_id"))
                         .name(rs.getString("name"))
                         .color(rs.getString("color"))
