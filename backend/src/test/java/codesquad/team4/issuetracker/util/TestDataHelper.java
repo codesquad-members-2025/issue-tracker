@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.util;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class TestDataHelper {
@@ -24,7 +24,7 @@ public class TestDataHelper {
         VALUES (?, ?, ?, ?, ?, ?, ?)
     """, id, title, isOpen, authorId, content, fileUrl, milestoneId);
     }
-    public static void insertMilestone(JdbcTemplate jdbcTemplate, Long id, String name, String description, LocalDateTime endDate, Boolean isOpen) {
+    public static void insertMilestone(JdbcTemplate jdbcTemplate, Long id, String name, String description, LocalDate endDate, Boolean isOpen) {
         jdbcTemplate.update("""
         INSERT INTO milestone (milestone_id, name, description, end_date, is_open)
         VALUES (?, ?, ?, ?, ?)

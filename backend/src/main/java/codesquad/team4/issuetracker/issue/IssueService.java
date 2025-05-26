@@ -61,7 +61,7 @@ public class IssueService {
     private final MilestoneRepository milestoneRepository;
 
     public IssueResponseDto.IssueListDto getIssues(IssueRequestDto.IssueFilterParamDto params, int page, int size) {
-        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(params);
+        List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(params, page, size);
 
         Map<Long, IssueResponseDto.IssueInfo> issueMap = new LinkedHashMap<>();
         Map<Long, Set<UserInfo>> assigneeMap = new HashMap<>();
@@ -75,28 +75,16 @@ public class IssueService {
             addIssueToMap(row, issueMap, issueId, assigneeMap, labelMap);
         }
 
-        List<IssueInfo> issues = pagenateList(page, size, issueMap);
-
         int totalElements = issueDao.countIssuesByOpenStatus(params.getStatus().getState());
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
         return IssueResponseDto.IssueListDto.builder()
-                .issues(issues)
+                .issues(new ArrayList<>(issueMap.values()))
                 .page(page)
                 .size(size)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
                 .build();
-    }
-
-    private List<IssueInfo> pagenateList(int page, int size, Map<Long, IssueInfo> issueMap) {
-        List<IssueInfo> issues = new ArrayList<>(issueMap.values());
-        int offset = page * size;
-
-        if (issues.size() <= offset) return List.of(); // 페이지가 범위 밖일 때 빈 리스트
-
-        int toIndex = Math.min(offset + size, issues.size()); // size 넘어가면 안 되니까 min
-        return issues.subList(offset, toIndex);
     }
 
     private void addIssueToMap(Map<String, Object> row, Map<Long, IssueInfo> issueMap, Long issueId,

@@ -1,15 +1,12 @@
     package codesquad.team4.issuetracker.issue;
 
     import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
-    import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
-    import java.util.ArrayList;
-    import java.util.HashSet;
-    import java.util.List;
-    import java.util.Map;
-    import java.util.Set;
+
+    import java.util.*;
     import java.util.stream.Collectors;
     import lombok.RequiredArgsConstructor;
     import org.springframework.jdbc.core.JdbcTemplate;
+    import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
     import org.springframework.stereotype.Repository;
 
     @Repository
@@ -17,97 +14,107 @@
     public class IssueDao {
 
         private final JdbcTemplate jdbcTemplate;
+        private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-        private record SqlWithParams(String sql, List<Object> params){}
-        public List<Map<String, Object>> findIssuesByOpenStatus(IssueRequestDto.IssueFilterParamDto dto){
+        public List<Map<String, Object>> findIssuesByOpenStatus(IssueRequestDto.IssueFilterParamDto dto, int page, int size){
 
-            SqlWithParams sqlWithParams = buildQuery(dto);
-
-            return jdbcTemplate.queryForList(sqlWithParams.sql, sqlWithParams.params.toArray(new Object[0]));
-        }
-
-        private SqlWithParams buildQuery(IssueFilterParamDto dto) {
             StringBuilder sql = new StringBuilder("""
-                SELECT i.issue_id AS issue_id,
-                       i.title,
-                       u.user_id AS author_id,
-                       u.nickname AS author_nickname,
-                       u.profile_image AS author_profile,
-                       m.milestone_id AS milestone_id,
-                       m.name AS milestone_title,
-                       l.label_id AS label_id,
-                       l.name AS label_name,
-                       l.color AS label_color,
-                       a.user_id AS assignee_id,
-                       a.nickname AS assignee_nickname,
-                       a.profile_image AS assignee_profile
-                FROM issue i
-                LEFT JOIN `user` u ON i.author_id = u.user_id
-                LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
-                LEFT JOIN issue_label il ON i.issue_id = il.issue_id
-                LEFT JOIN label l ON il.label_id = l.label_id
-                LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
-                LEFT JOIN `user` a ON ia.assignee_id = a.user_id
-                WHERE i.is_open = ?
-            """);
+        WITH paged_issues AS (
+            SELECT issue_id
+            FROM issue
+            WHERE is_open = :isOpen
+    """);
 
-            List<Object> params = new ArrayList<>();
-            params.add(dto.getStatus().getState());
+            Map<String, Object> params = new HashMap<>();
+            params.put("isOpen", dto.getStatus().getState()); // dto.getIsOpen()도 가능
 
             if (dto.getAuthorId() != null) {
-                sql.append(" AND i.author_id = ?");
-                params.add(dto.getAuthorId());
+                sql.append(" AND author_id = :authorId");
+                params.put("authorId", dto.getAuthorId());
             }
 
             if (dto.getAssigneeId() != null) {
-                sql.append(" AND a.user_id = ?");
-                params.add(dto.getAssigneeId());
+                sql.append("""
+            AND EXISTS (
+                SELECT 1 FROM issue_assignee ia
+                WHERE ia.issue_id = issue.issue_id
+                AND ia.assignee_id = :assigneeId
+            )
+        """);
+                params.put("assigneeId", dto.getAssigneeId());
             }
 
             if (dto.getCommentAuthorId() != null) {
                 sql.append("""
-                    AND EXISTS (
-                        SELECT 1 FROM comment c
-                        WHERE c.issue_id = i.issue_id
-                        AND c.author_id = ?
-                    )
-                """);
-                params.add(dto.getCommentAuthorId());
+            AND EXISTS (
+                SELECT 1 FROM comment c
+                WHERE c.issue_id = issue.issue_id
+                AND c.author_id = :commentAuthorId
+            )
+        """);
+                params.put("commentAuthorId", dto.getCommentAuthorId());
             }
 
             if (dto.getMilestoneId() != null) {
-                sql.append(" AND i.milestone_id = ?");
-                params.add(dto.getMilestoneId());
+                sql.append(" AND milestone_id = :milestoneId");
+                params.put("milestoneId", dto.getMilestoneId());
             }
 
-            // 라벨 필터링은 서브쿼리로 별도 처리
+            // 라벨 필터링 - IN + GROUP BY + HAVING
             if (dto.getLabelId() != null && !dto.getLabelId().isEmpty()) {
-                // 서브쿼리로 해당 라벨 조건을 만족하는 issue_id를 필터링
-                sql.append(" AND i.issue_id IN (");
+                sql.append(" AND issue_id IN (");
                 sql.append("SELECT il.issue_id FROM issue_label il WHERE il.label_id IN (");
 
-                String placeholders = dto.getLabelId().stream()
-                    .map(id -> "?")
-                    .collect(Collectors.joining(", "));
-                sql.append(placeholders).append(")");
+                List<String> labelParamNames = new ArrayList<>();
+                for (int i = 0; i < dto.getLabelId().size(); i++) {
+                    String paramName = "label" + i;
+                    labelParamNames.add(":" + paramName);
+                    params.put(paramName, dto.getLabelId().get(i));
+                }
 
-                sql.append(" GROUP BY il.issue_id HAVING COUNT(DISTINCT il.label_id) = ?)");
-
-                params.addAll(dto.getLabelId()); // IN 절 라벨들
-                params.add(dto.getLabelId().size()); // HAVING 개수
+                sql.append(String.join(", ", labelParamNames));
+                sql.append(") GROUP BY il.issue_id HAVING COUNT(DISTINCT il.label_id) = :labelCount)");
+                params.put("labelCount", dto.getLabelId().size());
             }
 
-            sql.append(" ORDER BY i.created_at DESC");
+            sql.append("""
+        ORDER BY created_at DESC
+        LIMIT :size OFFSET :offset
+        )
+        SELECT
+            i.issue_id AS issue_id,
+            i.title,
+            u.user_id AS author_id,
+            u.nickname AS author_nickname,
+            u.profile_image AS author_profile,
+            m.milestone_id AS milestone_id,
+            m.name AS milestone_title,
+            l.label_id AS label_id,
+            l.name AS label_name,
+            l.color AS label_color,
+            a.user_id AS assignee_id,
+            a.nickname AS assignee_nickname,
+            a.profile_image AS assignee_profile
+        FROM issue i
+        JOIN paged_issues p ON i.issue_id = p.issue_id
+        LEFT JOIN `user` u ON i.author_id = u.user_id
+        LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
+        LEFT JOIN issue_label il ON i.issue_id = il.issue_id
+        LEFT JOIN label l ON il.label_id = l.label_id
+        LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
+        LEFT JOIN `user` a ON ia.assignee_id = a.user_id
+        ORDER BY i.created_at DESC
+    """);
 
-            return new SqlWithParams(sql.toString(), params);
+            params.put("size", size);
+            params.put("offset", page * size);
+
+            return namedParameterJdbcTemplate.queryForList(sql.toString(), params);
         }
 
         public Integer countIssuesByOpenStatus(boolean isOpen) {
-            return jdbcTemplate.queryForObject(
-                    "SELECT COUNT(*) FROM issue WHERE is_open = ?",
-                    Integer.class,
-                isOpen
-            );
+            String sql = "SELECT COUNT(*) FROM issue WHERE is_open = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, isOpen);
         }
 
         public Set<Long> findExistingIssueIds(List<Long> issueIds) {
@@ -146,6 +153,7 @@
                 LEFT JOIN comment c ON i.issue_id = c.issue_id
                 LEFT JOIN `user` u ON u.user_id = c.author_id
                 where i.issue_id = ?
+                ORDER BY c.created_at DESC
             """;
 
             return jdbcTemplate.queryForList(sql, issueId);
