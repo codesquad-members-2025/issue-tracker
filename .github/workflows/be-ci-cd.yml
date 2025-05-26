@@ -127,7 +127,6 @@ jobs:
         with:
           status: success
           channel: '#2025-팀프로젝트-1조'
-          color: good
           text: |
             ☀️ 백엔드 배포 성공! ️
             • 브랜치: ${{ github.ref_name }}
