@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
@@ -25,14 +24,14 @@ public class IssueService {
 
 	private final IssueAssembler issueAssembler;
 
-	public IssueDto.ListResponse findIssues(IssueState state, Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds, IssueDto.CursorData cursor) {
+	public IssueDto.ListResponse findIssues(IssueDto.ListQueryRequest request) {
 
 		final int PAGE_SIZE = issueRepository.PAGE_SIZE;
 
 		// 이슈 기본 정보 조회 - (담당자, 레이블 제외)
 		List<IssueDto.BaseRow> issues = issueRepository.findIssuesWithFilters(
-			state, writerId, milestoneId, labelIds, assigneeIds, cursor);
+			request.getIssueState(), request.writerId(), request.milestoneId(),
+			request.labelIds(), request.assigneeIds(), request.decode());
 
 		boolean hasNext = issues.size() > PAGE_SIZE; // 다음 페이지 존재 여부
 
@@ -95,17 +94,15 @@ public class IssueService {
 			.build();
 	}
 
-	public IssueDto.CountResponse countIssues(
-		Integer writerId, Integer milestoneId, List<Integer> labelIds, List<Integer> assigneeIds) {
+	public IssueDto.CountResponse countIssues(IssueDto.CountQueryRequest request) {
 
-		log.debug("이슈 개수 조회: writerId={}, milestoneId={}, labelIds={}, assigneeIds={}",
-			writerId, milestoneId, labelIds, assigneeIds);
+		log.debug(request.toString());
 
 		IssueDto.CountResponse response =
-			issueRepository.countIssuesWithFilters(writerId, milestoneId, labelIds, assigneeIds);
+			issueRepository.countIssuesWithFilters(request.writerId(), request.milestoneId(),
+				request.labelIds(), request.assigneeIds());
 
-		log.debug("이슈 개수 조회 결과: 열린 이슈={}개, 닫힌 이슈={}개",
-			response.open(), response.closed());
+		log.debug(response.toString());
 
 		return response;
 	}
