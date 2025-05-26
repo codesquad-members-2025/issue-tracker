@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.label;
 
-import codesquad.team4.issuetracker.label.dto.LabelDto;
+import codesquad.team4.issuetracker.label.dto.LabelResponseDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,11 +16,11 @@ public class LabelDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<LabelDto.LabelInfo> findLabelForFiltering() {
+    public List<LabelResponseDto.LabelInfo> findLabelForFiltering() {
         String sql = "SELECT label_id, name, color FROM label";
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                LabelDto.LabelInfo.builder()
+                LabelResponseDto.LabelInfo.builder()
                         .id(rs.getLong("label_id"))
                         .name(rs.getString("name"))
                         .color(rs.getString("color"))
@@ -39,5 +39,21 @@ public class LabelDao {
         Map<String, Object> params = Map.of("ids", labelIds);
 
         return namedParameterJdbcTemplate.queryForList(sql, params, Long.class);
+    }
+
+    public List<LabelResponseDto.LabelDto> findAllLabels() {
+        String sql = """
+        SELECT label_id, name, description, color
+        FROM label
+        ORDER BY created_at DESC
+    """;
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+            LabelResponseDto.LabelDto.builder()
+                .id(rs.getLong("label_id"))
+                .name(rs.getString("name"))
+                .description(rs.getString("description"))
+                .color(rs.getString("color"))
+                .build()
+        );
     }
 }

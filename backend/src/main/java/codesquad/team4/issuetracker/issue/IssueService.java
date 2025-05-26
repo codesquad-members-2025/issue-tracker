@@ -19,10 +19,10 @@ import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueInfo;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.searchIssueDetailDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
 import codesquad.team4.issuetracker.label.LabelDao;
-import codesquad.team4.issuetracker.label.dto.LabelDto;
-import codesquad.team4.issuetracker.label.dto.LabelDto.LabelInfo;
+import codesquad.team4.issuetracker.label.dto.LabelResponseDto;
+import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
-import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto;
 import codesquad.team4.issuetracker.user.AssigneeDao;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
@@ -65,7 +65,7 @@ public class IssueService {
 
         Map<Long, IssueResponseDto.IssueInfo> issueMap = new LinkedHashMap<>();
         Map<Long, Set<UserInfo>> assigneeMap = new HashMap<>();
-        Map<Long, Set<LabelDto.LabelInfo>> labelMap = new HashMap<>();
+        Map<Long, Set<LabelResponseDto.LabelInfo>> labelMap = new HashMap<>();
 
         for (Map<String, Object> row : rows) {
             Long issueId = (Long) row.get("issue_id");
@@ -112,7 +112,7 @@ public class IssueService {
                                 .build())
                         .assignees(assigneeMap.getOrDefault(issueId, Set.of()))
                         .labels(labelMap.getOrDefault(issueId, Set.of()))
-                        .milestone(MilestoneDto.MilestoneInfo.builder()
+                        .milestone(MilestoneResponseDto.MilestoneInfo.builder()
                                 .id((Long) row.get("milestone_id"))
                                 .title((String) row.get("milestone_title"))
                                 .build())

@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.milestone;
 
-import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ public class MilestoneServiceTest {
     @DisplayName("마일스톤 필터링 정보 조회")
     void 마일스톤_필터링_정보_조회() {
         // when
-        MilestoneDto.MilestoneFilter result = milestoneService.getFilterMilestones();
+        MilestoneResponseDto.MilestoneFilter result = milestoneService.getFilterMilestones();
 
         // then
         assertThat(result.getMilestones()).hasSize(2);

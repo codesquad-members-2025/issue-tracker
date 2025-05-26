@@ -14,7 +14,7 @@ CREATE TABLE milestone (
                            name VARCHAR(50) NOT NULL UNIQUE,
                            description VARCHAR(50),
                            end_date DATE,
-                           is_open BOOLEAN,
+                           is_open BOOLEAN DEFAULT true,
                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

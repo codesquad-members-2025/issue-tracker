@@ -41,6 +41,7 @@
                 LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
                 LEFT JOIN `user` a ON ia.assignee_id = a.user_id
                 WHERE i.is_open = ?
+                ORDER BY i.created_at DESC
             """);
 
             List<Object> params = new ArrayList<>();
@@ -70,7 +71,7 @@
             return jdbcTemplate.queryForList(sql.toString(), params.toArray());
         }
 
-        public int countIssuesByOpenStatus(boolean isOpen) {
+        public Integer countIssuesByOpenStatus(boolean isOpen) {
             return jdbcTemplate.queryForObject(
                     "SELECT COUNT(*) FROM issue WHERE is_open = ?",
                     Integer.class,
