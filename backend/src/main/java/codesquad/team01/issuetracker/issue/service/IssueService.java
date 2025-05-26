@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
-import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
+import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
-import codesquad.team01.issuetracker.label.repository.LabelQueryRepository;
+import codesquad.team01.issuetracker.label.repository.LabelRepository;
 import codesquad.team01.issuetracker.user.dto.UserDto;
-import codesquad.team01.issuetracker.user.repository.UserQueryRepository;
+import codesquad.team01.issuetracker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,19 +19,19 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class IssueService {
 
-	private final IssueQueryRepository issueQueryRepository;
-	private final UserQueryRepository userQueryRepository;
-	private final LabelQueryRepository labelQueryRepository;
+	private final IssueRepository issueRepository;
+	private final UserRepository userRepository;
+	private final LabelRepository labelRepository;
 
 	private final IssueAssembler issueAssembler;
 
 	public IssueDto.ListResponse findIssues(IssueState state, Integer writerId, Integer milestoneId,
 		List<Integer> labelIds, List<Integer> assigneeIds, IssueDto.CursorData cursor) {
 
-		final int PAGE_SIZE = issueQueryRepository.PAGE_SIZE;
+		final int PAGE_SIZE = issueRepository.PAGE_SIZE;
 
 		// 이슈 기본 정보 조회 - (담당자, 레이블 제외)
-		List<IssueDto.BaseRow> issues = issueQueryRepository.findIssuesWithFilters(
+		List<IssueDto.BaseRow> issues = issueRepository.findIssuesWithFilters(
 			state, writerId, milestoneId, labelIds, assigneeIds, cursor);
 
 		boolean hasNext = issues.size() > PAGE_SIZE; // 다음 페이지 존재 여부
@@ -58,8 +58,8 @@ public class IssueService {
 		log.debug("기본 이슈 {}개 조회, id 목록: {}", pagedIssues.size(), issueIds);
 
 		// 드라이빙 테이블 기준으로 분리
-		List<UserDto.IssueAssigneeRow> assignees = userQueryRepository.findAssigneesByIssueIds(issueIds);
-		List<LabelDto.IssueLabelRow> labels = labelQueryRepository.findLabelsByIssueIds(issueIds);
+		List<UserDto.IssueAssigneeRow> assignees = userRepository.findAssigneesByIssueIds(issueIds);
+		List<LabelDto.IssueLabelRow> labels = labelRepository.findLabelsByIssueIds(issueIds);
 		log.debug("이슈 담당자 {}개, 레이블 {}개 조회", assignees.size(), labels.size());
 
 		// 이슈 기본 정보와 담당자, 레이블 조합
@@ -102,7 +102,7 @@ public class IssueService {
 			writerId, milestoneId, labelIds, assigneeIds);
 
 		IssueDto.CountResponse response =
-			issueQueryRepository.countIssuesWithFilters(writerId, milestoneId, labelIds, assigneeIds);
+			issueRepository.countIssuesWithFilters(writerId, milestoneId, labelIds, assigneeIds);
 
 		log.debug("이슈 개수 조회 결과: 열린 이슈={}개, 닫힌 이슈={}개",
 			response.open(), response.closed());

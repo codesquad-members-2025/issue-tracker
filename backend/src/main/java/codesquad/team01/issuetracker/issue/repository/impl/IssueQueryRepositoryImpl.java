@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Repository
-public class JdbcIssueQueryRepository implements IssueQueryRepository {
+public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 

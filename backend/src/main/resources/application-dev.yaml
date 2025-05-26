@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/issue_tracker_dev?useSSL=false&serverTimezone=Asia/Seoul
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  sql:
+    init:
+      mode: never
+
+      schema-locations: classpath:schema.sql
+#      data-locations: classpath:data.sql
+
+logging:
+  level:
+    root: INFO
+    codesquad.team01.issuetracker: DEBUG
+    codesquad.team01.issuetracker.issue.api: INFO
+    codesquad.team01.issuetracker.issue.repository: DEBUG
+    org.springframework.jdbc.core: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %highlight(%-5level) [%thread] %cyan(%-40.40logger{39}) : %msg%n"
+
+github:
+  oauth:
+    client-id: Ov23liGGoUM09MeMNHK7
+    client-secret: 7c759f3e4ae3697deae9841bc928f64dcf9f6586
+    authorize-uri: https://github.com/login/oauth/authorize
+    token-uri: https://github.com/login/oauth/access_token
+    user-info-uri: https://api.github.com/user
+    user-emails-uri: https://api.github.com/user/emails
+    redirect-uri: http://localhost:8080/api/v1/oauth/callback
+    scope: read:user, user:email
+
+jwt:
+  secret: "your-secret-key-goes-here-have-a-good-day"
+  access-token-validity: 900000        # 15 minutes in milliseconds
+  refresh-token-validity: 1209600000   # 2 weeks in milliseconds
