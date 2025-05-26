@@ -18,16 +18,8 @@ public class Comment extends BaseEntity {
 
     @Id
     private long id;
-
-    @Column("issue_id")
     private long issueId;
-
-    @Column("user_id")
     private long userId;
-
     private String contents;
-
-    @Column("file_path")
-    private String filePath;
 
 }

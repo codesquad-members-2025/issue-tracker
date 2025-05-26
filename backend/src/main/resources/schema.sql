@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS `issue`;
 DROP TABLE IF EXISTS `label`;
 DROP TABLE IF EXISTS `milestone`;
 DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `issue_status_count`;
 
 CREATE TABLE `user`
 (
@@ -13,10 +14,10 @@ CREATE TABLE `user`
     `login`             VARCHAR(255) NULL,
     `password`          VARCHAR(255) NULL,
     `nickname`          VARCHAR(255) NOT NULL,
-    `profile_image_url` VARCHAR(255) NULL,
+    `profile_image_url` VARCHAR(1000) NULL,
     `uuid`              VARCHAR(255) NOT NULL,
-    `created_at`        DATETIME     NOT NULL,
-    `updated_at`        DATETIME NULL,
+    `created_at`        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`        DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`        DATETIME NULL,
     UNIQUE KEY `user_uuid_unique` (`uuid`)
 );
@@ -28,8 +29,8 @@ CREATE TABLE `milestone`
     `title`       VARCHAR(255) NOT NULL,
     `description` TEXT NULL,
     `expired_at`  DATE NULL,
-    `created_at`  DATETIME     NOT NULL,
-    `updated_at`  DATETIME NULL,
+    `created_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`  DATETIME NULL
 );
 
@@ -41,9 +42,8 @@ CREATE TABLE `issue`
     `title`        VARCHAR(255) NOT NULL,
     `contents`     TEXT         NOT NULL,
     `is_closed`    BOOLEAN      NOT NULL,
-    `file_path`    VARCHAR(255) NULL,
-    `created_at`   DATETIME     NOT NULL,
-    `updated_at`   DATETIME NULL,
+    `created_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`   DATETIME NULL,
     FOREIGN KEY (`author_id`) REFERENCES `user` (`id`),
     FOREIGN KEY (`milestone_id`) REFERENCES `milestone` (`id`)
@@ -55,8 +55,8 @@ CREATE TABLE `label`
     `name`        VARCHAR(255) NOT NULL,
     `description` VARCHAR(255) NULL,
     `color`       VARCHAR(255) NOT NULL,
-    `created_at`  DATETIME     NOT NULL,
-    `updated_at`  DATETIME NULL,
+    `created_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`  DATETIME NULL
 );
 
@@ -66,9 +66,8 @@ CREATE TABLE `comment`
     `issue_id`   BIGINT UNSIGNED NOT NULL,
     `user_id`    BIGINT UNSIGNED NOT NULL,
     `contents`   TEXT     NOT NULL,
-    `file_path`  VARCHAR(255) NULL,
-    `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME NULL,
     FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
@@ -90,4 +89,12 @@ CREATE TABLE `issue_label`
     `label_id` BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
     FOREIGN KEY (`label_id`) REFERENCES `label` (`id`)
+);
+
+CREATE TABLE issue_status_count
+(
+    id           BIGINT UNSIGNED NOT NULL PRIMARY KEY CHECK (id = 1),
+    open_count   BIGINT    NOT NULL DEFAULT 0,
+    closed_count BIGINT    NOT NULL DEFAULT 0,
+    updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
