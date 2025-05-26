@@ -25,17 +25,15 @@ public class TokenService {
 		claims.put("username", username);
 		claims.put("profileImageUrl", profileImageUrl);
 
-		int subject = id;
-
 		// JWT 생성
 		String accessToken = userAuthorizationJwtManager.createAccessToken(id, claims);
 
 		// DB에 저장된 리프레시 토큰 조회
-		Optional<RefreshToken> existingOpt = refreshTokenRepository.findByUserId(id);
+		Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByUserId(id);
 		String refreshToken;
 
-		if (existingOpt.isPresent()) {
-			RefreshToken existing = existingOpt.get();
+		if (optionalRefreshToken.isPresent()) {
+			RefreshToken existing = optionalRefreshToken.get();
 			// 만료 여부 체크
 			if (userAuthorizationJwtManager.validateRefreshToken(existing.getToken())) {
 				// 만료되지 않았으면 DB 토큰 그대로
