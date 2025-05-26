@@ -38,7 +38,7 @@ public class IssueDto {
 	@Builder
 	public record CountQueryRequest(
 		@Positive(message = "작성자 ID는 양수여야 합니다")
-		Integer writerId,
+		int writerId,
 
 		@Positive(message = "마일스톤 ID는 양수여야 합니다")
 		Integer milestoneId,
@@ -56,7 +56,7 @@ public class IssueDto {
 		String state,
 
 		@Positive(message = "작성자 ID는 양수여야 합니다")
-		Integer writerId,
+		int writerId,
 
 		@Positive(message = "마일스톤 ID는 양수여야 합니다")
 		Integer milestoneId,
@@ -110,7 +110,7 @@ public class IssueDto {
 	@Getter
 	@Builder
 	public static class ListItemResponse {
-		private final Integer id;
+		private final int id;
 
 		private final String title;
 		private final String state;
@@ -148,7 +148,7 @@ public class IssueDto {
 	@Builder
 	public record BaseRow(
 		// issue
-		Integer issueId,
+		int issueId,
 
 		String issueTitle,
 		IssueState issueState,
@@ -156,7 +156,7 @@ public class IssueDto {
 		LocalDateTime issueUpdatedAt,
 
 		// writerId
-		Integer writerId,
+		int writerId,
 
 		String writerUsername,
 		String writerProfileImageUrl,
@@ -216,7 +216,7 @@ public class IssueDto {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class CursorData {
-		private Integer id;
+		private int id;
 		private LocalDateTime createdAt;
 
 		public String encode() {
