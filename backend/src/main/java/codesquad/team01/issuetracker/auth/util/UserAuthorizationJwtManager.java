@@ -79,10 +79,6 @@ public class UserAuthorizationJwtManager {
 		}
 	}
 
-	public long getAccessTokenExpiresInSeconds() {
-		return accessTokenValidity / 1000;
-	}
-
 	public boolean validateRefreshToken(String token) {
 		try {
 			Jwts.parser()
