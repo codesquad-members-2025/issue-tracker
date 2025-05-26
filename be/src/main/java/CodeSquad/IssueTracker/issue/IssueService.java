@@ -127,7 +127,7 @@ public class IssueService {
     }
 
     public int getIssueMaxPage(IssueFilterRequestDto filterRequestDto) {
-        int totalCount =  issueRepository.countFilteredIssues(filterRequestDto);
+        int totalCount =  issueRepository.countFilteredIssuesByIsOpen(filterRequestDto.getIsOpen(), filterRequestDto);
         return  (int) Math.ceil((double) totalCount / LIMIT_SIZE);
     }
 }

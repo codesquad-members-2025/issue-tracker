@@ -19,5 +19,5 @@ public interface IssueRepository {
 
     List<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterRequestDto filterRequestDto);
 
-    int countFilteredIssues(IssueFilterRequestDto filterRequestDto);
+    int countFilteredIssuesByIsOpen(boolean isOpen, IssueFilterRequestDto filterRequestDto);
 }

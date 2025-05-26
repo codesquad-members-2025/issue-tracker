@@ -151,9 +151,9 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
     }
 
     @Override
-    public int countFilteredIssues(IssueFilterRequestDto filterRequestDto) {
+    public int countFilteredIssuesByIsOpen(boolean isOpen, IssueFilterRequestDto filterRequestDto) {
         StringBuilder countSql = new StringBuilder();
-        countSql.append("SELECT COUNT(DISTINCT i.issue_id) ")  // DISTINCT로 중복 제거
+        countSql.append("SELECT COUNT(DISTINCT i.issue_id) ")
                 .append("FROM issues i ")
                 .append("LEFT JOIN milestones m ON i.milestone_id = m.milestone_id ")
                 .append("LEFT JOIN users u ON i.author_id = u.id ")
@@ -168,7 +168,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         if (filterRequestDto.getIsOpen() != null) {
             countSql.append("WHERE ");
             countSql.append("i.is_open = :isOpen ");
-            params.addValue("isOpen", filterRequestDto.getIsOpen());
+            params.addValue("isOpen", isOpen);
             hasWhere = true;
         }
 
@@ -213,7 +213,6 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
 
         return template.queryForObject(countSql.toString(), params, Integer.class);
     }
-
 
     private RowMapper<Issue> issueRowMapper() {
         return BeanPropertyRowMapper.newInstance(Issue.class);
