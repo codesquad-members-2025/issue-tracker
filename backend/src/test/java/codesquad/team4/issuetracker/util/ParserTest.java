@@ -24,7 +24,7 @@ public class ParserTest {
         assertThat(filterDto.getAssigneeId()).isEqualTo(assigneeId);
         assertThat(filterDto.getMilestoneId()).isEqualTo(milestoneId);
         assertThat(filterDto.getCommentAuthorId()).isEqualTo(commentAuthorId);
-        assertThat(filterDto.getLabelId()).containsExactlyElementsOf(labelIds);
+        assertThat(filterDto.getLabelIds()).containsExactlyElementsOf(labelIds);
     }
 
     private static Stream<Arguments> provideFilterConditions() {

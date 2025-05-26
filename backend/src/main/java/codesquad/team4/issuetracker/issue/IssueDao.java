@@ -1,115 +1,149 @@
     package codesquad.team4.issuetracker.issue;
 
     import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
-
-    import java.util.*;
+    import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.HashSet;
+    import java.util.List;
+    import java.util.Map;
+    import java.util.Set;
     import java.util.stream.Collectors;
     import lombok.RequiredArgsConstructor;
+    import lombok.extern.slf4j.Slf4j;
     import org.springframework.jdbc.core.JdbcTemplate;
     import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
     import org.springframework.stereotype.Repository;
 
     @Repository
+    @Slf4j
     @RequiredArgsConstructor
     public class IssueDao {
 
         private final JdbcTemplate jdbcTemplate;
         private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+        private record SqlWithParams(String sql, Map<String, Object> params) {}
         public List<Map<String, Object>> findIssuesByOpenStatus(IssueRequestDto.IssueFilterParamDto dto, int page, int size){
 
-            StringBuilder sql = new StringBuilder("""
-        WITH paged_issues AS (
-            SELECT issue_id
-            FROM issue
-            WHERE is_open = :isOpen
-    """);
+            SqlWithParams sqlWithParams = buildPagedQuery(dto, page, size);
+            String explainSql = "EXPLAIN " + sqlWithParams.sql();
+            log.info(explainSql);
+            return namedParameterJdbcTemplate.queryForList(explainSql, sqlWithParams.params());
+        }
 
+        private SqlWithParams buildPagedQuery(IssueFilterParamDto dto, int page, int size) {
+
+            StringBuilder sql = new StringBuilder("WITH paged_issues AS (\n");
             Map<String, Object> params = new HashMap<>();
-            params.put("isOpen", dto.getStatus().getState()); // dto.getIsOpen()도 가능
 
-            if (dto.getAuthorId() != null) {
-                sql.append(" AND author_id = :authorId");
-                params.put("authorId", dto.getAuthorId());
-            }
-
-            if (dto.getAssigneeId() != null) {
-                sql.append("""
-            AND EXISTS (
-                SELECT 1 FROM issue_assignee ia
-                WHERE ia.issue_id = issue.issue_id
-                AND ia.assignee_id = :assigneeId
-            )
-        """);
-                params.put("assigneeId", dto.getAssigneeId());
-            }
-
-            if (dto.getCommentAuthorId() != null) {
-                sql.append("""
-            AND EXISTS (
-                SELECT 1 FROM comment c
-                WHERE c.issue_id = issue.issue_id
-                AND c.author_id = :commentAuthorId
-            )
-        """);
-                params.put("commentAuthorId", dto.getCommentAuthorId());
-            }
-
-            if (dto.getMilestoneId() != null) {
-                sql.append(" AND milestone_id = :milestoneId");
-                params.put("milestoneId", dto.getMilestoneId());
-            }
-
-            // 라벨 필터링 - IN + GROUP BY + HAVING
-            if (dto.getLabelId() != null && !dto.getLabelId().isEmpty()) {
-                sql.append(" AND issue_id IN (");
-                sql.append("SELECT il.issue_id FROM issue_label il WHERE il.label_id IN (");
-
-                List<String> labelParamNames = new ArrayList<>();
-                for (int i = 0; i < dto.getLabelId().size(); i++) {
-                    String paramName = "label" + i;
-                    labelParamNames.add(":" + paramName);
-                    params.put(paramName, dto.getLabelId().get(i));
-                }
-
-                sql.append(String.join(", ", labelParamNames));
-                sql.append(") GROUP BY il.issue_id HAVING COUNT(DISTINCT il.label_id) = :labelCount)");
-                params.put("labelCount", dto.getLabelId().size());
-            }
+            sql.append(buildIssueIdFilterSubquery(dto, params));
 
             sql.append("""
-        ORDER BY created_at DESC
-        LIMIT :size OFFSET :offset
-        )
-        SELECT
-            i.issue_id AS issue_id,
-            i.title,
-            u.user_id AS author_id,
-            u.nickname AS author_nickname,
-            u.profile_image AS author_profile,
-            m.milestone_id AS milestone_id,
-            m.name AS milestone_title,
-            l.label_id AS label_id,
-            l.name AS label_name,
-            l.color AS label_color,
-            a.user_id AS assignee_id,
-            a.nickname AS assignee_nickname,
-            a.profile_image AS assignee_profile
-        FROM issue i
-        JOIN paged_issues p ON i.issue_id = p.issue_id
-        LEFT JOIN `user` u ON i.author_id = u.user_id
-        LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
-        LEFT JOIN issue_label il ON i.issue_id = il.issue_id
-        LEFT JOIN label l ON il.label_id = l.label_id
-        LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
-        LEFT JOIN `user` a ON ia.assignee_id = a.user_id
-        ORDER BY i.created_at DESC
-    """);
+                ORDER BY created_at DESC
+                LIMIT :size OFFSET :offset
+                )
+                SELECT
+                    i.issue_id AS issue_id,
+                    i.title,
+                    u.user_id AS author_id,
+                    u.nickname AS author_nickname,
+                    u.profile_image AS author_profile,
+                    m.milestone_id AS milestone_id,
+                    m.name AS milestone_title,
+                    l.label_id AS label_id,
+                    l.name AS label_name,
+                    l.color AS label_color,
+                    a.user_id AS assignee_id,
+                    a.nickname AS assignee_nickname,
+                    a.profile_image AS assignee_profile
+                FROM issue i
+                JOIN paged_issues p ON i.issue_id = p.issue_id
+                LEFT JOIN `user` u ON i.author_id = u.user_id
+                LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
+                LEFT JOIN issue_label il ON i.issue_id = il.issue_id
+                LEFT JOIN label l ON il.label_id = l.label_id
+                LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
+                LEFT JOIN `user` a ON ia.assignee_id = a.user_id
+                ORDER BY i.created_at DESC
+            """);
 
             params.put("size", size);
             params.put("offset", page * size);
 
-            return namedParameterJdbcTemplate.queryForList(sql.toString(), params);
+            return new SqlWithParams(sql.toString(), params);
+        }
+
+        private String buildIssueIdFilterSubquery(IssueRequestDto.IssueFilterParamDto dto, Map<String, Object> params) {
+            StringBuilder sql = new StringBuilder("SELECT issue_id FROM issue WHERE is_open = :isOpen\n");
+            params.put("isOpen", dto.getStatus().getState());
+
+            addAuthorCondition(dto.getAuthorId(), params, sql);
+            addAssigneeCondition(dto.getAssigneeId(), params, sql);
+            addCommentAuthorCondition(dto.getCommentAuthorId(), params, sql);
+            addMilestoneCondition(dto.getMilestoneId(), params, sql);
+            addLabelConditions(dto.getLabelIds(), params, sql);
+
+            return sql.toString();
+        }
+
+        private void addLabelConditions(List<Long> labelIds, Map<String, Object> params, StringBuilder sql) {
+            // 라벨 필터링 - IN + GROUP BY + HAVING
+            if (labelIds != null && !labelIds.isEmpty()) {
+                sql.append(" AND issue_id IN (\n");
+                sql.append("SELECT il.issue_id \nFROM issue_label il \nWHERE il.label_id IN (");
+
+                List<String> labelParamNames = new ArrayList<>();
+                for (int i = 0; i < labelIds.size(); i++) {
+                    String paramName = "label" + i;
+                    labelParamNames.add(":" + paramName);
+                    params.put(paramName, labelIds.get(i));
+                }
+
+                sql.append(String.join(", ", labelParamNames));
+                sql.append(") \nGROUP BY il.issue_id HAVING COUNT(DISTINCT il.label_id) = :labelCount)\n");
+                params.put("labelCount", labelIds.size());
+            }
+        }
+
+        private void addMilestoneCondition(Long milestoneId, Map<String, Object> params, StringBuilder sql) {
+            if (milestoneId != null) {
+                sql.append(" AND milestone_id = :milestoneId\n");
+                params.put("milestoneId", milestoneId);
+            }
+        }
+
+        private void addCommentAuthorCondition(Long commentAuthorId, Map<String, Object> params, StringBuilder sql) {
+            if (commentAuthorId != null) {
+                sql.append("""
+                    AND EXISTS (
+                        SELECT 1 FROM comment c
+                        WHERE c.issue_id = issue.issue_id
+                        AND c.author_id = :commentAuthorId
+                    )\n
+                """);
+                params.put("commentAuthorId", commentAuthorId);
+            }
+        }
+
+        private void addAssigneeCondition(Long assigneeId, Map<String, Object> params, StringBuilder sql) {
+            if (assigneeId != null) {
+                sql.append("""
+                    AND EXISTS (
+                        SELECT 1 FROM issue_assignee ia
+                        WHERE ia.issue_id = issue.issue_id
+                        AND ia.assignee_id = :assigneeId
+                    )\n
+                """);
+                params.put("assigneeId", assigneeId);
+            }
+        }
+
+        private void addAuthorCondition(Long authorId, Map<String, Object> params, StringBuilder sql) {
+            if (authorId != null) {
+                sql.append(" AND author_id = :authorId\n");
+                params.put("authorId", authorId);
+            }
         }
 
         public Integer countIssuesByOpenStatus(boolean isOpen) {

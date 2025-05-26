@@ -4,18 +4,11 @@ import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto.OpenStatus;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Parser {
-    public static IssueRequestDto.IssueFilterParamDto parseFilterCondition(String q) {
-        String query = Arrays.stream(q.split("&"))
-            .filter(param -> param.startsWith("q="))
-            .findFirst()
-            .map(param -> param.substring(2)) // "q=" 제거
-            .orElse("");
-
-        String[] conditions = query.split("\\+");
+    public static IssueRequestDto.IssueFilterParamDto parseFilterCondition(String query) {
+        String[] conditions = query.split(" ");
 
         String state = "open";
         Long authorId = null;
@@ -62,7 +55,7 @@ public class Parser {
             .milestoneId(milestoneId)
             .commentAuthorId(commentAuthorId)
             .status(OpenStatus.fromValue(state))
-            .labelId(labelIds)
+            .labelIds(labelIds)
             .build();
     }
 

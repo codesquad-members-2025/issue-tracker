@@ -70,7 +70,7 @@ public class IssueRequestDto {
         private Long commentAuthorId;
         private Long milestoneId;
         private OpenStatus status;
-        private List<Long> labelId;
+        private List<Long> labelIds;
 
         @Getter
         public enum OpenStatus{
