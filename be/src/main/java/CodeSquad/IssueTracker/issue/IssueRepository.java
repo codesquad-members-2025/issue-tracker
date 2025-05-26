@@ -17,5 +17,5 @@ public interface IssueRepository {
 
     List<Issue> findAll();
 
-    List<FilteredIssueDto> findIssuesByFilter(IssueFilterRequestDto filterRequestDto);
+    List<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterRequestDto filterRequestDto);
 }

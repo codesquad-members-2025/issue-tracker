@@ -3,10 +3,7 @@ package CodeSquad.IssueTracker.issue;
 import CodeSquad.IssueTracker.home.dto.IssueFilterRequestDto;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
-import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeRepository;
-import CodeSquad.IssueTracker.issueLabel.IssueLabelRepository;
 import CodeSquad.IssueTracker.milestone.dto.SummaryMilestoneDto;
-import CodeSquad.IssueTracker.user.UserRepository;
 import CodeSquad.IssueTracker.user.dto.SummaryUserDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,13 +22,12 @@ import java.util.Optional;
 @Repository
 public class JdbcTemplateIssueRepository implements IssueRepository {
 
+    public static final int LIMIT_SIZE = 20;
+
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcTemplateIssueRepository(DataSource dataSource,
-                                       UserRepository userRepository,
-                                       IssueAssigneeRepository issueAssigneeRepository,
-                                       IssueLabelRepository issueLabelRepository) {
+    public JdbcTemplateIssueRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("issues")
@@ -75,7 +71,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
     }
 
     @Override
-    public List<FilteredIssueDto> findIssuesByFilter(IssueFilterRequestDto filterRequestDto) {
+    public List<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterRequestDto filterRequestDto) {
         StringBuilder issueSql = new StringBuilder();
         issueSql.append("SELECT DISTINCT i.issue_id, i.title, i.is_open, i.author_id, u.nick_name, i.milestone_id, m.name AS milestone_name, i.last_modified_at\n")
                 .append("FROM issues i\n")
@@ -90,7 +86,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
 
         // 이슈 열림/닫힘 상태 필터링
         if (filterRequestDto.getIsOpen() != null) {
-            issueSql.append(hasWhere ? "AND " : "WHERE ");
+            issueSql.append("WHERE ");
             issueSql.append("i.is_open = :isOpen ");
             params.addValue("isOpen", filterRequestDto.getIsOpen());
             hasWhere = true;
@@ -134,6 +130,11 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
             issueSql.append("c.author_id = :commentedBy");
             params.addValue("commentedBy", filterRequestDto.getCommentedBy());
         }
+
+        issueSql.append(" ORDER BY i.issue_id DESC\n");
+        issueSql.append("LIMIT :limitSize OFFSET :page");
+        params.addValue("limitSize", LIMIT_SIZE);
+        params.addValue("page", (page - 1) * LIMIT_SIZE);
 
         List<FilteredIssueDto> issues = template.query(issueSql.toString(), params, (rs, rowNum) -> {
             FilteredIssueDto dto = new FilteredIssueDto();
