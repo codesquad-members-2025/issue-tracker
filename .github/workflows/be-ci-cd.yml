@@ -85,7 +85,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            # GitHub Secrets을 환경변수로 설정 # 추후 변경 필요 .env 파일로
+            # 모든 환경변수 설정 # 추후 변경 필요
             export DB_USERNAME="${{ secrets.DB_USERNAME }}"
             export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
             export OAUTH_GITHUB_CLIENT_ID="${{ secrets.OAUTH_GITHUB_CLIENT_ID }}"
@@ -108,11 +108,9 @@ jobs:
             cd backend
             chmod +x gradlew
 
-            # 이제 환경변수가 설정된 상태로 테스트
-            ./gradlew test
-
-            # 빌드
-            ./gradlew bootJar
+            # sudo -E로 환경변수 보존하면서 테스트 및 빌드
+            sudo -E ./gradlew clean test
+            sudo -E ./gradlew bootJar
 
             # Systemd 서비스 시작 (서비스 파일의 환경변수 사용)
             sudo systemctl start issue-tracker

@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1c5434d-9d2b-4673-affb-2b0ca68b6a56" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/codesquad/team01/issuetracker/issue/dto/IssueDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/codesquad/team01/issuetracker/issue/dto/IssueDto.java" afterDir="false" />
-    </list>
+    <list default="true" id="b1c5434d-9d2b-4673-affb-2b0ca68b6a56" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,7 +27,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "refactor/#5-issue-list-api",
+    "git-widget-placeholder": "release",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/jaehoonchoi/study/CodeSquad/issue-tracker/issue-tracker",
     "node.js.detected.package.eslint": "true",
@@ -75,6 +73,7 @@
       <workItem from="1746701866024" duration="309000" />
       <workItem from="1746702907152" duration="306000" />
       <workItem from="1747619265698" duration="58000" />
+      <workItem from="1748256228904" duration="9049000" />
     </task>
     <servers />
   </component>
