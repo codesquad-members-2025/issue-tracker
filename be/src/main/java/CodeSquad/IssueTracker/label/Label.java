@@ -15,4 +15,11 @@ public class Label {
     private String description;
     private String color;
     private LocalDateTime createdAt;
+
+    public Label(String name, String description, String color, LocalDateTime createdAt) {
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.createdAt = createdAt;
+    }
 }
