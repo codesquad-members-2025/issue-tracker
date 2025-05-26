@@ -80,13 +80,21 @@
                 params.add(dto.getMilestoneId());
             }
 
+            // 라벨 필터링은 서브쿼리로 별도 처리
             if (dto.getLabelId() != null && !dto.getLabelId().isEmpty()) {
-                sql.append(" AND l.label_id IN (");
+                // 서브쿼리로 해당 라벨 조건을 만족하는 issue_id를 필터링
+                sql.append(" AND i.issue_id IN (");
+                sql.append("SELECT il.issue_id FROM issue_label il WHERE il.label_id IN (");
+
                 String placeholders = dto.getLabelId().stream()
                     .map(id -> "?")
                     .collect(Collectors.joining(", "));
                 sql.append(placeholders).append(")");
-                params.addAll(dto.getLabelId());
+
+                sql.append(" GROUP BY il.issue_id HAVING COUNT(DISTINCT il.label_id) = ?)");
+
+                params.addAll(dto.getLabelId()); // IN 절 라벨들
+                params.add(dto.getLabelId().size()); // HAVING 개수
             }
 
             sql.append(" ORDER BY i.created_at DESC");
