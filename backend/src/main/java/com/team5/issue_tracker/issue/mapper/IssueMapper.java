@@ -27,7 +27,7 @@ public class IssueMapper {
           return new IssueSummaryResponse(
               issueId,
               issueQueryDto.getTitle(),
-              issueQueryDto.isOpen(),
+              issueQueryDto.getIsOpen(),
               labels.getOrDefault(issueId, List.of()),
               userDto.get(issueId),
               milestoneDto.get(issueId),
