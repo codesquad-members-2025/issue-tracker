@@ -10,4 +10,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'), // ✅ 여기서 @가 src를 의미하게 됨
     },
   },
+  test: {
+    environment: 'jsdom',
+  },
 });

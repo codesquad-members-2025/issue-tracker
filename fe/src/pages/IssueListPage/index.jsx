@@ -18,7 +18,7 @@ import useCheckBoxStore from '@/stores/useCheckBoxStore';
 import TotalCheckBox from '@/units/kanbanHeader/TotalCheckBox';
 import SelectDisplayer from '@/base-ui/issueListPage/IssueListHeader/SelectDisplayer';
 import StatusEditDropDown from '@/units/kanbanHeader/StatusEditDropDown';
-import deepEqualFast from '@/units/deepEqualFast/deepEqualFast';
+import deepEqualFast from '@/utils/common/deepEqualFast/deepEqualFast';
 import useLabelStore from '@/stores/labelStore';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import { mapToUnifiedId } from '@/utils/mapToUnifiedId/mapToUnifiedId';
