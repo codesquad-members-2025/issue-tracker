@@ -1,6 +1,5 @@
 package codesquad.team01.issuetracker.label.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import codesquad.team01.issuetracker.label.domain.LabelTextColor;
@@ -14,6 +13,15 @@ public class LabelDto {
 	 * 응답 DTO
 	 */
 	// 이슈 목록 - 레이블 응답 DTO
+	@Builder
+	public record FilterListItemResponse(
+		int id,
+		String name,
+		String color,
+		String textColor
+	) {
+	}
+
 	@Builder
 	public record ListItemResponse(
 		int id,
@@ -56,14 +64,12 @@ public class LabelDto {
 	) {
 	}
 
-	public record LabelListItem(
+	public record LabelRow(
 		int id,
 		String name,
 		String description,
 		String color,
-		String textColor,
-		LocalDateTime createdAt,
-		LocalDateTime updatedAt
+		String textColor
 	) {
 	}
 }

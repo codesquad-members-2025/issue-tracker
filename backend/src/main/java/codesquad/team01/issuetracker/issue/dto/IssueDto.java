@@ -123,7 +123,7 @@ public class IssueDto {
 		private final List<UserDto.AssigneeResponse> assignees = new ArrayList<>();
 
 		@Builder.Default
-		private final List<LabelDto.ListItemResponse> labels = new ArrayList<>();
+		private final List<LabelDto.FilterListItemResponse> labels = new ArrayList<>();
 	}
 
 	@Builder
@@ -184,7 +184,7 @@ public class IssueDto {
 	public record Details(
 		BaseRow baseInfo,
 		List<UserDto.AssigneeResponse> assignees,
-		List<LabelDto.ListItemResponse> labels
+		List<LabelDto.FilterListItemResponse> labels
 	) {
 		public ListItemResponse toListItemResponse() { // Mapper 클래스로 따로 뺄지 고민
 			return IssueDto.ListItemResponse.builder()

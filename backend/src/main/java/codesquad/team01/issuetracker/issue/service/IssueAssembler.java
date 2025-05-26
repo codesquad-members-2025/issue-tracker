@@ -27,7 +27,7 @@ public class IssueAssembler {
 		log.debug("이슈별 담당자 정보 그룹화: {}개 이슈-담당자 매핑", assigneesByIssueId.size());
 
 		// 레이블 정보를 이슈 id로 그룹화
-		Map<Integer, List<LabelDto.ListItemResponse>> labelsByIssueId = groupLabelsByIssueId(labels);
+		Map<Integer, List<LabelDto.FilterListItemResponse>> labelsByIssueId = groupLabelsByIssueId(labels);
 
 		log.debug("이슈별 레이블 정보 그룹화: {}개 이슈-레이블 매핑", labelsByIssueId.size());
 
@@ -59,13 +59,14 @@ public class IssueAssembler {
 	}
 
 	// 레이블 정보 이슈 id로 그룹화
-	private Map<Integer, List<LabelDto.ListItemResponse>> groupLabelsByIssueId(List<LabelDto.IssueLabelRow> labels) {
+	private Map<Integer, List<LabelDto.FilterListItemResponse>> groupLabelsByIssueId(
+		List<LabelDto.IssueLabelRow> labels) {
 
 		return labels.stream()
 			.collect(Collectors.groupingBy(
 				LabelDto.IssueLabelRow::issueId,
 				Collectors.mapping(
-					row -> LabelDto.ListItemResponse.builder()
+					row -> LabelDto.FilterListItemResponse.builder()
 						.id(row.labelId())
 						.name(row.labelName())
 						.color(row.labelColor())

@@ -21,5 +21,5 @@ public interface LabelRepository extends CrudRepository<Label, Integer> {
 		FROM label
 		WHERE deleted_at IS NULL
 		""")
-	List<LabelDto.ListItemResponse> findLabels();
+	List<LabelDto.LabelRow> findLabels();
 }
