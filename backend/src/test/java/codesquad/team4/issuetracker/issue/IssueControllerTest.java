@@ -21,10 +21,13 @@ import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -259,5 +262,34 @@ class IssueControllerTest {
             .andExpect(result -> assertThat(result.getResolvedException())
                 .isInstanceOf(InvalidFilteringConditionException.class)
                 .hasMessageContaining("하나만 사용할"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFilterConditions")
+    @DisplayName("문자열 필터링 조건을 파싱하여 Dto로 만든다")
+    void filteringConditionToDto(String q, String state, Long authorId, Long assigneeId, Long milestoneId, Long commentAuthorId, List<Long> labelIds) {
+        // when
+        IssueRequestDto.IssueFilterParamDto filterDto = IssueController.parseFilterCondition(q);
+
+        // then
+        assertThat(filterDto.getStatus().getValue()).isEqualTo(state);
+        assertThat(filterDto.getAuthorId()).isEqualTo(authorId);
+        assertThat(filterDto.getAssigneeId()).isEqualTo(assigneeId);
+        assertThat(filterDto.getMilestoneId()).isEqualTo(milestoneId);
+        assertThat(filterDto.getCommentAuthorId()).isEqualTo(commentAuthorId);
+        assertThat(filterDto.getLabelId()).containsExactlyElementsOf(labelIds);
+    }
+
+    private static Stream<Arguments> provideFilterConditions() {
+        return Stream.of(
+            Arguments.of("q=state:open&page=1&size=10", "open", null, null, null, null, List.of()),
+            Arguments.of("q=state:close&page=1&size=10", "close", null, null, null, null, List.of()),
+            Arguments.of("q=state:open+authorId:3&page=1&size=10", "open", 3L, null, null, null, List.of()),
+            Arguments.of("q=state:open+assigneeId:2&page=1&size=10", "open", null, 2L, null, null, List.of()), // 잘못된 값 테스트
+            Arguments.of("q=state:open+commentAuthorId:3&page=1&size=10", "open", null, null, null, 3L, List.of()),
+            Arguments.of("q=state:open+authorId:3+labelId:1&page=1&size=10", "open", 3L, null, null, null, List.of(1L)),
+            Arguments.of("q=authorId:3+labelId:1+labelId:2&page=1&size=10", "open", 3L, null, null, null, List.of(1L, 2L)),
+            Arguments.of("q=state:open+authorId:3+milestoneId:1&page=1&size=10", "open", 3L, null, 1L, null, List.of())
+        );
     }
 }
