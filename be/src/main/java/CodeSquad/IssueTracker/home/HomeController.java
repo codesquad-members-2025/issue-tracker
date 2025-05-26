@@ -13,8 +13,8 @@ public class HomeController {
     private final HomeService homeService;
 
     @GetMapping("/")
-    public BaseResponseDto<HomeResponseDto> home(@ModelAttribute IssueFilterRequestDto filterRequestDto) {
+    public BaseResponseDto<HomeResponseDto> home(@RequestParam int page, @ModelAttribute IssueFilterRequestDto filterRequestDto) {
         return BaseResponseDto.success("이슈목록을 성공적으로 불러왔습니다.",
-                homeService.getHomeData(filterRequestDto));
+                homeService.getHomeData(page, filterRequestDto));
     }
 }

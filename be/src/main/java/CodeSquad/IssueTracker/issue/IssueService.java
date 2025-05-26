@@ -31,6 +31,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueService {
 
+    public static final int LIMIT_SIZE = 20;
+
     private final IssueRepository issueRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
     private final IssueLabelRepository issueLabelRepository;
@@ -113,8 +115,8 @@ public class IssueService {
         return response;
     }
 
-    public Iterable<FilteredIssueDto> findIssuesByFilter(IssueFilterRequestDto filterRequestDto) {
-        List<FilteredIssueDto> issues = issueRepository.findIssuesByFilter(filterRequestDto);
+    public Iterable<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterRequestDto filterRequestDto) {
+        List<FilteredIssueDto> issues = issueRepository.findIssuesByFilter(page, filterRequestDto);
 
         for (FilteredIssueDto issue : issues) {
             issue.setAssignees(issueAssigneeRepository.findSummaryAssigneeByIssueId(issue.getIssueId()));
@@ -122,5 +124,10 @@ public class IssueService {
         }
 
         return issues;
+    }
+
+    public int getIssueMaxPage(IssueFilterRequestDto filterRequestDto) {
+        int totalCount =  issueRepository.countFilteredIssues(filterRequestDto);
+        return  (int) Math.ceil((double) totalCount / LIMIT_SIZE);
     }
 }
