@@ -27,9 +27,8 @@
         public List<Map<String, Object>> findIssuesByOpenStatus(IssueRequestDto.IssueFilterParamDto dto, int page, int size){
 
             SqlWithParams sqlWithParams = buildPagedQuery(dto, page, size);
-            String explainSql = "EXPLAIN " + sqlWithParams.sql();
-            log.info(explainSql);
-            return namedParameterJdbcTemplate.queryForList(explainSql, sqlWithParams.params());
+            log.info(sqlWithParams.sql());
+            return namedParameterJdbcTemplate.queryForList(sqlWithParams.sql, sqlWithParams.params());
         }
 
         private SqlWithParams buildPagedQuery(IssueFilterParamDto dto, int page, int size) {
