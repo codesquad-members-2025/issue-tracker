@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -69,11 +70,11 @@ public class UserAuthorizationJwtManager {
 
 	public Claims parseClaims(String token) {
 		try {
-			return Jwts.parserBuilder()
-				.setSigningKey(key)
+			Jwt<?, Claims> jwt = Jwts.parser()
+				.verifyWith(key)
 				.build()
-				.parseClaimsJws(token)
-				.getBody();
+				.parseSignedClaims(token);
+			return jwt.getPayload();
 		} catch (JwtException e) {
 			throw new IllegalArgumentException("허용되지 않거나 만료된 토큰입니다");
 		}
@@ -81,9 +82,10 @@ public class UserAuthorizationJwtManager {
 
 	public boolean validateRefreshToken(String token) {
 		try {
-			Jwts.parser()
-				.setSigningKey(SECRET_KEY.getBytes())
-				.parseClaimsJws(token); // 유효하지 않으면 예외 발생
+			Jwt<?, Claims> jwt = Jwts.parser()
+				.verifyWith(key)
+				.build()
+				.parseSignedClaims(token);
 			return true;
 		} catch (ExpiredJwtException e) {
 			log.info("Refresh token이 만료되었습니다. " + e.getCause() + "에 의해 " + e.getMessage() + "가 발생하였습니다.");
