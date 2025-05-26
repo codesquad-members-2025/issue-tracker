@@ -42,7 +42,7 @@ CREATE TABLE issue (
                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
                        FOREIGN KEY (author_id) REFERENCES user(user_id),
-                       FOREIGN KEY (milestone_id) REFERENCES milestone(milestone_id)
+                       FOREIGN KEY (milestone_id) REFERENCES milestone(milestone_id) ON DELETE SET NULL
 );
 
 -- COMMENT
@@ -56,7 +56,7 @@ CREATE TABLE comment (
                          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
                          CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES user(user_id),
-                         CONSTRAINT fk_comment_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id)
+                         CONSTRAINT fk_comment_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id) ON DELETE CASCADE
 );
 
 -- ISSUE_LABEL (다대다 관계)
@@ -66,8 +66,8 @@ CREATE TABLE issue_label (
                              label_id BIGINT NOT NULL,
                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-                             CONSTRAINT fk_issue_label_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id),
-                             CONSTRAINT fk_issue_label_label FOREIGN KEY (label_id) REFERENCES label(label_id)
+                             CONSTRAINT fk_issue_label_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id) ON DELETE CASCADE,
+                             CONSTRAINT fk_issue_label_label FOREIGN KEY (label_id) REFERENCES label(label_id) ON DELETE CASCADE
 );
 
 -- ISSUE_ASSIGNEE (다대다 관계)
@@ -77,7 +77,7 @@ CREATE TABLE issue_assignee (
                                 assignee_id BIGINT NOT NULL,
                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-                                CONSTRAINT fk_issue_assignee_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id),
+                                CONSTRAINT fk_issue_assignee_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id) ON DELETE CASCADE,
                                 CONSTRAINT fk_issue_assignee_user FOREIGN KEY (assignee_id) REFERENCES user(user_id)
 );
 
