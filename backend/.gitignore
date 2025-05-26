@@ -36,13 +36,14 @@ out/
 ### VS Code ###
 .vscode/
 
-# Spring Boot config files (all profiles)
+# Spring Boot config files (구체적으로 지정)
 application*.properties
 application*.yml
 application*.yaml
-*.properties
-*.yml
-*.yaml
+# 추가로 특정 설정 파일들만 제외
+application-dev.yml
+application-prod.yml
+application-local.yml
 
 .DS_Store
 ._.DS_Store
