@@ -5,6 +5,7 @@ import UserAvatar from '@/base-ui/utils/UserBadge';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import NewIssueInputForm from '@/units/issuePage/NewIssueInputForm';
 import { useAuthStore } from '@/stores/authStore';
+import NewIssueFooter from '@/units/issuePage/NewIssueFooter';
 
 const Body = styled.form`
   display: flex;
@@ -36,6 +37,7 @@ export default function NewIssuePage() {
         <NewIssueInputForm />
         <SideBar />
       </Main>
+      <NewIssueFooter />
     </Body>
   );
 }

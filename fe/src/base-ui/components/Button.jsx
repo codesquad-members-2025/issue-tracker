@@ -33,6 +33,7 @@ const ghostButtonStyle = css`
   background-color: transparent;
   color: ${({ theme }) => theme.text.default};
   cursor: pointer;
+  transition: background-color 0.3s;
 
   &:hover {
     color: ${({ theme }) => theme.text.strong};
@@ -52,6 +53,10 @@ const ghostButtonStyle = css`
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+  &:active {
+    border-radius: 12px;
+    background-color: ${({ theme }) => theme.brand.surface.default};
   }
 `;
 
