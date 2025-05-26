@@ -82,7 +82,8 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
                 .append("LEFT JOIN milestones m ON i.milestone_id = m.milestone_id\n")
                 .append("LEFT JOIN users u ON i.author_id = u.id\n")
                 .append("LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id\n")
-                .append("LEFT JOIN issue_label il ON i.issue_id = il.issue_id\n");
+                .append("LEFT JOIN issue_label il ON i.issue_id = il.issue_id\n")
+                .append("LEFT JOIN comments c ON i.issue_id = c.issue_id\n");
 
         boolean hasWhere = false;
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -125,6 +126,13 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
             issueSql.append("ia.assignee_id = :assigneeId");
             params.addValue("assigneeId", filterRequestDto.getAssignee());
             hasWhere = true;
+        }
+
+        // 댓글 남긴 이슈 필터링
+        if (filterRequestDto.getCommentedBy() != null) {
+            issueSql.append(hasWhere ? "AND " : "WHERE ");
+            issueSql.append("c.author_id = :commentedBy");
+            params.addValue("commentedBy", filterRequestDto.getCommentedBy());
         }
 
         List<FilteredIssueDto> issues = template.query(issueSql.toString(), params, (rs, rowNum) -> {
