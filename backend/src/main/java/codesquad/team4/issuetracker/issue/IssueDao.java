@@ -45,7 +45,7 @@
             """);
 
             List<Object> params = new ArrayList<>();
-            params.add(dto.getIsOpen());
+            params.add(dto.getStatus().getState());
 
             if (dto.getAuthorId() != null) {
                 sql.append(" AND i.author_id = ?");

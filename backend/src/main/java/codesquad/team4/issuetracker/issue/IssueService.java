@@ -77,7 +77,7 @@ public class IssueService {
 
         List<IssueInfo> issues = pagenateList(page, size, issueMap);
 
-        int totalElements = issueDao.countIssuesByOpenStatus(params.getIsOpen());
+        int totalElements = issueDao.countIssuesByOpenStatus(params.getStatus().getState());
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
         return IssueResponseDto.IssueListDto.builder()

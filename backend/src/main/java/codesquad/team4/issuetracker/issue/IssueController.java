@@ -7,10 +7,14 @@ import codesquad.team4.issuetracker.exception.badrequest.InvalidFilteringConditi
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
+import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto.OpenStatus;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.response.ApiResponse;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,14 +47,81 @@ public class IssueController {
     private final IssueService issueService;
     private final S3FileService s3FileService;
 
+    public static IssueRequestDto.IssueFilterParamDto parseFilterCondition(String q) {
+        String query = Arrays.stream(q.split("&"))
+            .filter(param -> param.startsWith("q="))
+            .findFirst()
+            .map(param -> param.substring(2)) // "q=" 제거
+            .orElse("");
+
+        String[] conditions = query.split("\\+");
+
+        String state = "open";
+        Long authorId = null;
+        Long assigneeId = null;
+        Long milestoneId = null;
+        Long commentAuthorId = null;
+        List<Long> labelIds = new ArrayList<>();
+
+        for (String condition : conditions) {
+            if (!condition.contains(":")) continue;
+
+            String[] parts = condition.split(":", 2);
+            String key = parts[0];
+            String value = parts[1];
+
+            switch (key) {
+                case "state":
+                    state = value;
+                    break;
+                case "authorId":
+                    authorId = parseLong(value);
+                    break;
+                case "assigneeId":
+                    assigneeId = parseLong(value);
+                    break;
+                case "milestoneId":
+                    milestoneId = parseLong(value);
+                    break;
+                case "commentAuthorId":
+                    commentAuthorId = parseLong(value);
+                    break;
+                case "labelId":
+                    Long labelId = parseLong(value);
+                    if (labelId != null) {
+                        labelIds.add(labelId);
+                    }
+                    break;
+            }
+        }
+
+        return IssueFilterParamDto.builder()
+            .authorId(authorId)
+            .assigneeId(assigneeId)
+            .milestoneId(milestoneId)
+            .commentAuthorId(commentAuthorId)
+            .status(OpenStatus.fromValue(state))
+            .labelId(labelIds)
+            .build();
+    }
+
+    private static Long parseLong(String s) {
+        try {
+            return Long.parseLong(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
     @GetMapping("")
-    public ApiResponse<IssueResponseDto.IssueListDto> showIssueList(@Valid IssueRequestDto.IssueFilterParamDto params, Pageable pageable) {
+    public ApiResponse<IssueResponseDto.IssueListDto> showIssueList(@RequestParam(required = false) String query, Pageable pageable) {
+        parseFilterCondition(query);
         //authorId, assigneeId, commentAuthorId 중 두개 이상의 조건은 불가
-        validateFilterConditionCount(params);
+//        validateFilterConditionCount(params);
 
-        IssueResponseDto.IssueListDto issues = issueService.getIssues(params, pageable.getPageNumber(), pageable.getPageSize());
+//        IssueResponseDto.IssueListDto issues = issueService.getIssues(params, pageable.getPageNumber(), pageable.getPageSize());
 
-        return ApiResponse.success(issues);
+        return ApiResponse.success(null);
     }
 
     private void validateFilterConditionCount(IssueFilterParamDto params) {
