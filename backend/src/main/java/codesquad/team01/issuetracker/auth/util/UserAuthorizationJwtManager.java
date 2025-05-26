@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class JwtUtil {
+public class UserAuthorizationJwtManager {
 
 	@Value("${jwt.secret}")
 	private String SECRET_KEY;
@@ -34,7 +34,7 @@ public class JwtUtil {
 	@Value("${jwt.refresh-token-validity}")
 	private final long refreshTokenValidity;
 
-	public JwtUtil(
+	public UserAuthorizationJwtManager(
 		@Value("${jwt.secret}") String secret,
 		@Value("${jwt.access-token-validity}") long accessTokenValidity,
 		@Value("${jwt.refresh-token-validity}") long refreshTokenValidity
