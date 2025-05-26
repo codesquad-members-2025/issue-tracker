@@ -90,15 +90,15 @@ public class UserAuthorizationJwtManager {
 				.parseClaimsJws(token); // 유효하지 않으면 예외 발생
 			return true;
 		} catch (ExpiredJwtException e) {
-			log.info("Refresh token이 만료되었습니다");
+			log.info("Refresh token이 만료되었습니다. " + e.getCause() + "에 의해 " + e.getMessage() + "가 발생하였습니다.");
 		} catch (UnsupportedJwtException e) {
-			log.info("지원하지 않는 JWT 형식입니다");
+			log.info("지원하지 않는 JWT 형식입니다. " + e.getCause() + "에 의해 " + e.getMessage() + "가 발생하였습니다.");
 		} catch (MalformedJwtException e) {
-			log.info("토큰이 올바르지 않거나 Base64 디코딩이 불가능합니다");
+			log.info("토큰이 올바르지 않거나 Base64 디코딩이 불가능합니다. " + e.getCause() + "에 의해 " + e.getMessage() + "가 발생하였습니다.");
 		} catch (SignatureException e) {
-			log.info("서명 검증이 실패하였습니다");
+			log.info("서명 검증이 실패하였습니다. " + e.getCause() + "에 의해 " + e.getMessage() + "가 발생하였습니다.");
 		} catch (IllegalArgumentException e) {
-			log.info("메서드에 잘못된 인자가 있습니다");
+			log.info("메서드에 잘못된 인자가 있습니다. " + e.getCause() + "에 의해 " + e.getMessage() + "가 발생하였습니다.");
 		}
 		return false;
 	}
