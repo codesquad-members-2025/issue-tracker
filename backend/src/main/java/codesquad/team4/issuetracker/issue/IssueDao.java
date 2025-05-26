@@ -1,6 +1,7 @@
     package codesquad.team4.issuetracker.issue;
 
     import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
+    import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
     import java.util.ArrayList;
     import java.util.HashSet;
     import java.util.List;
@@ -17,8 +18,15 @@
 
         private final JdbcTemplate jdbcTemplate;
 
+        private record SqlWithParams(String sql, List<Object> params){}
         public List<Map<String, Object>> findIssuesByOpenStatus(IssueRequestDto.IssueFilterParamDto dto){
 
+            SqlWithParams sqlWithParams = buildQuery(dto);
+
+            return jdbcTemplate.queryForList(sqlWithParams.sql, sqlWithParams.params.toArray(new Object[0]));
+        }
+
+        private SqlWithParams buildQuery(IssueFilterParamDto dto) {
             StringBuilder sql = new StringBuilder("""
                 SELECT i.issue_id AS issue_id,
                        i.title,
@@ -41,7 +49,6 @@
                 LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
                 LEFT JOIN `user` a ON ia.assignee_id = a.user_id
                 WHERE i.is_open = ?
-                ORDER BY i.created_at DESC
             """);
 
             List<Object> params = new ArrayList<>();
@@ -68,14 +75,30 @@
                 params.add(dto.getCommentAuthorId());
             }
 
-            return jdbcTemplate.queryForList(sql.toString(), params.toArray());
+            if (dto.getMilestoneId() != null) {
+                sql.append(" AND i.milestone_id = ?");
+                params.add(dto.getMilestoneId());
+            }
+
+            if (dto.getLabelId() != null && !dto.getLabelId().isEmpty()) {
+                sql.append(" AND l.label_id IN (");
+                String placeholders = dto.getLabelId().stream()
+                    .map(id -> "?")
+                    .collect(Collectors.joining(", "));
+                sql.append(placeholders).append(")");
+                params.addAll(dto.getLabelId());
+            }
+
+            sql.append(" ORDER BY i.created_at DESC");
+
+            return new SqlWithParams(sql.toString(), params);
         }
 
         public Integer countIssuesByOpenStatus(boolean isOpen) {
             return jdbcTemplate.queryForObject(
                     "SELECT COUNT(*) FROM issue WHERE is_open = ?",
                     Integer.class,
-                    isOpen
+                isOpen
             );
         }
 

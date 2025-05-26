@@ -7,6 +7,7 @@ import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
+import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto.OpenStatus;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueInfo;
 import codesquad.team4.issuetracker.util.TestDataHelper;
@@ -61,9 +62,9 @@ class IssueServiceH2Test {
     void bulkUpdateIssueStatus_success() {
         // given
         var request = IssueRequestDto.BulkUpdateIssueStatusDto.builder()
-                .issuesId(List.of(1L, 2L))
-                .isOpen(false)
-                .build();
+            .issuesId(List.of(1L, 2L))
+            .isOpen(false)
+            .build();
 
         // when
         var result = issueService.bulkUpdateIssueStatus(request);
@@ -80,9 +81,9 @@ class IssueServiceH2Test {
     void bulkUpdateIssueStatus_partialSuccess() {
         // given
         var request = IssueRequestDto.BulkUpdateIssueStatusDto.builder()
-                .issuesId(List.of(1L, 999L))
-                .isOpen(false)
-                .build();
+            .issuesId(List.of(1L, 999L))
+            .isOpen(false)
+            .build();
 
         // when
         var result = issueService.bulkUpdateIssueStatus(request);
@@ -112,17 +113,17 @@ class IssueServiceH2Test {
         TestDataHelper.insertIssueAssignee(jdbcTemplate, 3L, 2L, 1L);
 
         IssueFilterParamDto param = IssueFilterParamDto.builder()
-            .isOpen(true)
+            .status(OpenStatus.OPEN)
             .build();
         //when
         IssueResponseDto.IssueListDto actual = issueService.getIssues(param, 0, 2);
 
         //then
         assertThat(actual.getIssues()).hasSize(2);
-        assertThat(actual.getIssues().get(0).getLabels()).hasSize(1);
-        assertThat(actual.getIssues().get(0).getAssignees()).hasSize(2);
-        assertThat(actual.getIssues().get(1).getLabels()).hasSize(2);
-        assertThat(actual.getIssues().get(1).getAssignees()).hasSize(1);
+        assertThat(actual.getIssues().get(0).getLabels()).hasSize(2);
+        assertThat(actual.getIssues().get(0).getAssignees()).hasSize(1);
+        assertThat(actual.getIssues().get(1).getLabels()).hasSize(1);
+        assertThat(actual.getIssues().get(1).getAssignees()).hasSize(2);
         assertThat(actual.getPage()).isEqualTo(0);
         assertThat(actual.getSize()).isEqualTo(2);
     }
@@ -135,17 +136,17 @@ class IssueServiceH2Test {
 
         //when & then
         assertThatThrownBy(() -> issueService.deleteIssue(issueId))
-                .isInstanceOf(IssueNotFoundException.class);
+            .isInstanceOf(IssueNotFoundException.class);
     }
 
     @ParameterizedTest
     @DisplayName("필터링 조건이 내가 작성한 이슈를 가져오는 경우 다른 사람이 작성한 이슈는 가져와서는 안된다")
     @CsvSource({
-                "true, 3, 1",
-                "false, 1, 1",
-                "true, 1, 2",
-                "false, 1, 2"})
-    void filterIssueByAuthor(boolean isOpen, int expectedSize, Long authorId) {
+                "open, 3, 1",
+                "close, 1, 1",
+                "open, 1, 2",
+                "close, 1, 2"})
+    void filterIssueByAuthor(String state, int expectedSize, Long authorId) {
         //given
         TestDataHelper.insertUser(jdbcTemplate, 2L, "사용자2");
         TestDataHelper.insertIssue(jdbcTemplate, 4L, "이슈 4", true, 1L);   // open
@@ -153,7 +154,7 @@ class IssueServiceH2Test {
         TestDataHelper.insertIssue(jdbcTemplate, 6L, "이슈 6", false, 2L);  // closed
 
         IssueFilterParamDto param = IssueFilterParamDto.builder()
-            .isOpen(isOpen)
+            .status(OpenStatus.fromValue(state))
             .authorId(authorId)
             .build();
         //when
@@ -168,13 +169,13 @@ class IssueServiceH2Test {
     @ParameterizedTest
     @DisplayName("필터링 조건이 내가 담당한 이슈를 가져오는 경우 내가 담당하지 않은 이슈는 가져와서는 안된다")
     @CsvSource({
-        "true, 1, 1",
-        "false, 0, 1",
-        "true, 1, 2",
-        "false, 1, 2",
-        "true, 2, 3",
-        "false, 0, 3"})
-    void filterIssueByAssignee(boolean isOpen, int expectedSize, Long assigneeId) {
+        "open, 1, 1",
+        "close, 0, 1",
+        "open, 1, 2",
+        "close, 1, 2",
+        "open, 2, 3",
+        "close, 0, 3"})
+    void filterIssueByAssignee(String state, int expectedSize, Long assigneeId) {
         //given
         TestDataHelper.insertUser(jdbcTemplate, 2L, "사용자2");
         TestDataHelper.insertUser(jdbcTemplate, 3L, "사용자3");
@@ -191,7 +192,7 @@ class IssueServiceH2Test {
         TestDataHelper.insertIssueAssignee(jdbcTemplate, 5L, 4L, 3L);
 
         IssueFilterParamDto param = IssueFilterParamDto.builder()
-            .isOpen(isOpen)
+            .status(OpenStatus.fromValue(state))
             .assigneeId(assigneeId)
             .build();
         //when
@@ -210,14 +211,14 @@ class IssueServiceH2Test {
     @ParameterizedTest
     @DisplayName("필터링 조건이 내가 댓글을 작성한 이슈를 가져오는 경우 댓글을 달지 않은 이슈는 가져와서는 안된다")
     @CsvSource({
-        "true, 1, 1",
-        "false, 0, 1",
-        "true, 1, 2",
-        "false, 1, 2",
-        "true, 0, 3",
-        "false, 2, 3"
+        "open, 1, 1",
+        "close, 0, 1",
+        "open, 1, 2",
+        "close, 1, 2",
+        "open, 0, 3",
+        "close, 2, 3"
     })
-    void filterIssueByCommentAuthor(boolean isOpen, int expectedSize, Long commentAuthorId) {
+    void filterIssueByCommentAuthor(String state, int expectedSize, Long commentAuthorId) {
         // given
         TestDataHelper.insertUser(jdbcTemplate, 2L, "사용자2");
         TestDataHelper.insertUser(jdbcTemplate, 3L, "사용자3");
@@ -234,7 +235,7 @@ class IssueServiceH2Test {
         TestDataHelper.insertComment(jdbcTemplate, 5L, "댓글5", 3L, 6L, null);
 
         IssueFilterParamDto param = IssueFilterParamDto.builder()
-            .isOpen(isOpen)
+            .status(OpenStatus.fromValue(state))
             .commentAuthorId(commentAuthorId)
             .build();
 
@@ -254,7 +255,7 @@ class IssueServiceH2Test {
             AND i.is_open = ?
         """;
 
-        List<Long> expectedIssueIds = jdbcTemplate.queryForList(sql, Long.class, commentAuthorId, isOpen);
+        List<Long> expectedIssueIds = jdbcTemplate.queryForList(sql, Long.class, commentAuthorId, OpenStatus.fromValue(state).getState());
 
         // then
         assertThat(issues.getIssues()).hasSize(expectedSize);
