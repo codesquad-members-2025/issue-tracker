@@ -27,11 +27,17 @@ public class JwtAuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
-        // ✅ OPTIONS 요청은 CORS Preflight → 무조건 통과시켜야 함 (CorsFilter가 처리)
         if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
-            filterChain.doFilter(servletRequest, servletResponse);
+            // ✅ CORS 헤더 강제 설정
+            httpResponse.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
+            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+            httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            httpResponse.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
             return;
         }
+
 
         String requestURI = httpRequest.getRequestURI();
 
