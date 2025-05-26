@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Repository
-public class JdbcUserQueryRepository implements UserQueryRepository {
+public class UserQueryRepositoryImpl implements UserQueryRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
