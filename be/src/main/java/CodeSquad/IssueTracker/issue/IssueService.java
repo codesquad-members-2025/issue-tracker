@@ -130,4 +130,8 @@ public class IssueService {
         int totalCount =  issueRepository.countFilteredIssuesByIsOpen(filterRequestDto.getIsOpen(), filterRequestDto);
         return  (int) Math.ceil((double) totalCount / LIMIT_SIZE);
     }
+
+    public int countIssuesByOpenStatus(boolean isOpen, IssueFilterRequestDto filterRequestDto) {
+        return issueRepository.countFilteredIssuesByIsOpen(isOpen, filterRequestDto);
+    }
 }
