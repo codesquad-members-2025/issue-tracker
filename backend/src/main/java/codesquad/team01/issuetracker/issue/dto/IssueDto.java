@@ -47,6 +47,15 @@ public class IssueDto {
 
 		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds
 	) {
+		@Override
+		public String toString() {
+			return "CountQueryRequest{" +
+				"writerId=" + writerId +
+				", milestoneId=" + milestoneId +
+				", labelIds=" + labelIds +
+				", assigneeIds=" + assigneeIds +
+				'}';
+		}
 	}
 
 	// 이슈 조회 필터 쿼리 요청 DTO
@@ -67,6 +76,18 @@ public class IssueDto {
 
 		String cursor // 무한스크롤 커서
 	) {
+		@Override
+		public String toString() {
+			return "ListQueryRequest{" +
+				"state='" + state + '\'' +
+				", writerId=" + writerId +
+				", milestoneId=" + milestoneId +
+				", labelIds=" + labelIds +
+				", assigneeIds=" + assigneeIds +
+				", cursor='" + cursor + '\'' +
+				'}';
+		}
+
 		public IssueState getIssueState() {
 			return IssueState.fromStateStr(state);
 		}
@@ -139,6 +160,13 @@ public class IssueDto {
 		int open,
 		int closed
 	) {
+		@Override
+		public String toString() {
+			return "CountResponse{" +
+				"open=" + open +
+				", closed=" + closed +
+				'}';
+		}
 	}
 
 	/**
