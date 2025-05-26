@@ -22,7 +22,7 @@ public class Issue {
   private final Instant createdAt;
   private Instant updatedAt;
 
-  public Issue(String title, String body, Long userId, Long milestoneId, boolean isOpen) {
+  public Issue(String title, String body, Long userId, Long milestoneId, Boolean isOpen) {
     this.title = title;
     this.body = body;
     this.userId = userId;
@@ -33,7 +33,7 @@ public class Issue {
   }
 
   @PersistenceConstructor
-  public Issue(String title, String body, Long userId, Long milestoneId, boolean isOpen,
+  public Issue(String title, String body, Long userId, Long milestoneId, Boolean isOpen,
       Instant createdAt, Instant updatedAt) {
     this.title = title;
     this.body = body;
@@ -44,7 +44,7 @@ public class Issue {
     this.updatedAt = updatedAt;
   }
 
-  public void update(String title, String body, Long milestoneId, boolean isOpen) {
+  public void update(String title, String body, Long milestoneId, Boolean isOpen) {
     this.title = title;
     this.body = body;
     this.milestoneId = milestoneId;

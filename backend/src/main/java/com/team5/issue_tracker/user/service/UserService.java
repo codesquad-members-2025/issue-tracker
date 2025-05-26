@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
   private final UserRepository userRepository;
 
-  public boolean existsById(Long userId) {
+  public Boolean existsById(Long userId) {
     return userRepository.existsById(userId);
   }
 }
