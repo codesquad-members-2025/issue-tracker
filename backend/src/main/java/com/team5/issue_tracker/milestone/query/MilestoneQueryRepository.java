@@ -28,33 +28,79 @@ public class MilestoneQueryRepository {
         (rs, rowNum) -> new MilestoneSummaryResponse(rs.getLong("id"), rs.getString("name")));
   }
 
+  public MilestoneResponse getMilestoneByIssueId(Long issueId) {
+    String sql = """
+        WITH issue_counts AS (
+          SELECT
+            milestone_id,
+            COUNT(id) AS total,
+            SUM(CASE WHEN is_open = true THEN 1 ELSE 0 END) AS open_count,
+            SUM(CASE WHEN is_open = false THEN 1 ELSE 0 END) AS closed_count
+          FROM issue
+          GROUP BY milestone_id
+        )
+        SELECT
+          m.id,
+          m.name,
+          m.description,
+          m.deadline,
+          m.is_open,
+          COALESCE(ic.open_count, 0) AS open_issue_count,
+          COALESCE(ic.closed_count, 0) AS closed_issue_count,
+          CASE
+            WHEN COALESCE(ic.total, 0) = 0 THEN 0
+            ELSE ROUND((ic.closed_count) * 100.0 / ic.total)
+          END AS progress
+        FROM issue i
+        LEFT JOIN milestone m ON i.milestone_id = m.id
+        LEFT JOIN issue_counts ic ON m.id = ic.milestone_id
+        WHERE i.id = :issueId
+        LIMIT 1
+        """;
+
+    MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
+
+    return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) ->
+        new MilestoneResponse(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("description"),
+            rs.getDate("deadline") != null ? rs.getDate("deadline").toLocalDate() : null,
+            rs.getBoolean("is_open"),
+            rs.getLong("open_issue_count"),
+            rs.getLong("closed_issue_count"),
+            rs.getLong("progress")
+        )
+    );
+  }
+
   public List<MilestoneResponse> findAllMilestones() {
     String sql = """
-      WITH issue_counts AS (
-        SELECT
-          milestone_id,
-          COUNT(id) AS total,
-          SUM(CASE WHEN is_open = true THEN 1 ELSE 0 END) AS open_count,
-          SUM(CASE WHEN is_open = false THEN 1 ELSE 0 END) AS closed_count
-        FROM issue
-        GROUP BY milestone_id
-      )
-      SELECT
-        m.id,
-        m.name,
-        m.description,
-        m.deadline,
-        m.is_open,
-        COALESCE(ic.open_count, 0) AS open_issue_count,
-        COALESCE(ic.closed_count, 0) AS closed_issue_count,
-        CASE
-          WHEN COALESCE(ic.total, 0) = 0 THEN 0
-          ELSE ROUND((ic.closed_count) * 100.0 / ic.total)
-        END AS progress
-      FROM milestone m
-      LEFT JOIN issue_counts ic ON m.id = ic.milestone_id
-      ORDER BY m.id;
-    """;
+          WITH issue_counts AS (
+            SELECT
+              milestone_id,
+              COUNT(id) AS total,
+              SUM(CASE WHEN is_open = true THEN 1 ELSE 0 END) AS open_count,
+              SUM(CASE WHEN is_open = false THEN 1 ELSE 0 END) AS closed_count
+            FROM issue
+            GROUP BY milestone_id
+          )
+          SELECT
+            m.id,
+            m.name,
+            m.description,
+            m.deadline,
+            m.is_open,
+            COALESCE(ic.open_count, 0) AS open_issue_count,
+            COALESCE(ic.closed_count, 0) AS closed_issue_count,
+            CASE
+              WHEN COALESCE(ic.total, 0) = 0 THEN 0
+              ELSE ROUND((ic.closed_count) * 100.0 / ic.total)
+            END AS progress
+          FROM milestone m
+          LEFT JOIN issue_counts ic ON m.id = ic.milestone_id
+          ORDER BY m.id;
+        """;
 
     return jdbcTemplate.query(sql,
         (rs, rowNum) -> new MilestoneResponse(
@@ -62,18 +108,20 @@ public class MilestoneQueryRepository {
             rs.getString("name"),
             rs.getString("description"),
             rs.getDate("deadline") != null ? rs.getDate("deadline").toLocalDate() : null,
-            rs.getBoolean("is_open"), rs.getLong("open_issue_count"),
-            rs.getLong("closed_issue_count"), rs.getLong("progress")));
+            rs.getBoolean("is_open"),
+            rs.getLong("open_issue_count"),
+            rs.getLong("closed_issue_count"),
+            rs.getLong("progress")));
   }
 
   public MilestoneCountResponse countMilestones() {
     String sql = """
-      SELECT
-        COUNT(id) AS total,
-        SUM(CASE WHEN is_open = true THEN 1 ELSE 0 END) AS open_count,
-        SUM(CASE WHEN is_open = false THEN 1 ELSE 0 END) AS closed_count
-      FROM milestone
-      """;
+        SELECT
+          COUNT(id) AS total,
+          SUM(CASE WHEN is_open = true THEN 1 ELSE 0 END) AS open_count,
+          SUM(CASE WHEN is_open = false THEN 1 ELSE 0 END) AS closed_count
+        FROM milestone
+        """;
 
     return jdbcTemplate.queryForObject(sql, new HashMap<>(), (rs, rowNum) ->
         new MilestoneCountResponse(

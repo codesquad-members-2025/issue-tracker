@@ -2,6 +2,7 @@ package com.team5.issue_tracker.issue.query;
 
 import com.team5.issue_tracker.issue.dto.IssueQueryDto;
 import com.team5.issue_tracker.issue.dto.IssueSearchCondition;
+import com.team5.issue_tracker.issue.dto.response.IssueBaseResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -102,5 +103,24 @@ public class IssueQueryRepository {
             rs.getString("image_url")
         )
     );
+  }
+
+  public IssueBaseResponse findIssueDetailById(Long issueId) {
+    String issueSql = """
+            SELECT id, title, body, is_open, created_at, updated_at
+            FROM issue
+            WHERE id = :issueId
+        """;
+
+    MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
+
+    return jdbcTemplate.queryForObject(issueSql, params, (rs, rowNum) -> new IssueBaseResponse(
+        rs.getLong("id"),
+        rs.getString("title"),
+        rs.getString("body"),
+        rs.getBoolean("is_open"),
+        rs.getTimestamp("created_at").toInstant(),
+        rs.getTimestamp("updated_at").toInstant()
+    ));
   }
 }

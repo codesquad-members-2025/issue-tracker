@@ -2,6 +2,7 @@ package com.team5.issue_tracker.issue.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.team5.issue_tracker.common.dto.ApiResponse;
 import com.team5.issue_tracker.issue.dto.request.IssueSearchRequest;
 import com.team5.issue_tracker.issue.dto.request.IssueCreateRequest;
+import com.team5.issue_tracker.issue.dto.response.IssueDetailResponse;
 import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.parser.IssueSearchRequestParser;
 import com.team5.issue_tracker.issue.query.IssueQueryService;
@@ -41,6 +43,12 @@ public class IssueController {
     log.debug("q: {}", q);
     IssueSearchRequest searchRequest = IssueSearchRequestParser.fromQueryString(q);
     return ResponseEntity.ok(ApiResponse.success(issueQueryService.getIssuePage(searchRequest)));
+  }
+
+  @GetMapping("/{issueId}")
+  public ResponseEntity<ApiResponse<IssueDetailResponse>> getIssueById(@PathVariable Long issueId) {
+    IssueDetailResponse response = issueQueryService.getIssueById(issueId);
+    return ResponseEntity.ok(ApiResponse.success(response));
   }
 
   @PostMapping

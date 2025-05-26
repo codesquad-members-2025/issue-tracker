@@ -30,6 +30,39 @@ public class UserQueryRepository {
     );
   }
 
+  public UserSummaryResponse getAuthorById(Long userId) {
+    String sql = """
+            SELECT id, username, image_url
+            FROM user
+            WHERE id = :userId
+        """;
+
+    MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
+
+    return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> new UserSummaryResponse(
+        rs.getLong("id"),
+        rs.getString("username"),
+        rs.getString("image_url")
+    ));
+  }
+
+  public List<UserSummaryResponse> getAssigneesByIssueId(Long issueId) {
+    String sql = """
+            SELECT u.id, u.username, u.image_url
+            FROM issue_assignee ia
+            JOIN user u ON ia.assignee_id = u.id
+            WHERE ia.issue_id = :issueId
+        """;
+
+    MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
+
+    return jdbcTemplate.query(sql, params, (rs, rowNum) -> new UserSummaryResponse(
+        rs.getLong("id"),
+        rs.getString("username"),
+        rs.getString("image_url")
+    ));
+  }
+
   public Map<Long, UserSummaryResponse> getAuthorsByIssueIds(List<Long> issueIds) {
     if (issueIds == null || issueIds.isEmpty()) {
       return Collections.emptyMap(); // 빈 결과 반환

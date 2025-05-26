@@ -44,6 +44,26 @@ public class LabelQueryRepository {
     );
   }
 
+  public List<LabelResponse> getLabelsByIssueId(Long issueId) {
+    String sql = """
+        SELECT 
+            l.id, l.name, l.description, l.text_color, l.background_color
+        FROM issue_label il
+        JOIN label l ON il.label_id = l.id
+        WHERE il.issue_id = :issueId
+        """;
+
+    MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
+
+    return jdbcTemplate.query(sql, params, (rs, rowNum) -> new LabelResponse(
+        rs.getLong("id"),
+        rs.getString("name"),
+        rs.getString("description"),
+        rs.getString("text_color"),
+        rs.getString("background_color")
+    ));
+  }
+
   public Map<Long, List<LabelSummaryResponse>> getLabelListByIssueIds(List<Long> issueIds) {
     if (issueIds == null || issueIds.isEmpty()) {
       return Collections.emptyMap(); // 빈 결과 반환
