@@ -15,7 +15,6 @@ import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -25,46 +24,46 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class UserAuthorizationJwtManager {
 
-	@Value("${jwt.secret}")
+	@Value("${jwt.secret-key}")
 	private String SECRET_KEY;
 	private final SecretKey key;
 
-	@Value("${jwt.access-token-validity}")
-	private final long accessTokenValidity;
+	@Value("${jwt.access-token-lifetime}")
+	private final long accessTokenLifetime;
 
-	@Value("${jwt.refresh-token-validity}")
-	private final long refreshTokenValidity;
+	@Value("${jwt.refresh-token-lifetime}")
+	private final long refreshTokenLifetime;
 
 	public UserAuthorizationJwtManager(
-		@Value("${jwt.secret}") String secret,
-		@Value("${jwt.access-token-validity}") long accessTokenValidity,
-		@Value("${jwt.refresh-token-validity}") long refreshTokenValidity
+		@Value("${jwt.secret-key}") String secret,
+		@Value("${jwt.access-token-lifetime}") long accessTokenLifetime,
+		@Value("${jwt.refresh-token-lifetime}") long refreshTokenLifetime
 	) {
 		this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-		this.accessTokenValidity = accessTokenValidity;
-		this.refreshTokenValidity = refreshTokenValidity;
+		this.accessTokenLifetime = accessTokenLifetime;
+		this.refreshTokenLifetime = refreshTokenLifetime;
 	}
 
 	public String createAccessToken(int subject, Map<String, Object> claims) {
 		Date now = new Date();
-		Date expiry = new Date(now.getTime() + accessTokenValidity);
+		Date expiry = new Date(now.getTime() + accessTokenLifetime);
 		return Jwts.builder()
-			.setClaims(claims)
-			.setSubject(String.valueOf(subject))
-			.setIssuedAt(now)
-			.setExpiration(expiry)
-			.signWith(key, SignatureAlgorithm.HS256)
+			.claims(claims)
+			.subject(String.valueOf(subject))
+			.issuedAt(now)
+			.expiration(expiry)
+			.signWith(key, Jwts.SIG.HS256)
 			.compact();
 	}
 
 	public String createRefreshToken(int subject) {
 		Date now = new Date();
-		Date expiry = new Date(now.getTime() + refreshTokenValidity);
+		Date expiry = new Date(now.getTime() + refreshTokenLifetime);
 		return Jwts.builder()
-			.setSubject(String.valueOf(subject))
-			.setIssuedAt(now)
-			.setExpiration(expiry)
-			.signWith(key, SignatureAlgorithm.HS256)
+			.subject(String.valueOf(subject))
+			.issuedAt(now)
+			.expiration(expiry)
+			.signWith(key, Jwts.SIG.HS256)
 			.compact();
 	}
 
