@@ -25,7 +25,7 @@ public class S3Uploader implements Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    private static final long PART_SIZE = 5 * 1024 * 1024;
+    private static final long PART_SIZE = 5 * 1024 * 1024; //5MB씩 잘라서 남은 데이터들 다 받기
 
     @Override
     public String upload(MultipartFile file) throws IOException {
