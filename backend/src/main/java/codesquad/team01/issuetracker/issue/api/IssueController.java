@@ -31,7 +31,6 @@ public class IssueController {
 		log.info("조건에 부합하는 이슈 개수= {}, 다음 페이지 존재= {}",
 			response.totalCount(), response.cursor().hasNext());
 		return ResponseEntity.ok(ApiResponse.success(response));
-
 	}
 
 	@GetMapping("/v1/issues/count")
