@@ -23,6 +23,30 @@ const commonTheme = {
     navy: accent.navy,
     red: accent.red,
   },
+  spacing: {
+    base: {
+      xsmall: '4px',
+      small: '8px',
+      medium: '16px',
+      large: '24px',
+      xlarge: '32px',
+    },
+    button: {
+      paddingY: {
+        ghost: '8px',
+        default: '12px',
+      },
+      width: {
+        small: '128px',
+        medium: '184px',
+        large: '240px',
+      },
+      gap: {
+        small: '4px',
+        default: '8px',
+      },
+    },
+  },
 };
 
 export default commonTheme;
