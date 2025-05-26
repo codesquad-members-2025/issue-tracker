@@ -2,7 +2,7 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.comment.CommentService;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
-import CodeSquad.IssueTracker.home.dto.IssueFilterRequestDto;
+import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
 import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueDetailResponse;
@@ -115,8 +115,8 @@ public class IssueService {
         return response;
     }
 
-    public Iterable<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterRequestDto filterRequestDto) {
-        List<FilteredIssueDto> issues = issueRepository.findIssuesByFilter(page, filterRequestDto);
+    public Iterable<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterCondition condition) {
+        List<FilteredIssueDto> issues = issueRepository.findIssuesByFilter(page, condition);
 
         for (FilteredIssueDto issue : issues) {
             issue.setAssignees(issueAssigneeRepository.findSummaryAssigneeByIssueId(issue.getIssueId()));
@@ -126,12 +126,12 @@ public class IssueService {
         return issues;
     }
 
-    public int getIssueMaxPage(IssueFilterRequestDto filterRequestDto) {
-        int totalCount =  issueRepository.countFilteredIssuesByIsOpen(filterRequestDto.getIsOpen(), filterRequestDto);
+    public int getIssueMaxPage(IssueFilterCondition condition) {
+        int totalCount =  issueRepository.countFilteredIssuesByIsOpen(condition.getIsOpen(), condition);
         return  (int) Math.ceil((double) totalCount / LIMIT_SIZE);
     }
 
-    public int countIssuesByOpenStatus(boolean isOpen, IssueFilterRequestDto filterRequestDto) {
-        return issueRepository.countFilteredIssuesByIsOpen(isOpen, filterRequestDto);
+    public int countIssuesByOpenStatus(boolean isOpen, IssueFilterCondition condition) {
+        return issueRepository.countFilteredIssuesByIsOpen(isOpen, condition);
     }
 }

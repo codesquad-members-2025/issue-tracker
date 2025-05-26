@@ -1,6 +1,6 @@
 package CodeSquad.IssueTracker.issue;
 
-import CodeSquad.IssueTracker.home.dto.IssueFilterRequestDto;
+import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
 import CodeSquad.IssueTracker.milestone.dto.SummaryMilestoneDto;
@@ -71,8 +71,8 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
     }
 
     @Override
-    public List<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterRequestDto filter) {
-        IssueFilterQueryBuilder queryBuilder = new IssueFilterQueryBuilder(filter.getIsOpen(), filter);
+    public List<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterCondition condition) {
+        IssueFilterQueryBuilder queryBuilder = new IssueFilterQueryBuilder(condition.getIsOpen(), condition);
         String sql = """
             SELECT DISTINCT
             i.issue_id, i.title, i.is_open, i.author_id, u.nick_name, i.milestone_id, m.name AS milestone_name, i.last_modified_at
@@ -103,7 +103,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
     }
 
     @Override
-    public int countFilteredIssuesByIsOpen(boolean isOpen, IssueFilterRequestDto filter) {
+    public int countFilteredIssuesByIsOpen(boolean isOpen, IssueFilterCondition condition) {
         String countSql = """
             SELECT COUNT(DISTINCT i.issue_id)
             FROM issues i
@@ -114,7 +114,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
             LEFT JOIN comments c ON i.issue_id = c.issue_id
             """;
 
-        IssueFilterQueryBuilder queryBuilder = new IssueFilterQueryBuilder(isOpen, filter);
+        IssueFilterQueryBuilder queryBuilder = new IssueFilterQueryBuilder(isOpen, condition);
         String whereClause = queryBuilder.getWhereClause().toString();
         String finalSql = countSql + whereClause;
 

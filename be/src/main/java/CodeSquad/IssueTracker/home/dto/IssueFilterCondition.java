@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class IssueFilterRequestDto {
+public class IssueFilterCondition {
     private Boolean isOpen;
     private Long label;
     private Long assignee;
