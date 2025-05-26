@@ -1,21 +1,11 @@
 package elbin_bank.issue_tracker.comment.application.query;
 
-import elbin_bank.issue_tracker.comment.application.query.dto.UserDto;
-import elbin_bank.issue_tracker.comment.domain.Comment;
+import elbin_bank.issue_tracker.comment.infrastructure.query.projection.CommentProjection;
 
 import java.util.List;
-import java.util.Map;
 
 public interface CommentsQueryRepository {
 
-    List<Comment> findByIssueId(Long issueId);
-
-    Map<Long, UserDto> findUsersByIds(List<Long> ids);
-
-
-
-
-
-
+    List<CommentProjection> findByIssueId(Long issueId);
 
 }
