@@ -27,4 +27,21 @@ public class LabelResponseDto {
         private int count;
     }
 
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class LabelListDto {
+        private List<LabelDto> labels;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class LabelDto {
+        private Long id;
+        private String name;
+        private String description;
+        private String color;
+    }
+
 }

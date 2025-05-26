@@ -22,7 +22,7 @@ import codesquad.team4.issuetracker.label.LabelDao;
 import codesquad.team4.issuetracker.label.dto.LabelResponseDto;
 import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.MilestoneRepository;
-import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto;
 import codesquad.team4.issuetracker.user.AssigneeDao;
 import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
@@ -112,7 +112,7 @@ public class IssueService {
                                 .build())
                         .assignees(assigneeMap.getOrDefault(issueId, Set.of()))
                         .labels(labelMap.getOrDefault(issueId, Set.of()))
-                        .milestone(MilestoneDto.MilestoneInfo.builder()
+                        .milestone(MilestoneResponseDto.MilestoneInfo.builder()
                                 .id((Long) row.get("milestone_id"))
                                 .title((String) row.get("milestone_title"))
                                 .build())

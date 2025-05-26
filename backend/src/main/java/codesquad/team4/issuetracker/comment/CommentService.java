@@ -55,6 +55,7 @@ public class CommentService {
                 .build();
     }
 
+    @Transactional
     public void deleteComment(Long issueId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
