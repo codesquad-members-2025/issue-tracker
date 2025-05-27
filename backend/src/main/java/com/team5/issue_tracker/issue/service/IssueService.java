@@ -44,7 +44,7 @@ public class IssueService {
     saveIssueLabels(savedIssueID, request.getLabelIds());
     saveIssueAssignees(savedIssueID, request.getAssigneeIds());
 
-    CommentRequest content = request.getContent();
+    CommentRequest content = request.getComent();
     Comment comment = new Comment(userId, savedIssueID, content.getContent(), now, now);
     commentRepository.save(comment);
 
