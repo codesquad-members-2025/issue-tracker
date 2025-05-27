@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.team5.issue_tracker.label.dto.response.LabelPageResponse;
 import com.team5.issue_tracker.label.dto.response.LabelResponse;
 import com.team5.issue_tracker.label.dto.response.LabelSummaryResponse;
-import com.team5.issue_tracker.issue.dto.response.IssueLabelPageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueLabelScrollResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,13 +15,22 @@ import lombok.RequiredArgsConstructor;
 public class LabelQueryService {
   private final LabelQueryRepository labelQueryRepository;
 
-  public IssueLabelPageResponse getFilterLabels() {
-    List<LabelSummaryResponse> labels = labelQueryRepository.findIssueLabels();
-    return new IssueLabelPageResponse((long) labels.size(), 0L, (long) labels.size(), labels);
+  public IssueLabelScrollResponse getScrolledFilterLabels(String cursor, Integer limit) {
+    List<LabelSummaryResponse> labelsPlusOne = labelQueryRepository.findIssueLabels(cursor, limit);
+
+    Boolean hasNext = labelsPlusOne.size() > limit;
+    List<LabelSummaryResponse> labels = hasNext ? labelsPlusOne.subList(0, limit) : labelsPlusOne;
+    String nextCursor = hasNext ? labels.getLast().getName() : null;
+
+    return new IssueLabelScrollResponse(
+        hasNext,
+        nextCursor,
+        labels
+    );
   }
 
-  public LabelPageResponse getAllLabels() {
-    List<LabelResponse> labels = labelQueryRepository.findAllLabels();
-    return new LabelPageResponse((long) labels.size(), 0L, (long) labels.size(), labels);
+  public LabelPageResponse getPagedLabels(Integer page, Integer perPage) {
+    List<LabelResponse> labels = labelQueryRepository.findLabels(page, perPage);
+    return new LabelPageResponse(labels.size(), page, perPage, labels);
   }
 }

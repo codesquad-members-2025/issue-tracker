@@ -21,7 +21,7 @@ import com.team5.issue_tracker.label.query.LabelQueryRepository;
 import com.team5.issue_tracker.milestone.dto.response.MilestoneResponse;
 import com.team5.issue_tracker.milestone.dto.response.MilestoneSummaryResponse;
 import com.team5.issue_tracker.milestone.query.MilestoneQueryRepository;
-import com.team5.issue_tracker.user.dto.UserPageResponse;
+import com.team5.issue_tracker.user.dto.UserScrollResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 import com.team5.issue_tracker.user.query.UserQueryRepository;
 
@@ -39,11 +39,12 @@ public class IssueQueryService {
   private final CommentQueryRepository commentQueryRepository;
 
   @Transactional(readOnly = true)
-  public IssuePageResponse getIssuePage(IssueSearchRequest searchRequest) {
+  public IssuePageResponse getPagedIssues(IssueSearchRequest searchRequest, Integer page,
+      Integer perPage) {
     log.debug("조건에 맞는 이슈 조회 요청");
     IssueSearchCondition searchCondition = getCondition(searchRequest);
     List<IssueQueryDto> issueQueryDtos =
-        issueQueryRepository.findIssuesByCondition(searchCondition);
+        issueQueryRepository.findIssuesByCondition(searchCondition, page, perPage);
 
     List<Long> issueIds = issueQueryDtos.stream()
         .map(IssueQueryDto::getId)
@@ -61,16 +62,20 @@ public class IssueQueryService {
         IssueMapper.toSummaryResponse(issueQueryDtos,
             labelMap, authorMap, milestoneMap, assigneeMap);
 
-    return new IssuePageResponse((long) issueSummaryResponseList.size(), 0L, //TODO: 페이지 기능
-        (long) issueSummaryResponseList.size(), searchRequest.toQueryString(),
-        issueSummaryResponseList);
+    return new IssuePageResponse(issueSummaryResponseList.size(), page, perPage,
+        searchRequest.toQueryString(), issueSummaryResponseList);
   }
 
-  public UserPageResponse getIssueAuthors() {
-    log.debug("전체 작성자 조회 요청");
-    List<UserSummaryResponse> authorSummaries = issueQueryRepository.findDistinctAuthors();
-    return new UserPageResponse((long) authorSummaries.size(), 0L, (long) authorSummaries.size(),
-        authorSummaries);
+  public UserScrollResponse getScrolledIssueAuthors(String cursor, Integer limit) {
+    log.debug("전체 작성자 스크롤 조회 요청");
+    List<UserSummaryResponse> usersPlusOne =
+        issueQueryRepository.findDistinctAuthors(cursor, limit);
+
+    Boolean hasNext = usersPlusOne.size() > limit;
+    List<UserSummaryResponse> users = hasNext ? usersPlusOne.subList(0, limit) : usersPlusOne;
+    String nextCursor = hasNext ? users.getLast().getUsername() : null;
+
+    return new UserScrollResponse(hasNext, nextCursor, users);
   }
 
   private IssueSearchCondition getCondition(IssueSearchRequest searchRequest) {

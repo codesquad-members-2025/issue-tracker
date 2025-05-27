@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPageResponse {
-  private Long total;
-  private Long page;
-  private Long perPage;
+public class UserScrollResponse {
+  private Boolean hasNext;
+  private String nextCursor;
   private List<UserSummaryResponse> users;
 }

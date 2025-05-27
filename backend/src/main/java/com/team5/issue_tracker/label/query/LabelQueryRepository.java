@@ -19,9 +19,18 @@ import lombok.RequiredArgsConstructor;
 public class LabelQueryRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public List<LabelSummaryResponse> findIssueLabels() {
-    String lableSql = "SELECT id, name, text_color, background_color FROM label";
-    return jdbcTemplate.query(lableSql, (rs, rowNum) ->
+  public List<LabelSummaryResponse> findIssueLabels(String cursor, Integer limit) {
+    String lableSql = """
+        SELECT id, name, text_color, background_color FROM label
+        WHERE (:cursor IS NULL OR name > :cursor)
+        ORDER BY name ASC
+        LIMIT :limitPlusOne;
+        """;
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("cursor", cursor);
+    params.addValue("limitPlusOne", limit + 1);
+
+    return jdbcTemplate.query(lableSql, params, (rs, rowNum) ->
         new LabelSummaryResponse(
             rs.getLong("id"),
             rs.getString("name"),
@@ -31,9 +40,18 @@ public class LabelQueryRepository {
     );
   }
 
-  public List<LabelResponse> findAllLabels() {
-    String lableSql = "SELECT id, name, description, text_color, background_color FROM label";
-    return jdbcTemplate.query(lableSql, (rs, rowNum) ->
+  public List<LabelResponse> findLabels(Integer page, Integer perPage) {
+    String lableSql =
+        "SELECT id, name, description, text_color, background_color FROM label LIMIT :limit OFFSET :offset";
+
+    MapSqlParameterSource params = new MapSqlParameterSource();
+
+    int limit = perPage;
+    int offset = (page - 1) * perPage;
+    params.addValue("limit", limit);
+    params.addValue("offset", offset);
+
+    return jdbcTemplate.query(lableSql, params, (rs, rowNum) ->
         new LabelResponse(
             rs.getLong("id"),
             rs.getString("name"),

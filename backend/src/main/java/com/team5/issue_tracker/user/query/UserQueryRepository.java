@@ -20,9 +20,19 @@ import lombok.RequiredArgsConstructor;
 public class UserQueryRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public List<UserSummaryResponse> findAllUsers() {
-    String userSql = "SELECT id, username, image_url FROM user";
-    return jdbcTemplate.query(userSql, (rs, rowNum) ->
+  public List<UserSummaryResponse> getScrolledUsers(String cursor, Integer limit) {
+    String userSql = """        
+        SELECT id, username, image_url
+        FROM user WHERE (:cursor IS NULL OR username > :cursor) 
+        ORDER BY username ASC
+        LIMIT :limitPlusOne;
+        """;
+
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("cursor", cursor);
+    params.addValue("limitPlusOne", limit + 1);
+
+    return jdbcTemplate.query(userSql, params, (rs, rowNum) ->
         new UserSummaryResponse(
             rs.getLong("id"),
             rs.getString("username"),

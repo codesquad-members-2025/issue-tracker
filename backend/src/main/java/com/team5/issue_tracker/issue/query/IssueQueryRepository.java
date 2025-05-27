@@ -19,7 +19,8 @@ public class IssueQueryRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public List<IssueQueryDto> findIssuesByCondition(IssueSearchCondition searchCondition) {
+  public List<IssueQueryDto> findIssuesByCondition(IssueSearchCondition searchCondition, Integer page,
+      Integer perPage) {
     StringBuilder issueSql = new StringBuilder("""
             SELECT 
                 i.id,
@@ -78,6 +79,12 @@ public class IssueQueryRepository {
 
     issueSql.append(" ORDER BY i.created_at DESC");
 
+    int limit = perPage;
+    int offset = (page - 1) * perPage;
+    issueSql.append(" LIMIT :limit OFFSET :offset");
+    params.addValue("limit", limit);
+    params.addValue("offset", offset);
+
     return jdbcTemplate.query(issueSql.toString(), params, (rs, rowNum) ->
         new IssueQueryDto(
             rs.getLong("id"),
@@ -89,14 +96,20 @@ public class IssueQueryRepository {
     );
   }
 
-  public List<UserSummaryResponse> findDistinctAuthors() {
+  public List<UserSummaryResponse> findDistinctAuthors(String cursor, Integer limit) {
     String authorSql = """
         SELECT DISTINCT u.id, u.username, u.image_url
         FROM issue i
         JOIN user u ON i.user_id = u.id
+        WHERE (:cursor IS NULL OR username > :cursor) 
+        ORDER BY username ASC
+        LIMIT :limitPlusOne;
         """;
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("cursor", cursor);
+    params.addValue("limitPlusOne", limit + 1);
 
-    return jdbcTemplate.query(authorSql, (rs, rowNum) ->
+    return jdbcTemplate.query(authorSql, params, (rs, rowNum) ->
         new UserSummaryResponse(
             rs.getLong("id"),
             rs.getString("username"),

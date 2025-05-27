@@ -18,11 +18,11 @@ import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.parser.IssueSearchRequestParser;
 import com.team5.issue_tracker.issue.query.IssueQueryService;
 import com.team5.issue_tracker.issue.service.IssueService;
-import com.team5.issue_tracker.issue.dto.response.IssueLabelPageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueLabelScrollResponse;
 import com.team5.issue_tracker.label.query.LabelQueryService;
-import com.team5.issue_tracker.issue.dto.response.IssueMilestonePageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueMilestoneScrollResponse;
 import com.team5.issue_tracker.milestone.query.MilestoneQueryService;
-import com.team5.issue_tracker.user.dto.UserPageResponse;
+import com.team5.issue_tracker.user.dto.UserScrollResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,12 +40,15 @@ public class IssueController {
   private final MilestoneQueryService milestonePageResponse;
 
   @GetMapping
-  public ResponseEntity<ApiResponse<IssuePageResponse>> getAllIssues(
-      @RequestParam(required = false) String q) {
+  public ResponseEntity<ApiResponse<IssuePageResponse>> getPagedIssues(
+      @RequestParam(required = false) String q,
+      @RequestParam(required = false, defaultValue = "1") Integer page,
+      @RequestParam(required = false, defaultValue = "10") Integer perPage) {
     log.info("GET /api/issues 요청");
     log.debug("q: {}", q);
     IssueSearchRequest searchRequest = IssueSearchRequestParser.fromQueryString(q);
-    return ResponseEntity.ok(ApiResponse.success(issueQueryService.getIssuePage(searchRequest)));
+    return ResponseEntity.ok(
+        ApiResponse.success(issueQueryService.getPagedIssues(searchRequest, page, perPage)));
   }
 
   @GetMapping("/{issueId}")
@@ -71,19 +74,30 @@ public class IssueController {
   }
 
   @GetMapping("/authors")
-  public ResponseEntity<ApiResponse<UserPageResponse>> getAllAuthors() {
+  public ResponseEntity<ApiResponse<UserScrollResponse>> getScrolledAuthors(
+      @RequestParam(required = false) String cursor,
+      @RequestParam(required = false, defaultValue = "10") Integer limit
+  ) {
     log.info("GET /api/issues/authors 요청");
-    return ResponseEntity.ok(ApiResponse.success(issueQueryService.getIssueAuthors()));
+    return ResponseEntity.ok(
+        ApiResponse.success(issueQueryService.getScrolledIssueAuthors(cursor, limit)));
   }
 
   @GetMapping("/labels")
-  public ResponseEntity<ApiResponse<IssueLabelPageResponse>> getFilterLabels() {
-    return ResponseEntity.ok(ApiResponse.success(labelQueryService.getFilterLabels()));
+  public ResponseEntity<ApiResponse<IssueLabelScrollResponse>> getScrolledFilterLabels(
+      @RequestParam(required = false) String cursor,
+      @RequestParam(required = false, defaultValue = "10") Integer limit
+  ) {
+    return ResponseEntity.ok(
+        ApiResponse.success(labelQueryService.getScrolledFilterLabels(cursor, limit)));
   }
 
   @GetMapping("/milestones")
-  public ResponseEntity<ApiResponse<IssueMilestonePageResponse>> getFilterMilestones() {
-    return ResponseEntity.ok(ApiResponse.success(milestonePageResponse.getFilterMilestones()));
+  public ResponseEntity<ApiResponse<IssueMilestoneScrollResponse>> getScrolledFilterMilestones(
+      @RequestParam(required = false) String cursor,
+      @RequestParam(required = false, defaultValue = "10") Integer limit
+  ) {
+    return ResponseEntity.ok(
+        ApiResponse.success(milestonePageResponse.getScrolledFilterMilestones(cursor, limit)));
   }
-
 }

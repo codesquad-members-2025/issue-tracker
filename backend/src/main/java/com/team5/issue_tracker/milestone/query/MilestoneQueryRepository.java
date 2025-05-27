@@ -22,9 +22,19 @@ public class MilestoneQueryRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public List<MilestoneSummaryResponse> findIssueMilestones() {
-    String milestoneSql = "SELECT id, name FROM milestone";
-    return jdbcTemplate.query(milestoneSql,
+  public List<MilestoneSummaryResponse> findIssueMilestones(String cursor, Integer limit) {
+    String milestoneSql = """
+    SELECT id, name FROM milestone
+    WHERE (:cursor IS NULL OR name > :cursor)
+    ORDER BY name ASC
+    LIMIT :limitPlusOne;
+    """;
+
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("cursor", cursor);
+    params.addValue("limitPlusOne", limit + 1);
+
+    return jdbcTemplate.query(milestoneSql, params,
         (rs, rowNum) -> new MilestoneSummaryResponse(rs.getLong("id"), rs.getString("name")));
   }
 
@@ -74,7 +84,7 @@ public class MilestoneQueryRepository {
     );
   }
 
-  public List<MilestoneResponse> findAllMilestones() {
+  public List<MilestoneResponse> findMilestones(Integer page, Integer perPage) {
     String sql = """
           WITH issue_counts AS (
             SELECT
@@ -99,10 +109,17 @@ public class MilestoneQueryRepository {
             END AS progress
           FROM milestone m
           LEFT JOIN issue_counts ic ON m.id = ic.milestone_id
-          ORDER BY m.id;
+          ORDER BY m.id
+          LIMIT :limit OFFSET :offset;
         """;
+    MapSqlParameterSource params = new MapSqlParameterSource();
 
-    return jdbcTemplate.query(sql,
+    int limit = perPage;
+    int offset = (page - 1) * perPage;
+    params.addValue("limit", limit);
+    params.addValue("offset", offset);
+
+    return jdbcTemplate.query(sql, params,
         (rs, rowNum) -> new MilestoneResponse(
             rs.getLong("id"),
             rs.getString("name"),

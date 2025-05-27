@@ -3,6 +3,7 @@ package com.team5.issue_tracker.milestone.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.team5.issue_tracker.common.dto.ApiResponse;
@@ -20,7 +21,10 @@ public class MilestoneController {
   private final MilestoneQueryService milestoneQueryService;
 
   @GetMapping
-  public ResponseEntity<ApiResponse<MilestonePageResponse>> getAllLabels() {
-    return ResponseEntity.ok(ApiResponse.success(milestoneQueryService.getAllMilestones()));
+  public ResponseEntity<ApiResponse<MilestonePageResponse>> getPagedMilestones(
+      @RequestParam(value = "page", defaultValue = "1") Integer page,
+      @RequestParam(value = "perPage", defaultValue = "10") Integer perPage
+  ) {
+    return ResponseEntity.ok(ApiResponse.success(milestoneQueryService.getPagedMilestones(page, perPage)));
   }
 }

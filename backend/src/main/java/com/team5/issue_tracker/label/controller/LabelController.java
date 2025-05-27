@@ -3,6 +3,7 @@ package com.team5.issue_tracker.label.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.team5.issue_tracker.common.dto.ApiResponse;
@@ -20,7 +21,9 @@ public class LabelController {
   private final LabelQueryService labelQueryService;
 
   @GetMapping
-  public ResponseEntity<ApiResponse<LabelPageResponse>> getAllLabels() {
-    return ResponseEntity.ok(ApiResponse.success(labelQueryService.getAllLabels()));
+  public ResponseEntity<ApiResponse<LabelPageResponse>> getPagedLabels(
+      @RequestParam(required = false, defaultValue = "1") Integer page,
+      @RequestParam(required = false, defaultValue = "10") Integer perPage) {
+    return ResponseEntity.ok(ApiResponse.success(labelQueryService.getPagedLabels(page, perPage)));
   }
 }
