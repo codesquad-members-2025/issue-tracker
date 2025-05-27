@@ -1,12 +1,10 @@
 package CodeSquad.IssueTracker.issue;
 
-import CodeSquad.IssueTracker.home.dto.IssueFilterRequestDto;
+
+import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
-import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeRepository;
-import CodeSquad.IssueTracker.issueLabel.IssueLabelRepository;
 import CodeSquad.IssueTracker.milestone.dto.SummaryMilestoneDto;
-import CodeSquad.IssueTracker.user.UserRepository;
 import CodeSquad.IssueTracker.user.dto.SummaryUserDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,13 +23,12 @@ import java.util.Optional;
 @Repository
 public class JdbcTemplateIssueRepository implements IssueRepository {
 
+    public static final int LIMIT_SIZE = 20;
+
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcTemplateIssueRepository(DataSource dataSource,
-                                       UserRepository userRepository,
-                                       IssueAssigneeRepository issueAssigneeRepository,
-                                       IssueLabelRepository issueLabelRepository) {
+    public JdbcTemplateIssueRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("issues")
@@ -75,59 +72,26 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
     }
 
     @Override
-    public List<FilteredIssueDto> findIssuesByFilter(IssueFilterRequestDto filterRequestDto) {
-        StringBuilder issueSql = new StringBuilder();
-        issueSql.append("SELECT DISTINCT i.issue_id, i.title, i.is_open, i.author_id, u.nick_name, i.milestone_id, m.name AS milestone_name, i.last_modified_at\n")
-                .append("FROM issues i\n")
-                .append("LEFT JOIN milestones m ON i.milestone_id = m.milestone_id\n")
-                .append("LEFT JOIN users u ON i.author_id = u.id\n")
-                .append("LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id\n")
-                .append("LEFT JOIN issue_label il ON i.issue_id = il.issue_id\n");
+    public List<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterCondition condition) {
+        IssueFilterQueryBuilder queryBuilder = new IssueFilterQueryBuilder(condition.getIsOpen(), condition);
+        String sql = """
+            SELECT DISTINCT
+            i.issue_id, i.title, i.is_open, i.author_id, u.nick_name, i.milestone_id, m.name AS milestone_name, i.last_modified_at
+            FROM issues i
+            LEFT JOIN milestones m ON i.milestone_id = m.milestone_id
+            LEFT JOIN users u ON i.author_id = u.id
+            LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
+            LEFT JOIN issue_label il ON i.issue_id = il.issue_id
+            LEFT JOIN comments c ON i.issue_id = c.issue_id
+         """ + queryBuilder.getWhereClause() + """
+            ORDER BY i.issue_id DESC LIMIT :limit OFFSET :page
+         """;
 
-        boolean hasWhere = false;
-        MapSqlParameterSource params = new MapSqlParameterSource();
+        MapSqlParameterSource params = queryBuilder.getParams();
+        params.addValue("limit", LIMIT_SIZE);
+        params.addValue("page", (page - 1) * LIMIT_SIZE);
 
-        // 이슈 열림/닫힘 상태 필터링
-        if (filterRequestDto.getIsOpen() != null) {
-            issueSql.append(hasWhere ? "AND " : "WHERE ");
-            issueSql.append("i.is_open = :isOpen ");
-            params.addValue("isOpen", filterRequestDto.getIsOpen());
-            hasWhere = true;
-        }
-
-        // 작성자 필터링
-        if (filterRequestDto.getAuthor() != null) {
-            issueSql.append(hasWhere ? "AND " : "WHERE ");
-            issueSql.append("i.author_id = :authorId ");
-            params.addValue("authorId", filterRequestDto.getAuthor());
-            hasWhere = true;
-        }
-
-        // 마일스톤 필터링
-        if (filterRequestDto.getMilestone() != null) {
-            issueSql.append(hasWhere ? "AND " : "WHERE ");
-            issueSql.append("i.milestone_id = :milestoneId");
-            params.addValue("milestoneId", filterRequestDto.getMilestone());
-            hasWhere = true;
-        }
-
-        // 레이블 필터링
-        if (filterRequestDto.getLabel() != null) {
-            issueSql.append(hasWhere ? "AND " : "WHERE ");
-            issueSql.append("il.label_id = :labelId");
-            params.addValue("labelId", filterRequestDto.getLabel());
-            hasWhere = true;
-        }
-
-        // 담당자 필터링
-        if (filterRequestDto.getAssignee() != null) {
-            issueSql.append(hasWhere ? "AND " : "WHERE ");
-            issueSql.append("ia.assignee_id = :assigneeId");
-            params.addValue("assigneeId", filterRequestDto.getAssignee());
-            hasWhere = true;
-        }
-
-        List<FilteredIssueDto> issues = template.query(issueSql.toString(), params, (rs, rowNum) -> {
+        return template.query(sql.toString(), params, (rs, rowNum) -> {
             FilteredIssueDto dto = new FilteredIssueDto();
             dto.setIssueId(rs.getLong("issue_id"));
             dto.setTitle(rs.getString("title"));
@@ -137,8 +101,25 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
             dto.setLastModifiedAt(rs.getTimestamp("last_modified_at").toLocalDateTime());
             return dto;
         });
+    }
 
-        return issues;
+    @Override
+    public int countFilteredIssuesByIsOpen(boolean isOpen, IssueFilterCondition condition) {
+        String countSql = """
+            SELECT COUNT(DISTINCT i.issue_id)
+            FROM issues i
+            LEFT JOIN milestones m ON i.milestone_id = m.milestone_id
+            LEFT JOIN users u ON i.author_id = u.id
+            LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
+            LEFT JOIN issue_label il ON i.issue_id = il.issue_id
+            LEFT JOIN comments c ON i.issue_id = c.issue_id
+            """;
+
+        IssueFilterQueryBuilder queryBuilder = new IssueFilterQueryBuilder(isOpen, condition);
+        String whereClause = queryBuilder.getWhereClause().toString();
+        String finalSql = countSql + whereClause;
+
+        return template.queryForObject(finalSql, queryBuilder.getParams(), Integer.class);
     }
 
     private RowMapper<Issue> issueRowMapper() {
