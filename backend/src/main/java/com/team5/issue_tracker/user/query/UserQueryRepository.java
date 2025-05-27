@@ -3,7 +3,6 @@ package com.team5.issue_tracker.user.query;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -135,14 +134,14 @@ public class UserQueryRepository {
         ));
   }
 
-  public Optional<Long> getUserIdByUsername(String username) {
+  public Long getUserIdByUsername(String username) {
     if (username == null) {
-      return Optional.empty();
+      return null;
     }
     String sql = "SELECT id FROM user WHERE username = :username";
     MapSqlParameterSource params = new MapSqlParameterSource("username", username);
     List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);
 
-    return result.isEmpty() ? Optional.of(-1L) : Optional.of(result.get(0));
+    return result.isEmpty() ? null : result.get(0);
   }
 }

@@ -80,13 +80,12 @@ public class IssueQueryService {
 
   private IssueSearchCondition getCondition(IssueSearchRequest searchRequest) {
     Long assigneeId =
-        userQueryRepository.getUserIdByUsername(searchRequest.getAssigneeName()).orElse(null);
+        userQueryRepository.getUserIdByUsername(searchRequest.getAssigneeName());
     List<Long> labelIds = labelQueryRepository.getLabelIdsByNames(searchRequest.getLabelNames());
     Long milestoneId =
-        milestoneQueryRepository.getMilestoneIdByName(searchRequest.getMilestoneName())
-            .orElse(null);
+        milestoneQueryRepository.getMilestoneIdByName(searchRequest.getMilestoneName());
     Long authorId =
-        userQueryRepository.getUserIdByUsername(searchRequest.getAuthorName()).orElse(null);
+        userQueryRepository.getUserIdByUsername(searchRequest.getAuthorName());
     log.info("assigneeId: {}, labelIds: {}, milestoneId: {}, authorId: {}",
         assigneeId, labelIds, milestoneId, authorId);
 

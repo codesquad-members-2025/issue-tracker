@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -174,14 +173,14 @@ public class MilestoneQueryRepository {
             (String) row.get("milestone_name"))));
   }
 
-  public Optional<Long> getMilestoneIdByName(String milestoneName) {
+  public Long getMilestoneIdByName(String milestoneName) {
     if (milestoneName == null) {
-      return Optional.empty();
+      return null;
     }
     String sql = "SELECT id FROM milestone WHERE name = :milestoneName";
     MapSqlParameterSource params = new MapSqlParameterSource("milestoneName", milestoneName);
     List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);
 
-    return result.isEmpty() ? Optional.of(-1L) : Optional.of(result.get(0));
+    return result.isEmpty() ? null : result.get(0);
   }
 }
