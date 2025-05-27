@@ -14,6 +14,8 @@ const useIssueDetailStore = create(
       isOpen: '',
       lastModifiedAt: '',
     },
+
+    //입력 액션이 발생하면 계속해서 변하는 필드
     comment: { commentId: null, content: '', issueFileUrl: [] },
 
     /* 
