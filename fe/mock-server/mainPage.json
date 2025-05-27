@@ -444,6 +444,22 @@
         "name": "v1.0 릴리즈"
       },
       "lastModifiedAt": "2025-05-31T20:00:00Z"
+    },
+    {
+      "id": 16,
+      "title": "ㅂㅈㄷ",
+      "content": "ㅂㅈ",
+      "isOpen": true,
+      "assignees": [
+        {
+          "id": 101,
+          "nickname": "devchan",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        }
+      ],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-05-27T08:34:57.102Z"
     }
   ],
   "users": [

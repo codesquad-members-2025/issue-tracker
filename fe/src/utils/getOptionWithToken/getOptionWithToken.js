@@ -6,3 +6,5 @@ export default function getOptionWithToken(options, token) {
   const option = { ...options, headers };
   return option;
 }
+
+//credentials: 'include'

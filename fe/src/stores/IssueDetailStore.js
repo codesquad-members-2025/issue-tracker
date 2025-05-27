@@ -113,6 +113,8 @@ const useIssueDetailStore = create(
       set((state) => {
         state.comment.issueFileUrl = file ? file : null;
       }),
+
+    initIssueDetail: () => set((state) => {}),
   })),
 );
 

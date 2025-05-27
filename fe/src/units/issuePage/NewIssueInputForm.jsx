@@ -12,6 +12,7 @@ const InputWrapper = styled.div`
   width: 912px;
 `;
 
+//setCurrentInput은 유효성 검사용 함수
 export default function NewIssueInputForm({ setCurrentInput }) {
   const issue = useIssueDetailStore((s) => s.issue);
   // const comment = useIssueDetailStore((s) => s.comment.content);

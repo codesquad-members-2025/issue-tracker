@@ -26,6 +26,86 @@ function authMiddleware(req, res, next) {
   next();
 }
 
+app.post('/issues', authMiddleware, async (req, res) => {
+  try {
+    const { title, content, issueFileUrl, assigneeIds = [], labelIds = [], milestoneId } = req.body;
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+
+    // 새 이슈 ID 생성
+    const newIssueId = Math.max(...json.issues.map(i => i.id)) + 1;
+
+    // 새 이슈 객체 생성
+    const newIssue = {
+      issue: {
+        issueId: newIssueId,
+        title,
+        content,
+        authorId: 1, // 현재 로그인한 사용자 ID
+        milestoneId,
+        isOpen: true,
+        lastModifiedAt: new Date().toISOString(),
+        issueFileUrl: issueFileUrl || null
+      },
+      assignees: assigneeIds
+        .map(id => {
+          const user = json.users.find(u => u.id === id);
+          return user ? {
+            id: user.id,
+            nickname: user.nickName,
+            profileImageUrl: user.profileImageUrl || `https://dummy.local/profile/${user.nickName}.png`
+          } : null;
+        })
+        .filter(Boolean),
+      labels: labelIds
+        .map(id => {
+          const label = json.labels.find(l => l.id === id);
+          return label ? {
+            labelId: label.id,
+            name: label.name,
+            color: label.color
+          } : null;
+        })
+        .filter(Boolean),
+      milestone: milestoneId ? {
+        ...json.milestones.find(m => m.id === milestoneId),
+        milestoneId,
+        processingRate: 0
+      } : null,
+      comments: []
+    };
+
+    // 새 이슈를 기존 이슈 목록에 추가
+    json.issues.push({
+      id: newIssueId,
+      title,
+      content,
+      isOpen: true,
+      author: json.users.find(u => u.id === 1),
+      assignees: newIssue.assignees,
+      labels: newIssue.labels,
+      milestone: newIssue.milestone,
+      createdAt: new Date().toISOString()
+    });
+
+    // 파일 저장
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+
+    res.status(201).json({
+      success: true,
+      message: '새 이슈가 생성되었습니다.',
+      data: newIssue
+    });
+  } catch (error) {
+    console.error('🔥 이슈 생성 오류:', error.message);
+    res.status(500).json({
+      success: false,
+      message: '이슈 생성 중 서버 오류 발생',
+      error: error.message
+    });
+  }
+});
+
 app.get('/', authMiddleware, async (req, res) => {
   try {
     const { author, label, milestone, assignee, page = 1, limit = 10 } = req.query;
