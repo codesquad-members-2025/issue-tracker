@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.issue.dto;
 
+import codesquad.team4.issuetracker.util.OpenStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ public class IssueRequestDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class CreateIssueDto{
+    public static class CreateIssueDto {
         @NotNull
         private String title;
         @NotNull
@@ -71,29 +72,5 @@ public class IssueRequestDto {
         private Long milestoneId;
         private OpenStatus status;
         private List<Long> labelIds;
-
-        @Getter
-        public enum OpenStatus{
-            OPEN("open", true), CLOSE("close", false);
-
-            final String value;
-            final boolean state;
-
-            OpenStatus(String value, boolean state) {
-                this.value = value;
-                this.state = state;
-            }
-            public static OpenStatus fromValue(String value) {
-                for (OpenStatus status : OpenStatus.values()) {
-                    if (status.value.equalsIgnoreCase(value)) {
-                        return status;
-                    }
-                }
-                return OpenStatus.OPEN;
-            }
-            public boolean getState() {
-                return state;
-            }
-        }
     }
 }

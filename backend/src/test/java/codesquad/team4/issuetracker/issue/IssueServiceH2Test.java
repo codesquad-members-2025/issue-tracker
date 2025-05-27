@@ -7,11 +7,11 @@ import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
-import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto.OpenStatus;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueInfo;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueListDto;
 import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelInfo;
+import codesquad.team4.issuetracker.util.OpenStatus;
 import codesquad.team4.issuetracker.util.Parser;
 import codesquad.team4.issuetracker.util.TestDataHelper;
 import java.util.List;
@@ -176,10 +176,10 @@ class IssueServiceH2Test {
     @ParameterizedTest
     @DisplayName("필터링 조건이 내가 작성한 이슈를 가져오는 경우 다른 사람이 작성한 이슈는 가져와서는 안된다")
     @CsvSource({
-                "open, 3, 1",
-                "close, 1, 1",
-                "open, 1, 2",
-                "close, 1, 2"})
+        "open, 3, 1",
+        "close, 1, 1",
+        "open, 1, 2",
+        "close, 1, 2"})
     void filterIssueByAuthor(String state, int expectedSize, Long authorId) {
         //given
         IssueFilterParamDto param = IssueFilterParamDto.builder()
@@ -261,12 +261,12 @@ class IssueServiceH2Test {
 
     private List<Long> findIssueIdsByCommentAuthor(String state, Long commentAuthorId) {
         String sql = """
-            SELECT DISTINCT c.issue_id
-            FROM comment c
-            JOIN issue i ON c.issue_id = i.issue_id
-            WHERE c.author_id = ?
-            AND i.is_open = ?
-        """;
+                SELECT DISTINCT c.issue_id
+                FROM comment c
+                JOIN issue i ON c.issue_id = i.issue_id
+                WHERE c.author_id = ?
+                AND i.is_open = ?
+            """;
 
         List<Long> expectedIssueIds = jdbcTemplate.queryForList(sql, Long.class,
             commentAuthorId, OpenStatus.fromValue(state).getState());

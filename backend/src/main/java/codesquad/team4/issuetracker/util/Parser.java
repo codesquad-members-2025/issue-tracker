@@ -2,7 +2,6 @@ package codesquad.team4.issuetracker.util;
 
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
-import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto.OpenStatus;
 import java.util.ArrayList;
 import java.util.List;
 

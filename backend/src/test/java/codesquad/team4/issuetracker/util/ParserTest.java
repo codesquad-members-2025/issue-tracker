@@ -29,31 +29,31 @@ public class ParserTest {
 
     private static Stream<Arguments> provideFilterConditions() {
         return Stream.of(
-            Arguments.of("q=state:open&page=1&size=10", "open", null, null, null, null, List.of()),
-            Arguments.of("q=state:close&page=1&size=10", "close", null, null, null, null, List.of()),
-            Arguments.of("q=state:open+authorId:3&page=1&size=10", "open", 3L, null, null, null, List.of()),
-            Arguments.of("q=state:open+assigneeId:2&page=1&size=10", "open", null, 2L, null, null, List.of()),
-            Arguments.of("q=state:open+commentAuthorId:3&page=1&size=10", "open", null, null, null, 3L, List.of()),
-            Arguments.of("q=state:open+authorId:3+labelId:1&page=1&size=10", "open", 3L, null, null, null, List.of(1L)),
-            Arguments.of("q=authorId:3+labelId:1+labelId:2&page=1&size=10", "open", 3L, null, null, null, List.of(1L, 2L)),
-            Arguments.of("q=state:open+authorId:3+milestoneId:1&page=1&size=10", "open", 3L, null, 1L, null, List.of()),
-            Arguments.of("q=state:open+labelId:1+labelId:2+labelId:3&page=1&size=10", "open", null, null, null, null, List.of(1L, 2L, 3L)),
+            Arguments.of("state:open", "open", null, null, null, null, List.of()),
+            Arguments.of("state:close", "close", null, null, null, null, List.of()),
+            Arguments.of("state:open authorId:3", "open", 3L, null, null, null, List.of()),
+            Arguments.of("state:open assigneeId:2", "open", null, 2L, null, null, List.of()),
+            Arguments.of("state:open commentAuthorId:3", "open", null, null, null, 3L, List.of()),
+            Arguments.of("state:open authorId:3 labelId:1", "open", 3L, null, null, null, List.of(1L)),
+            Arguments.of("authorId:3 labelId:1 labelId:2", "open", 3L, null, null, null, List.of(1L, 2L)),
+            Arguments.of("state:open authorId:3 milestoneId:1", "open", 3L, null, 1L, null, List.of()),
+            Arguments.of("state:open labelId:1 labelId:2 labelId:3", "open", null, null, null, null, List.of(1L, 2L, 3L)),
             // authorId와 assigneeId 동시 제공
-            Arguments.of("q=state:open+authorId:3+assigneeId:4&page=1&size=10", "open", 3L, 4L, null, null, List.of()),
+            Arguments.of("state:open authorId:3 assigneeId:4", "open", 3L, 4L, null, null, List.of()),
             // milestoneId만 있는 경우
-            Arguments.of("q=milestoneId:2&page=1&size=10", "open", null, null, 2L, null, List.of()),
+            Arguments.of("milestoneId:2", "open", null, null, 2L, null, List.of()),
             // labelId만 있는 경우
-            Arguments.of("q=labelId:5&page=1&size=10", "open", null, null, null, null, List.of(5L)),
+            Arguments.of("labelId:5", "open", null, null, null, null, List.of(5L)),
             // state 없이 commentAuthorId만
-            Arguments.of("q=commentAuthorId:2&page=1&size=10", "open", null, null, null, 2L, List.of()),
+            Arguments.of("commentAuthorId:2", "open", null, null, null, 2L, List.of()),
             // 필터링이 아무것도 없는 경우
-            Arguments.of("q=&page=1&size=10", "open", null, null, null, null, List.of()),
+            Arguments.of("", "open", null, null, null, null, List.of()),
             // 필드 순서가 바뀐 경우
-            Arguments.of("q=authorId:3+state:open&page=1&size=10", "open", 3L, null, null, null, List.of()),
+            Arguments.of("authorId:3 state:open", "open", 3L, null, null, null, List.of()),
             // labelId 중복 테스트
-            Arguments.of("q=labelId:1+labelId:1&page=1&size=10", "open", null, null, null, null, List.of(1L, 1L)),
+            Arguments.of("labelId:1 labelId:1", "open", null, null, null, null, List.of(1L, 1L)),
             // state가 대소문자 섞인 경우
-            Arguments.of("q=state:Open&page=1&size=10", "open", null, null, null, null, List.of())
+            Arguments.of("state:Open", "open", null, null, null, null, List.of())
         );
     }
 }
