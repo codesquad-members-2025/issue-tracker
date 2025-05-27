@@ -64,7 +64,7 @@ public class LabelQueryRepository {
     ));
   }
 
-  public Map<Long, List<LabelSummaryResponse>> getLabelListByIssueIds(List<Long> issueIds) {
+  public Map<Long, List<LabelResponse>> getLabelListByIssueIds(List<Long> issueIds) {
     if (issueIds == null || issueIds.isEmpty()) {
       return Collections.emptyMap(); // 빈 결과 반환
     }
@@ -74,6 +74,7 @@ public class LabelQueryRepository {
             i.id AS issue_id,
             l.id AS label_id,
             l.name AS label_name,
+            l.description AS label_description,
             l.text_color AS label_text_color,
             l.background_color AS label_background_color
         FROM issue i
@@ -89,9 +90,10 @@ public class LabelQueryRepository {
     return rows.stream()
         .collect(Collectors.groupingBy(
             row -> ((Number) row.get("issue_id")).longValue(),
-            Collectors.mapping(row -> new LabelSummaryResponse(
+            Collectors.mapping(row -> new LabelResponse(
                 ((Number) row.get("label_id")).longValue(),
                 (String) row.get("label_name"),
+                (String) row.get("label_description"),
                 (String) row.get("label_text_color"),
                 (String) row.get("label_background_color")
             ), Collectors.toList())
