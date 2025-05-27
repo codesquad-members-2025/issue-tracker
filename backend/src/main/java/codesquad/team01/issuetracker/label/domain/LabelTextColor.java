@@ -1,18 +1,14 @@
 package codesquad.team01.issuetracker.label.domain;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
-@RequiredArgsConstructor
 public enum LabelTextColor {
 
-	BLACK("#000000"),
-	WHITE("#FFFFFF");
-
-	private final String hexCode;
+	BLACK,
+	WHITE;
 
 	public static LabelTextColor fromTextColorStr(String textColor) {
 		if (textColor == null) {
