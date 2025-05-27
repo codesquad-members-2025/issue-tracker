@@ -14,9 +14,10 @@ const InputWrapper = styled.div`
 
 export default function NewIssueInputForm({ setCurrentInput }) {
   const issue = useIssueDetailStore((s) => s.issue);
-  const comment = useIssueDetailStore((s) => s.comment.content);
+  // const comment = useIssueDetailStore((s) => s.comment.content);
+  const comment = issue.content;
   const titleChangeHandler = useIssueDetailStore((s) => s.changeTitle);
-  const commentChangeHandler = useIssueDetailStore((s) => s.addOrEditComment);
+  const commentChangeHandler = useIssueDetailStore((s) => s.addMainComment);
   const setFiles = useIssueDetailStore((s) => s.setFiles);
 
   // const { titleChangeHandler, commentChangeHandler } = useIssueDetailStore(

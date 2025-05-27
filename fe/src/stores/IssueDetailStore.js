@@ -8,6 +8,7 @@ const useIssueDetailStore = create(
     issue: {
       issueId: '',
       title: '',
+      content: '',
       issueFileUrl: [],
       authorId: null,
       milestoneId: null,
@@ -16,6 +17,7 @@ const useIssueDetailStore = create(
     },
 
     //입력 액션이 발생하면 계속해서 변하는 필드
+    comments: [],
     comment: { commentId: null, content: '', issueFileUrl: [] },
 
     /* 
@@ -26,7 +28,6 @@ const useIssueDetailStore = create(
     assignees: [],
     labels: [],
     milestone: {},
-    comments: [],
 
     //클릭하는 순간 적용
     toggleAssignee: (item) => {
@@ -67,6 +68,12 @@ const useIssueDetailStore = create(
     changeTitle: (value) => {
       set((state) => {
         state.issue.title = value;
+      });
+    },
+
+    addMainComment: (value) => {
+      set((s) => {
+        s.issue.content = value;
       });
     },
 
