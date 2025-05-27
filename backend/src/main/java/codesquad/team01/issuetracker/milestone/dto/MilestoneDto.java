@@ -19,6 +19,7 @@ public class MilestoneDto {
 	) {
 	}
 
+	// 필터용 마일스톤 응답 DTO
 	@Builder
 	public record MilestoneFilterResponse(
 		int id,
@@ -26,6 +27,7 @@ public class MilestoneDto {
 	) {
 	}
 
+	// 필터용 마일스톤 목록 응답 DTO
 	@Builder
 	public record MilestoneFilterListResponse(
 		int totalCount,

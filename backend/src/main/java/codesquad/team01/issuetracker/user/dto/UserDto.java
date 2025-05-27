@@ -17,9 +17,6 @@ public class UserDto {
 	// 이슈 목록 - 작성자 응답 DTO
 	@Builder
 	public record WriterResponse(
-		// 처음엔 작성자 응답 DTO로 생성했지만
-		// 현재 담당자, 작성자 필터 db 조회용 dto, 응답용 dto의 역할도 하고 있음
-		// 이럴 경우 더 만들지? 이름을 범용적으로 바꿀지?
 		int id,
 		String username,
 		String profileImageUrl
@@ -40,14 +37,16 @@ public class UserDto {
 		}
 	}
 
+	// 필터용 사용자 목록 응답 Dto
 	@Builder
 	public record UserFilterListResponse(
 		int totalCount,
-		List<UserFilterResponse> users // WriterResponse와 같이 데이터를 필요로 해서 임시로 넣음
+		List<UserFilterResponse> users
 
 	) {
 	}
 
+	// 필터용 사용자 응답 Dto
 	@Builder
 	public record UserFilterResponse(
 		int id,
@@ -70,6 +69,7 @@ public class UserDto {
 	) {
 	}
 
+	// 사용자 행 DTO
 	@Builder
 	public record UserFilterRow(
 		int id,

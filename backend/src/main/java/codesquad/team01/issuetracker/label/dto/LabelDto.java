@@ -50,6 +50,7 @@ public class LabelDto {
 	) {
 	}
 
+	// 필터용 레이블 응답 Dto
 	@Builder
 	public record LabelFilterResponse(
 		Integer id,
@@ -59,6 +60,7 @@ public class LabelDto {
 	) {
 	}
 
+	// 필터용 레이블 목록 응답 Dto
 	@Builder
 	public record LabelFilterListResponse(
 		int totalCount,
