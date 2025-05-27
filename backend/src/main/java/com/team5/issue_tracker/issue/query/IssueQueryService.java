@@ -102,9 +102,9 @@ public class IssueQueryService {
   public IssueDetailResponse getIssueById(Long issueId) {
     IssueBaseResponse issueBase = issueQueryRepository.findIssueDetailById(issueId);
     List<LabelResponse> labelList = labelQueryRepository.getLabelsByIssueId(issueId);
-    UserSummaryResponse author = userQueryRepository.getAuthorById(issueId);
+    UserSummaryResponse author = userQueryRepository.getAuthorById(issueBase.getAuthorId());
     List<UserSummaryResponse> assignees = userQueryRepository.getAssigneesByIssueId(issueId);
-    MilestoneResponse milestone = milestoneQueryRepository.getMilestoneByIssueId(issueId);
+    MilestoneResponse milestone = milestoneQueryRepository.getMilestoneByIssueId(issueBase.getMilestoneId());
     List<CommentResponse> comments = commentQueryRepository.getCommentsByIssueId(issueId);
 
     return IssueMapper.toDetailResponse(issueBase, labelList, author, assignees, milestone,

@@ -120,7 +120,7 @@ public class IssueQueryRepository {
 
   public IssueBaseResponse findIssueDetailById(Long issueId) {
     String issueSql = """
-            SELECT id, title, is_open, created_at, updated_at
+            SELECT id, title, user_id, milestone_id, is_open, created_at, updated_at
             FROM issue
             WHERE id = :issueId
         """;
@@ -130,6 +130,8 @@ public class IssueQueryRepository {
     return jdbcTemplate.queryForObject(issueSql, params, (rs, rowNum) -> new IssueBaseResponse(
         rs.getLong("id"),
         rs.getString("title"),
+        rs.getLong("user_id"),
+        rs.getLong("milestone_id"),
         rs.getBoolean("is_open"),
         rs.getTimestamp("created_at").toInstant(),
         rs.getTimestamp("updated_at").toInstant()

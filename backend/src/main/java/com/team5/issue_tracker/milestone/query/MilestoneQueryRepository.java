@@ -38,7 +38,7 @@ public class MilestoneQueryRepository {
         (rs, rowNum) -> new MilestoneSummaryResponse(rs.getLong("id"), rs.getString("name")));
   }
 
-  public MilestoneResponse getMilestoneByIssueId(Long issueId) {
+  public MilestoneResponse getMilestoneByIssueId(Long milestoneId) {
     String sql = """
         WITH issue_counts AS (
           SELECT
@@ -61,14 +61,13 @@ public class MilestoneQueryRepository {
             WHEN COALESCE(ic.total, 0) = 0 THEN 0
             ELSE ROUND((ic.closed_count) * 100.0 / ic.total)
           END AS progress
-        FROM issue i
-        LEFT JOIN milestone m ON i.milestone_id = m.id
-        LEFT JOIN issue_counts ic ON m.id = ic.milestone_id
-        WHERE i.id = :issueId
+        FROM milestone m
+        INNER JOIN issue_counts ic ON m.id = ic.milestone_id
+        WHERE m.id = :milestoneId
         LIMIT 1
         """;
 
-    MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
+    MapSqlParameterSource params = new MapSqlParameterSource("milestoneId", milestoneId);
 
     return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) ->
         new MilestoneResponse(

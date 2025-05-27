@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 public class IssueBaseResponse {
   private Long id;
   private String title;
+  private Long authorId;
+  private Long milestoneId;
   private Boolean isOpen;
   private Instant createdAt;
   private Instant updatedAt;
