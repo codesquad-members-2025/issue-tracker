@@ -1,59 +1,44 @@
     package codesquad.team4.issuetracker.issue;
 
-    import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
+    import static codesquad.team4.issuetracker.util.Parser.camelToSnake;
 
-    import java.util.*;
+    import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
+    import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.HashSet;
+    import java.util.List;
+    import java.util.Map;
+    import java.util.Set;
     import java.util.stream.Collectors;
     import lombok.RequiredArgsConstructor;
+    import lombok.extern.slf4j.Slf4j;
     import org.springframework.jdbc.core.JdbcTemplate;
     import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
     import org.springframework.stereotype.Repository;
 
     @Repository
+    @Slf4j
     @RequiredArgsConstructor
     public class IssueDao {
 
         private final JdbcTemplate jdbcTemplate;
         private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+        private record SqlWithParams(String sql, Map<String, Object> params) {}
         public List<Map<String, Object>> findIssuesByOpenStatus(IssueRequestDto.IssueFilterParamDto dto, int page, int size){
 
-            StringBuilder sql = new StringBuilder("""
-                WITH paged_issues AS (
-                    SELECT issue_id
-                    FROM issue
-                    WHERE is_open = :isOpen
-            """);
+            SqlWithParams sqlWithParams = buildPagedQuery(dto, page, size);
+            log.info(sqlWithParams.sql());
+            return namedParameterJdbcTemplate.queryForList(sqlWithParams.sql, sqlWithParams.params());
+        }
 
+        private SqlWithParams buildPagedQuery(IssueFilterParamDto dto, int page, int size) {
+
+            StringBuilder sql = new StringBuilder("WITH paged_issues AS (\n");
             Map<String, Object> params = new HashMap<>();
-            params.put("isOpen", dto.getIsOpen());
 
-            if (dto.getAuthorId() != null) {
-                sql.append(" AND author_id = :authorId");
-                params.put("authorId", dto.getAuthorId());
-            }
-
-            if (dto.getAssigneeId() != null) {
-                sql.append("""
-                    AND EXISTS (
-                        SELECT 1 FROM issue_assignee ia
-                        WHERE ia.issue_id = issue.issue_id
-                        AND ia.assignee_id = :assigneeId
-                    )
-                """);
-                params.put("assigneeId", dto.getAssigneeId());
-            }
-
-            if (dto.getCommentAuthorId() != null) {
-                sql.append("""
-                    AND EXISTS (
-                        SELECT 1 FROM comment c
-                        WHERE c.issue_id = issue.issue_id
-                        AND c.author_id = :commentAuthorId
-                    )
-                """);
-                params.put("commentAuthorId", dto.getCommentAuthorId());
-            }
+            sql.append(buildIssueIdFilterSubquery(dto, params));
 
             sql.append("""
                 ORDER BY created_at DESC
@@ -87,7 +72,83 @@
             params.put("size", size);
             params.put("offset", page * size);
 
-            return namedParameterJdbcTemplate.queryForList(sql.toString(), params);
+            return new SqlWithParams(sql.toString(), params);
+        }
+
+        private String buildIssueIdFilterSubquery(IssueRequestDto.IssueFilterParamDto dto, Map<String, Object> params) {
+            StringBuilder sql = new StringBuilder("SELECT issue_id FROM issue WHERE is_open = :isOpen\n");
+            params.put("isOpen", dto.getStatus().getState());
+
+            // 작성자 필터
+            addAuthorCondition(dto.getAuthorId(), params, sql);
+            // 담당자 필터
+            addAssigneeCondition(dto.getAssigneeId(), params, sql);
+            // 댓글 작성자 필터
+            addCommentAuthorCondition(dto.getCommentAuthorId(), params, sql);
+            // 마일스톤 필터
+            addMilestoneCondition(dto.getMilestoneId(), params, sql);
+            // 라벨 필터
+            addLabelConditions(dto.getLabelIds(), params, sql);
+
+            return sql.toString();
+        }
+
+        private void addLabelConditions(List<Long> labelIds, Map<String, Object> params, StringBuilder sql) {
+            // 라벨 필터링 - IN + GROUP BY + HAVING
+            if (labelIds != null && !labelIds.isEmpty()) {
+                sql.append(" AND issue_id IN (\n");
+                sql.append("SELECT il.issue_id \nFROM issue_label il \nWHERE il.label_id IN (");
+
+                List<String> labelParamNames = new ArrayList<>();
+                for (int i = 0; i < labelIds.size(); i++) {
+                    String paramName = "label" + i;
+                    labelParamNames.add(":" + paramName);
+                    params.put(paramName, labelIds.get(i));
+                }
+
+                sql.append(String.join(", ", labelParamNames));
+                sql.append(") \nGROUP BY il.issue_id HAVING COUNT(DISTINCT il.label_id) = :labelCount)\n");
+                params.put("labelCount", labelIds.size());
+            }
+        }
+
+        private void addCommentAuthorCondition(Long commentAuthorId, Map<String, Object> params, StringBuilder sql) {
+            addExistsCondition("comment", "issue_id", "author_id", commentAuthorId, "commentAuthorId", params, sql);
+        }
+
+        private void addAssigneeCondition(Long assigneeId, Map<String, Object> params, StringBuilder sql) {
+            addExistsCondition("issue_assignee", "issue_id", "assignee_id", assigneeId, "assigneeId", params, sql);
+        }
+
+        private void addExistsCondition(String subTable, String joinColumn, String filterColumn, Long filterValue,
+                                        String paramName, Map<String, Object> params, StringBuilder sql) {
+            if (filterValue != null) {
+                sql.append(" AND EXISTS (\n")
+                    .append("     SELECT 1 FROM ").append(subTable).append(" sub\n")
+                    .append("     WHERE sub.").append(joinColumn).append(" = issue.issue_id\n")
+                    .append("       AND sub.").append(filterColumn).append(" = :").append(paramName).append("\n")
+                    .append(")\n");
+                params.put(paramName, filterValue);
+            }
+        }
+
+        private void addMilestoneCondition(Long milestoneId, Map<String, Object> params, StringBuilder sql) {
+            addWhereEqualClause(milestoneId, params, "milestoneId", sql);
+        }
+
+        private void addAuthorCondition(Long authorId, Map<String, Object> params, StringBuilder sql) {
+            addWhereEqualClause(authorId, params, "authorId", sql);
+        }
+
+        private void addWhereEqualClause(Long id, Map<String, Object> params, String paramName, StringBuilder sql) {
+            if (id != null) {
+                sql.append(" AND ")
+                    .append(camelToSnake(paramName))
+                    .append(" = :")
+                    .append(paramName)
+                    .append("\n");
+                params.put(paramName, id);
+            }
         }
 
         public Integer countIssuesByOpenStatus(boolean isOpen) {

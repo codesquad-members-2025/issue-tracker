@@ -75,7 +75,7 @@ public class IssueService {
             addIssueToMap(row, issueMap, issueId, assigneeMap, labelMap);
         }
 
-        int totalElements = issueDao.countIssuesByOpenStatus(params.getIsOpen());
+        int totalElements = issueDao.countIssuesByOpenStatus(params.getStatus().getState());
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
         return IssueResponseDto.IssueListDto.builder()
