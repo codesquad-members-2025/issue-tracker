@@ -1,4 +1,4 @@
-package com.team5.issue_tracker.issue.dto.response;
+package com.team5.issue_tracker.milestone.dto.response;
 
 import java.util.List;
 
@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IssuePageResponse {
+public class MilestonePageResponse {
   private Long total;
   private Long page;
   private Long perPage;
-  private String q;
-  private List<IssueSummaryResponse> issues;
+  private Long OpenCount;
+  private Long ClosedCount;
+  private List<MilestoneResponse> milestones;
 }

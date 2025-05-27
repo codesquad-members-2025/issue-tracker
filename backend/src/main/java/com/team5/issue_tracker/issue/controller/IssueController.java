@@ -14,9 +14,9 @@ import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.parser.IssueSearchRequestParser;
 import com.team5.issue_tracker.issue.query.IssueQueryService;
 import com.team5.issue_tracker.issue.service.IssueService;
-import com.team5.issue_tracker.label.dto.response.IssueLabelPageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueLabelPageResponse;
 import com.team5.issue_tracker.label.query.LabelQueryService;
-import com.team5.issue_tracker.milestone.dto.response.IssueMilestonePageResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueMilestonePageResponse;
 import com.team5.issue_tracker.milestone.query.MilestoneQueryService;
 import com.team5.issue_tracker.user.dto.UserPageResponse;
 
