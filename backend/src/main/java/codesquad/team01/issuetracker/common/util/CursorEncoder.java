@@ -27,7 +27,7 @@ public class CursorEncoder {
 			String json = objectMapper.writeValueAsString(cursor);
 			return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
 		} catch (JsonProcessingException e) {
-			throw new CursorException("커서 인토딩 실패: " + e.getMessage());
+			throw new CursorException("커서 인코딩 실패: " + e.getMessage());
 		}
 	}
 }
