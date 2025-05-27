@@ -73,7 +73,7 @@ public class GitHubClient {
 
 		String email = (String)userMap.get("email");
 		if (email == null) {
-			var emails = fetchUserEmail(accessToken);
+			List<AuthDto.GitHubEmail> emails = fetchUserEmail(accessToken);
 			email = emails.stream()
 				.filter(AuthDto.GitHubEmail::primary)
 				.filter(AuthDto.GitHubEmail::verified)
