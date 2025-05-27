@@ -71,12 +71,23 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
                 sp.params(),
                 (rs, rn) -> {
                     try {
-                        List<LabelProjection> lbls = objectMapper.readValue(rs.getString("labels_json"),
-                                new TypeReference<>() {
-                                });
-                        List<String> assg = objectMapper.readValue(rs.getString("assignee_imgs_json"),
-                                new TypeReference<>() {
-                                });
+                        List<LabelProjection> rawLabels = objectMapper.readValue(
+                                rs.getString("labels_json"),
+                                new TypeReference<>() {}
+                        );
+                        // 중복 제거
+                        List<LabelProjection> lbls = rawLabels.stream()
+                                .distinct()
+                                .toList();
+
+                        List<String> rawImgs = objectMapper.readValue(
+                                rs.getString("assignee_imgs_json"),
+                                new TypeReference<>() {}
+                        );
+                        // 중복 제거
+                        List<String> assg = rawImgs.stream()
+                                .distinct()
+                                .toList();
 
                         return new IssueProjection(
                                 rs.getLong("id"),
@@ -85,7 +96,9 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
                                 lbls,
                                 rs.getBoolean("is_closed"),
                                 rs.getTimestamp("created_at").toLocalDateTime(),
-                                rs.getTimestamp("updated_at").toLocalDateTime(),
+                                rs.getTimestamp("updated_at") != null
+                                        ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                        : null,
                                 assg,
                                 rs.getString("milestone_title")
                         );
