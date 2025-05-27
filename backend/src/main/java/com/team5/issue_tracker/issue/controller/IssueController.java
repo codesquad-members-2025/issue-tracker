@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.team5.issue_tracker.common.comment.dto.CommentRequest;
+import com.team5.issue_tracker.common.comment.service.CommentService;
 import com.team5.issue_tracker.common.dto.ApiResponse;
 import com.team5.issue_tracker.issue.dto.request.IssueSearchRequest;
 import com.team5.issue_tracker.issue.dto.request.IssueCreateRequest;
@@ -32,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/issues")
 public class IssueController {
   private final IssueService issueService;
+  private final CommentService commentService;
   private final IssueQueryService issueQueryService;
   private final LabelQueryService labelQueryService;
   private final MilestoneQueryService milestonePageResponse;
@@ -49,6 +52,14 @@ public class IssueController {
   public ResponseEntity<ApiResponse<IssueDetailResponse>> getIssueById(@PathVariable Long issueId) {
     IssueDetailResponse response = issueQueryService.getIssueById(issueId);
     return ResponseEntity.ok(ApiResponse.success(response));
+  }
+
+  @PostMapping("/{issueId}/comments")
+  public ResponseEntity<ApiResponse<Long>> addComment(
+      @PathVariable Long issueId,
+      @Valid @RequestBody CommentRequest request
+  ) {
+    return ResponseEntity.ok(ApiResponse.success(commentService.addComment(issueId, request)));
   }
 
   @PostMapping
