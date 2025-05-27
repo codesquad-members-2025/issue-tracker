@@ -37,7 +37,7 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 990;
 `;
 
 const ToggleContainer = styled.div`
@@ -56,7 +56,7 @@ const MenuTriggerButton = styled.button`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 900;
 
   &::after {
     content: '';
@@ -135,6 +135,11 @@ export default function AddStatusToggle({
     setOpen((prev) => !prev);
   }
 
+  const isEmpty = (value) => {
+    if (Array.isArray(value)) return value.length === 0;
+    if (value && typeof value === 'object') return Object.keys(value).length === 0;
+    return true; // null, undefined, '' 등도 “빈 값”으로 취급
+  };
   return (
     <ToggleContainer>
       <MenuTriggerButton $open={open} onClick={handleToggle}>
@@ -142,7 +147,7 @@ export default function AddStatusToggle({
       </MenuTriggerButton>
       <SubMenuContainer open={open}>
         <SubMenuWrapper>
-          {itemsArr.map((item) => {
+          {itemsArr?.map((item) => {
             const isSelected =
               toggleType === 'milestone'
                 ? selected?.id === item.id
@@ -161,7 +166,7 @@ export default function AddStatusToggle({
         </SubMenuWrapper>
       </SubMenuContainer>
       {open && <Overlay onClick={() => handleCloseOverlay(pageTypeContext)} />}
-      {!open && <GetSelectedElements type={toggleType} />}
+      {!open && !isEmpty(selected) && <GetSelectedElements type={toggleType} />}
     </ToggleContainer>
   );
 }

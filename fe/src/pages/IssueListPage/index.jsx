@@ -18,12 +18,12 @@ import useCheckBoxStore from '@/stores/useCheckBoxStore';
 import TotalCheckBox from '@/units/kanbanHeader/TotalCheckBox';
 import SelectDisplayer from '@/base-ui/issueListPage/IssueListHeader/SelectDisplayer';
 import StatusEditDropDown from '@/units/kanbanHeader/StatusEditDropDown';
-import deepEqualFast from '@/units/deepEqualFast/deepEqualFast';
+import deepEqualFast from '@/utils/common/deepEqualFast/deepEqualFast';
 import useLabelStore from '@/stores/labelStore';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
-import { useAuthStore } from '@/stores/authStore';
 import { mapToUnifiedId } from '@/utils/mapToUnifiedId/mapToUnifiedId';
 import { mapIssueListToUnifiedId } from '@/utils/mapToUnifiedId/mapIssueListToUnifiedId';
+import DefaultSwipeButton from '@/units/pagination/DefaultSwipeButton';
 
 const Container = styled.div`
   display: flex;
@@ -97,7 +97,7 @@ export default function IssueListPage() {
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const isSelected = getIsSelected(checkBoxEntry);
   const setLabels = useLabelStore((state) => state.setLabels);
-  const accessToken = useAuthStore((state) => state.accessToken);
+  const accessToken = localStorage.getItem('token');
   const GEToptions = {
     method: 'GET',
     headers: {
@@ -175,6 +175,7 @@ export default function IssueListPage() {
         </KanbanHeader>
         <KanbanMain />
       </Kanban>
+      <DefaultSwipeButton />
       {isActive && <DetailFilterModal />}
     </Container>
   );

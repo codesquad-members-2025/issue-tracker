@@ -6,10 +6,10 @@
       "id": 1,
       "title": "로그인 오류",
       "isOpen": true,
-      "author": { "id": 101, "nickname": "devchan" },
+      "author": { "id": 101, "nickName": "devchan" },
       "assignees": [
-        { "id": 102, "nickname": "alice" },
-        { "id": 103, "nickname": "bob" }
+        { "id": 102, "nickName": "alice" },
+        { "id": 103, "nickName": "bob" }
       ],
       "labels": [
         { "id": 1, "name": "bug", "color": "#ff0000" },
@@ -22,8 +22,8 @@
       "id": 3,
       "title": "서버 응답 지연 문제",
       "isOpen": false,
-      "author": { "id": 103, "nickname": "bob" },
-      "assignees": [{ "id": 101, "nickname": "devchan" }],
+      "author": { "id": 103, "nickName": "bob" },
+      "assignees": [{ "id": 101, "nickName": "devchan" }],
       "labels": [
         { "id": 1, "name": "bug", "color": "#ff0000" },
         { "id": 4, "name": "performance", "color": "#0000ff" }

@@ -18,5 +18,10 @@ export default ({ mode }) => {
       // 👇 VITE_API_BASE_URL을 import.meta.env에서 사용할 수 있게 삽입
       'import.meta.env.VITE_API_BASE_URL': JSON.stringify(env.VITE_API_BASE_URL),
     },
-  });
-};
+
+  },
+  test: {
+    environment: 'jsdom',
+  },
+});
+

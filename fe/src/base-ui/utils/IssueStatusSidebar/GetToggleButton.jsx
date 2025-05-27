@@ -6,6 +6,8 @@ import { typography } from '@/styles/foundation';
 const SubMenuButton = styled.button`
   ${typography.available.medium16};
   color: ${({ theme, $isSelect }) => ($isSelect ? theme.text.strong : theme.text.default)};
+  background-color: ${({ theme, $isSelect }) => ($isSelect ? theme.surface.bold : 'transparant')};
+  width: 100%;
   display: flex;
   align-items: center;
   height: 50px;
@@ -63,9 +65,9 @@ export function GetToggleButton({ toggleType, item, onClick, isSelected }) {
     default:
       return (
         <SubMenuButton id={item.id} $isSelect={isSelected} onClick={() => onClick(item)}>
-          <img src={item.imgUrl} alt={item.nickname} />
+          <img src={item.profileImageUrl} alt={item.nickName} />
 
-          <span>{item.name}</span>
+          <span>{item.nickName}</span>
         </SubMenuButton>
       );
   }

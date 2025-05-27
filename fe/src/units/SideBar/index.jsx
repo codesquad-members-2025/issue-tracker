@@ -30,7 +30,6 @@ export default function SideBar({ pageType = null }) {
     { type: 'label', label: '레이블', items: label },
     { type: 'milestone', label: '마일스톤', items: milestone },
   ];
-
   return (
     <Container>
       {toggleTypes.map(({ type, label, items }) => {
