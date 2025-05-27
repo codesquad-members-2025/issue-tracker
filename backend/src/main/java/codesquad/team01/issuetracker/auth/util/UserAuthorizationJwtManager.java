@@ -24,20 +24,20 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class UserAuthorizationJwtManager {
 
-	@Value("${jwt.secret-key}")
+	@Value("${JWT_SECRET_KEY}")
 	private String SECRET_KEY;
 	private final SecretKey key;
 
-	@Value("${jwt.access-token-lifetime}")
+	@Value("${JWT_ACCESS_TOKEN_LIFETIME}")
 	private final long accessTokenLifetime;
 
-	@Value("${jwt.refresh-token-lifetime}")
+	@Value("${JWT_REFRESH_TOKEN_LIFETIME}")
 	private final long refreshTokenLifetime;
 
 	public UserAuthorizationJwtManager(
-		@Value("${jwt.secret-key}") String secret,
-		@Value("${jwt.access-token-lifetime}") long accessTokenLifetime,
-		@Value("${jwt.refresh-token-lifetime}") long refreshTokenLifetime
+		@Value("${JWT_SECRET_KEY}") String secret,
+		@Value("${JWT_ACCESS_TOKEN_LIFETIME}") long accessTokenLifetime,
+		@Value("${JWT_REFRESH_TOKEN_LIFETIME}") long refreshTokenLifetime
 	) {
 		this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 		this.accessTokenLifetime = accessTokenLifetime;
