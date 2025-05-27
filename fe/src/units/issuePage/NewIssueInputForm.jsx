@@ -18,7 +18,7 @@ export default function NewIssueInputForm({ setCurrentInput }) {
   const comment = issue.content;
   const titleChangeHandler = useIssueDetailStore((s) => s.changeTitle);
   const commentChangeHandler = useIssueDetailStore((s) => s.addMainComment);
-  const setFiles = useIssueDetailStore((s) => s.setFiles);
+  const setFile = useIssueDetailStore((s) => s.setFileForMainComment);
 
   // const { titleChangeHandler, commentChangeHandler } = useIssueDetailStore(
   //   (s) => ({
@@ -45,8 +45,8 @@ export default function NewIssueInputForm({ setCurrentInput }) {
         commentType="new"
         commentValue={comment}
         changeHandler={(e) => commentChangeHandler(e.target.value)}
-        setFiles={setFiles}
-        files={issue.files}
+        setFile={setFile}
+        files={issue.issueFileUrl}
       />
     </InputWrapper>
   );

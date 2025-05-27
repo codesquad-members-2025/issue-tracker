@@ -9,7 +9,7 @@ const useIssueDetailStore = create(
       issueId: '',
       title: '',
       content: '',
-      issueFileUrl: [],
+      issueFileUrl: null,
       authorId: null,
       milestoneId: null,
       isOpen: '',
@@ -71,12 +71,14 @@ const useIssueDetailStore = create(
       });
     },
 
+    //이슈 등록 페이지의 코멘트 등록 액션
     addMainComment: (value) => {
       set((s) => {
         s.issue.content = value;
       });
     },
 
+    //상세 이슈페이지의 코멘트 관련 액션
     addOrEditComment: (value, commentId = null) => {
       set((state) => {
         if (commentId) {
@@ -99,13 +101,17 @@ const useIssueDetailStore = create(
       });
     },
 
-    //검토 필요
-    setFiles: (newFiles) =>
+    // 1. 메인 코멘트(이슈 본문) 파일첨부용
+    setFileForMainComment: (file) =>
       set((state) => {
-        const map = new Map();
-        state.comment.issueFileUrl.forEach((f) => map.set(f.name, f));
-        newFiles.forEach((f) => map.set(f.name, f));
-        state.comment.issueFileUrl = Array.from(map.values());
+        state.issue.issueFileUrl = file ? file : null;
+      }),
+
+    // 2. 상세 이슈페이지의 특정 코멘트 파일첨부용
+    //항상 comment 작업은 comments에서 comment로 추출해서 편집 후, 서버에 comment 를 보낸다.
+    setFileForComment: (file) =>
+      set((state) => {
+        state.comment.issueFileUrl = file ? file : null;
       }),
   })),
 );

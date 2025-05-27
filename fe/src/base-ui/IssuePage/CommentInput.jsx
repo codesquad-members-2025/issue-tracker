@@ -58,7 +58,7 @@ export default function CommentInput({
   commentType,
   commentValue,
   changeHandler,
-  setFiles,
+  setFile,
   files,
 }) {
   const isDebounce = useTypingStatus(commentValue);
@@ -75,7 +75,7 @@ export default function CommentInput({
       />
       {isDebounce && <TypingCount>{`띄어쓰기 포함 ${countNumber(commentValue)}자`}</TypingCount>}
       <Bottom>
-        <FileDropzone onFiles={setFiles} files={files} />
+        <FileDropzone onFiles={setFile} files={files} />
       </Bottom>
     </Container>
   );

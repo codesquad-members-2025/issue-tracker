@@ -31,10 +31,10 @@ export default function FileDropzone({ onFiles, files }) {
     isDragReject,
     fileRejections, // 거절된 파일 목록
   } = useDropzone({
-    onDrop: (accepted) => onFiles(accepted), // ✅ Zustand 액션 주입
+    onDrop: (accepted) => onFiles(accepted[0]), // ✅ Zustand 액션 주입
     accept: { 'image/*': [], 'application/pdf': [] },
     maxSize: 5 * 1024 * 1024, // 5 MB
-    multiple: true,
+    multiple: false,
   });
 
   return (
@@ -72,11 +72,9 @@ export default function FileDropzone({ onFiles, files }) {
         </Label>
       )}
 
-      {files?.length > 0 && (
+      {files && (
         <AcceptedFilesWrapper>
-          {files.map((f) => {
-            return <span key={f.name}>{f.name}</span>;
-          })}
+          <span>{files.name}</span>
         </AcceptedFilesWrapper>
       )}
     </Zone>
