@@ -81,3 +81,17 @@ CREATE TABLE issue_assignee (
                                 CONSTRAINT fk_issue_assignee_user FOREIGN KEY (assignee_id) REFERENCES user(user_id)
 );
 
+-- 1) summary_count 테이블 생성
+CREATE TABLE summary_count (
+                               id TINYINT PRIMARY KEY DEFAULT 1,
+                               issue_open_count     INT NOT NULL DEFAULT 0,
+                               issue_closed_count   INT NOT NULL DEFAULT 0,
+                               milestone_open_count INT NOT NULL DEFAULT 0,
+                               milestone_closed_count INT NOT NULL DEFAULT 0,
+                               labels_count         INT NOT NULL DEFAULT 0,
+                               milestones_count     INT NOT NULL DEFAULT 0
+);
+
+-- 2) 초기 row 삽입 (id=1 고정)
+INSERT INTO summary_count (id) VALUES (1)
+ON DUPLICATE KEY UPDATE id = 1;
