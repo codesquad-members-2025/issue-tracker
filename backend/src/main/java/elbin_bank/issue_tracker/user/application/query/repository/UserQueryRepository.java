@@ -1,4 +1,4 @@
-package elbin_bank.issue_tracker.user.application.query;
+package elbin_bank.issue_tracker.user.application.query.repository;
 
 import elbin_bank.issue_tracker.user.infrastructure.query.projection.UserProjection;
 
@@ -10,5 +10,7 @@ public interface UserQueryRepository {
     Map<Long, String> findNickNamesByIds(List<Long> ids);
 
     Map<Long, UserProjection> findUsersByIds(List<Long> ids);
+
+    List<UserProjection> findAll();
 
 }
