@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
@@ -43,7 +44,7 @@ public class IssueService {
 			return IssueDto.ListResponse.builder()
 				.issues(List.of())
 				.totalCount(0)
-				.cursor(IssueDto.CursorResponse.builder()
+				.cursor(CursorDto.CursorResponse.builder()
 					.next(null)
 					.hasNext(false)
 					.build())
@@ -74,7 +75,7 @@ public class IssueService {
 		String next = null;
 		if (hasNext && !pagedIssues.isEmpty()) { // 다음 페이지 있으면
 			IssueDto.BaseRow lastIssue = pagedIssues.getLast();
-			IssueDto.CursorData nextCursor = IssueDto.CursorData.builder()
+			CursorDto.CursorData nextCursor = CursorDto.CursorData.builder()
 				.id(lastIssue.issueId())
 				.createdAt(lastIssue.issueCreatedAt())
 				.build();
@@ -87,7 +88,7 @@ public class IssueService {
 		return IssueDto.ListResponse.builder()
 			.issues(issueResponses)
 			.totalCount(issueResponses.size())
-			.cursor(IssueDto.CursorResponse.builder()
+			.cursor(CursorDto.CursorResponse.builder()
 				.next(next)
 				.hasNext(hasNext)
 				.build())

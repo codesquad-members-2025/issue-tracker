@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
@@ -71,7 +72,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 	@Override
 	public List<IssueDto.BaseRow> findIssuesWithFilters(
 		IssueState state, Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds, IssueDto.CursorData cursor) {
+		List<Integer> labelIds, List<Integer> assigneeIds, CursorDto.CursorData cursor) {
 
 		StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
 		MapSqlParameterSource params = new MapSqlParameterSource();
