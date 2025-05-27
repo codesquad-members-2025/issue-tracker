@@ -1,7 +1,6 @@
 package codesquad.team4.issuetracker.issue;
 
 import codesquad.team4.issuetracker.aws.S3FileService;
-import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
@@ -46,12 +45,6 @@ public class IssueController {
         IssueResponseDto.IssueListDto issues = issueService.getIssues(filter, pageable.getPageNumber(), pageable.getPageSize());
 
         return ApiResponse.success(issues);
-    }
-
-    @GetMapping("/count")
-    public ApiResponse<IssueCountDto> showIssueCount() {
-        IssueCountDto result = issueService.getIssueCounts();
-        return ApiResponse.success(result);
     }
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -1,4 +1,4 @@
-package codesquad.team4.issuetracker.issue.dto;
+package codesquad.team4.issuetracker.count.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
