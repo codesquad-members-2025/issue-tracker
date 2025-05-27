@@ -35,7 +35,7 @@ public class GitHubClient {
 
 	// token 요청
 	public String fetchAccessToken(String code) {
-		log.info("Requesting access token from GitHub for code={}", code);
+		log.info("해당 인증 코드 ({}) 로 GitHub 에 access token 요청", code);
 		Map<String, String> tokenRequest = Map.of(
 			CLIENT_ID, properties.getClientId(),
 			CLIENT_SECRET, properties.getClientSecret(),
@@ -51,13 +51,13 @@ public class GitHubClient {
 			properties.getTokenUri(), request, Map.class
 		);
 		String token = (String)tokenResponse.getBody().get(ACCESS_TOKEN);
-		log.info("GitHub access token fetched");
+		log.info("GitHub access token 가져오기 완료");
 		return token;
 	}
 
 	// 사용자 정보 요청
 	public AuthDto.GitHubUser fetchUserInfo(String accessToken) {
-		log.info("Fetching GitHub user info with accessToken");
+		log.info("access token 을 사용한 GitHub 사용자 정보 요청");
 		HttpHeaders authHeaders = new HttpHeaders();
 		authHeaders.setBearerAuth((accessToken));
 		HttpEntity<Void> userRequest = new HttpEntity<>(authHeaders);
@@ -67,7 +67,6 @@ public class GitHubClient {
 		);
 
 		Map<String, Object> userMap = userResponse.getBody();
-		log.debug("GitHub user info response: {}", userMap);
 		Long id = ((Number)userMap.get(ID)).longValue();
 		String githubId = (String)userMap.get(LOGIN);
 		String avatarUrl = (String)userMap.get(AVATAR_URL);
@@ -83,7 +82,7 @@ public class GitHubClient {
 				.orElse(null);
 		}
 
-		log.info("GitHubUser parsed: id={}, login={}", id, githubId);
+		log.info("GitHub 사용자 정보 : id={}, login={}, avatarUrl={}, email={}", id, githubId, avatarUrl, email);
 		return new AuthDto.GitHubUser(id, githubId, avatarUrl, email);
 	}
 
