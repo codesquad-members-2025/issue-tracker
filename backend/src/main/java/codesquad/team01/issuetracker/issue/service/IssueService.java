@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.common.util.CursorEncoder;
+import codesquad.team01.issuetracker.issue.constants.IssueConstants;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
@@ -29,17 +30,15 @@ public class IssueService {
 
 	public IssueDto.ListResponse findIssues(IssueDto.ListQueryRequest request, CursorDto.CursorData cursor) {
 
-		final int PAGE_SIZE = issueRepository.PAGE_SIZE;
-
 		// 이슈 기본 정보 조회 - (담당자, 레이블 제외)
 		List<IssueDto.BaseRow> issues = issueRepository.findIssuesWithFilters(
 			request.getIssueState(), request.writerId(), request.milestoneId(),
 			request.labelIds(), request.assigneeIds(), cursor);
 
-		boolean hasNext = issues.size() > PAGE_SIZE; // 다음 페이지 존재 여부
+		boolean hasNext = issues.size() > IssueConstants.PAGE_SIZE; // 다음 페이지 존재 여부
 
 		List<IssueDto.BaseRow> pagedIssues =
-			hasNext ? issues.subList(0, PAGE_SIZE) : issues; // 다음 페이지가 있다면 PAGE_SIZE만큼만
+			hasNext ? issues.subList(0, IssueConstants.PAGE_SIZE) : issues; // 다음 페이지가 있다면 PAGE_SIZE만큼만
 
 		if (pagedIssues.isEmpty()) {
 			log.debug("조건에 맞는 이슈가 없습니다.");

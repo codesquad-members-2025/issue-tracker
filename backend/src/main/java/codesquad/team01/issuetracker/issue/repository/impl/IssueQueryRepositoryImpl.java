@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
+import codesquad.team01.issuetracker.issue.constants.IssueConstants;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
@@ -97,7 +98,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		sql.append(" ORDER BY i.created_at DESC, i.id DESC");
 
 		sql.append(" LIMIT :pageSize");
-		params.addValue("pageSize", PAGE_SIZE + 1); // 다음 페이지 존재 여부 확인을 위해 +1
+		params.addValue("pageSize", IssueConstants.PAGE_SIZE + 1); // 다음 페이지 존재 여부 확인을 위해 +1
 
 		return jdbcTemplate.query(sql.toString(), params, issueRowMapper);
 	}
