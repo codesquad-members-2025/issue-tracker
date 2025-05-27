@@ -1,4 +1,4 @@
-package elbin_bank.issue_tracker.user.presentation;
+package elbin_bank.issue_tracker.user.presentation.query;
 
 import elbin_bank.issue_tracker.user.application.query.UserQueryService;
 import elbin_bank.issue_tracker.user.application.query.dto.UserInfoResponseDto;
