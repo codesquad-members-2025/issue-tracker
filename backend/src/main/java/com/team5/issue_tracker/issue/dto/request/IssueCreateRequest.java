@@ -21,7 +21,7 @@ public class IssueCreateRequest {
   private String title;
 
   @NotNull(message = "댓글 내용을 넣어주세요.")
-  private CommentRequest coment;
+  private CommentRequest comment;
 
   @NotNull(message = "담당자를 넣어주세요.")
   private List<Long> assigneeIds;
