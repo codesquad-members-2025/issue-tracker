@@ -31,6 +31,15 @@ public class LabelDto {
 		String color,
 		String textColor
 	) {
+		public static ListItemResponse from(LabelRow row) {
+			return new ListItemResponse(
+				row.id(),
+				row.name(),
+				row.description(),
+				row.color(),
+				row.textColor()
+			);
+		}
 	}
 
 	public record ListResponse(
@@ -76,6 +85,15 @@ public class LabelDto {
 		String textColor,
 		LocalDateTime createdAt,
 		LocalDateTime updatedAt
+	) {
+	}
+
+	public record LabelRow(
+		int id,
+		String name,
+		String description,
+		String color,
+		String textColor
 	) {
 	}
 }
