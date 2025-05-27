@@ -1,0 +1,115 @@
+/** @jsxImportSource @emotion/react */
+import { useEffect, useRef, useState } from 'react';
+import styled from '@emotion/styled';
+import CommentMetaBar from './CommentMetaBar';
+
+interface CommentInputSectionProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export default function CommentInputSection({
+  value,
+  onChange,
+}: CommentInputSectionProps) {
+  const [isFocused, setIsFocused] = useState(false);
+  const [showCharCount, setShowCharCount] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = () => {
+    // TODO file upload 로직
+  };
+
+  const handleCharCountVisibility = (value: string) => {
+    if (!value) {
+      setShowCharCount(false);
+      return;
+    }
+
+    setShowCharCount(true);
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setShowCharCount(false);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    handleCharCountVisibility(value);
+  }, [value]);
+
+  return (
+    <EditorContainer isFocused={isFocused}>
+      <LabelAbove isFloating={isFocused || !!value}>
+        코멘트를 입력하세요
+      </LabelAbove>
+      <ContentTextarea
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+      />
+
+      <CommentMetaBar
+        showCharCount={showCharCount}
+        charCount={value.length}
+        onUploadClick={() => fileInputRef.current?.click()}
+        onFileChange={handleFileUpload}
+        fileInputRef={fileInputRef}
+      />
+    </EditorContainer>
+  );
+}
+
+const EditorContainer = styled.section<{ isFocused: boolean }>`
+  position: relative;
+  height: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: ${({ theme }) => theme.radius.medium};
+  overflow: hidden;
+
+  background-color: ${({ isFocused, theme }) =>
+    isFocused ? theme.neutral.surface.default : theme.neutral.surface.bold};
+
+  box-shadow: ${({ isFocused, theme }) =>
+    isFocused ? `0 0 0 1px ${theme.neutral.border.active}` : 'none'};
+`;
+
+//TODO 공통 컴포넌트 추출
+const LabelAbove = styled.label<{ isFloating: boolean }>`
+  position: absolute;
+  left: 16px;
+  top: ${({ isFloating }) => (isFloating ? '8px' : '19px')};
+  ${({ theme, isFloating }) =>
+    isFloating
+      ? theme.typography.displayMedium12
+      : theme.typography.displayMedium16};
+  transform: none;
+  color: ${({ theme }) => theme.neutral.text.weak};
+  pointer-events: none;
+  transition: all 0.2s ease;
+`;
+
+const ContentTextarea = styled.textarea`
+  width: 100%;
+  height: 300px;
+  padding: 28px 16px 16px;
+  border: none;
+  background-color: transparent;
+  color: ${({ theme }) => theme.neutral.text.strong};
+  resize: none;
+
+  ${({ theme }) => theme.typography.displayMedium16};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.neutral.text.weak};
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
