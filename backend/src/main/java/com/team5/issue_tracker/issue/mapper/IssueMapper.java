@@ -50,7 +50,6 @@ public class IssueMapper {
     return new IssueDetailResponse(
         issue.getId(),
         issue.getTitle(),
-        issue.getBody(),
         issue.getIsOpen(),
         labels,
         author,

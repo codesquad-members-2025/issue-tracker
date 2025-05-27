@@ -64,42 +64,21 @@ VALUES (4, 'documentation', 'Improvements or additions to documentation.', '#fff
 INSERT INTO label (id, name, description, text_color, background_color, created_at, updated_at)
 VALUES (5, 'good first issue', 'Good for newcomers.', '#000000', '#7057ff', '2024-04-26 00:00:00',
         '2024-04-26 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (1, '자동 로그아웃 현상', 'Pariatur id recusandae a tempora. Cum dolorem ea enim.', 1, 2, TRUE,
-        '2024-04-30 00:00:00', '2024-04-30 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (2, '다크모드 적용 오류', 'Magni libero ratione modi.', 9, 4, FALSE, '2024-04-29 00:00:00',
-        '2024-04-29 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (3, '파일 업로드 실패',
-        'Debitis quasi dignissimos cum illo. Provident minima ratione occaecati nam.', 8, 2, FALSE,
-        '2024-04-28 00:00:00', '2024-04-28 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (4, '접근 권한 설정 문제', 'Possimus in molestias molestiae culpa atque maiores.', 3, 5, FALSE,
-        '2024-04-27 00:00:00', '2024-04-27 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (5, '모바일 화면 깨짐',
-        'Modi beatae assumenda quam sed. Tenetur deserunt amet aspernatur nobis nemo quam.', 8, 2,
-        FALSE, '2024-04-26 00:00:00', '2024-04-26 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (6, '계정 삭제 요청 기능 추가',
-        'Adipisci illo totam voluptatibus. Fugit aspernatur ipsum error quaerat deleniti.', 2, 4,
-        TRUE, '2024-04-25 00:00:00', '2024-04-25 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (7, '라벨이 저장되지 않아요',
-        'Mollitia labore sunt ad necessitatibus possimus aspernatur corrupti. Nam blanditiis maxime enim consequuntur laudantium cupiditate.',
-        5, 5, TRUE, '2024-04-24 00:00:00', '2024-04-24 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (8, '알림 기능이 작동하지 않아요',
-        'Debitis totam ad delectus eaque. Animi incidunt unde hic id facilis adipisci.', 3, 5,
-        TRUE, '2024-04-23 00:00:00', '2024-04-23 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (9, '댓글 작성이 안돼요', 'Inventore ut atque. Doloribus facilis repellendus illum earum sunt.', 7,
-        NULL, FALSE, '2024-04-22 00:00:00', '2024-04-22 00:00:00');
-INSERT INTO issue (id, title, body, user_id, milestone_id, is_open, created_at, updated_at)
-VALUES (10, '이메일 인증이 오지 않아요', 'Provident sint repudiandae at corrupti.', 4, 2, FALSE,
-        '2024-04-21 00:00:00', '2024-04-21 00:00:00');
 
+INSERT INTO issue (id, title, user_id, milestone_id, is_open, created_at, updated_at)
+VALUES (1, '자동 로그아웃 현상', 1, 2, TRUE, '2024-04-30 00:00:00', '2024-04-30 00:00:00'),
+       (2, '다크모드 적용 오류', 9, 4, FALSE, '2024-04-29 00:00:00', '2024-04-29 00:00:00'),
+       (3, '파일 업로드 실패', 8, 2, FALSE, '2024-04-28 00:00:00', '2024-04-28 00:00:00'),
+       (4, '접근 권한 설정 문제', 3, 5, FALSE, '2024-04-27 00:00:00', '2024-04-27 00:00:00'),
+       (5, '모바일 화면 깨짐', 8, 2, FALSE, '2024-04-26 00:00:00', '2024-04-26 00:00:00'),
+       (6, '계정 삭제 요청 기능 추가', 2, 4, TRUE, '2024-04-25 00:00:00', '2024-04-25 00:00:00'),
+       (7, '라벨이 저장되지 않아요', 5, 5, TRUE, '2024-04-24 00:00:00', '2024-04-24 00:00:00'),
+       (8, '알림 기능이 작동하지 않아요', 3, 5, TRUE, '2024-04-23 00:00:00', '2024-04-23 00:00:00'),
+       (9, '댓글 작성이 안돼요', 7, NULL, FALSE, '2024-04-22 00:00:00', '2024-04-22 00:00:00'),
+       (10, '이메일 인증이 오지 않아요', 4, 2, FALSE, '2024-04-21 00:00:00', '2024-04-21 00:00:00');
+
+
+-- 📌 사용자 코멘트 1~10
 INSERT INTO comment (id, user_id, issue_id, content, created_at, updated_at)
 VALUES (1, 1, 1, 'Great issue, well described.', '2025-06-01 00:00:00', '2025-06-01 00:00:00'),
        (2, 2, 2, 'I am facing the same problem.', '2025-06-02 00:00:00', '2025-06-02 00:00:00'),
@@ -112,22 +91,49 @@ VALUES (1, 1, 1, 'Great issue, well described.', '2025-06-01 00:00:00', '2025-06
         '2025-06-08 00:00:00'),
        (9, 9, 9, 'Assigned to me, will check soon.', '2025-06-09 00:00:00', '2025-06-09 00:00:00'),
        (10, 10, 10, 'Looks like a duplicate of #2.', '2025-06-10 00:00:00', '2025-06-10 00:00:00'),
-       (11, 1, 2, 'Temporary workaround: restart the app.', '2025-06-11 00:00:00',
+
+-- 📌 이슈 본문 댓글 11~20 (issue.body에서 옮긴 것)
+       (11, 1, 1, 'Pariatur id recusandae a tempora. Cum dolorem ea enim.', '2024-04-30 00:00:00',
+        '2024-04-30 00:00:00'),
+       (12, 9, 2, 'Magni libero ratione modi.', '2024-04-29 00:00:00', '2024-04-29 00:00:00'),
+       (13, 8, 3, 'Debitis quasi dignissimos cum illo. Provident minima ratione occaecati nam.',
+        '2024-04-28 00:00:00', '2024-04-28 00:00:00'),
+       (14, 3, 4, 'Possimus in molestias molestiae culpa atque maiores.', '2024-04-27 00:00:00',
+        '2024-04-27 00:00:00'),
+       (15, 8, 5,
+        'Modi beatae assumenda quam sed. Tenetur deserunt amet aspernatur nobis nemo quam.',
+        '2024-04-26 00:00:00', '2024-04-26 00:00:00'),
+       (16, 2, 6,
+        'Adipisci illo totam voluptatibus. Fugit aspernatur ipsum error quaerat deleniti.',
+        '2024-04-25 00:00:00', '2024-04-25 00:00:00'),
+       (17, 5, 7,
+        'Mollitia labore sunt ad necessitatibus possimus aspernatur corrupti. Nam blanditiis maxime enim consequuntur laudantium cupiditate.',
+        '2024-04-24 00:00:00', '2024-04-24 00:00:00'),
+       (18, 3, 8, 'Debitis totam ad delectus eaque. Animi incidunt unde hic id facilis adipisci.',
+        '2024-04-23 00:00:00', '2024-04-23 00:00:00'),
+       (19, 7, 9, 'Inventore ut atque. Doloribus facilis repellendus illum earum sunt.',
+        '2024-04-22 00:00:00', '2024-04-22 00:00:00'),
+       (20, 4, 10, 'Provident sint repudiandae at corrupti.', '2024-04-21 00:00:00',
+        '2024-04-21 00:00:00'),
+
+-- 📌 사용자 후속 댓글 21~30
+       (21, 1, 2, 'Temporary workaround: restart the app.', '2025-06-11 00:00:00',
         '2025-06-11 00:00:00'),
-       (12, 2, 3, 'Could be related to recent update.', '2025-06-12 00:00:00',
+       (22, 2, 3, 'Could be related to recent update.', '2025-06-12 00:00:00',
         '2025-06-12 00:00:00'),
-       (13, 3, 4, 'Any error logs available?', '2025-06-13 00:00:00', '2025-06-13 00:00:00'),
-       (14, 4, 5, 'Marked as bug, thanks!', '2025-06-14 00:00:00', '2025-06-14 00:00:00'),
-       (15, 5, 6, 'I pushed a hotfix.', '2025-06-15 00:00:00', '2025-06-15 00:00:00'),
-       (16, 6, 7, 'Let’s discuss this in the next meeting.', '2025-06-16 00:00:00',
+       (23, 3, 4, 'Any error logs available?', '2025-06-13 00:00:00', '2025-06-13 00:00:00'),
+       (24, 4, 5, 'Marked as bug, thanks!', '2025-06-14 00:00:00', '2025-06-14 00:00:00'),
+       (25, 5, 6, 'I pushed a hotfix.', '2025-06-15 00:00:00', '2025-06-15 00:00:00'),
+       (26, 6, 7, 'Let’s discuss this in the next meeting.', '2025-06-16 00:00:00',
         '2025-06-16 00:00:00'),
-       (17, 7, 8, 'Issue confirmed, thanks for the report.', '2025-06-17 00:00:00',
+       (27, 7, 8, 'Issue confirmed, thanks for the report.', '2025-06-17 00:00:00',
         '2025-06-17 00:00:00'),
-       (18, 8, 9, 'This might be OS-specific.', '2025-06-18 00:00:00', '2025-06-18 00:00:00'),
-       (19, 9, 10, 'Please try it on another browser.', '2025-06-19 00:00:00',
+       (28, 8, 9, 'This might be OS-specific.', '2025-06-18 00:00:00', '2025-06-18 00:00:00'),
+       (29, 9, 10, 'Please try it on another browser.', '2025-06-19 00:00:00',
         '2025-06-19 00:00:00'),
-       (20, 10, 1, 'Closing this since it’s resolved.', '2025-06-20 00:00:00',
+       (30, 10, 1, 'Closing this since it’s resolved.', '2025-06-20 00:00:00',
         '2025-06-20 00:00:00');
+
 
 INSERT INTO issue_label (id, issue_id, label_id)
 VALUES (1, 1, 2);
@@ -250,3 +256,19 @@ INSERT INTO issue_assignee (id, issue_id, assignee_id)
 VALUES (29, 9, 3);
 INSERT INTO issue_assignee (id, issue_id, assignee_id)
 VALUES (30, 10, 4);
+
+INSERT INTO comment_attachment (id, comment_id, file_url)
+VALUES
+    (1, 1, 'https://images.unsplash.com/photo-1601758003122-58e5f6b16c89?fit=crop&w=400&q=80'), -- 고양이
+    (2, 2, 'https://images.unsplash.com/photo-1619983081563-430f63602781?fit=crop&w=400&q=80'), -- 강아지
+    (3, 5, 'https://images.unsplash.com/photo-1560807707-8cc77767d783?fit=crop&w=400&q=80' ), -- 햄스터
+    (4, 7, 'https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?fit=crop&w=400&q=80'), -- 토끼
+    (5, 8, 'https://images.unsplash.com/photo-1618828664039-f1999131840c?fit=crop&w=400&q=80' ), -- 새끼 고양이
+    (6, 11, 'https://images.unsplash.com/photo-1507149833265-60c372daea22?fit=crop&w=400&q=80' ), -- 판다
+    (7, 13, 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?fit=crop&w=400&q=80'), -- 수달
+    (8, 14, 'https://images.unsplash.com/photo-1501706362039-c6e8095b3d9a?fit=crop&w=400&q=80'), -- 앵무새
+    (9, 18, 'https://images.unsplash.com/photo-1621391404769-21c14b3b4801?fit=crop&w=400&q=80'), -- 병아리
+    (10, 21, 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?fit=crop&w=400&q=80'), -- 아기여우
+    (11, 23, 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?fit=crop&w=400&q=80'), -- 고슴도치
+    (12, 27, 'https://images.unsplash.com/photo-1508780709619-79562169bc64?fit=crop&w=400&q=80'), -- 아기 사슴
+    (13, 30, 'https://images.unsplash.com/photo-1595433707802-44d4b4d6fb32?fit=crop&w=400&q=80'); -- 새끼 고양이

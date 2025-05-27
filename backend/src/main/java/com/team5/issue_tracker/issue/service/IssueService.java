@@ -1,10 +1,16 @@
 package com.team5.issue_tracker.issue.service;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.team5.issue_tracker.common.comment.domain.Comment;
+import com.team5.issue_tracker.common.comment.domain.CommentAttachment;
+import com.team5.issue_tracker.common.comment.dto.CommentRequest;
+import com.team5.issue_tracker.common.comment.reqository.CommentAttachmentRepository;
+import com.team5.issue_tracker.common.comment.reqository.CommentRepository;
 import com.team5.issue_tracker.issue.domain.Issue;
 import com.team5.issue_tracker.issue.domain.IssueAssignee;
 import com.team5.issue_tracker.issue.domain.IssueLabel;
@@ -22,6 +28,8 @@ public class IssueService {
   private final IssueRepository issueRepository;
   private final IssueLabelRepository issueLabelRepository;
   private final IssueAssigneeRepository issueAssigneeRepository;
+  private final CommentRepository commentRepository;
+  private final CommentAttachmentRepository commentAttachmentRepository;
   private final UserService userService;
 
   @Transactional
@@ -31,13 +39,19 @@ public class IssueService {
       throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
     } //TODO: 커스텀 에러 만들지 고민중
 
-    Issue issue =
-        new Issue(request.getTitle(), request.getBody(), userId, request.getMilestoneId(), true);
+    Instant now = Instant.now();
+    Issue issue = new Issue(request.getTitle(), userId, request.getMilestoneId(), true, now, now);
     Issue savedIssue = issueRepository.save(issue);
-
     Long savedIssueID = savedIssue.getId();
+
     saveIssueLabels(savedIssueID, request.getLabelIds());
     saveIssueAssignees(savedIssueID, request.getAssigneeIds());
+
+    CommentRequest commentRequest = request.getComment();
+    Comment comment = new Comment(userId, savedIssueID, commentRequest.getContent(), now, now);
+    Comment savedComment = commentRepository.save(comment);
+
+    saveCommentAttachment(commentRequest, savedComment);
 
     return savedIssueID;
   }
@@ -51,6 +65,19 @@ public class IssueService {
   private void saveIssueAssignees(Long issueId, List<Long> assigneeIds) {
     for (Long assigneeId : assigneeIds) {
       issueAssigneeRepository.save(new IssueAssignee(issueId, assigneeId));
+    }
+  }
+
+  private void saveCommentAttachment(CommentRequest commentRequest, Comment savedComment) {
+    List<String> attachments = commentRequest.getAttachments();
+    if (attachments != null && !attachments.isEmpty()) {
+      for (String fileUrl : attachments) {
+        CommentAttachment attachment = new CommentAttachment(
+            savedComment.getId(),
+            fileUrl
+        );
+        commentAttachmentRepository.save(attachment);
+      }
     }
   }
 }

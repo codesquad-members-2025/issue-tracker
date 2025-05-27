@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentResponse {
   private Long id;
-  private String body;
+  private String content;
   private UserSummaryResponse author;
   private Instant createdAt;
   private Instant updatedAt;

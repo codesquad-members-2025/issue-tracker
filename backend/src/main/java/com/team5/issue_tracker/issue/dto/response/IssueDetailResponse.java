@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 public class IssueDetailResponse {
   private Long id;
   private String title;
-  private String body;
   private Boolean isOpen;
   private List<LabelResponse> labels;
   private UserSummaryResponse author;
