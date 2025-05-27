@@ -54,6 +54,9 @@ public class UserDto {
 		String username,
 		String profileImageUrl
 	) {
+		public String profileImageUrl() {
+			return profileImageUrl != null ? profileImageUrl : DEFAULT_PROFILE_IMAGE_URL;
+		}
 	}
 
 	/**
