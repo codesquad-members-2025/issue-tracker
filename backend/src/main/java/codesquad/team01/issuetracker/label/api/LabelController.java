@@ -19,7 +19,7 @@ public class LabelController {
 
 	private final LabelService labelService;
 
-	@GetMapping("/v1/labels/list")
+	@GetMapping("/v1/labels")
 	public ResponseEntity<ApiResponse<LabelDto.ListResponse>> getLabels() {
 		LabelDto.ListResponse listResponse = labelService.getLabels();
 		return ResponseEntity.ok(ApiResponse.success(listResponse));
