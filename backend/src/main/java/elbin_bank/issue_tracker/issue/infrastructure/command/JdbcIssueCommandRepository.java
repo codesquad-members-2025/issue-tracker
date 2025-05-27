@@ -1,6 +1,6 @@
 package elbin_bank.issue_tracker.issue.infrastructure.command;
 
-import elbin_bank.issue_tracker.issue.application.command.dto.IssueCreateCommand;
+import elbin_bank.issue_tracker.issue.domain.Issue;
 import elbin_bank.issue_tracker.issue.domain.IssueCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,43 +16,64 @@ public class JdbcIssueCommandRepository implements IssueCommandRepository {
     private final NamedParameterJdbcTemplate jdbc;
 
     @Override
-    public Long create(IssueCreateCommand cmd) {
-        String sqlIssue = """
-            INSERT INTO issue (author_id, milestone_id, title, contents, is_closed)
-             VALUES (:authorId, :milestone, :title, :content, FALSE)
-        """;
+    public Issue save(Issue issue) {
+        if (issue.getId() == null) {
+            return insert(issue);
+        } else {
+            update(issue);
+            return issue;
+        }
+    }
+
+    private Issue insert(Issue issue) {
+        String sql = """
+                    INSERT INTO issue
+                      (author_id, title, contents, milestone_id, is_closed)
+                    VALUES
+                      (:authorId, :title, :contents, :milestoneId, :isClosed)
+                """;
+
+        var params = new MapSqlParameterSource()
+                .addValue("authorId", issue.getAuthorId())
+                .addValue("title", issue.getTitle())
+                .addValue("contents", issue.getContents())
+                .addValue("milestoneId", issue.getMilestoneId())
+                .addValue("isClosed", issue.isClosed());
+
         KeyHolder kh = new GeneratedKeyHolder();
-        jdbc.update(sqlIssue,
-                new MapSqlParameterSource()
-                        .addValue("authorId", cmd.authorId())
-                        .addValue("milestone", cmd.milestone())
-                        .addValue("title", cmd.title())
-                        .addValue("content", cmd.content()),
-                kh,
-                new String[]{"id"});
-        Long issueId = kh.getKey().longValue();
+        jdbc.update(sql, params, kh, new String[]{"id"});
+        long newId = kh.getKey().longValue();
 
-        if (cmd.assignees() != null && !cmd.assignees().isEmpty()) {
-            String sqlAss = "INSERT INTO assignee (user_id, issue_id) VALUES (:uid, :iid)";
-            for (Long uid : cmd.assignees()) {
-                jdbc.update(sqlAss,
-                        new MapSqlParameterSource()
-                                .addValue("uid", uid)
-                                .addValue("iid", issueId));
-            }
-        }
+        return new Issue(
+                newId,
+                issue.getAuthorId(),
+                issue.getTitle(),
+                issue.getContents(),
+                issue.getMilestoneId(),
+                issue.isClosed()
+        );
+    }
 
-        if (cmd.labels() != null && !cmd.labels().isEmpty()) {
-            String sqlLbl = "INSERT INTO issue_label (issue_id, label_id) VALUES (:iid, :lid)";
-            for (Long lid : cmd.labels()) {
-                jdbc.update(sqlLbl,
-                        new MapSqlParameterSource()
-                                .addValue("iid", issueId)
-                                .addValue("lid", lid));
-            }
-        }
+    private void update(Issue issue) {
+        String sql = """
+                    UPDATE issue
+                       SET author_id    = :authorId,
+                           title        = :title,
+                           contents     = :contents,
+                           milestone_id = :milestoneId,
+                           is_closed    = :isClosed
+                     WHERE id           = :id
+                """;
 
-        return issueId;
+        var params = new MapSqlParameterSource()
+                .addValue("authorId", issue.getAuthorId())
+                .addValue("title", issue.getTitle())
+                .addValue("contents", issue.getContents())
+                .addValue("milestoneId", issue.getMilestoneId())
+                .addValue("isClosed", issue.isClosed())
+                .addValue("id", issue.getId());
+
+        jdbc.update(sql, params);
     }
 
 }
