@@ -8,6 +8,15 @@ import NewIssueFormSection from '@/features/newIssue/components/NewIssueFormSect
 export default function NewIssuePage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+
+  function isTitleEmpty(title: string) {
+    return title.trim() === '';
+  }
+
+  function handleCreateIssue() {
+    //TODO 이슈 생성 로직 추가
+  }
+
   return (
     <VerticalStack>
       <NewIssueHeader />
@@ -19,7 +28,10 @@ export default function NewIssuePage() {
         onContentChange={setContent}
       />
       <Divider />
-      <NewIssueActionButtons />
+      <NewIssueActionButtons
+        isSubmitDisabled={isTitleEmpty(title)}
+        onSubmit={handleCreateIssue}
+      />
     </VerticalStack>
   );
 }
