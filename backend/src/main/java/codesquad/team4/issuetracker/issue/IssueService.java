@@ -10,7 +10,7 @@ import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
-import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
+import codesquad.team4.issuetracker.count.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
@@ -37,7 +37,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +62,7 @@ public class IssueService {
     private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
     private final MilestoneRepository milestoneRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public IssueResponseDto.IssueListDto getIssues(IssueRequestDto.IssueFilterParamDto params, int page, int size) {
         List<Map<String, Object>> rows = issueDao.findIssuesByOpenStatus(params, page, size);
@@ -159,26 +163,37 @@ public class IssueService {
             addNewAssignees(issueId, request.getAssigneeIds());
         }
 
+        eventPublisher.publishEvent(new IssueEvent.Created());
         return createMessageResult(issueId, CREATE_ISSUE);
     }
 
     @Transactional
     public IssueResponseDto.BulkUpdateIssueStatusDto bulkUpdateIssueStatus(IssueRequestDto.BulkUpdateIssueStatusDto request) {
-        List<Long> issueIds = request.getIssuesId();
-        boolean isOpen = request.isOpen();
+        List<Long> issueIds  = request.getIssuesId();
+        boolean   targetOpen = request.isOpen();
 
-        Set<Long> existingIdsSet = issueDao.findExistingIssueIds(issueIds);
-        List<Long> existingIds = new ArrayList<>(existingIdsSet);
+        List<Issue> existing = issueRepository.findAllByIdIn(issueIds);
+        Map<Long, Boolean> oldStatusMap = existing.stream()
+                .collect(Collectors.toMap(Issue::getId, Issue::isOpen));
 
-        List<Long> missingIds = issueIds.stream()
-            .filter(id -> !existingIdsSet.contains(id))
-            .toList();
-
-
-        if (!existingIdsSet.isEmpty()) {
-            issueDao.updateIssueStatusByIds(isOpen, existingIds);
+        List<Long> existingIds = new ArrayList<>(oldStatusMap.keySet());
+        if (!existingIds.isEmpty()) {
+            issueDao.updateIssueStatusByIds(targetOpen, existingIds);
         }
 
+        // 변경된 이슈들에 대해 이벤트 발행
+        for (Long id : existingIds) {
+            boolean oldOpen = oldStatusMap.get(id);
+            if (oldOpen != targetOpen) {
+                eventPublisher.publishEvent(
+                        new IssueEvent.StatusChanged(oldOpen, targetOpen)
+                );
+            }
+        }
+
+        List<Long> missingIds = issueIds.stream()
+                .filter(id -> !oldStatusMap.containsKey(id))
+                .toList();
         String message = missingIds.isEmpty()
                 ? UPDATE_ISSUESTATUS
                 : String.format(ISSUE_PARTIALLY_UPDATED, missingIds);
@@ -241,12 +256,23 @@ public class IssueService {
                     .orElseThrow(() -> new MilestoneNotFoundException(request.getMilestoneId()));
         }
 
+        boolean oldOpen = oldIssue.isOpen();
+
         //기존 이미지를 삭제하는 것인지 확인
         String newFileUrl = determineNewFileUrl(request, uploadUrl, oldIssue);
 
         Issue updated = createupdatedIssue(request, oldIssue, newFileUrl);
 
         issueRepository.save(updated);
+
+        boolean newOpen = updated.isOpen();
+
+        //상태가 바뀌었을 때만 이벤트 발생
+        if (oldOpen != newOpen) {
+            eventPublisher.publishEvent(
+                    new IssueEvent.StatusChanged(oldOpen, newOpen)
+            );
+        }
 
         return createMessageResult(updated.getId(), UPDATE_ISSUE);
     }
@@ -358,9 +384,11 @@ public class IssueService {
     }
 
     public void deleteIssue(Long issueId) {
-        if (!issueRepository.existsById(issueId)) {
-            throw new IssueNotFoundException(issueId);
-        }
+        Issue issue = issueRepository.findById(issueId)
+                .orElseThrow(() -> new IssueNotFoundException(issueId));
+
+        boolean wasOpen = issue.isOpen();
         issueRepository.deleteById(issueId);
+        eventPublisher.publishEvent(new IssueEvent.Deleted(wasOpen));
     }
 }
