@@ -80,10 +80,6 @@ public class IssueDto {
 		public IssueState getIssueState() {
 			return IssueState.fromStateStr(state);
 		}
-
-		public String getState() { // 값이 들어오지 않은 경우 초기값 설정
-			return state != null ? state : "open";
-		}
 	}
 
 	/**
