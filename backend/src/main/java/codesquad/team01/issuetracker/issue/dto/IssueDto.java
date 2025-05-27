@@ -216,7 +216,7 @@ public class IssueDto {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class CursorData {
-		private int id;
+		private Integer id;
 		private LocalDateTime createdAt;
 
 		public String encode() {
