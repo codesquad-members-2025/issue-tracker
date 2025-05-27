@@ -1,6 +1,5 @@
 package codesquad.team01.issuetracker.label.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import codesquad.team01.issuetracker.label.domain.LabelTextColor;
@@ -15,13 +14,31 @@ public class LabelDto {
 	 */
 	// 이슈 목록 - 레이블 응답 DTO
 	@Builder
+	public record FilterListItemResponse(
+		int id,
+		String name,
+		String color,
+		String textColor
+	) {
+	}
+
+	@Builder
 	public record ListItemResponse(
-		Integer id,
+		int id,
 		String name,
 		String description,
 		String color,
 		String textColor
 	) {
+		public static ListItemResponse from(LabelRow row) {
+			return new ListItemResponse(
+				row.id(),
+				row.name(),
+				row.description(),
+				row.color(),
+				row.textColor()
+			);
+		}
 	}
 
 	public record ListResponse(
@@ -33,8 +50,8 @@ public class LabelDto {
 	// 이슈 레이블 행 DTO
 	@Builder
 	public record IssueLabelRow(
-		Integer issueId,
-		Integer labelId,
+		int issueId,
+		int labelId,
 		String labelName,
 		String labelColor,
 		LabelTextColor labelTextColor
@@ -43,8 +60,7 @@ public class LabelDto {
 
 	@Builder
 	public record LabelFilterResponse(
-		Integer id,
-
+		int id,
 		String name,
 		String color
 	) {
@@ -57,14 +73,12 @@ public class LabelDto {
 	) {
 	}
 
-	public record LabelListItem(
-		Integer id,
+	public record LabelRow(
+		int id,
 		String name,
 		String description,
 		String color,
-		String textColor,
-		LocalDateTime createdAt,
-		LocalDateTime updatedAt
+		String textColor
 	) {
 	}
 }
