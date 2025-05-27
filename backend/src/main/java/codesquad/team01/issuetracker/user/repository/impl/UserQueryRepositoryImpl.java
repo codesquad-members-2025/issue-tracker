@@ -44,8 +44,8 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 		.assigneeProfileImageUrl(rs.getString("assignee_profile_image_url"))
 		.build();
 
-	private final RowMapper<UserDto.WriterResponse> filterUserListItemResponseRowMapper =
-		(rs, rowNum) -> UserDto.WriterResponse.builder()
+	private final RowMapper<UserDto.UserFilterRow> filterUserListItemResponseRowMapper =
+		(rs, rowNum) -> UserDto.UserFilterRow.builder()
 			.id(rs.getInt("users_id"))
 			.username(rs.getString("users_username"))
 			.profileImageUrl(rs.getString("users_profile_image_url"))
@@ -62,7 +62,7 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 	}
 
 	@Override
-	public List<UserDto.WriterResponse> findUsersForFilter() {
+	public List<UserDto.UserFilterRow> findUsersForFilter() {
 		return jdbcTemplate.query(FILTER_USER_LIST_QUERY, filterUserListItemResponseRowMapper);
 	}
 }

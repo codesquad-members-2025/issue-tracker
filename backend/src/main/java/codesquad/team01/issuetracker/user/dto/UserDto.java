@@ -43,7 +43,17 @@ public class UserDto {
 	@Builder
 	public record UserFilterListResponse(
 		int totalCount,
-		List<WriterResponse> users // WriterResponse와 같이 데이터를 필요로 해서 임시로 넣음
+		List<UserFilterResponse> users // WriterResponse와 같이 데이터를 필요로 해서 임시로 넣음
+
+	) {
+	}
+
+	@Builder
+	public record UserFilterResponse(
+		int id,
+
+		String username,
+		String profileImageUrl
 	) {
 	}
 
@@ -55,7 +65,17 @@ public class UserDto {
 	public record IssueAssigneeRow(
 		int issueId,
 		int assigneeId,
+
 		String assigneeProfileImageUrl
+	) {
+	}
+
+	@Builder
+	public record UserFilterRow(
+		int id,
+
+		String username,
+		String profileImageUrl
 	) {
 	}
 }
