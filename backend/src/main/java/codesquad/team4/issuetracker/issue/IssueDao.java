@@ -1,5 +1,7 @@
     package codesquad.team4.issuetracker.issue;
 
+    import static codesquad.team4.issuetracker.util.Parser.camelToSnake;
+
     import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
     import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
     import java.util.ArrayList;
@@ -77,10 +79,15 @@
             StringBuilder sql = new StringBuilder("SELECT issue_id FROM issue WHERE is_open = :isOpen\n");
             params.put("isOpen", dto.getStatus().getState());
 
+            // 작성자 필터
             addAuthorCondition(dto.getAuthorId(), params, sql);
+            // 담당자 필터
             addAssigneeCondition(dto.getAssigneeId(), params, sql);
+            // 댓글 작성자 필터
             addCommentAuthorCondition(dto.getCommentAuthorId(), params, sql);
+            // 마일스톤 필터
             addMilestoneCondition(dto.getMilestoneId(), params, sql);
+            // 라벨 필터
             addLabelConditions(dto.getLabelIds(), params, sql);
 
             return sql.toString();
@@ -105,43 +112,42 @@
             }
         }
 
-        private void addMilestoneCondition(Long milestoneId, Map<String, Object> params, StringBuilder sql) {
-            if (milestoneId != null) {
-                sql.append(" AND milestone_id = :milestoneId\n");
-                params.put("milestoneId", milestoneId);
-            }
-        }
-
         private void addCommentAuthorCondition(Long commentAuthorId, Map<String, Object> params, StringBuilder sql) {
-            if (commentAuthorId != null) {
-                sql.append("""
-                    AND EXISTS (
-                        SELECT 1 FROM comment c
-                        WHERE c.issue_id = issue.issue_id
-                        AND c.author_id = :commentAuthorId
-                    )\n
-                """);
-                params.put("commentAuthorId", commentAuthorId);
-            }
+            addExistsCondition("comment", "issue_id", "author_id", commentAuthorId, "commentAuthorId", params, sql);
         }
 
         private void addAssigneeCondition(Long assigneeId, Map<String, Object> params, StringBuilder sql) {
-            if (assigneeId != null) {
-                sql.append("""
-                    AND EXISTS (
-                        SELECT 1 FROM issue_assignee ia
-                        WHERE ia.issue_id = issue.issue_id
-                        AND ia.assignee_id = :assigneeId
-                    )\n
-                """);
-                params.put("assigneeId", assigneeId);
+            addExistsCondition("issue_assignee", "issue_id", "assignee_id", assigneeId, "assigneeId", params, sql);
+        }
+
+        private void addExistsCondition(String subTable, String joinColumn, String filterColumn, Long filterValue,
+                                        String paramName, Map<String, Object> params, StringBuilder sql) {
+            if (filterValue != null) {
+                sql.append(" AND EXISTS (\n")
+                    .append("     SELECT 1 FROM ").append(subTable).append(" sub\n")
+                    .append("     WHERE sub.").append(joinColumn).append(" = issue.issue_id\n")
+                    .append("       AND sub.").append(filterColumn).append(" = :").append(paramName).append("\n")
+                    .append(")\n");
+                params.put(paramName, filterValue);
             }
         }
 
+        private void addMilestoneCondition(Long milestoneId, Map<String, Object> params, StringBuilder sql) {
+            addWhereEqualClause(milestoneId, params, "milestoneId", sql);
+        }
+
         private void addAuthorCondition(Long authorId, Map<String, Object> params, StringBuilder sql) {
-            if (authorId != null) {
-                sql.append(" AND author_id = :authorId\n");
-                params.put("authorId", authorId);
+            addWhereEqualClause(authorId, params, "authorId", sql);
+        }
+
+        private void addWhereEqualClause(Long id, Map<String, Object> params, String paramName, StringBuilder sql) {
+            if (id != null) {
+                sql.append(" AND ")
+                    .append(camelToSnake(paramName))
+                    .append(" = :")
+                    .append(paramName)
+                    .append("\n");
+                params.put(paramName, id);
             }
         }
 

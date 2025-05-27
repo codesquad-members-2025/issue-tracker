@@ -65,4 +65,8 @@ public class Parser {
             return null;
         }
     }
+
+    public static String camelToSnake(String input) {
+        return input.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
+    }
 }
