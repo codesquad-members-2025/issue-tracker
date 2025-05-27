@@ -1,54 +1,616 @@
--- ▶ user 테이블
-INSERT INTO `user` (`github_id`, `login`, `password`, `nickname`, `profile_image_url`, `uuid`)
-VALUES (101, 'alice', 'pass1', 'Alice', 'https://cdn.com/alice.png', 'uuid-alice'),
-       (102, 'bob', 'pass2', 'Bob', 'https://cdn.com/bob.png', 'uuid-bob'),
-       (103, 'carol', 'pass3', 'Carol', 'https://cdn.com/carol.png', 'uuid-carol'),
-       (104, 'dan', 'pass4', 'Dan', 'https://cdn.com/dan.png', 'uuid-dan'),
-       (105, 'eve', 'pass5', 'Eve', 'https://cdn.com/eve.png', 'uuid-eve');
--- ▶ milestone 테이블
-INSERT INTO `milestone` (`is_closed`, `title`, `description`, `expired_at`, `total_issues`, `closed_issues`)
-VALUES (FALSE, 'v1.0', '첫 번째 릴리즈', '2025-06-01', 10, 3),
-       (TRUE, 'hotfix', '긴급 수정', '2025-05-20', 4, 2),
-       (FALSE, 'v2.0', '두 번째 버전', NULL, 1, 1),
-       (FALSE, 'v3.0 Planning', '기획중', NULL, 453, 12),
-       (TRUE, 'legacy-support', '이전 버전 유지보수', '2025-04-15', 11, 10);
--- ▶ label 테이블
-INSERT INTO `label` (`name`, `description`, `color`)
-VALUES ('bug', '버그 관련', '#d73a4a'),
-       ('enhancement', '기능 개선', '#a2eeef'),
-       ('question', '질문', '#d876e3'),
-       ('documentation', '문서 관련', '#0075ca'),
-       ('design', '디자인 요청', '#cfd3d7');
--- ▶ issue 테이블
-INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`)
-VALUES (1, 1, '로그인 안됨', '카카오 로그인 시 오류 발생', FALSE),
-       (2, 2, '버튼 위치 이상', 'UI 깨짐 현상', FALSE),
-       (3, NULL, 'DB 연결 안됨', 'RDS 연결 실패', TRUE),
-       (4, 3, '페이지 로딩 느림', '성능 문제 있음', FALSE),
-       (5, NULL, '디자인 요청', '버튼 색상 바꿔주세요', FALSE);
--- ▶ comment 테이블
-INSERT INTO `comment` (`issue_id`, `user_id`, `contents`)
-VALUES (1, 2, '저도 같은 문제 있어요.'),
-       (1, 3, '다시 시도해보니 잘 됩니다.'),
-       (3, 1, 'RDS 설정 다시 확인해보세요.'),
-       (2, 4, 'Figma 디자인 링크 필요합니다.'),
-       (5, 5, '디자인팀과 상의 중입니다.');
--- ▶ assignee 테이블
-INSERT INTO `assignee` (`user_id`, `issue_id`)
-VALUES (2, 1),
-       (3, 1),
-       (4, 2),
-       (5, 3),
-       (1, 5);
--- ▶ issue_label 테이블
-INSERT INTO `issue_label` (`issue_id`, `label_id`)
-VALUES (1, 1),
-       (1, 3),
-       (2, 2),
-       (4, 2),
-       (5, 5);
+-- ▶ user 테이블 초기 데이터
+INSERT INTO `user` (`github_id`, `login`, `password`, `nickname`, `profile_image_url`, `uuid`) VALUES
+                                                                                                   (101, 'alice', 'pass1', 'Alice', 'https://cdn.com/alice.png', 'uuid-alice'),
+                                                                                                   (102, 'bob', 'pass2', 'Bob', 'https://cdn.com/bob.png', 'uuid-bob'),
+                                                                                                   (103, 'carol', 'pass3', 'Carol', 'https://cdn.com/carol.png', 'uuid-carol'),
+                                                                                                   (104, 'dan', 'pass4', 'Dan', 'https://cdn.com/dan.png', 'uuid-dan'),
+                                                                                                   (105, 'eve', 'pass5', 'Eve', 'https://cdn.com/eve.png', 'uuid-eve');
 
--- ▶ issue_status_count 테이블
-INSERT INTO issue_status_count (status_key, issue_count)
-VALUES ('OPEN', 4),
-       ('CLOSED', 1);
+-- ▶ milestone 초기 데이터
+INSERT INTO `milestone` (`is_closed`, `title`, `description`, `expired_at`, `total_issues`, `closed_issues`) VALUES
+                                                                                                                 (FALSE, 'v1.0', '첫 번째 릴리즈', '2025-06-01', 10, 3),
+                                                                                                                 (TRUE, 'hotfix', '긴급 수정', '2025-05-20', 4, 2),
+                                                                                                                 (FALSE, 'v2.0', '두 번째 버전', NULL, 1, 1),
+                                                                                                                 (FALSE, 'v3.0 Planning', '기획중', NULL, 453, 12),
+                                                                                                                 (TRUE, 'legacy-support', '이전 버전 유지보수', '2025-04-15', 11, 10);
+
+-- ▶ label 초기 데이터
+INSERT INTO `label` (`name`, `description`, `color`) VALUES
+                                                         ('bug', '버그 관련', '#d73a4a'),
+                                                         ('enhancement', '기능 개선', '#a2eeef'),
+                                                         ('question', '질문', '#d876e3'),
+                                                         ('documentation', '문서 관련', '#0075ca'),
+                                                         ('design', '디자인 요청', '#cfd3d7');
+
+-- ▶ issue 초기 데이터
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES
+                                                                                        (1, 1, '로그인 안됨', '카카오 로그인 시 오류 발생', FALSE),
+                                                                                        (2, 2, '버튼 위치 이상', 'UI 깨짐 현상', FALSE),
+                                                                                        (3, NULL, 'DB 연결 안됨', 'RDS 연결 실패', TRUE),
+                                                                                        (4, 3, '페이지 로딩 느림', '성능 문제 있음', FALSE),
+                                                                                        (5, NULL, '디자인 요청', '버튼 색상 바꿔주세요', FALSE);
+
+-- ▶ comment 초기 데이터
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES
+                                                              (1, 2, '저도 같은 문제 있어요.'),
+                                                              (1, 3, '다시 시도해보니 잘 됩니다.'),
+                                                              (3, 1, 'RDS 설정 다시 확인해보세요.'),
+                                                              (2, 4, 'Figma 디자인 링크 필요합니다.'),
+                                                              (5, 5, '디자인팀과 상의 중입니다.');
+
+-- ▶ assignee 초기 데이터
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES
+                                                   (2, 1),
+                                                   (3, 1),
+                                                   (4, 2),
+                                                   (5, 3),
+                                                   (1, 5);
+
+-- ▶ issue_label 초기 데이터
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES
+                                                       (1, 1),
+                                                       (1, 3),
+                                                       (2, 2),
+                                                       (4, 2),
+                                                       (5, 5);
+
+-- ▶ issue_status_count 초기 데이터
+INSERT INTO `issue_status_count` (`status_key`, `issue_count`) VALUES
+                                                                   ('OPEN', 4),
+                                                                   ('CLOSED', 1);
+
+-- ▶ 추가 100개 issue 및 관련 데이터
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 1, '문서 업데이트 필요', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (6, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 6);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (6, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, 'API 오류', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (7, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 7);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (7, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 2, '보안 점검', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (8, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 8);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (8, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (8, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 3, 'API 오류', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (9, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 9);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 9);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (9, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 1, '보안 점검', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (10, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 10);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 10);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (10, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (10, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (10, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 3, 'API 오류', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (11, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 11);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 11);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (11, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 2, '문서 업데이트 필요', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (12, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 12);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (12, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (12, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 2, '문서 업데이트 필요', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (13, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 13);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 13);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (13, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, NULL, '문서 업데이트 필요', '사용자 피드백 반영 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (14, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 14);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 14);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (14, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 5, '문서 업데이트 필요', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (15, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 15);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 15);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (15, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, 'API 오류', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (16, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 16);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 16);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (16, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (16, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 3, '성능 최적화', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (17, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 17);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 17);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (17, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (17, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, '문서 업데이트 필요', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (18, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 18);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (18, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (18, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (18, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 2, '성능 최적화', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (19, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 19);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 19);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (19, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 2, 'API 오류', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (20, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 20);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 20);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (20, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 2, '문서 업데이트 필요', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (21, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 21);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (21, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (21, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 4, 'API 오류', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (22, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 22);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 22);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (22, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (22, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (22, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 2, 'API 오류', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (23, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 23);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (23, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (23, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (23, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, NULL, '성능 최적화', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (24, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 24);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 24);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (24, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 3, '보안 점검', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (25, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 25);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (25, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (25, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 2, 'UI 개선', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (26, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 26);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 26);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (26, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (26, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 5, 'API 오류', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (27, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 27);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (27, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (27, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 4, 'API 오류', '사용자 피드백 반영 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (28, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 28);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 28);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (28, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (28, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 2, '문서 업데이트 필요', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (29, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 29);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (29, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 4, '성능 최적화', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (30, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 30);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (30, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, NULL, 'UI 개선', '긴급 수정 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (31, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 31);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (31, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (31, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (31, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 5, '성능 최적화', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (32, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 32);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 32);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (32, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (32, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 3, 'API 오류', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (33, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 33);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (33, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (33, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (33, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 1, 'UI 개선', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (34, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 34);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 34);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (34, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (34, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (34, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 3, 'API 오류', '사용자 피드백 반영 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (35, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 35);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (35, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 5, 'UI 개선', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (36, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 36);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 36);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (36, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 1, 'API 오류', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (37, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 37);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (37, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (37, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (37, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, NULL, 'UI 개선', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (38, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 38);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (38, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 3, 'API 오류', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (39, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 39);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (39, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (39, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (39, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 2, '보안 점검', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (40, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 40);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 40);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (40, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, '보안 점검', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (41, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 41);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 41);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (41, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 4, '문서 업데이트 필요', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (42, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 42);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 42);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (42, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (42, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (42, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 3, 'UI 개선', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (43, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 43);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (43, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (43, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 5, '성능 최적화', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (44, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 44);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (44, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 5, '성능 최적화', '사용자 피드백 반영 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (45, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 45);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (45, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (45, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (45, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 5, '문서 업데이트 필요', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (46, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 46);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 46);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (46, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, NULL, 'UI 개선', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (47, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 47);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (47, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (47, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 5, '문서 업데이트 필요', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (48, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 48);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (48, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (48, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 5, '성능 최적화', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (49, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 49);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 49);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (49, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 2, '보안 점검', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (50, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 50);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 50);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (50, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (50, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (50, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 2, 'API 오류', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (51, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 51);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (51, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (51, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 4, 'UI 개선', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (52, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 52);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 52);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (52, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 3, 'UI 개선', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (53, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 53);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 53);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (53, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (53, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (53, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 3, '성능 최적화', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (54, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 54);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (54, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (54, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (54, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 4, '문서 업데이트 필요', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (55, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 55);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (55, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (55, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 4, '보안 점검', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (56, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 56);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 56);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (56, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (56, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 4, 'API 오류', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (57, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 57);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (57, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 1, '보안 점검', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (58, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 58);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 58);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (58, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 4, '문서 업데이트 필요', '사용자 피드백 반영 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (59, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 59);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 59);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (59, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (59, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, '성능 최적화', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (60, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 60);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (60, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 1, '성능 최적화', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (61, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 61);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 61);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (61, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (61, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 5, '성능 최적화', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (62, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 62);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (62, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, NULL, '보안 점검', '긴급 수정 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (63, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 63);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (63, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (63, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (63, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 3, '성능 최적화', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (64, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 64);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 64);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (64, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (64, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, NULL, '보안 점검', '사용자 피드백 반영 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (65, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 65);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 65);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (65, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (65, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 2, 'API 오류', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (66, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 66);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 66);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (66, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (66, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 2, '보안 점검', '사용자 피드백 반영 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (67, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 67);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 67);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (67, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (67, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (67, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, NULL, '보안 점검', '긴급 수정 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (68, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 68);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 68);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (68, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 4, 'UI 개선', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (69, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 69);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 69);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (69, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (69, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 3, 'UI 개선', '자세한 내용은 로그 참조', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (70, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 70);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (70, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (70, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (70, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 3, '성능 최적화', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (71, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 71);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (71, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 3, 'API 오류', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (72, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 72);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (72, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (72, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (72, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, 'API 오류', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (73, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 73);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 73);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (73, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 4, 'API 오류', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (74, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 74);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (74, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (74, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (74, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 3, 'API 오류', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (75, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 75);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 75);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (75, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (75, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (75, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 5, '보안 점검', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (76, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 76);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (76, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (76, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (76, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 2, 'UI 개선', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (77, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 77);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (77, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (77, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 1, 'UI 개선', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (78, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 78);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (78, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (78, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, '성능 최적화', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (79, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 79);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (79, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 5, '성능 최적화', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (80, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 80);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 80);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (80, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (80, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, '성능 최적화', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (81, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 81);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 81);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (81, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 1, '문서 업데이트 필요', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (82, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 82);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 82);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (82, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (82, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, '보안 점검', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (83, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 83);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 83);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (83, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (83, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, NULL, '보안 점검', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (84, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 84);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (84, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (84, 1);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 5, 'API 오류', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (85, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 85);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (85, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (85, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (85, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, 1, 'UI 개선', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (86, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 86);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 86);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (86, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, NULL, 'UI 개선', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (87, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 87);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 87);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (87, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, NULL, 'UI 개선', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (88, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 88);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 88);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (88, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (88, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 2, '보안 점검', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (89, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 89);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 89);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (89, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (89, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (89, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 5, '성능 최적화', '긴급 수정 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (90, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 90);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 90);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (90, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (90, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (90, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 2, 'UI 개선', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (91, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 91);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 91);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (91, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (91, 5);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (91, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 4, 'API 오류', '사용자 피드백 반영 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (92, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 92);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 92);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (92, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, NULL, 'UI 개선', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (93, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 93);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 93);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (93, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (93, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (93, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 4, '문서 업데이트 필요', '긴급 수정 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (94, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 94);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (94, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (94, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (94, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 4, 'API 오류', '자세한 내용은 로그 참조', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (95, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 95);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 95);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (95, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (95, 3);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 3, '보안 점검', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (96, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (5, 96);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 96);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (96, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 5, '보안 점검', '리팩터링 권장', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (97, 4, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 97);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (97, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (97, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, NULL, 'API 오류', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (98, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 98);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (98, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (98, 5);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (4, NULL, '문서 업데이트 필요', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (99, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 99);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 99);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (99, 4);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 3, '성능 최적화', '세부 사항 TBD', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (100, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 100);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 100);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (100, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (100, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (100, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (2, 5, '문서 업데이트 필요', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (101, 5, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 101);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 101);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (101, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (101, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (101, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 5, '문서 업데이트 필요', '사용자 피드백 반영 필요', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (102, 3, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 102);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (2, 102);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (102, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (5, 3, '성능 최적화', '리팩터링 권장', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (103, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (4, 103);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 103);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (103, 3);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (103, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (103, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (1, 2, 'UI 개선', '긴급 수정 필요', FALSE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (104, 1, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 104);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 104);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (104, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (104, 4);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (104, 2);
+INSERT INTO `issue` (`author_id`, `milestone_id`, `title`, `contents`, `is_closed`) VALUES (3, 5, '보안 점검', '세부 사항 TBD', TRUE);
+INSERT INTO `comment` (`issue_id`, `user_id`, `contents`) VALUES (105, 2, '테스트 코멘트');
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (1, 105);
+INSERT INTO `assignee` (`user_id`, `issue_id`) VALUES (3, 105);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (105, 2);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (105, 1);
+INSERT INTO `issue_label` (`issue_id`, `label_id`) VALUES (105, 3);

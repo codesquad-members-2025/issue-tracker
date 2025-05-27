@@ -18,6 +18,10 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
     private final NamedParameterJdbcTemplate jdbc;
 
     public Map<Long, List<LabelProjection>> findByIssueIds(List<Long> issueIds) {
+        if (issueIds == null || issueIds.isEmpty()) {
+            return Map.of();
+        }
+
         String sql = """
                     SELECT il.issue_id, l.id, l.name, l.description, l.color
                       FROM issue_label il

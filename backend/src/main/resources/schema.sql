@@ -54,7 +54,7 @@ CREATE TABLE `issue`
 CREATE TABLE `label`
 (
     `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(255) NOT NULL,
+    `name`        VARCHAR(255) NOT NULL UNIQUE,
     `description` VARCHAR(255) NULL,
     `color`       VARCHAR(255) NOT NULL,
     `created_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -1,5 +1,6 @@
 package elbin_bank.issue_tracker.issue.application.query.repository;
 
+import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 public interface IssueQueryRepository {
 
-    List<IssueProjection> findIssues(String rawQuery);
+    List<IssueProjection> findIssues(FilterCriteria crit);
 
     Map<Long, List<String>> findAssigneeNamesByIssueIds(List<Long> issueIds);
 

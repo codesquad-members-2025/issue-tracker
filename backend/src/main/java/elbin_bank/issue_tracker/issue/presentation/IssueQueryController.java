@@ -15,8 +15,8 @@ public class IssueQueryController {
     private final IssueQueryService issueQueryService;
 
     @GetMapping("")
-    public ResponseEntity<IssuesResponseDto> list(@RequestParam(value = "q", required = false) String rawQuery) {
-        return ResponseEntity.ok(issueQueryService.getFilteredIssues(rawQuery));
+    public ResponseEntity<IssuesResponseDto> list(@RequestParam(value = "q", required = false) String dsl) {
+        return ResponseEntity.ok(issueQueryService.getFilteredIssues(dsl));
     }
 
     @GetMapping("{id}")

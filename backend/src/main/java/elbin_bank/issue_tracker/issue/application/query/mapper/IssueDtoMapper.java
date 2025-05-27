@@ -1,7 +1,6 @@
 package elbin_bank.issue_tracker.issue.application.query.mapper;
 
 import elbin_bank.issue_tracker.issue.application.query.dto.IssueDetailResponseDto;
-import elbin_bank.issue_tracker.issue.application.query.dto.IssueDto;
 import elbin_bank.issue_tracker.issue.application.query.dto.IssuesResponseDto;
 import elbin_bank.issue_tracker.issue.application.query.dto.MilestoneDto;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
@@ -22,14 +21,7 @@ public class IssueDtoMapper {
                                                  Map<Long, List<LabelProjection>> labelProjections,
                                                  Map<Long, List<String>> assigneeNames,
                                                  IssueCountProjection issueCountProjection) {
-        return new IssuesResponseDto(issueProjections.stream()
-                .map(b -> new IssueDto(
-                        b.id(), b.author(), b.title(),
-                        labelProjections.getOrDefault(b.id(), List.of()),
-                        b.isClosed(), b.createdAt(), b.updatedAt(),
-                        assigneeNames.getOrDefault(b.id(), List.of()),
-                        b.milestone()
-                )).toList(),
+        return new IssuesResponseDto(issueProjections,
                 issueCountProjection.openCount(),
                 issueCountProjection.closedCount());
     }

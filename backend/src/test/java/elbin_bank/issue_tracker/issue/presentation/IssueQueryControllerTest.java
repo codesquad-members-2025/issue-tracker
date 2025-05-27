@@ -1,7 +1,6 @@
 package elbin_bank.issue_tracker.issue.presentation;
 
 import elbin_bank.issue_tracker.issue.application.query.IssueQueryService;
-import elbin_bank.issue_tracker.issue.application.query.dto.IssueDto;
 import elbin_bank.issue_tracker.issue.application.query.dto.IssuesResponseDto;
 import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import org.junit.jupiter.api.DisplayName;
