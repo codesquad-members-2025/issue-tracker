@@ -38,7 +38,7 @@ public class MilestoneQueryRepository {
         (rs, rowNum) -> new MilestoneSummaryResponse(rs.getLong("id"), rs.getString("name")));
   }
 
-  public MilestoneResponse getMilestoneByIssueId(Long milestoneId) {
+  public MilestoneResponse getMilestoneById(Long milestoneId) {
     String sql = """
         WITH issue_counts AS (
           SELECT
@@ -69,7 +69,7 @@ public class MilestoneQueryRepository {
 
     MapSqlParameterSource params = new MapSqlParameterSource("milestoneId", milestoneId);
 
-    return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) ->
+    List<MilestoneResponse> result = jdbcTemplate.query(sql, params, (rs, rowNum) ->
         new MilestoneResponse(
             rs.getLong("id"),
             rs.getString("name"),
@@ -81,6 +81,8 @@ public class MilestoneQueryRepository {
             rs.getLong("progress")
         )
     );
+
+    return result.stream().findFirst().orElse(null);
   }
 
   public List<MilestoneResponse> findMilestones(Integer page, Integer perPage) {
