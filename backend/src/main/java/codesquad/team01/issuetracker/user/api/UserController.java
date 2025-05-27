@@ -19,7 +19,7 @@ public class UserController {
 
 	private final UserService userService;
 
-	@GetMapping("/v1/filters/users")
+	@GetMapping("/v1/users/filters")
 	public ResponseEntity<ApiResponse<UserDto.UserFilterListResponse>> getUsers() {
 		UserDto.UserFilterListResponse response = userService.findUsersForFilter();
 		log.info("사용자 목록 개수= {}", response.totalCount());
