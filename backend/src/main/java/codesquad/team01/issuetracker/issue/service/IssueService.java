@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
+import codesquad.team01.issuetracker.common.util.CursorEncoder;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
@@ -24,6 +25,7 @@ public class IssueService {
 	private final LabelRepository labelRepository;
 
 	private final IssueAssembler issueAssembler;
+	private final CursorEncoder cursorEncoder;
 
 	public IssueDto.ListResponse findIssues(IssueDto.ListQueryRequest request, CursorDto.CursorData cursor) {
 
@@ -80,7 +82,7 @@ public class IssueService {
 				.createdAt(lastIssue.issueCreatedAt())
 				.build();
 			log.debug("last issue CreatedAt: {}, issue id={}", lastIssue.issueCreatedAt(), lastIssue.issueId());
-			next = nextCursor.encode();
+			next = cursorEncoder.encode(nextCursor);
 		}
 
 		log.debug("응답 데이터 생성 완료: 이슈 {}개 포함, 다음 페이지 존재: {}",
