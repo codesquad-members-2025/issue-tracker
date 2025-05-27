@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team5.issue_tracker.common.comment.domain.Comment;
+import com.team5.issue_tracker.common.comment.dto.CommentRequest;
 import com.team5.issue_tracker.common.comment.reqository.CommentRepository;
 import com.team5.issue_tracker.issue.domain.Issue;
 import com.team5.issue_tracker.issue.domain.IssueAssignee;
@@ -43,7 +44,8 @@ public class IssueService {
     saveIssueLabels(savedIssueID, request.getLabelIds());
     saveIssueAssignees(savedIssueID, request.getAssigneeIds());
 
-    Comment comment = new Comment(userId, savedIssueID, request.getContent(), now, now);
+    CommentRequest content = request.getContent();
+    Comment comment = new Comment(userId, savedIssueID, content.getContent(), now, now);
     commentRepository.save(comment);
 
     return savedIssueID;

@@ -1,7 +1,5 @@
 package com.team5.issue_tracker.common.comment.dto;
 
-import java.util.List;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
