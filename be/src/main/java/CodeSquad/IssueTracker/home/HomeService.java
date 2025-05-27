@@ -1,7 +1,8 @@
 package CodeSquad.IssueTracker.home;
 
-import CodeSquad.IssueTracker.home.dto.IssueFilterRequestDto;
+import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.home.dto.HomeResponseDto;
+import CodeSquad.IssueTracker.home.dto.MetaData;
 import CodeSquad.IssueTracker.issue.IssueService;
 import CodeSquad.IssueTracker.label.LabelService;
 import CodeSquad.IssueTracker.milestone.MilestoneService;
@@ -18,12 +19,16 @@ public class HomeService {
     private final MilestoneService milestoneService;
     private final UserService userService;
 
-    public HomeResponseDto getHomeData(IssueFilterRequestDto filterRequestDto) {
+    public HomeResponseDto getHomeData(int currentPage, IssueFilterCondition condition) {
+        int openIssueNumber = issueService.countIssuesByOpenStatus(true, condition);
+        int closeIssueNumber = issueService.countIssuesByOpenStatus(false, condition);
+        int maxPage = issueService.getIssueMaxPage(condition);
         return new HomeResponseDto(
-                issueService.findIssuesByFilter(filterRequestDto),
+                issueService.findIssuesByFilter(currentPage, condition),
                 userService.findAllUserDetails(),
                 labelService.findAll(),
-                milestoneService.findAll()
+                milestoneService.findAll(),
+                new MetaData(currentPage, maxPage, openIssueNumber, closeIssueNumber)
         );
     }
 }
