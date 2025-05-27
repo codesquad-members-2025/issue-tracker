@@ -20,19 +20,9 @@ public class LabelService {
 	public LabelDto.ListResponse getLabels() {
 		List<LabelDto.ListItemResponse> items = labelRepository.findLabels()
 			.stream()
-			.map(this::toListItemResponse)
+			.map(LabelDto.ListItemResponse::from)
 			.collect(Collectors.toList());
 		return new LabelDto.ListResponse(items.size(), items);
-	}
-
-	private LabelDto.ListItemResponse toListItemResponse(LabelDto.LabelRow row) {
-		return LabelDto.ListItemResponse.builder()
-			.id(row.id())
-			.name(row.name())
-			.description(row.description())
-			.color(row.color())
-			.textColor(row.textColor())
-			.build();
 	}
 
 	public LabelDto.LabelFilterListResponse findLabelsForFilter() {
