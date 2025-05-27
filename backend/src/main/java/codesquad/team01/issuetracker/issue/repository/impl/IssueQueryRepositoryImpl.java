@@ -39,9 +39,8 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		FROM issue i
 		JOIN users u ON i.writer_id = u.id
 		LEFT JOIN milestone m ON i.milestone_id = m.id
-		WHERE 1=1 
-		AND i.deleted_at IS NULL
-		AND i.state = :state
+		WHERE i.deleted_at IS NULL
+		    AND i.state = :state 
 		""";
 
 	private static final String BASE_COUNT_ISSUES_QUERY = """
@@ -49,8 +48,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			i.state,
 			COUNT(*) as count
 		FROM issue i
-		WHERE 1=1
-		AND i.deleted_at IS NULL
+		WHERE i.deleted_at IS NULL 
 		""";
 
 	private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()

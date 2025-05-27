@@ -15,7 +15,7 @@ public enum IssueState {
 	public static IssueState fromStateStr(String state) {
 
 		if (state == null) {
-			throw new InvalidParameterException("IssueState는 null일 수 없습니다.");
+			return OPEN;
 		}
 
 		for (IssueState issueState : IssueState.values()) {
