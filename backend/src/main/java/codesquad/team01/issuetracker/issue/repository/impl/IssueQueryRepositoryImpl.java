@@ -41,6 +41,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		LEFT JOIN milestone m ON i.milestone_id = m.id
 		WHERE 1=1 
 		AND i.deleted_at IS NULL
+		AND i.state = :state
 		""";
 
 	private static final String BASE_COUNT_ISSUES_QUERY = """
@@ -78,8 +79,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
 		MapSqlParameterSource params = new MapSqlParameterSource();
 
-		// state - 기본값: open
-		sql.append(" AND i.state = :state ");
+		// state
 		params.addValue("state", state.name());
 
 		appendFilterConditions(sql, params, writerId, milestoneId, labelIds, assigneeIds);
