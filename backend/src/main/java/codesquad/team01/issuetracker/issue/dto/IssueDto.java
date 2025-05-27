@@ -38,7 +38,7 @@ public class IssueDto {
 	@Builder
 	public record CountQueryRequest(
 		@Positive(message = "작성자 ID는 양수여야 합니다")
-		int writerId,
+		Integer writerId,
 
 		@Positive(message = "마일스톤 ID는 양수여야 합니다")
 		Integer milestoneId,
@@ -56,7 +56,7 @@ public class IssueDto {
 		String state,
 
 		@Positive(message = "작성자 ID는 양수여야 합니다")
-		int writerId,
+		Integer writerId,
 
 		@Positive(message = "마일스톤 ID는 양수여야 합니다")
 		Integer milestoneId,
