@@ -3,11 +3,14 @@ package codesquad.team4.issuetracker.milestone;
 import codesquad.team4.issuetracker.entity.Milestone;
 import codesquad.team4.issuetracker.exception.badrequest.InvalidCommentAccessException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
+import codesquad.team4.issuetracker.issue.IssueEvent;
 import codesquad.team4.issuetracker.label.LabelRepository;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneRequestDto;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto.MilestoneInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MilestoneService {
     private final MilestoneDao milestoneDao;
     private final MilestoneRepository milestoneRepository;
-    private final LabelRepository labelRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public MilestoneResponseDto.MilestoneFilter getFilterMilestones() {
         List<MilestoneInfo> milestones = milestoneDao.findMilestoneForFiltering();
@@ -30,16 +34,6 @@ public class MilestoneService {
                 .milestones(milestones)
                 .count(milestones.size())
                 .build();
-    }
-
-    public MilestoneResponseDto.MilestoneCountDto getMilestoneCount() {
-        Integer openCount = milestoneDao.countMilestonesByOpenStatus(true);
-        Integer closedCount = milestoneDao.countMilestonesByOpenStatus(false);
-
-        return MilestoneResponseDto.MilestoneCountDto.builder()
-            .openCount(openCount != null ? openCount : 0)
-            .closedCount(closedCount != null ? closedCount : 0)
-            .build();
     }
 
     public MilestoneResponseDto.MilestoneListDto getMilestones(boolean isOpen) {
@@ -79,11 +73,13 @@ public class MilestoneService {
     @Transactional
     public void createMilestone(MilestoneRequestDto.CreateMilestoneDto request) {
         Milestone milestone = Milestone.builder()
-            .name(request.getName())
-            .description(request.getDescription())
-            .endDate(request.getEndDate())
-            .build();
+                .name(request.getName())
+                .description(request.getDescription())
+                .endDate(request.getEndDate())
+                .isOpen(true)
+                .build();
 
+        eventPublisher.publishEvent(new MilestoneEvent.Created());
         milestoneRepository.save(milestone);
     }
 
@@ -105,10 +101,15 @@ public class MilestoneService {
 
     @Transactional
     public void deleteMilestone(Long milestoneId) {
-        if (!milestoneRepository.existsById(milestoneId)) {
-            throw new MilestoneNotFoundException(milestoneId);
-        }
+        Milestone milestone = milestoneRepository.findById(milestoneId)
+                .orElseThrow(() -> new MilestoneNotFoundException(milestoneId));
+
+        boolean wasOpen = milestone.isOpen();
+        log.info("▶ [Service] deleteMilestone: id={} ▶ deleting, wasOpen={}",
+                milestoneId, wasOpen);
         milestoneRepository.deleteById(milestoneId);
+        log.info("▶ [Service] deleteMilestone: id={} ▶ publishing Deleted", milestoneId);
+        eventPublisher.publishEvent(new MilestoneEvent.Deleted(wasOpen));
     }
 
     @Transactional
@@ -116,8 +117,18 @@ public class MilestoneService {
         Milestone milestone = milestoneRepository.findById(milestoneId)
             .orElseThrow(() -> new MilestoneNotFoundException(milestoneId));
 
+        boolean oldOpen = milestone.isOpen();
         milestone.updateStatus(false);
-
         milestoneRepository.save(milestone);
+        boolean newOpen = milestone.isOpen();
+
+        if (oldOpen != newOpen) {
+            log.info("▶ [Service] closeMilestone: id={}, {}→{} ▶ publishing StatusChanged",
+                    milestoneId, oldOpen, newOpen);
+            eventPublisher.publishEvent(
+                    new MilestoneEvent.StatusChanged(oldOpen, false)
+            );
+        }
+
     }
 }

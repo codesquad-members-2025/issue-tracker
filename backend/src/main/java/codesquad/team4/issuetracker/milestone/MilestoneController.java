@@ -21,12 +21,6 @@ public class MilestoneController {
         return ApiResponse.success(result);
     }
 
-    @GetMapping("/count")
-    public ApiResponse<MilestoneResponseDto.MilestoneCountDto> showMilestoneCount() {
-        MilestoneResponseDto.MilestoneCountDto result = milestoneService.getMilestoneCount();
-        return ApiResponse.success(result);
-    }
-
     @GetMapping("")
     public ApiResponse<MilestoneResponseDto.MilestoneListDto> getMilestones(@RequestParam boolean isOpen) {
         MilestoneResponseDto.MilestoneListDto result = milestoneService.getMilestones(isOpen);

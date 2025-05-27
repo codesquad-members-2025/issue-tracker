@@ -20,6 +20,4 @@ public class IssueEvent {
     public static class Deleted { //삭제 전 open여부
         private final boolean wasOpen;
     }
-
-
 }

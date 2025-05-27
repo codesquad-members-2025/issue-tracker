@@ -383,6 +383,7 @@ public class IssueService {
         }
     }
 
+    @Transactional
     public void deleteIssue(Long issueId) {
         Issue issue = issueRepository.findById(issueId)
                 .orElseThrow(() -> new IssueNotFoundException(issueId));

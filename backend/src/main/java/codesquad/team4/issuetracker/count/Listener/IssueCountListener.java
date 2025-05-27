@@ -10,33 +10,30 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @RequiredArgsConstructor
 public class IssueCountListener {
-    private final CountDao issueCountDao;
+    private final CountDao countDao;
 
-    /** 생성 → open +1 */
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onCreated(IssueEvent.Created e) {
-        issueCountDao.incrementIssueOpen();
+        countDao.incrementIssueOpen();
     }
 
-    /** 상태 변경 → open/closed 증감 */
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onStatusChanged(IssueEvent.StatusChanged e) {
         if (e.isOldIsOpen() && !e.isNewIsOpen()) {
-            issueCountDao.decrementIssueOpen();
-            issueCountDao.incrementIssueClosed();
+            countDao.decrementIssueOpen();
+            countDao.incrementIssueClosed();
         } else if (!e.isOldIsOpen() && e.isNewIsOpen()) {
-            issueCountDao.incrementIssueOpen();
-            issueCountDao.decrementIssueClosed();
+            countDao.incrementIssueOpen();
+            countDao.decrementIssueClosed();
         }
     }
 
-    /** 삭제 → wasOpen 여부에 따라 –1 */
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onDeleted(IssueEvent.Deleted e) {
         if (e.isWasOpen()) {
-            issueCountDao.decrementIssueOpen();
+            countDao.decrementIssueOpen();
         } else {
-            issueCountDao.decrementIssueClosed();
+            countDao.decrementIssueClosed();
         }
     }
 
