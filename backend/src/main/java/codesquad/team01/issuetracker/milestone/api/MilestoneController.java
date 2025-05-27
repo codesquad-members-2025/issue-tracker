@@ -19,7 +19,7 @@ public class MilestoneController {
 
 	private final MilestoneService milestoneService;
 
-	@GetMapping("/v1/filters/milestones")
+	@GetMapping("/v1/milestones/filters")
 	public ResponseEntity<ApiResponse<MilestoneDto.MilestoneFilterListResponse>> getMilestones() {
 		MilestoneDto.MilestoneFilterListResponse response = milestoneService.findMilestonesForFilter();
 		log.info("마일스톤 목록 개수= {}", response.totalCount());
