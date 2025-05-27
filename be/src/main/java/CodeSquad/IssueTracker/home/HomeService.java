@@ -23,6 +23,7 @@ public class HomeService {
         int openIssueNumber = issueService.countIssuesByOpenStatus(true, condition);
         int closeIssueNumber = issueService.countIssuesByOpenStatus(false, condition);
         int maxPage = issueService.getIssueMaxPage(condition);
+
         return new HomeResponseDto(
                 issueService.findIssuesByFilter(currentPage, condition),
                 userService.findAllUserDetails(),
