@@ -1,5 +1,7 @@
 package codesquad.team4.issuetracker.milestone;
 
+import codesquad.team4.issuetracker.count.CountService;
+import codesquad.team4.issuetracker.count.dto.MilestoneCountDto;
 import codesquad.team4.issuetracker.entity.Milestone;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneRequestDto;
@@ -37,6 +39,9 @@ public class MilestoneServiceTest {
     @Autowired
     private MilestoneRepository milestoneRepository;
 
+    @Autowired
+    private CountService countService;
+
     @BeforeEach
     void setUp() {
         TestDataHelper.insertMilestone(jdbcTemplate, 1L, "week1", "1주차", LocalDate.of(2025, 6, 25), true);
@@ -46,6 +51,7 @@ public class MilestoneServiceTest {
         TestDataHelper.insertUser(jdbcTemplate, 1L, "user1");
         TestDataHelper.insertIssueAllParams(jdbcTemplate, 1L, "issue1", true, 1L, "1111", null, 1L);
         TestDataHelper.insertIssueAllParams(jdbcTemplate, 2L, "issue2", false, 1L, "2222", null, 1L);
+        TestDataHelper.insertSummaryCount(jdbcTemplate, 1, 1, 1, 1, 1,0, 0);
     }
     @Test
     @DisplayName("마일스톤 필터링 정보 조회")
@@ -128,7 +134,7 @@ public class MilestoneServiceTest {
     @Test
     @DisplayName("마일스톤 개수 조회")
     void countMilestone_closed() {
-        MilestoneResponseDto.MilestoneCountDto result = milestoneService.getMilestoneCount();
+        MilestoneCountDto result = countService.getMilestoneCounts();
         assertThat(result.getOpenCount()).isEqualTo(1);
         assertThat(result.getClosedCount()).isEqualTo(1);
     }

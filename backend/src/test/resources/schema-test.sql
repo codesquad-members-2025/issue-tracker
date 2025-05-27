@@ -80,3 +80,15 @@ CREATE TABLE issue_assignee (
                                 CONSTRAINT fk_issue_assignee_issue FOREIGN KEY (issue_id) REFERENCES issue(issue_id),
                                 CONSTRAINT fk_issue_assignee_user FOREIGN KEY (assignee_id) REFERENCES `user`(user_id)
 );
+
+CREATE TABLE summary_count (
+                               id TINYINT PRIMARY KEY,
+                               issue_open_count     INT NOT NULL DEFAULT 0,
+                               issue_closed_count   INT NOT NULL DEFAULT 0,
+                               milestone_open_count INT NOT NULL DEFAULT 0,
+                               milestone_closed_count INT NOT NULL DEFAULT 0,
+                               labels_count         INT NOT NULL DEFAULT 0,
+                               milestones_count     INT NOT NULL DEFAULT 0
+);
+
+MERGE INTO summary_count (id) KEY(id) VALUES (1);
