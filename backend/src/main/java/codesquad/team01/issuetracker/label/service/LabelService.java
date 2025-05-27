@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import codesquad.team01.issuetracker.common.exception.DuplicateLabelName;
+import codesquad.team01.issuetracker.label.domain.Label;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +32,23 @@ public class LabelService {
 			.totalCount(labels.size())
 			.labels(labels)
 			.build();
+	}
+
+	public LabelDto.LabelCreateResponse saveLabel(LabelDto.LabelCreateRequest request) {
+		String labelName = request.name();
+		if (labelRepository.existsByName(labelName)) {
+			throw new DuplicateLabelName("레이블 이름 중복");
+		}
+
+		Label entity = Label.builder()
+			.name(request.name())
+			.description(request.description())
+			.color(request.color())
+			.textColor(request.textColor())
+			.build();
+
+		Label savedLabel = labelRepository.save(entity);
+
+		return LabelDto.LabelCreateResponse.from(savedLabel);
 	}
 }
