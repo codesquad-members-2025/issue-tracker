@@ -4,7 +4,7 @@ import { GhostButton } from '../components/Button';
 
 export function PrevButton({ onClick }) {
   return (
-    <GhostButton>
+    <GhostButton onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="24px"
@@ -20,7 +20,7 @@ export function PrevButton({ onClick }) {
 }
 export function NextButton({ onClick }) {
   return (
-    <GhostButton>
+    <GhostButton onClick={onClick}>
       <span>Next</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"

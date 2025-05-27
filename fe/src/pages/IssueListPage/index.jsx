@@ -23,6 +23,7 @@ import useLabelStore from '@/stores/labelStore';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import { mapToUnifiedId } from '@/utils/mapToUnifiedId/mapToUnifiedId';
 import { mapIssueListToUnifiedId } from '@/utils/mapToUnifiedId/mapIssueListToUnifiedId';
+import DefaultSwipeButton from '@/units/pagination/DefaultSwipeButton';
 
 const Container = styled.div`
   display: flex;
@@ -174,6 +175,7 @@ export default function IssueListPage() {
         </KanbanHeader>
         <KanbanMain />
       </Kanban>
+      <DefaultSwipeButton />
       {isActive && <DetailFilterModal />}
     </Container>
   );

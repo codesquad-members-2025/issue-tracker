@@ -39,7 +39,7 @@
     {
       "id": 2,
       "title": "UI 개선 요청",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 102,
         "nickName": "alice"
@@ -66,7 +66,7 @@
     {
       "id": 3,
       "title": "서버 응답 지연 문제",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 103,
         "nickName": "bob"
@@ -117,7 +117,7 @@
     {
       "id": 5,
       "title": "보안 취약점 발견",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 105,
         "nickName": "david"
@@ -303,7 +303,7 @@
     {
       "id": 11,
       "title": "릴리즈 노트 자동 생성",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 102,
         "nickName": "alice"
@@ -331,7 +331,7 @@
     {
       "id": 12,
       "title": "다국어 지원",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 103,
         "nickName": "bob"
@@ -359,7 +359,7 @@
     {
       "id": 13,
       "title": "로그아웃 버튼 위치 변경",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 104,
         "nickName": "charlie"
@@ -387,7 +387,7 @@
     {
       "id": 14,
       "title": "API 응답 속도 개선",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 105,
         "nickName": "david"
@@ -420,7 +420,7 @@
     {
       "id": 15,
       "title": "마일스톤 삭제 오류",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 101,
         "nickName": "devchan"
