@@ -6,6 +6,7 @@ import useIssueDetailStore from '@/stores/IssueDetailStore';
 import NewIssueInputForm from '@/units/issuePage/NewIssueInputForm';
 import { useAuthStore } from '@/stores/authStore';
 import NewIssueFooter from '@/units/issuePage/NewIssueFooter';
+import useValidation from '@/hooks/useValidation';
 
 const Body = styled.form`
   display: flex;
@@ -22,8 +23,13 @@ const Main = styled.div`
 `;
 
 export default function NewIssuePage() {
-  const issue = useIssueDetailStore((s) => s.issue);
   const titleText = '새로운 이슈 작성';
+  const existTitle = useIssueDetailStore.getState().issue.title; //기존의 초기 title
+
+  //🐛 -> 리렌더링 될때마다 계속해서 커스텀 훅의 초깃값이 변함. -> 유효성 검사 불가.
+  const { isValid, setCurrentInput, currentInput } = useValidation({
+    existedString: '',
+  });
 
   function submitHandler(e) {
     e.preventDefault();
@@ -34,10 +40,10 @@ export default function NewIssuePage() {
     <Body onSubmit={submitHandler}>
       <NewIssueTile title={titleText} />
       <Main>
-        <NewIssueInputForm />
+        <NewIssueInputForm setCurrentInput={setCurrentInput} />
         <SideBar />
       </Main>
-      <NewIssueFooter />
+      <NewIssueFooter isValid={isValid} />
     </Body>
   );
 }

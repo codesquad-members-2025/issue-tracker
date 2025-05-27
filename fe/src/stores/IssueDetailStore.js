@@ -6,15 +6,15 @@ const useIssueDetailStore = create(
   immer((set) => ({
     // issue 프로퍼티 -> 서버로부터 DB에 있는 데이터를 보내줄때 업데이트하는 용도입니다.
     issue: {
-      id: '',
+      issueId: '',
       title: '',
-      comment: '',
-      files: [],
+      issueFileUrl: [],
       authorId: null,
       milestoneId: null,
       isOpen: '',
       lastModifiedAt: '',
     },
+    comment: { commentId: null, content: '', issueFileUrl: [] },
 
     /* 
     - 아래의 프로퍼티 4개는 서버로부터 데이터를 받을때(*이슈 상세페이지_이슈가 이미 존재할경우*) 업데이트 됩니다.
@@ -25,6 +25,7 @@ const useIssueDetailStore = create(
     labels: [],
     milestone: {},
     comments: [],
+
     //클릭하는 순간 적용
     toggleAssignee: (item) => {
       set((state) => {
@@ -66,18 +67,36 @@ const useIssueDetailStore = create(
         state.issue.title = value;
       });
     },
-    changeComment: (value) => {
+
+    addOrEditComment: (value, commentId = null) => {
       set((state) => {
-        state.issue.comment = value;
+        if (commentId) {
+          // 편집 모드: comments에서 해당 객체로 교체(초기화), 이후 state.comment에 입력값 적용
+          const target = state.comments.find((comment) => comment.commentId === commentId);
+          state.comment = target;
+        }
+        state.comment = {
+          commentId: null,
+          content: value,
+          issueFileUrl: [],
+        };
       });
     },
 
+    // 상세 이슈페이지 GET 패치 후 초기화 로직
+    initComments: (comments) => {
+      set((state) => {
+        state.comments = comments;
+      });
+    },
+
+    //검토 필요
     setFiles: (newFiles) =>
       set((state) => {
         const map = new Map();
-        state.issue.files.forEach((f) => map.set(f.name, f));
+        state.comment.issueFileUrl.forEach((f) => map.set(f.name, f));
         newFiles.forEach((f) => map.set(f.name, f));
-        state.issue.files = Array.from(map.values());
+        state.comment.issueFileUrl = Array.from(map.values());
       }),
   })),
 );

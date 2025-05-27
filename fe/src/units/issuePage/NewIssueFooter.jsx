@@ -23,7 +23,7 @@ const ClearBtn = styled(LargeContainerButton)`
   justify-content: center;
 `;
 
-export default function NewIssueFooter() {
+export default function NewIssueFooter({ isValid }) {
   const navigator = useNavigate();
   return (
     <Container>
@@ -46,7 +46,7 @@ export default function NewIssueFooter() {
           </svg>
           <span>작성취소</span>
         </GhostButton>
-        <ClearBtn disabled={true}>완료</ClearBtn>
+        <ClearBtn disabled={!isValid}>완료</ClearBtn>
       </Wrapper>
     </Container>
   );

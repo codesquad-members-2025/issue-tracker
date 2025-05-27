@@ -21,7 +21,7 @@ export default function useValidation({ existedString }) {
   useEffect(() => {
     if (existedString === currentInput) {
       setIsValid(false);
-    } else if (currentInpu.trim() === '') {
+    } else if (currentInput.trim() === '') {
       setIsValid(false);
     } else {
       setIsValid(true);
