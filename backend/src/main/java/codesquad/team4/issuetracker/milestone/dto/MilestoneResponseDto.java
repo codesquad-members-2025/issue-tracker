@@ -28,14 +28,6 @@ public class MilestoneResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class MilestoneCountDto {
-        private Integer openCount;
-        private Integer closedCount;
-    }
-
-    @AllArgsConstructor
-    @Getter
-    @Builder
     public static class MilestoneDto {
         private Long id;
         private String name;

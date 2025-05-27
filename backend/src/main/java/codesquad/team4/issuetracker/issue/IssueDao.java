@@ -156,15 +156,6 @@
             return jdbcTemplate.queryForObject(sql, Integer.class, isOpen);
         }
 
-        public Set<Long> findExistingIssueIds(List<Long> issueIds) {
-            String placeholders = issueIds.stream().map(id -> "?").collect(Collectors.joining(", "));
-            String sql = "SELECT issue_id FROM issue WHERE issue_id IN (" + placeholders + ")";
-            List<Long> results = jdbcTemplate.query(sql,
-                (rs, rowNum) -> rs.getLong("issue_id"),
-                issueIds.toArray());
-            return new HashSet<>(results);
-        }
-
         public int updateIssueStatusByIds(boolean isOpen, List<Long> issueIds) {
             String placeholders = issueIds.stream().map(id -> "?").collect(Collectors.joining(", "));
             String updateSql = "UPDATE issue SET is_open = ? WHERE issue_id IN (" + placeholders + ")";

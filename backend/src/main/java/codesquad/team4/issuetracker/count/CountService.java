@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CountService {
-    private final IssueCountDao issueCountDao;
+    private final CountDao issueCountDao;
 
     public IssueCountDto getIssueCounts() {
         return issueCountDao.getIssueCounts();
