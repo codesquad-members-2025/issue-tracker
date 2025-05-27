@@ -105,10 +105,7 @@ public class MilestoneService {
                 .orElseThrow(() -> new MilestoneNotFoundException(milestoneId));
 
         boolean wasOpen = milestone.isOpen();
-        log.info("▶ [Service] deleteMilestone: id={} ▶ deleting, wasOpen={}",
-                milestoneId, wasOpen);
         milestoneRepository.deleteById(milestoneId);
-        log.info("▶ [Service] deleteMilestone: id={} ▶ publishing Deleted", milestoneId);
         eventPublisher.publishEvent(new MilestoneEvent.Deleted(wasOpen));
     }
 
@@ -123,8 +120,6 @@ public class MilestoneService {
         boolean newOpen = milestone.isOpen();
 
         if (oldOpen != newOpen) {
-            log.info("▶ [Service] closeMilestone: id={}, {}→{} ▶ publishing StatusChanged",
-                    milestoneId, oldOpen, newOpen);
             eventPublisher.publishEvent(
                     new MilestoneEvent.StatusChanged(oldOpen, false)
             );
