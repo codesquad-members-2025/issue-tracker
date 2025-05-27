@@ -38,11 +38,11 @@ out/
 
 # Spring Boot config files (all profiles)
 application*.properties
-application*.yml
-application*.yaml
 *.properties
 *.yml
 *.yaml
+/src/main/resources/properties/env.properties
+!application.yaml
 
 .DS_Store
 ._.DS_Store
