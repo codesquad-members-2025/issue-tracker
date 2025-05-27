@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class IssueQueryService {
   private final IssueQueryRepository issueQueryRepository;
   private final LabelQueryRepository labelQueryRepository;
@@ -38,7 +39,6 @@ public class IssueQueryService {
   private final UserQueryRepository userQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
 
-  @Transactional(readOnly = true)
   public IssuePageResponse getPagedIssues(IssueSearchRequest searchRequest, Integer page,
       Integer perPage) {
     log.debug("조건에 맞는 이슈 조회 요청");
@@ -99,7 +99,6 @@ public class IssueQueryService {
     );
   }
 
-  @Transactional(readOnly = true)
   public IssueDetailResponse getIssueById(Long issueId) {
     IssueBaseResponse issueBase = issueQueryRepository.findIssueDetailById(issueId);
     List<LabelResponse> labelList = labelQueryRepository.getLabelsByIssueId(issueId);

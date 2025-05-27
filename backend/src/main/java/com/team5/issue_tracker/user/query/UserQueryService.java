@@ -3,6 +3,7 @@ package com.team5.issue_tracker.user.query;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.team5.issue_tracker.user.dto.UserScrollResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserQueryService {
   private final UserQueryRepository userQueryRepository;
 

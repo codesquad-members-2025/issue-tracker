@@ -3,6 +3,7 @@ package com.team5.issue_tracker.milestone.query;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.team5.issue_tracker.issue.dto.response.IssueMilestoneScrollResponse;
 import com.team5.issue_tracker.milestone.dto.response.MilestoneCountResponse;
 import com.team5.issue_tracker.milestone.dto.response.MilestonePageResponse;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MilestoneQueryService {
   private final MilestoneQueryRepository milestoneQueryRepository;
 
