@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
-import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
+import codesquad.team4.issuetracker.count.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
