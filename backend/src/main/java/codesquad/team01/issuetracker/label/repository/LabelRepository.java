@@ -20,4 +20,6 @@ public interface LabelRepository extends CrudRepository<Label, Integer> {
 		WHERE deleted_at IS NULL
 		""")
 	List<LabelDto.LabelRow> findLabels();
+
+	boolean existsByName(String name);
 }
