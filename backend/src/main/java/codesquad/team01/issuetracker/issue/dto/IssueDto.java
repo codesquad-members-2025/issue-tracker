@@ -1,14 +1,8 @@
 package codesquad.team01.issuetracker.issue.dto;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
@@ -69,9 +63,8 @@ public class IssueDto {
 
 		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
 
-		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds,
+		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds
 
-		String cursor // 무한스크롤 커서
 	) {
 		@Override
 		public String toString() {
@@ -81,7 +74,6 @@ public class IssueDto {
 				", milestoneId=" + milestoneId +
 				", labelIds=" + labelIds +
 				", assigneeIds=" + assigneeIds +
-				", cursor='" + cursor + '\'' +
 				'}';
 		}
 
@@ -91,24 +83,6 @@ public class IssueDto {
 
 		public String getState() { // 값이 들어오지 않은 경우 초기값 설정
 			return state != null ? state : "open";
-		}
-
-		public CursorDto.CursorData decode() {
-			if (cursor == null || cursor.isBlank()) {
-				return null;
-			}
-
-			try {
-				String decoded = new String(Base64.getDecoder().decode(cursor), StandardCharsets.UTF_8);
-				ObjectMapper mapper = new ObjectMapper()
-					.registerModule(new JavaTimeModule())
-					.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-				return mapper.readValue(decoded, CursorDto.CursorData.class);
-			} catch (Exception e) {
-				log.warn("커서 디코딩 실패", e);
-				// 디코딩 실패 시 null 반환 -> 첫 페이지
-				return null;
-			}
 		}
 	}
 

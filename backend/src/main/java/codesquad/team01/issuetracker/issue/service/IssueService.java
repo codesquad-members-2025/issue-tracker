@@ -25,14 +25,14 @@ public class IssueService {
 
 	private final IssueAssembler issueAssembler;
 
-	public IssueDto.ListResponse findIssues(IssueDto.ListQueryRequest request) {
+	public IssueDto.ListResponse findIssues(IssueDto.ListQueryRequest request, CursorDto.CursorData cursor) {
 
 		final int PAGE_SIZE = issueRepository.PAGE_SIZE;
 
 		// 이슈 기본 정보 조회 - (담당자, 레이블 제외)
 		List<IssueDto.BaseRow> issues = issueRepository.findIssuesWithFilters(
 			request.getIssueState(), request.writerId(), request.milestoneId(),
-			request.labelIds(), request.assigneeIds(), request.decode());
+			request.labelIds(), request.assigneeIds(), cursor);
 
 		boolean hasNext = issues.size() > PAGE_SIZE; // 다음 페이지 존재 여부
 
