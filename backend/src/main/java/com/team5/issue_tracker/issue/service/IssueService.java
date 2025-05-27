@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team5.issue_tracker.common.comment.domain.Comment;
-import com.team5.issue_tracker.common.comment.domain.CommentAttachment;
-import com.team5.issue_tracker.common.comment.dto.CommentRequest;
-import com.team5.issue_tracker.common.comment.reqository.CommentAttachmentRepository;
 import com.team5.issue_tracker.common.comment.reqository.CommentRepository;
 import com.team5.issue_tracker.issue.domain.Issue;
 import com.team5.issue_tracker.issue.domain.IssueAssignee;
@@ -29,7 +26,6 @@ public class IssueService {
   private final IssueLabelRepository issueLabelRepository;
   private final IssueAssigneeRepository issueAssigneeRepository;
   private final CommentRepository commentRepository;
-  private final CommentAttachmentRepository commentAttachmentRepository;
   private final UserService userService;
 
   @Transactional
@@ -47,11 +43,8 @@ public class IssueService {
     saveIssueLabels(savedIssueID, request.getLabelIds());
     saveIssueAssignees(savedIssueID, request.getAssigneeIds());
 
-    CommentRequest commentRequest = request.getComment();
-    Comment comment = new Comment(userId, savedIssueID, commentRequest.getContent(), now, now);
-    Comment savedComment = commentRepository.save(comment);
-
-    saveCommentAttachment(commentRequest, savedComment);
+    Comment comment = new Comment(userId, savedIssueID, request.getContent(), now, now);
+    commentRepository.save(comment);
 
     return savedIssueID;
   }
@@ -68,16 +61,4 @@ public class IssueService {
     }
   }
 
-  private void saveCommentAttachment(CommentRequest commentRequest, Comment savedComment) {
-    List<String> attachments = commentRequest.getAttachments();
-    if (attachments != null && !attachments.isEmpty()) {
-      for (String fileUrl : attachments) {
-        CommentAttachment attachment = new CommentAttachment(
-            savedComment.getId(),
-            fileUrl
-        );
-        commentAttachmentRepository.save(attachment);
-      }
-    }
-  }
 }

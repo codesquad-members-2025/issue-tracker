@@ -256,19 +256,3 @@ INSERT INTO issue_assignee (id, issue_id, assignee_id)
 VALUES (29, 9, 3);
 INSERT INTO issue_assignee (id, issue_id, assignee_id)
 VALUES (30, 10, 4);
-
-INSERT INTO comment_attachment (id, comment_id, file_url)
-VALUES
-    (1, 1, 'https://images.unsplash.com/photo-1601758003122-58e5f6b16c89?fit=crop&w=400&q=80'), -- 고양이
-    (2, 2, 'https://images.unsplash.com/photo-1619983081563-430f63602781?fit=crop&w=400&q=80'), -- 강아지
-    (3, 5, 'https://images.unsplash.com/photo-1560807707-8cc77767d783?fit=crop&w=400&q=80' ), -- 햄스터
-    (4, 7, 'https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?fit=crop&w=400&q=80'), -- 토끼
-    (5, 8, 'https://images.unsplash.com/photo-1618828664039-f1999131840c?fit=crop&w=400&q=80' ), -- 새끼 고양이
-    (6, 11, 'https://images.unsplash.com/photo-1507149833265-60c372daea22?fit=crop&w=400&q=80' ), -- 판다
-    (7, 13, 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?fit=crop&w=400&q=80'), -- 수달
-    (8, 14, 'https://images.unsplash.com/photo-1501706362039-c6e8095b3d9a?fit=crop&w=400&q=80'), -- 앵무새
-    (9, 18, 'https://images.unsplash.com/photo-1621391404769-21c14b3b4801?fit=crop&w=400&q=80'), -- 병아리
-    (10, 21, 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?fit=crop&w=400&q=80'), -- 아기여우
-    (11, 23, 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?fit=crop&w=400&q=80'), -- 고슴도치
-    (12, 27, 'https://images.unsplash.com/photo-1508780709619-79562169bc64?fit=crop&w=400&q=80'), -- 아기 사슴
-    (13, 30, 'https://images.unsplash.com/photo-1595433707802-44d4b4d6fb32?fit=crop&w=400&q=80'); -- 새끼 고양이

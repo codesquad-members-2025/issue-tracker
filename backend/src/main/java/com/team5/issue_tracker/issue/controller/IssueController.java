@@ -51,6 +51,14 @@ public class IssueController {
         ApiResponse.success(issueQueryService.getPagedIssues(searchRequest, page, perPage)));
   }
 
+  @PostMapping
+  public ResponseEntity<ApiResponse<Long>> createIssue(
+      @Valid @RequestBody IssueCreateRequest request
+  ) {
+    log.info("POST /api/issues 요청");
+    return ResponseEntity.ok(ApiResponse.success(issueService.createIssue(request)));
+  }
+
   @GetMapping("/{issueId}")
   public ResponseEntity<ApiResponse<IssueDetailResponse>> getIssueById(@PathVariable Long issueId) {
     IssueDetailResponse response = issueQueryService.getIssueById(issueId);
@@ -63,14 +71,6 @@ public class IssueController {
       @Valid @RequestBody CommentRequest request
   ) {
     return ResponseEntity.ok(ApiResponse.success(commentService.addComment(issueId, request)));
-  }
-
-  @PostMapping
-  public ResponseEntity<ApiResponse<Long>> createIssue(
-      @Valid @RequestBody IssueCreateRequest request
-  ) {
-    log.info("POST /api/issues 요청");
-    return ResponseEntity.ok(ApiResponse.success(issueService.createIssue(request)));
   }
 
   @GetMapping("/authors")
