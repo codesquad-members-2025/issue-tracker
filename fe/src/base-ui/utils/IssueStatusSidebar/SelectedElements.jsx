@@ -3,7 +3,7 @@ import { typography } from '@/styles/foundation';
 import UserAvatar from '../UserBadge';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import Label from '../Label';
-import MilestoneProgressBar from '@/base-ui/IssuePage/milestoneProgressBar';
+import MilestoneProgressBar from '@/base-ui/IssuePage/MilestoneProgressBar';
 
 const Container = styled.div`
   display: flex;
