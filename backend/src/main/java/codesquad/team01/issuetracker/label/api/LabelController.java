@@ -25,7 +25,7 @@ public class LabelController {
 		return ResponseEntity.ok(ApiResponse.success(listResponse));
 	}
 
-	@GetMapping("/v1/filters/labels")
+	@GetMapping("/v1/labels/filters")
 	public ResponseEntity<ApiResponse<LabelDto.LabelFilterListResponse>> getLabelFilter() {
 		LabelDto.LabelFilterListResponse response = labelService.findLabelsForFilter();
 		log.info("레이블 목록 개수= {}", response.totalCount());

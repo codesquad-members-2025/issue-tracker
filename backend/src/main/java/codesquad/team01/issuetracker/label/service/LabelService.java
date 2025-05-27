@@ -1,6 +1,7 @@
 package codesquad.team01.issuetracker.label.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,10 @@ public class LabelService {
 	private final LabelQueryRepository labelQueryRepository;
 
 	public LabelDto.ListResponse getLabels() {
-		List<LabelDto.ListItemResponse> items = labelRepository.findLabels();
+		List<LabelDto.ListItemResponse> items = labelRepository.findLabels()
+			.stream()
+			.map(LabelDto.ListItemResponse::from)
+			.collect(Collectors.toList());
 		return new LabelDto.ListResponse(items.size(), items);
 	}
 
