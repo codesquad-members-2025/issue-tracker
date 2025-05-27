@@ -1,0 +1,55 @@
+name: Deploy Spring Boot Backend with CodeDeploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout code
+        uses: actions/checkout@v3
+
+      - name: ☕ Setup JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: 🏗️ Build with Gradle
+        run: |
+          cd be
+          ./gradlew clean build
+
+      - name: 📦 Package for CodeDeploy
+        run: |
+          mkdir -p codedeploy/deploy/scripts
+          cp be/build/libs/*.jar codedeploy/
+          cp deploy/appspec.yml codedeploy/deploy/
+          cp deploy/scripts/*.sh codedeploy/deploy/scripts/
+          chmod +x codedeploy/deploy/scripts/*.sh
+          zip -r codedeploy.zip codedeploy/
+
+      - name: ☁️ Upload to S3
+        run: |
+          aws s3 cp codedeploy.zip s3://${{ secrets.CODEDEPLOY_S3_BUCKET }}/codedeploy.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: 🚀 Trigger CodeDeploy
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{ secrets.CODEDEPLOY_APP_NAME }} \
+            --deployment-group-name ${{ secrets.CODEDEPLOY_GROUP_NAME }} \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --s3-location bucket=${{ secrets.CODEDEPLOY_S3_BUCKET }},key=codedeploy.zip,bundleType=zip \
+            --region ${{ secrets.AWS_REGION }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
