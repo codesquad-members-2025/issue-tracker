@@ -35,6 +35,14 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error(errorMessage));
 	}
 
+	@ExceptionHandler(DuplicateLabelName.class)    // 레이블 생성 시 이미 생성된 레이블과 이름 중복
+	public ResponseEntity<ApiResponse<?>> handleDuplicateLabel(DuplicateLabelName e) {
+		String labelName = e.getLabelName();
+		return ResponseEntity
+			.badRequest()
+			.body(ApiResponse.error("레이블 이름 '" + labelName + "'은(는) 이미 존재합니다."));
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<?>> handleExceptions(Exception e) {
 		log.error("Unhandled exception", e);

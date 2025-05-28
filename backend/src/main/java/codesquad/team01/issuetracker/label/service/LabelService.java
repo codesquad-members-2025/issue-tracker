@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.team01.issuetracker.common.exception.DuplicateLabelName;
 import codesquad.team01.issuetracker.label.domain.Label;
@@ -11,7 +12,9 @@ import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelQueryRepository;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class LabelService {
@@ -36,10 +39,11 @@ public class LabelService {
 			.build();
 	}
 
+	@Transactional
 	public LabelDto.LabelCreateResponse saveLabel(LabelDto.LabelCreateRequest request) {
-		String labelName = request.name();
+		String labelName = request.name().trim();
 		if (labelRepository.existsByName(labelName)) {
-			throw new DuplicateLabelName("레이블 이름 중복");
+			throw new DuplicateLabelName(labelName);
 		}
 
 		Label entity = Label.builder()

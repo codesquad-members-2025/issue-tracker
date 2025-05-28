@@ -1,7 +1,15 @@
 package codesquad.team01.issuetracker.common.exception;
 
 public class DuplicateLabelName extends RuntimeException {
-	public DuplicateLabelName(String message) {
-		super(message);
+
+	private final String labelName;
+
+	public DuplicateLabelName(String labelName) {
+		super("중복된 레이블 이름 : " + labelName);
+		this.labelName = labelName;
+	}
+
+	public String getLabelName() {
+		return labelName;
 	}
 }
