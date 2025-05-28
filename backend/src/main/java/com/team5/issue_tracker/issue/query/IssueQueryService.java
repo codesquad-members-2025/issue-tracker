@@ -11,6 +11,7 @@ import com.team5.issue_tracker.issue.dto.IssueSearchCondition;
 import com.team5.issue_tracker.issue.dto.request.IssueSearchRequest;
 import com.team5.issue_tracker.issue.dto.response.IssueBaseResponse;
 import com.team5.issue_tracker.common.comment.dto.CommentResponse;
+import com.team5.issue_tracker.issue.dto.response.IssueCountResponse;
 import com.team5.issue_tracker.issue.dto.response.IssueDetailResponse;
 import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.dto.response.IssueSummaryResponse;
@@ -45,6 +46,8 @@ public class IssueQueryService {
     IssueSearchCondition searchCondition = getCondition(searchRequest);
     List<IssueQueryDto> issueQueryDtos =
         issueQueryRepository.findIssuesByCondition(searchCondition, page, perPage);
+    IssueCountResponse issueCountResponse =
+        issueQueryRepository.getIssueCountByCondition(searchCondition);
 
     List<Long> issueIds = issueQueryDtos.stream()
         .map(IssueQueryDto::getId)
@@ -63,7 +66,8 @@ public class IssueQueryService {
             labelMap, authorMap, milestoneMap, assigneeMap);
 
     return new IssuePageResponse(issueSummaryResponseList.size(), page, perPage,
-        searchRequest.toQueryString(), issueSummaryResponseList);
+        searchRequest.toQueryString(), issueCountResponse.getOpenCount(),
+        issueCountResponse.getClosedCount(), issueSummaryResponseList);
   }
 
   public UserScrollResponse getScrolledIssueAuthors(String cursor, Integer limit) {
@@ -103,7 +107,8 @@ public class IssueQueryService {
     List<LabelResponse> labelList = labelQueryRepository.getLabelsByIssueId(issueId);
     UserSummaryResponse author = userQueryRepository.getAuthorById(issueBase.getAuthorId());
     List<UserSummaryResponse> assignees = userQueryRepository.getAssigneesByIssueId(issueId);
-    MilestoneResponse milestone = milestoneQueryRepository.getMilestoneById(issueBase.getMilestoneId());
+    MilestoneResponse milestone =
+        milestoneQueryRepository.getMilestoneById(issueBase.getMilestoneId());
     List<CommentResponse> comments = commentQueryRepository.getCommentsByIssueId(issueId);
     return IssueMapper.toDetailResponse(issueBase, labelList, author, assignees, milestone,
         comments);
