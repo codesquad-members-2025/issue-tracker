@@ -12,11 +12,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("refresh_tokens")
+@Table("refresh_token")
 public class RefreshToken {
 	@Id
 	private Integer id;
 	private Integer userId;
 	private String token;
-
 }
