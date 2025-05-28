@@ -3,23 +3,21 @@ package elbin_bank.issue_tracker.issue.application.query.mapper;
 import elbin_bank.issue_tracker.issue.application.query.dto.IssueDetailResponseDto;
 import elbin_bank.issue_tracker.issue.application.query.dto.IssuesResponseDto;
 import elbin_bank.issue_tracker.issue.application.query.dto.MilestoneDto;
-import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
 import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import elbin_bank.issue_tracker.milestone.application.ProgressRateCalculator;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class IssueDtoMapper {
 
     public IssuesResponseDto toIssuesResponseDto(List<IssueProjection> issueProjections,
-                                                 Map<Long, List<LabelProjection>> labelProjections,
-                                                 Map<Long, List<String>> assigneeNames,
                                                  IssueCountProjection issueCountProjection) {
         return new IssuesResponseDto(issueProjections,
                 issueCountProjection.openCount(),
@@ -29,8 +27,16 @@ public class IssueDtoMapper {
     public IssueDetailResponseDto toIssueDetailDto(IssueDetailProjection issueDetailProjection,
                                                    List<LabelProjection> labelProjections,
                                                    List<UserInfoProjection> userInfoProjections) {
-        int progressRate = ProgressRateCalculator.calculate(issueDetailProjection.milestoneTotalIssues(),
-                issueDetailProjection.milestoneClosedIssues());
+        MilestoneDto milestone = Optional.ofNullable(issueDetailProjection.milestoneId())
+                .map(id -> new MilestoneDto(
+                        id,
+                        issueDetailProjection.milestoneName(),
+                        ProgressRateCalculator.calculate(
+                                issueDetailProjection.milestoneTotalIssues(),
+                                issueDetailProjection.milestoneClosedIssues()
+                        )
+                ))
+                .orElse(null);
 
         return new IssueDetailResponseDto(
                 issueDetailProjection.id(),
@@ -40,9 +46,7 @@ public class IssueDtoMapper {
                 issueDetailProjection.title(),
                 issueDetailProjection.contents(),
                 labelProjections,
-                new MilestoneDto(issueDetailProjection.milestoneId(),
-                        issueDetailProjection.milestoneName(),
-                        progressRate),
+                milestone,
                 userInfoProjections,
                 issueDetailProjection.isClosed(),
                 issueDetailProjection.createdAt(),
