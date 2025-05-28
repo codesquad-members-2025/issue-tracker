@@ -50,4 +50,22 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 
     }
 
+    @Override
+    public List<LabelProjection> findAll() {
+        String sql = """
+                SELECT id, name, color, description
+                  FROM label
+                """;
+
+        return jdbc.query(
+                sql,
+                (rs, rowNum) -> new LabelProjection(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("color"),
+                        rs.getString("description")
+                )
+        );
+    }
+
 }

@@ -9,4 +9,6 @@ public interface LabelQueryRepository {
 
     Map<Long, List<LabelProjection>> findByIssueIds(List<Long> issueIds);
 
+    List<LabelProjection> findAll();
+
 }
