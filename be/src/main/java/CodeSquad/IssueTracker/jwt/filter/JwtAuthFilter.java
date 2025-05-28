@@ -60,9 +60,11 @@ public class JwtAuthFilter implements Filter {
         String accessToken = authHeader.substring(7);
         try {
             Claims claims = jwtUtil.validateAccessToken(accessToken);
+
             httpRequest.setAttribute("id", claims.get("loginId")); // 사용자의 식별자 id
             httpRequest.setAttribute("loginId", claims.get("loginUser")); // 로그인 시 사용되는 id
             log.info("[JWT Filter] loginId: {}", claims.get("loginUser"));
+
         } catch (JwtValidationException e) {
             respondUnauthorized(httpResponse, e.getMessage());
             return;

@@ -16,7 +16,7 @@ public class JWTUtil {
     private final String accessSecretKey;
     private final String refreshSecretKey;
     private static final String CLAIM_LOGIN_ID = "loginId";
-    private static final String CLAIM_IMG_URL = "imgUrl";
+    private static final String CLAIM_IMG_URL = "profileImageUrl";
 
     public JWTUtil(
             @Value("${spring.jwt.access-key}") String accessSecretKey,
@@ -32,11 +32,11 @@ public class JWTUtil {
     /*
     JWT Access Token을 생성합니다.(페이로드에 유저 이름과 프로필 사진 링크 정보를 포함)
      */
-    public String createAccessToken(User loginUser, String imgUrl) {
+    public String createAccessToken(User loginUser) {
         return Jwts.builder()
                 .setSubject(loginUser.getLoginId())
                 .claim(CLAIM_LOGIN_ID, loginUser.getLoginId())
-                .claim(CLAIM_IMG_URL, imgUrl)
+                .claim(CLAIM_IMG_URL, loginUser.getProfileImageUrl())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
                 .signWith(Keys.hmacShaKeyFor(accessSecretKey.getBytes(UTF_8)))
