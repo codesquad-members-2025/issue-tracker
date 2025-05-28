@@ -1,7 +1,10 @@
-import { type NewIssueState } from '@/features/newIssue/types';
+import {
+  type NewIssuePayload,
+  type NewIssueState,
+} from '@/features/newIssue/types';
 
-export function buildIssuePayload(form: NewIssueState) {
-  const payload: Record<string, unknown> = {
+export function buildIssuePayload(form: NewIssueState): NewIssuePayload {
+  const payload: NewIssuePayload = {
     title: form.title.trim(),
   };
 
