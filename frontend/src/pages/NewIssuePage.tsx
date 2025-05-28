@@ -1,4 +1,5 @@
 import { useNewIssueForm } from '@/features/newIssue/hooks/useNewIssueForm';
+import { buildIssuePayload } from '@/features/newIssue/utils';
 import VerticalStack from '@/layouts/VerticalStack';
 import Divider from '@/shared/components/Divider';
 import NewIssueActionButtons from '@/features/newIssue/components/NewIssueActionButtons';
@@ -13,7 +14,10 @@ export default function NewIssuePage() {
   }
 
   function handleCreateIssue() {
-    //TODO 이슈 생성 로직 추가
+    const payload = buildIssuePayload(issueForm);
+    console.log('[POST] /api/v1/issues payload:', payload);
+
+    // TODO fetch/postIssue(payload)
   }
 
   return (
