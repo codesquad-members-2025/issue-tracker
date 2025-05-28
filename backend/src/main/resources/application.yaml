@@ -28,6 +28,6 @@ github:
     scope: read:user user:email
 
 jwt:
-  JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-  JWT_ACCESS_TOKEN_LIFETIME: ${JWT_ACCESS_TOKEN_LIFETIME}
-  JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
+  jwt-secret-key: ${JWT_SECRET_KEY}
+  jwt-access-token-lifetime: ${JWT_ACCESS_TOKEN_LIFETIME}
+  jwt-refresh-token-lifetime: ${JWT_REFRESH_TOKEN_LIFETIME}
