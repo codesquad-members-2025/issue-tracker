@@ -1,6 +1,8 @@
 package codesquad.team4.issuetracker.util;
 
 import java.time.LocalDate;
+import java.util.Map;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class TestDataHelper {
@@ -59,22 +61,11 @@ public class TestDataHelper {
     }
 
     public static void insertSummaryCount(JdbcTemplate jdbcTemplate,
-                                          int id,
-                                          int issueOpenCount,
-                                          int issueClosedCount,
-                                          int milestoneOpenCount,
-                                          int milestoneClosedCount,
-                                          int labelsCount,
-                                          int milestonesCount) {
-        jdbcTemplate.update("""
-        UPDATE summary_count SET
-            issue_open_count = ?,
-            issue_closed_count = ?,
-            milestone_open_count = ?,
-            milestone_closed_count = ?,
-            labels_count = ?,
-            milestones_count = ?
-        WHERE id = 1
-    """, issueOpenCount, issueClosedCount, milestoneOpenCount, milestoneClosedCount, labelsCount, milestonesCount);
+                                          Map<String, Integer> summaryMap) {
+        String sql = "UPDATE summary_count SET cnt = ? WHERE type = ?";
+
+        for (Map.Entry<String, Integer> entry : summaryMap.entrySet()) {
+            jdbcTemplate.update(sql, entry.getValue(), entry.getKey());
+        }
     }
 }

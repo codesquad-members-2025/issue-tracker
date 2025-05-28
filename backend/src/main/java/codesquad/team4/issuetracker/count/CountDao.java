@@ -18,14 +18,14 @@ public class CountDao {
 
     public int getCount(String type) {
         return jdbcTemplate.queryForObject(
-                "SELECT count FROM summary_count WHERE type = ?",
+                "SELECT cnt FROM summary_count WHERE type = ?",
                 Integer.class, type
         );
     }
 
     public void adjustCount(String type, int delta) {
         jdbcTemplate.update(
-                "UPDATE summary_count SET count = count + ? WHERE type = ?",
+                "UPDATE summary_count SET cnt = cnt + ? WHERE type = ?",
                 delta, type
         );
     }
