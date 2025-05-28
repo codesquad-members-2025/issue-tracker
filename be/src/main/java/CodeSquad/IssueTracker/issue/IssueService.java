@@ -43,15 +43,15 @@ public class IssueService {
     private final CommentService commentService;
     private final Uploader s3Uploader;
 
-    public void update(Long issueId, IssueUpdateDto updateParam){
+    public void update(Long issueId, IssueUpdateDto updateParam) {
         issueRepository.update(issueId, updateParam);
     }
 
-    public Optional<Issue> findById(Long issueId){
+    public Optional<Issue> findById(Long issueId) {
         return issueRepository.findById(issueId);
     }
 
-    public Iterable<Issue> findAll(){
+    public Iterable<Issue> findAll() {
         return issueRepository.findAll();
     }
 
@@ -88,7 +88,6 @@ public class IssueService {
 
     public IssueDetailResponse toDetailResponse(Issue issue) {
         IssueDetailResponse response = new IssueDetailResponse();
-        response.setIssue(issue);
 
         // ✅ 1. Assignees
         List<IssueAssigneeResponse> issueAssignees = issueAssigneeService.findAssigneeResponsesByIssueId(issue.getIssueId());
@@ -108,6 +107,15 @@ public class IssueService {
         response.setComments(comments);
         response.setMilestone(milestones);
 
+        Optional<User> byId = userService.findById(response.getIssue().getAuthorId());
+
+        if (byId.isPresent()) {
+            User author = byId.get();
+            response.setAuthorName(author.getNickName());
+            response.setAuthorProfileImage(author.getProfileImageUrl());
+        }
+
+
         return response;
     }
 
@@ -123,8 +131,8 @@ public class IssueService {
     }
 
     public int getIssueMaxPage(IssueFilterCondition condition) {
-        int totalCount =  issueRepository.countFilteredIssuesByIsOpen(condition.getIsOpen(), condition);
-        return  (int) Math.ceil((double) totalCount / LIMIT_SIZE);
+        int totalCount = issueRepository.countFilteredIssuesByIsOpen(condition.getIsOpen(), condition);
+        return (int) Math.ceil((double) totalCount / LIMIT_SIZE);
     }
 
     public int countIssuesByOpenStatus(boolean isOpen, IssueFilterCondition condition) {

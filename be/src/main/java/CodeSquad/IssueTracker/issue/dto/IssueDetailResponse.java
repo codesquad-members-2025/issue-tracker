@@ -12,6 +12,8 @@ import java.util.List;
 @Data
 public class IssueDetailResponse {
     private Issue issue;
+    private String authorName;
+    private String authorProfileImage;
 
     private List<IssueAssigneeResponse> assignees = List.of();
     private List<IssueLabelResponse> labels = List.of();
