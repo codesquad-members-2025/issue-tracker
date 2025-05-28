@@ -12,7 +12,7 @@ import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueInfo;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueListDto;
 import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelInfo;
 import codesquad.team4.issuetracker.util.OpenStatus;
-import codesquad.team4.issuetracker.util.Parser;
+import codesquad.team4.issuetracker.util.IssueFilteringParser;
 import codesquad.team4.issuetracker.util.TestDataHelper;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -281,7 +281,7 @@ class IssueServiceH2Test {
         Long milestoneId, Long commentAuthorId, List<Long> labelIds) {
 
         // given
-        IssueRequestDto.IssueFilterParamDto filterDto = Parser.parseFilterCondition(q);
+        IssueRequestDto.IssueFilterParamDto filterDto = IssueFilteringParser.parseFilterCondition(q);
 
         // when
         IssueResponseDto.IssueListDto result = issueService.getIssues(filterDto, 0, 10);

@@ -5,7 +5,7 @@ import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDt
 import java.util.ArrayList;
 import java.util.List;
 
-public class Parser {
+public class IssueFilteringParser {
     public static IssueRequestDto.IssueFilterParamDto parseFilterCondition(String query) {
         String[] conditions = query.split(" ");
 

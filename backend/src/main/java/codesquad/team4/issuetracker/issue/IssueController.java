@@ -6,7 +6,7 @@ import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDt
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.response.ApiResponse;
-import codesquad.team4.issuetracker.util.Parser;
+import codesquad.team4.issuetracker.util.IssueFilteringParser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class IssueController {
     @GetMapping("")
     public ApiResponse<IssueResponseDto.IssueListDto> showIssueList(@RequestParam(required = false) String q, Pageable pageable) {
 
-        IssueFilterParamDto filter = Parser.parseFilterCondition(q);
+        IssueFilterParamDto filter = IssueFilteringParser.parseFilterCondition(q);
         IssueResponseDto.IssueListDto issues = issueService.getIssues(filter, pageable.getPageNumber(), pageable.getPageSize());
 
         return ApiResponse.success(issues);
