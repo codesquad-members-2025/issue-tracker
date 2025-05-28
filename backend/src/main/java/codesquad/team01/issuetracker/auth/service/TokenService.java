@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 import codesquad.team01.issuetracker.auth.domain.RefreshToken;
 import codesquad.team01.issuetracker.auth.dto.AuthDto;
 import codesquad.team01.issuetracker.auth.repository.RefreshTokenRepository;
-import codesquad.team01.issuetracker.auth.util.JwtUtil;
+import codesquad.team01.issuetracker.auth.util.UserAuthorizationJwtManager;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class TokenService {
 
-	private final JwtUtil jwtUtil;
+	private final UserAuthorizationJwtManager userAuthorizationJwtManager;
 	private final RefreshTokenRepository refreshTokenRepository;
 
 	public AuthDto.LoginResponse createTokens(int id, String profileImageUrl, String username) {
@@ -25,24 +25,22 @@ public class TokenService {
 		claims.put("username", username);
 		claims.put("profileImageUrl", profileImageUrl);
 
-		int subject = id;
-
 		// JWT 생성
-		String accessToken = jwtUtil.createAccessToken(id, claims);
+		String accessToken = userAuthorizationJwtManager.createAccessToken(id, claims);
 
 		// DB에 저장된 리프레시 토큰 조회
-		Optional<RefreshToken> existingOpt = refreshTokenRepository.findByUserId(id);
+		Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByUserId(id);
 		String refreshToken;
 
-		if (existingOpt.isPresent()) {
-			RefreshToken existing = existingOpt.get();
+		if (optionalRefreshToken.isPresent()) {
+			RefreshToken existing = optionalRefreshToken.get();
 			// 만료 여부 체크
-			if (jwtUtil.validateRefreshToken(existing.getToken())) {
+			if (userAuthorizationJwtManager.validateRefreshToken(existing.getToken())) {
 				// 만료되지 않았으면 DB 토큰 그대로
 				refreshToken = existing.getToken();
 			} else {
 				// 만료됐으면 새로 발급함 (DB 업데이트)
-				refreshToken = jwtUtil.createRefreshToken(id);
+				refreshToken = userAuthorizationJwtManager.createRefreshToken(id);
 				RefreshToken updated = RefreshToken.builder()
 					.id(existing.getId())
 					.userId(id)
@@ -52,15 +50,13 @@ public class TokenService {
 			}
 		} else {
 			// 없으면 새로 발급
-			refreshToken = jwtUtil.createRefreshToken(id);
+			refreshToken = userAuthorizationJwtManager.createRefreshToken(id);
 			RefreshToken created = RefreshToken.builder()
 				.userId(id)
 				.token(refreshToken)
 				.build();
 			refreshTokenRepository.save(created);
 		}
-
 		return new AuthDto.LoginResponse(accessToken, refreshToken);
 	}
-
 }
