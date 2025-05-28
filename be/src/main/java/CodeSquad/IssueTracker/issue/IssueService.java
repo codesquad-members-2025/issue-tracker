@@ -43,10 +43,6 @@ public class IssueService {
     private final CommentService commentService;
     private final Uploader s3Uploader;
 
-    public Issue save(Issue issue){
-        return issueRepository.save(issue);
-    }
-
     public void update(Long issueId, IssueUpdateDto updateParam){
         issueRepository.update(issueId, updateParam);
     }
@@ -72,9 +68,9 @@ public class IssueService {
         issue.setLastModifiedAt(LocalDateTime.now());
 
         if (files != null && !files.isEmpty()) {
-            MultipartFile file = files.get(0);
-            String imageUrl = s3Uploader.upload(file);
-            issue.setImageUrl(imageUrl);
+            MultipartFile file = files.getFirst();
+            String issueFileUrl = s3Uploader.upload(file);
+            issue.setIssueFileUrl(issueFileUrl);
         }
 
         Issue saved = issueRepository.save(issue);

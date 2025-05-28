@@ -17,7 +17,7 @@ public class CommentResponseDto {
     public CommentResponseDto(Comment comment, User author) {
         this.commentId = comment.getCommentId();
         this.content = comment.getContent();
-        this.imageUrl = comment.getImageUrl();
+        this.imageUrl = comment.getIssueFileUrl();
         this.authorNickname=author.getNickName();
         this.lastModifiedAt = comment.getLastModifiedAt();
     }

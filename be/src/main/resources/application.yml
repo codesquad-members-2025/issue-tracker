@@ -62,6 +62,7 @@ spring:
         static: ${AWS_REGION}
       s3:
         bucket: ${S3_BUCKET_NAME}
+        url: ${S3_URL_NAME}
 
   sql:
     init:
