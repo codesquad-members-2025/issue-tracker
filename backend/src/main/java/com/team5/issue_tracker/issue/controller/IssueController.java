@@ -2,6 +2,7 @@ package com.team5.issue_tracker.issue.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,11 @@ import com.team5.issue_tracker.common.comment.service.CommentService;
 import com.team5.issue_tracker.common.dto.ApiResponse;
 import com.team5.issue_tracker.issue.dto.request.IssueSearchRequest;
 import com.team5.issue_tracker.issue.dto.request.IssueCreateRequest;
+import com.team5.issue_tracker.issue.dto.request.UpdateIssueAssigneesRequest;
+import com.team5.issue_tracker.issue.dto.request.UpdateIssueLabelsRequest;
+import com.team5.issue_tracker.issue.dto.request.UpdateIssueMilestoneRequest;
+import com.team5.issue_tracker.issue.dto.request.UpdateIssueStatusRequest;
+import com.team5.issue_tracker.issue.dto.request.UpdateIssueTitleRequest;
 import com.team5.issue_tracker.issue.dto.response.IssueDetailResponse;
 import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
 import com.team5.issue_tracker.issue.parser.IssueSearchRequestParser;
@@ -99,5 +105,50 @@ public class IssueController {
   ) {
     return ResponseEntity.ok(
         ApiResponse.success(milestonePageResponse.getScrolledFilterMilestones(cursor, limit)));
+  }
+
+  @PatchMapping("/{issueId}/title")
+  public ResponseEntity<Void> updateIssueTitle(
+      @PathVariable Long issueId,
+      @Valid @RequestBody UpdateIssueTitleRequest request
+  ) {
+    issueService.updateIssueTitle(issueId, request);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/{issueId}/status")
+  public ResponseEntity<Void> updateIssueStatus(
+      @PathVariable Long issueId,
+      @Valid @RequestBody UpdateIssueStatusRequest request
+  ) {
+    issueService.updateIssueStatus(issueId, request);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/{issueId}/labels")
+  public ResponseEntity<Void> updateIssueLabels(
+      @PathVariable Long issueId,
+      @Valid @RequestBody UpdateIssueLabelsRequest request
+  ) {
+    issueService.updateIssueLabels(issueId, request);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/{issueId}/milestone")
+  public ResponseEntity<Void> updateIssueMilestone(
+      @PathVariable Long issueId,
+      @Valid @RequestBody UpdateIssueMilestoneRequest request
+  ) {
+    issueService.updateIssueMilestone(issueId, request);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/{issueId}/assignees")
+  public ResponseEntity<Void> updateIssueAssignees(
+      @PathVariable Long issueId,
+      @Valid @RequestBody UpdateIssueAssigneesRequest request
+  ) {
+    issueService.updateIssueAssignees(issueId, request);
+    return ResponseEntity.noContent().build();
   }
 }

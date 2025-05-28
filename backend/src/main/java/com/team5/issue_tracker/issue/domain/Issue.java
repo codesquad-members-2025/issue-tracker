@@ -3,11 +3,13 @@ package com.team5.issue_tracker.issue.domain;
 import java.time.Instant;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 @Getter
+@Setter
 public class Issue {
   @Id
   private Long id;
@@ -17,7 +19,6 @@ public class Issue {
   private Boolean isOpen;
 
   private final Long userId;
-  //todo: 글로벌 서비스를 위한 자료형 변경
   private final Instant createdAt;
   private Instant updatedAt;
 
