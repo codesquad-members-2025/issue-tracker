@@ -15,6 +15,7 @@ import com.team5.issue_tracker.issue.domain.Issue;
 import com.team5.issue_tracker.issue.domain.IssueAssignee;
 import com.team5.issue_tracker.issue.domain.IssueLabel;
 import com.team5.issue_tracker.issue.dto.request.IssueCreateRequest;
+import com.team5.issue_tracker.issue.dto.request.IssueDeleteRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueAssigneesRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueLabelsRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueMilestoneRequest;
@@ -111,6 +112,18 @@ public class IssueService {
     if (assigneeIds != null && !assigneeIds.isEmpty()) {
       saveIssueAssignees(issueId, assigneeIds);
     }
+  }
+
+  @Transactional
+  public void deleteIssue(Long issueId) {
+    validateIssueExists(issueId);
+    issueRepository.deleteById(issueId);
+  }
+
+  @Transactional
+  public void deleteIssues(IssueDeleteRequest request) {
+    Iterable<Issue> issues = issueRepository.findAllById(request.getIssueIds());
+    issueRepository.deleteAll(issues);
   }
 
   private void saveIssueLabels(Long issueId, Collection<Long> labelIds) {
