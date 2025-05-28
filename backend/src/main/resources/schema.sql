@@ -84,15 +84,13 @@ CREATE TABLE issue_assignee (
 
 -- 1) summary_count 테이블 생성
 CREATE TABLE summary_count (
-                               id TINYINT PRIMARY KEY DEFAULT 1,
-                               issue_open_count     INT NOT NULL DEFAULT 0,
-                               issue_closed_count   INT NOT NULL DEFAULT 0,
-                               milestone_open_count INT NOT NULL DEFAULT 0,
-                               milestone_closed_count INT NOT NULL DEFAULT 0,
-                               labels_count         INT NOT NULL DEFAULT 0,
-                               milestones_count     INT NOT NULL DEFAULT 0
+                               type  VARCHAR(50) PRIMARY KEY,
+                               count INT NOT NULL DEFAULT 0
 );
 
--- 2) 초기 row 삽입 (id=1 고정)
-INSERT INTO summary_count (id) VALUES (1)
-ON DUPLICATE KEY UPDATE id = 1;
+-- 2) 초기 row 삽입
+INSERT INTO summary_count(type) VALUES
+                                    ('issue_open'),
+                                    ('issue_closed'),
+                                    ('milestone_open'),
+                                    ('milestone_closed');
