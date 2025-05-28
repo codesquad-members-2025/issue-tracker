@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import codesquad.team01.issuetracker.auth.client.GitHubClient;
 import codesquad.team01.issuetracker.auth.dto.AuthDto;
+import codesquad.team01.issuetracker.common.exception.InvalidPasswordException;
+import codesquad.team01.issuetracker.common.exception.UserNotFoundException;
 import codesquad.team01.issuetracker.user.domain.User;
 import codesquad.team01.issuetracker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,27 +40,21 @@ public class AuthService {
 	}
 
 	private User findOrCreateUser(AuthDto.GitHubUser gitHubUser) {
-		return userRepository
-			.findByProviderIdAndAuthProvider(gitHubUser.id(), GITHUB)
-			.orElseGet(() -> userRepository.save(
-				User.builder()
-					.loginId(null)
-					.username(gitHubUser.githubId())
-					.email(gitHubUser.email())
-					.providerId(gitHubUser.id())
-					.authProvider(GITHUB)
-					.build()
-			));
+		return userRepository.findByProviderIdAndAuthProvider(gitHubUser.id(), GITHUB)
+			.orElseGet(() -> userRepository.save(User.builder()
+				.loginId(null)
+				.username(gitHubUser.githubId())
+				.email(gitHubUser.email())
+				.providerId(gitHubUser.id())
+				.authProvider(GITHUB)
+				.build()));
 	}
 
 	public User authenticateUser(String loginId, String password) {
-		User user = userRepository.findByLoginId(loginId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
+		User user = userRepository.findByLoginId(loginId).orElseThrow(UserNotFoundException::new);
 		if (!passwordEncoder.matches(password, user.getPassword())) {
-			throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
+			throw new InvalidPasswordException();
 		}
-
 		return user;
 	}
 
