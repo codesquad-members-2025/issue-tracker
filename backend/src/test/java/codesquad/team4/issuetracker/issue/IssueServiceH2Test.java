@@ -274,7 +274,7 @@ class IssueServiceH2Test {
     }
 
     @ParameterizedTest
-    @MethodSource("codesquad.team4.issuetracker.util.ParserTest#provideFilterConditions")
+    @MethodSource("codesquad.team4.issuetracker.util.IssueFilteringParserTest#provideFilterConditions")
     @DisplayName("필터링 조건이 주어졌을 때 서비스에서 올바른 이슈 목록을 반환한다")
     void filterIssuesInService(
         String q, String state, Long authorId, Long assigneeId,

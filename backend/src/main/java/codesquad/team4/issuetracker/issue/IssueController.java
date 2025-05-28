@@ -39,9 +39,10 @@ public class IssueController {
     private final S3FileService s3FileService;
 
     @GetMapping("")
-    public ApiResponse<IssueResponseDto.IssueListDto> showIssueList(@RequestParam(required = false) String q, Pageable pageable) {
+    public ApiResponse<IssueResponseDto.IssueListDto> showIssueList(
+        @RequestParam(required = false, name = "q") String queryString, Pageable pageable) {
 
-        IssueFilterParamDto filter = IssueFilteringParser.parseFilterCondition(q);
+        IssueFilterParamDto filter = IssueFilteringParser.parseFilterCondition(queryString);
         IssueResponseDto.IssueListDto issues = issueService.getIssues(filter, pageable.getPageNumber(), pageable.getPageSize());
 
         return ApiResponse.success(issues);
