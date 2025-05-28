@@ -16,26 +16,26 @@ public class MilestoneCountListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onCreated(MilestoneEvent.Created e) {
-        countDao.incrementMilestoneOpen();
+        countDao.increment(CountDao.MILESTONE_OPEN);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onStatusChanged(MilestoneEvent.StatusChanged e) {
         if (e.isOldIsOpen() && !e.isNewIsOpen()) {
-            countDao.decrementMilestoneOpen();
-            countDao.incrementMilestoneClosed();
+            countDao.decrement(CountDao.MILESTONE_OPEN);
+            countDao.increment(CountDao.MILESTONE_CLOSED);
         } else if (!e.isOldIsOpen() && e.isNewIsOpen()) {
-            countDao.incrementMilestoneOpen();
-            countDao.decrementMilestoneClosed();
+            countDao.increment(CountDao.MILESTONE_OPEN);
+            countDao.decrement(CountDao.MILESTONE_CLOSED);
         }
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onDeleted(MilestoneEvent.Deleted e) {
         if (e.isWasOpen()) {
-            countDao.decrementMilestoneOpen();
+            countDao.decrement(CountDao.MILESTONE_OPEN);
         } else {
-            countDao.decrementMilestoneClosed();
+            countDao.decrement(CountDao.MILESTONE_CLOSED);
         }
     }
 

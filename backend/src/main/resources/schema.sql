@@ -84,7 +84,7 @@ CREATE TABLE issue_assignee (
 -- 1) summary_count 테이블 생성
 CREATE TABLE summary_count (
                                type  VARCHAR(50) PRIMARY KEY,
-                               count INT NOT NULL DEFAULT 0
+                               cnt INT NOT NULL DEFAULT 0
 );
 
 -- 2) 초기 row 삽입
