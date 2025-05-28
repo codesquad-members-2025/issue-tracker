@@ -1,0 +1,28 @@
+{
+  "milestones": [
+    {
+      "id": 1,
+      "title": "이슈 목록 필터링 기능",
+      "totalIssueCount": 10,
+      "closedIssueCount": 4
+    },
+    {
+      "id": 2,
+      "title": "이슈 생성 페이지 구성",
+      "totalIssueCount": 7,
+      "closedIssueCount": 7
+    },
+    {
+      "id": 3,
+      "title": "사이드바 기능 고도화",
+      "totalIssueCount": 5,
+      "closedIssueCount": 1
+    },
+    {
+      "id": 4,
+      "title": "다크모드 지원",
+      "totalIssueCount": 3,
+      "closedIssueCount": 0
+    }
+  ]
+}

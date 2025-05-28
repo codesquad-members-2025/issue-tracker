@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "nickname": "jjinbbangS2",
+      "profileImage": "https://avatars.githubusercontent.com/u/9919?v=4"
+    },
+    {
+      "id": 2,
+      "nickname": "htmlH3AD",
+      "profileImage": "https://avatars.githubusercontent.com/u/69631?v=4"
+    },
+    {
+      "id": 3,
+      "nickname": "samsamis9",
+      "profileImage": "https://avatars.githubusercontent.com/u/10522028?v=4"
+    },
+    {
+      "id": 4,
+      "nickname": "dev-angel0",
+      "profileImage": "https://avatars.githubusercontent.com/u/36260787?v=4"
+    }
+  ]
+}
