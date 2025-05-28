@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE milestone
 (
     id          BIGINT PRIMARY KEY AUTO_INCREMENT,
-    deadline    DATE         NOT NULL,
+    deadline    DATE,
     name        VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     is_open     BOOLEAN      NOT NULL,
