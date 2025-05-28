@@ -42,7 +42,7 @@ CREATE TABLE `issue`
     `author_id`    BIGINT UNSIGNED NOT NULL,
     `milestone_id` BIGINT UNSIGNED NULL,
     `title`        VARCHAR(255) NOT NULL,
-    `contents`     TEXT         NOT NULL,
+    `contents`     TEXT         NULL,
     `is_closed`    BOOLEAN      NOT NULL,
     `created_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
