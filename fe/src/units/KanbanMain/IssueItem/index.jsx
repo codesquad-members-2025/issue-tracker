@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { IssueBadge, IssueNumber } from '@/base-ui/issueListPage/issueItem';
 import CheckBox from '@/base-ui/utils/CheckBox';
-import IssueTitle from '@/base-ui/utils/IssueTitle';
+import { IssueTitle } from '@/base-ui/utils/IssueTitle';
 import Label from '@/base-ui/utils/Label';
 import MileStoneTitle from '@/base-ui/utils/MileStoneTitle';
 import AuthorInform from '@/base-ui/utils/AuthorInform';
@@ -72,7 +72,7 @@ export default function IssueItem({ issue }) {
           </Header>
           <Information>
             <IssueNumber issueNumber={id} />
-            <AuthorInform lastModifiedAt={lastModifiedAt} author={author.nickName} />
+            <AuthorInform lastModifiedAt={lastModifiedAt} author={author.nickname} />
             <MileStoneTitle mileStoneTitle={milestone?.name} />
           </Information>
         </Main>

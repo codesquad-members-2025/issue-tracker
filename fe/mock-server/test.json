@@ -1,40 +1,47 @@
 {
-  "issue": {
-    "issueId": 7,
-    "title": "이슈 제목 예시",
-    "content": "이슈 내용입니다",
-    "authorId": 1,
-    "milestoneId": 1,
-    "isOpen": true,
-    "lastModifiedAt": "2025-05-21T17:39:18.2438513",
-    "issueFileUrl": null
-  },
-  "assignees": [
-    {
-      "id": 1,
-      "nickname": "관리자",
-      "profileImageUrl": "https://dummy.local/profile/admin.png"
-    }
-  ],
-  "labels": [
-    {
-      "labelId": 1,
-      "name": "bug",
-      "color": "#FF0000"
+  "success": true,
+  "message": "이슈목록을 성공적으로 불러왔습니다.",
+  "data": {
+    "issue": {
+      "issueId": 1,
+      "title": "로그인 버튼이 작동하지 않음",
+      "content": "로그인 버튼을 눌러도 반응이 없습니다.",
+      "authorId": 1,
+      "milestoneId": 1,
+      "isOpen": true,
+      "lastModifiedAt": "2025-05-21T18:13:27",
+      "imageUrl": null
     },
-    {
-      "labelId": 2,
-      "name": "feature",
-      "color": "#00FF00"
-    }
-  ],
-  "milestone": {
-    "milestoneId": 1,
-    "name": "v1.0",
-    "description": "1차 출시",
-    "endDate": "2025-06-30",
-    "processingRate": 0,
-    "isOpen": true
-  },
-  "comments": []
+    "assignees": [
+      {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      }
+    ],
+    "labels": [
+      {
+        "id": 1,
+        "name": "bug",
+        "color": "#FF0000"
+      }
+    ],
+    "milestone": {
+      "milestoneId": 1,
+      "name": "v1.0",
+      "description": "1차 출시",
+      "endDate": "2025-06-30",
+      "processingRate": 0,
+      "isOpen": true
+    },
+    "comments": [
+      {
+        "commentId": 1,
+        "content": "이 문제는 곧 해결될 예정입니다.",
+        "imageUrl": null,
+        "authorNickname": "홍길동",
+        "lastModifiedAt": "2025-05-21T18:13:27"
+      }
+    ]
+  }
 }

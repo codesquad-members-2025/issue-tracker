@@ -33,7 +33,7 @@ app.post('/issues', authMiddleware, async (req, res) => {
     const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
     // 새 이슈 ID 생성
-    const newIssueId = Math.max(...json.issues.map(i => i.id)) + 1;
+    const newIssueId = Math.max(...json.issues.map((i) => i.id)) + 1;
 
     // 새 이슈 객체 생성
     const newIssue = {
@@ -45,34 +45,41 @@ app.post('/issues', authMiddleware, async (req, res) => {
         milestoneId,
         isOpen: true,
         lastModifiedAt: new Date().toISOString(),
-        issueFileUrl: issueFileUrl || null
+        issueFileUrl: issueFileUrl || null,
       },
       assignees: assigneeIds
-        .map(id => {
-          const user = json.users.find(u => u.id === id);
-          return user ? {
-            id: user.id,
-            nickname: user.nickName,
-            profileImageUrl: user.profileImageUrl || `https://dummy.local/profile/${user.nickName}.png`
-          } : null;
+        .map((id) => {
+          const user = json.users.find((u) => u.id === id);
+          return user
+            ? {
+                id: user.id,
+                nickname: user.nickname,
+                profileImageUrl:
+                  user.profileImageUrl || `https://dummy.local/profile/${user.nickname}.png`,
+              }
+            : null;
         })
         .filter(Boolean),
       labels: labelIds
-        .map(id => {
-          const label = json.labels.find(l => l.id === id);
-          return label ? {
-            labelId: label.id,
-            name: label.name,
-            color: label.color
-          } : null;
+        .map((id) => {
+          const label = json.labels.find((l) => l.id === id);
+          return label
+            ? {
+                labelId: label.id,
+                name: label.name,
+                color: label.color,
+              }
+            : null;
         })
         .filter(Boolean),
-      milestone: milestoneId ? {
-        ...json.milestones.find(m => m.id === milestoneId),
-        milestoneId,
-        processingRate: 0
-      } : null,
-      comments: []
+      milestone: milestoneId
+        ? {
+            ...json.milestones.find((m) => m.id === milestoneId),
+            milestoneId,
+            processingRate: 0,
+          }
+        : null,
+      comments: [],
     };
 
     // 새 이슈를 기존 이슈 목록에 추가
@@ -81,11 +88,11 @@ app.post('/issues', authMiddleware, async (req, res) => {
       title,
       content,
       isOpen: true,
-      author: json.users.find(u => u.id === 1),
+      author: json.users.find((u) => u.id === 1),
       assignees: newIssue.assignees,
       labels: newIssue.labels,
       milestone: newIssue.milestone,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     });
 
     // 파일 저장
@@ -94,14 +101,18 @@ app.post('/issues', authMiddleware, async (req, res) => {
     res.status(201).json({
       success: true,
       message: '새 이슈가 생성되었습니다.',
-      data: newIssue
+      data: {
+        issue: {
+          issueId: newIssueId,
+        },
+      },
     });
   } catch (error) {
     console.error('🔥 이슈 생성 오류:', error.message);
     res.status(500).json({
       success: false,
       message: '이슈 생성 중 서버 오류 발생',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -184,7 +195,7 @@ app.post('/login', async (req, res) => {
     const filePath = path.join(__dirname, 'mainPage.json');
     const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
-    const user = json.users.find((u) => u.nickName === loginId);
+    const user = json.users.find((u) => u.nickname === loginId);
     if (!user) {
       return res.status(401).json({
         success: false,

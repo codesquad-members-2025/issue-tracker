@@ -60,12 +60,14 @@ export default function CommentInput({
   changeHandler,
   setFile,
   files,
+  headerComponent = null,
 }) {
   const isDebounce = useTypingStatus(commentValue);
   const isEmpty = !commentValue;
 
   return (
     <Container $isEmpty={isEmpty}>
+      {headerComponent}
       {commentValue && <CommentGuideLabel>{commentLabel}</CommentGuideLabel>}
       <TextArea
         placeholder="코멘트를 입력하세요."
