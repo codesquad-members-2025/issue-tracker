@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Repository
-public class JdbcLabelQueryRepository implements LabelQueryRepository {
+public class LabelQueryRepositoryImpl implements LabelQueryRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 

@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import codesquad.team01.issuetracker.label.domain.Label;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 
-public interface LabelRepository extends CrudRepository<Label, Integer> {
+public interface LabelRepository extends CrudRepository<Label, Integer>, LabelQueryRepository {
 	@Query("""
 		SELECT 
 			id,

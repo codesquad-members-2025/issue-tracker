@@ -58,14 +58,17 @@ public class LabelDto {
 	) {
 	}
 
+	// 필터용 레이블 응답 Dto
 	@Builder
 	public record LabelFilterResponse(
 		int id,
+
 		String name,
 		String color
 	) {
 	}
 
+	// 필터용 레이블 목록 응답 Dto
 	@Builder
 	public record LabelFilterListResponse(
 		int totalCount,
