@@ -8,10 +8,12 @@ export default function CommentHeader({ onClick }) {
     <Container>
       <LeftWrapper>
         <UserAvatar
-          avatarUrl={'코멘트 객체의 author의 url -> 서버에서 응답으로 안주면 내가 스토어에서 찾기'}
+          avatarUrl={
+            'prop__코멘트 객체의 author의 url -> 서버에서 응답으로 안주면 내가 스토어에서 찾기'
+          }
         />
-        <AuthorName>{'코멘트의 작성자 이름'}</AuthorName>
-        <ModifiedTime>{'코멘트의 등록 시간'}</ModifiedTime>
+        <AuthorName>{'prop__코멘트의 작성자 이름'}</AuthorName>
+        <ModifiedTime>{'prop__코멘트의 등록 시간'}</ModifiedTime>
       </LeftWrapper>
       <RightWrapper>
         {issue.authorId === comment.authorId && <AuthorLabel />}
