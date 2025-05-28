@@ -16,6 +16,7 @@ public class JWTUtil {
     private final String accessSecretKey;
     private final String refreshSecretKey;
     private static final String CLAIM_LOGIN_ID = "loginId";
+    private static final String CLAIM_LOGIN_USER = "loginUser";
     private static final String CLAIM_IMG_URL = "profileImageUrl";
 
     public JWTUtil(
@@ -34,8 +35,8 @@ public class JWTUtil {
      */
     public String createAccessToken(User loginUser) {
         return Jwts.builder()
-                .setSubject(loginUser.getLoginId())
-                .claim(CLAIM_LOGIN_ID, loginUser.getLoginId())
+                .claim(CLAIM_LOGIN_ID, loginUser.getId()) // 사용자의 식별자 id
+                .claim(CLAIM_LOGIN_USER, loginUser.getLoginId()) // 로그인 시 사용되는 id
                 .claim(CLAIM_IMG_URL, loginUser.getProfileImageUrl())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
