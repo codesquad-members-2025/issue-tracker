@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import codesquad.team01.issuetracker.common.dto.CursorDto;
+import codesquad.team01.issuetracker.issue.constants.IssueConstants;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
@@ -37,8 +39,8 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		FROM issue i
 		JOIN users u ON i.writer_id = u.id
 		LEFT JOIN milestone m ON i.milestone_id = m.id
-		WHERE 1=1 
-		AND i.deleted_at IS NULL
+		WHERE i.deleted_at IS NULL
+		    AND i.state = :state 
 		""";
 
 	private static final String BASE_COUNT_ISSUES_QUERY = """
@@ -46,8 +48,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			i.state,
 			COUNT(*) as count
 		FROM issue i
-		WHERE 1=1
-		AND i.deleted_at IS NULL
+		WHERE i.deleted_at IS NULL 
 		""";
 
 	private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()
@@ -71,13 +72,12 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 	@Override
 	public List<IssueDto.BaseRow> findIssuesWithFilters(
 		IssueState state, Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds, IssueDto.CursorData cursor) {
+		List<Integer> labelIds, List<Integer> assigneeIds, CursorDto.CursorData cursor) {
 
 		StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
 		MapSqlParameterSource params = new MapSqlParameterSource();
 
-		// state - 기본값: open
-		sql.append(" AND i.state = :state ");
+		// state
 		params.addValue("state", state.name());
 
 		appendFilterConditions(sql, params, writerId, milestoneId, labelIds, assigneeIds);
@@ -96,7 +96,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		sql.append(" ORDER BY i.created_at DESC, i.id DESC");
 
 		sql.append(" LIMIT :pageSize");
-		params.addValue("pageSize", PAGE_SIZE + 1); // 다음 페이지 존재 여부 확인을 위해 +1
+		params.addValue("pageSize", IssueConstants.PAGE_SIZE + 1); // 다음 페이지 존재 여부 확인을 위해 +1
 
 		return jdbcTemplate.query(sql.toString(), params, issueRowMapper);
 	}

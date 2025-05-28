@@ -16,11 +16,18 @@ public class UserService {
 
 	public UserDto.UserFilterListResponse findUsersForFilter() {
 
-		List<UserDto.WriterResponse> users = userRepository.findUsersForFilter();
+		List<UserDto.UserFilterRow> users = userRepository.findUsersForFilter();
 
 		return UserDto.UserFilterListResponse.builder()
 			.totalCount(users.size())
-			.users(users)
+			.users(users.stream().map( // UserFilterRow -> UserFilterResponse
+					u -> UserDto.UserFilterResponse.builder()
+						.id(u.id())
+						.username(u.username())
+						.profileImageUrl(u.profileImageUrl())
+						.build()
+				).toList()
+			)
 			.build();
 	}
 }

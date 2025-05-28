@@ -1,27 +1,18 @@
 package codesquad.team01.issuetracker.issue.dto;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import codesquad.team01.issuetracker.common.exception.CursorException;
+import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.user.dto.UserDto;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -72,9 +63,8 @@ public class IssueDto {
 
 		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
 
-		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds,
+		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds
 
-		String cursor // 무한스크롤 커서
 	) {
 		@Override
 		public String toString() {
@@ -84,34 +74,11 @@ public class IssueDto {
 				", milestoneId=" + milestoneId +
 				", labelIds=" + labelIds +
 				", assigneeIds=" + assigneeIds +
-				", cursor='" + cursor + '\'' +
 				'}';
 		}
 
 		public IssueState getIssueState() {
 			return IssueState.fromStateStr(state);
-		}
-
-		public String getState() { // 값이 들어오지 않은 경우 초기값 설정
-			return state != null ? state : "open";
-		}
-
-		public CursorData decode() {
-			if (cursor == null || cursor.isBlank()) {
-				return null;
-			}
-
-			try {
-				String decoded = new String(Base64.getDecoder().decode(cursor), StandardCharsets.UTF_8);
-				ObjectMapper mapper = new ObjectMapper()
-					.registerModule(new JavaTimeModule())
-					.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-				return mapper.readValue(decoded, CursorData.class);
-			} catch (Exception e) {
-				log.warn("커서 디코딩 실패", e);
-				// 디코딩 실패 시 null 반환 -> 첫 페이지
-				return null;
-			}
 		}
 	}
 
@@ -123,7 +90,7 @@ public class IssueDto {
 	public record ListResponse(
 		int totalCount,
 		List<ListItemResponse> issues,
-		CursorResponse cursor
+		CursorDto.CursorResponse cursor
 	) {
 	}
 
@@ -145,13 +112,6 @@ public class IssueDto {
 
 		@Builder.Default
 		private final List<LabelDto.FilterListItemResponse> labels = new ArrayList<>();
-	}
-
-	@Builder
-	public record CursorResponse(
-		String next,
-		boolean hasNext
-	) {
 	}
 
 	// 상태별 이슈 개수 응답 DTO
@@ -239,27 +199,4 @@ public class IssueDto {
 		}
 	}
 
-	@Getter
-	@Builder
-	@AllArgsConstructor
-	@NoArgsConstructor
-	public static class CursorData {
-		private Integer id;
-		private LocalDateTime createdAt;
-
-		public String encode() {
-			try {
-				String json = new ObjectMapper()
-					.registerModule(new JavaTimeModule())
-					.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-					.writeValueAsString(this);
-
-				return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
-			} catch (JsonProcessingException e) { // 인코딩 실패 시
-				throw new CursorException("json 직렬화 실패");
-			} catch (Exception e) {
-				throw new CursorException(e.getMessage());
-			}
-		}
-	}
 }

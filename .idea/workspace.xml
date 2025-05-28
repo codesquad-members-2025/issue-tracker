@@ -27,7 +27,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "release",
+    "git-widget-placeholder": "refactor/#5-count-issues-api",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/jaehoonchoi/study/CodeSquad/issue-tracker/issue-tracker",
     "node.js.detected.package.eslint": "true",
@@ -35,6 +35,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -74,6 +75,7 @@
       <workItem from="1746702907152" duration="306000" />
       <workItem from="1747619265698" duration="58000" />
       <workItem from="1748256228904" duration="9049000" />
+      <workItem from="1748269660257" duration="9231000" />
     </task>
     <servers />
   </component>
