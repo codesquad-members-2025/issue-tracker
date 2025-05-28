@@ -51,13 +51,4 @@ const IssueList: React.FC<IssueListProps> = ({
   </Container>
 );
 
-// const IssueList: React.FC<IssueListProps> = () => {
-//   return (
-//     <ListContainer>
-//       <IssueListHeader />
-//       <IssueItem key={1} />
-//     </ListContainer>
-//   );
-// };
-
 export default IssueList;

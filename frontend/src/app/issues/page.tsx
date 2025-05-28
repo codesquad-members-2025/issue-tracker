@@ -12,6 +12,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 const Page = styled.div`
   display: flex;
+  height: 105vh;
   flex-direction: column;
   padding: 1rem 5rem 5rem 5rem;
   background-color: ${({ theme }) => theme.colors.surface.default};
@@ -19,6 +20,7 @@ const Page = styled.div`
 
 const Toolbar = styled.div`
   display: flex;
+  height: 105vh;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
@@ -80,7 +82,7 @@ export default function IssuesPage() {
   // 이슈 카운트 API 호출
   const fetchIssueCounts = async () => {
     try {
-      const res = await fetch("/api/v1/issues/counts");
+      const res = await fetch("http://localhost:8080/api/v1/issues/count");
       if (!res.ok) throw new Error("이슈 카운트 API 호출 실패");
       const json = await res.json();
       setIssueCounts(json.data);
@@ -157,13 +159,14 @@ export default function IssuesPage() {
   // fetch("/api/v1/issues?state=open")
   useEffect(() => {
     fetchIssueCounts();
-  }, [fetchIssueCounts]);
+  }, []);
 
   useEffect(() => {
     fetchIssues();
-    fetchMoreIssues();
+    // fetchMoreIssues();
   }, []);
 
+  // mock 데이터를 사용하여 이슈 목록을 가져오는 함수 (삭제 예정)
   const fetchIssues = async () => {
     try {
       const res = await fetch("/mockDatas/issueMockData.json");
@@ -178,13 +181,14 @@ export default function IssuesPage() {
     }
   };
 
+  // 무한 스크롤을 위한 이슈 목록을 가져오는 함수
   const fetchMoreIssues = async () => {
     if (loading || !hasNext) return;
     setLoading(true);
     try {
       const url = cursor
-        ? `/api/v1/issues?cursor=${encodeURIComponent(cursor)}`
-        : "/api/v1/issues";
+        ? `http://localhost:8080/api/v1/issues?cursor=${cursor}`
+        : "http://localhost:8080/api/v1/issues";
       const res = await fetch(url);
       const result = await res.json();
       const {
@@ -204,8 +208,6 @@ export default function IssuesPage() {
 
   return (
     <Page>
-      {/* <Header /> */}
-
       <Toolbar>
         <LeftControls>
           <IssueFilterDropdown

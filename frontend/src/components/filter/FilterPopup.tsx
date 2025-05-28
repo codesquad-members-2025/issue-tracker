@@ -1,13 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useState } from "react";
-
 interface Option {
   id: string;
   label: string;
   color?: string; // optional (예: 레이블의 경우 색상)
 }
-
 interface FilterPopupProps {
   title: string;
   options: Option[];
@@ -16,9 +13,9 @@ interface FilterPopupProps {
 }
 
 const PopupWrapper = styled.div`
-  position: absolute;
-  top: 2.5rem;
-  right: 0;
+  position: absolute; // 필터 팝업을 표시하기 위한 레이어 분리 코드
+  top: 2.5rem; /* Wrapper 내부 padding 포함 좌표 */
+  right: 0.5rem;
   width: 200px;
   background-color: ${({ theme }) => theme.colors.surface.default};
   border: ${({ theme }) =>
