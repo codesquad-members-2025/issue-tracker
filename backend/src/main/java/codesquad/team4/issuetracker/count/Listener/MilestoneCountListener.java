@@ -21,10 +21,10 @@ public class MilestoneCountListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onStatusChanged(MilestoneEvent.StatusChanged e) {
-        if (e.isOldIsOpen() && !e.isNewIsOpen()) {
+        if (e.isClosing()) {
             countDao.decrement(CountDao.MILESTONE_OPEN);
             countDao.increment(CountDao.MILESTONE_CLOSED);
-        } else if (!e.isOldIsOpen() && e.isNewIsOpen()) {
+        } else if (e.isOpening()) {
             countDao.increment(CountDao.MILESTONE_OPEN);
             countDao.decrement(CountDao.MILESTONE_CLOSED);
         }
