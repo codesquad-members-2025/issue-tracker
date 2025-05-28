@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useNewIssueForm } from '@/features/newIssue/hooks/useNewIssueForm';
+import { useCreateIssue } from '@/features/newIssue/hooks/useCreateIssue';
 import { buildIssuePayload } from '@/features/newIssue/utils';
 import VerticalStack from '@/layouts/VerticalStack';
 import Divider from '@/shared/components/Divider';
@@ -10,6 +11,7 @@ import NewIssueFormSection from '@/features/newIssue/components/NewIssueFormSect
 export default function NewIssuePage() {
   const navigate = useNavigate();
   const { state: issueForm, dispatch: updateIssueForm } = useNewIssueForm();
+  const { mutate: postNewIssue } = useCreateIssue();
 
   function handleCancel() {
     updateIssueForm({ type: 'RESET_FORM' });
@@ -24,7 +26,7 @@ export default function NewIssuePage() {
     const payload = buildIssuePayload(issueForm);
     console.log('[POST] /api/v1/issues payload:', payload);
 
-    // TODO fetch/postIssue(payload)
+    postNewIssue(payload);
   }
 
   return (
