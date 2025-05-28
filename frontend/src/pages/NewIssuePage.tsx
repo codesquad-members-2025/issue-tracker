@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useNewIssueForm } from '@/features/newIssue/hooks/useNewIssueForm';
 import { buildIssuePayload } from '@/features/newIssue/utils';
 import VerticalStack from '@/layouts/VerticalStack';
@@ -7,7 +8,13 @@ import NewIssueHeader from '@/features/newIssue/components/NewIssueHeader';
 import NewIssueFormSection from '@/features/newIssue/components/NewIssueFormSection';
 
 export default function NewIssuePage() {
+  const navigate = useNavigate();
   const { state: issueForm, dispatch: updateIssueForm } = useNewIssueForm();
+
+  function handleCancel() {
+    updateIssueForm({ type: 'RESET_FORM' });
+    navigate('/');
+  }
 
   function isTitleEmpty(title: string) {
     return title.trim() === '';
@@ -50,6 +57,7 @@ export default function NewIssuePage() {
       <NewIssueActionButtons
         isSubmitDisabled={isTitleEmpty(issueForm.title)}
         onSubmit={handleCreateIssue}
+        onCancel={handleCancel}
       />
     </VerticalStack>
   );
