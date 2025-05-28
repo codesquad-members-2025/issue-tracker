@@ -8,6 +8,15 @@ interface NewIssueFormSectionProps {
 
   content: string;
   onContentChange: (value: string) => void;
+
+  milestoneId: number | null;
+  onMilestoneChange: (id: number | null) => void;
+
+  selectedLabelIds: number[];
+  onToggleLabel: (id: number) => void;
+
+  selectedAssigneeIds: number[];
+  onToggleAssignee: (id: number) => void;
 }
 
 export default function NewIssueFormSection({
