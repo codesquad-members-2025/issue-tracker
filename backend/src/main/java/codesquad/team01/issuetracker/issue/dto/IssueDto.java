@@ -9,6 +9,8 @@ import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.user.dto.UserDto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
@@ -81,16 +83,27 @@ public class IssueDto {
 		}
 	}
 
+	// 다중 선택 이슈 state 변화 요청 DTO
 	@Builder
 	public record BatchUpdateRequest(
 
+		@NotEmpty(message = "이슈 ID 목록은 비어있을 수 없습니다")
 		List<@Positive(message = "이슈 ID는 양수여야 합니다") Integer> issueIds,
 
+		@NotBlank(message = "작업 타입은 필수입니다")
 		@Pattern(regexp = "^(open|close)$", message = "action은 'open' 또는 'close'만 가능합니다")
 		String action
 	) {
 		public IssueState getTargetState() {
-			return "close".equals(action) ? IssueState.CLOSED : IssueState.OPEN;
+			return IssueState.fromActionStr(action);
+		}
+
+		@Override
+		public String toString() {
+			return "BatchUpdateRequest{" +
+				"issueIds=" + issueIds +
+				", action='" + action + '\'' +
+				'}';
 		}
 	}
 
@@ -140,6 +153,7 @@ public class IssueDto {
 		}
 	}
 
+	// 다중 선택 이슈 state 변화 응답 DTO
 	@Builder
 	public record BatchUpdateResponse(
 		int totalCount,
@@ -147,6 +161,15 @@ public class IssueDto {
 		int failedCount,
 		List<Integer> failedIssueIds
 	) {
+		@Override
+		public String toString() {
+			return "BatchUpdateResponse{" +
+				"totalCount=" + totalCount +
+				", successCount=" + successCount +
+				", failedCount=" + failedCount +
+				", failedIssueIds=" + failedIssueIds +
+				'}';
+		}
 	}
 
 	/**
