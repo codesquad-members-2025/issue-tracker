@@ -14,6 +14,7 @@ import codesquad.team01.issuetracker.auth.dto.AuthDto;
 import codesquad.team01.issuetracker.auth.service.AuthService;
 import codesquad.team01.issuetracker.auth.service.TokenService;
 import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
+import codesquad.team01.issuetracker.common.dto.ApiResponse;
 import codesquad.team01.issuetracker.user.domain.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -62,9 +63,8 @@ public class AuthController {
 	}
 
 	//자체 로그인
-	//에러 발생 시 API Response 적용 예정
 	@PostMapping("/v1/auth/login")
-	public AuthDto.LoginResponse login(@RequestBody @Valid AuthDto.LoginRequest request) {
+	public ApiResponse<AuthDto.LoginResponse> login(@RequestBody @Valid AuthDto.LoginRequest request) {
 
 		User user = authService.authenticateUser(
 			request.loginId(),
@@ -74,6 +74,6 @@ public class AuthController {
 		AuthDto.LoginResponse tokens = tokenService.createTokens(user.getId(), user.getProfileImageUrl(),
 			user.getUsername());
 
-		return tokens;
+		return ApiResponse.success(tokens);
 	}
 }

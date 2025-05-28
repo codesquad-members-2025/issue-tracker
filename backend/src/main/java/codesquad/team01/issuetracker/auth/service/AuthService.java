@@ -51,26 +51,6 @@ public class AuthService {
 			));
 	}
 
-	/*
-	public AuthDto.LoginResponse login(String loginId, String password) {
-
-		User user = userRepository.findByLoginId(loginId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
-		if (!passwordEncoder.matches(password, user.getPassword())) {
-			throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
-		}
-
-		try {
-			return createJwtToken(user.getId(), user.getProfileImageUrl(), user.getUsername());
-		} catch (JwtException | IllegalArgumentException e) {
-			throw new IllegalStateException("토큰 생성 중 오류가 발생했습니다." + e.getMessage());
-		} catch (DataAccessException e) {
-			throw new IllegalStateException("토큰 저장 중 DB 오류가 발생했습니다." + e.getMessage());
-		}
-
-	}
-	*/
 	public User authenticateUser(String loginId, String password) {
 		User user = userRepository.findByLoginId(loginId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
