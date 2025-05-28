@@ -7,26 +7,26 @@ import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.team01.issuetracker.auth.dto.AuthDto;
 import codesquad.team01.issuetracker.auth.service.AuthService;
+import codesquad.team01.issuetracker.auth.service.TokenService;
 import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
+import codesquad.team01.issuetracker.common.dto.ApiResponse;
+import codesquad.team01.issuetracker.user.domain.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@RequestMapping("/api")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
 
 	private final AuthService authService;
+	private final TokenService tokenService;
 	private final AuthorizationUrlBuilder authorizationUrlBuilder;
 
 	// Authorization endpoint
@@ -54,13 +54,26 @@ public class AuthController {
 		}
 		session.removeAttribute("oauth_state");
 
-		return authService.loginWithGitHub(code);
+		User oauthUser = authService.findGitHubUser(code);
+
+		AuthDto.LoginResponse tokens = tokenService.createTokens(oauthUser.getId(), oauthUser.getProfileImageUrl(),
+			oauthUser.getUsername());
+
+		return tokens;
 	}
 
 	//자체 로그인
-	//에러 발생 시 API Response 적용 예정
 	@PostMapping("/v1/auth/login")
-	public AuthDto.LoginResponse login(@RequestBody @Valid AuthDto.LoginRequest request) {
-		return authService.login(request.loginId(), request.password());
+	public ApiResponse<AuthDto.LoginResponse> login(@RequestBody @Valid AuthDto.LoginRequest request) {
+
+		User user = authService.authenticateUser(
+			request.loginId(),
+			request.password()
+		);
+
+		AuthDto.LoginResponse tokens = tokenService.createTokens(user.getId(), user.getProfileImageUrl(),
+			user.getUsername());
+
+		return ApiResponse.success(tokens);
 	}
 }
