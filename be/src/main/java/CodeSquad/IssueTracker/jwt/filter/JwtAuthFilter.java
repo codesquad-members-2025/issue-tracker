@@ -22,28 +22,13 @@ public class JwtAuthFilter implements Filter {
     private final JWTUtil jwtUtil;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
-        if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
-            // ✅ CORS 헤더 강제 설정
-            httpResponse.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
-            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
-            httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        String requestURI =  httpRequest.getRequestURI();
 
-
-
-            httpResponse.setStatus(HttpServletResponse.SC_OK);
-            return;
-        }
-
-
-        String requestURI = httpRequest.getRequestURI();
-
-        // 로그인/회원가입은 JWT 인증 제외
+        // 특정 URL 경로는 필터를 적용하지 않도록 처리
         if (requestURI.equals("/login") || requestURI.equals("/signup")) {
             filterChain.doFilter(httpRequest, httpResponse);
             return;
@@ -53,31 +38,32 @@ public class JwtAuthFilter implements Filter {
         String authHeader = httpRequest.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            respondUnauthorized(httpResponse, "Authorization 헤더가 없거나 형식이 잘못되었습니다.");
+            BaseResponseDto responseDto = BaseResponseDto.failure("Authorization 헤더가 없거나 형식이 잘못되었습니다.");
+            String json = new ObjectMapper().writeValueAsString(responseDto);
+
+            httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+            httpResponse.setContentType("application/json; charset=UTF-8");
+            httpResponse.getWriter().write(json);
             return;
         }
 
         String accessToken = authHeader.substring(7);
+
         try {
             Claims claims = jwtUtil.validateAccessToken(accessToken);
-
             httpRequest.setAttribute("id", claims.get("loginId")); // 사용자의 식별자 id
             httpRequest.setAttribute("loginId", claims.get("loginUser")); // 로그인 시 사용되는 id
             log.info("[JWT Filter] loginId: {}", claims.get("loginUser"));
-
         } catch (JwtValidationException e) {
-            respondUnauthorized(httpResponse, e.getMessage());
+            BaseResponseDto responseDto = BaseResponseDto.failure(e.getMessage());
+            String json = new ObjectMapper().writeValueAsString(responseDto);
+
+            httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+            httpResponse.setContentType("application/json; charset=UTF-8");
+            httpResponse.getWriter().write(json);
             return;
         }
 
         filterChain.doFilter(httpRequest, httpResponse);
-    }
-
-    private void respondUnauthorized(HttpServletResponse response, String message) throws IOException {
-        BaseResponseDto dto = BaseResponseDto.failure(message);
-        String json = new ObjectMapper().writeValueAsString(dto);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json; charset=UTF-8");
-        response.getWriter().write(json);
     }
 }
