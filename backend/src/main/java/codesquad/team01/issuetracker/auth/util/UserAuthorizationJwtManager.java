@@ -35,11 +35,11 @@ public class UserAuthorizationJwtManager {
 	private final long refreshTokenLifetime;
 
 	public UserAuthorizationJwtManager(
-		@Value("${JWT_SECRET_KEY}") String secret,
+		@Value("${JWT_SECRET_KEY}") String secretKey,
 		@Value("${JWT_ACCESS_TOKEN_LIFETIME}") long accessTokenLifetime,
 		@Value("${JWT_REFRESH_TOKEN_LIFETIME}") long refreshTokenLifetime
 	) {
-		this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+		this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 		this.accessTokenLifetime = accessTokenLifetime;
 		this.refreshTokenLifetime = refreshTokenLifetime;
 	}
