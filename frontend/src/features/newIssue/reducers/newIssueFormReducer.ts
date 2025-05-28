@@ -1,12 +1,5 @@
 import { initialNewIssueFormState } from '../hooks/useNewIssueForm';
-
-export type NewIssueState = {
-  title: string;
-  content: string;
-  milestoneId: number | null;
-  labelIds: number[];
-  assigneeIds: number[];
-};
+import { type NewIssueState } from '../types';
 
 export type Action =
   | { type: 'SET_TITLE'; payload: string }
@@ -26,20 +19,20 @@ export function newIssueFormReducer(
     case 'SET_CONTENT':
       return { ...state, content: action.payload };
     case 'SET_MILESTONE':
-      return { ...state, milestoneId: action.payload };
+      return { ...state, milestone: action.payload };
     case 'TOGGLE_LABEL':
       return {
         ...state,
-        labelIds: state.labelIds.includes(action.payload)
-          ? state.labelIds.filter(id => id !== action.payload)
-          : [...state.labelIds, action.payload],
+        labels: state.labels.includes(action.payload)
+          ? state.labels.filter(id => id !== action.payload)
+          : [...state.labels, action.payload],
       };
     case 'TOGGLE_ASSIGNEE':
       return {
         ...state,
-        assigneeIds: state.assigneeIds.includes(action.payload)
-          ? state.assigneeIds.filter(id => id !== action.payload)
-          : [...state.assigneeIds, action.payload],
+        assignees: state.assignees.includes(action.payload)
+          ? state.assignees.filter(id => id !== action.payload)
+          : [...state.assignees, action.payload],
       };
 
     case 'RESET_FORM':

@@ -1,15 +1,13 @@
 import { useReducer } from 'react';
-import {
-  newIssueFormReducer,
-  type NewIssueState,
-} from '../reducers/newIssueFormReducer';
+import { newIssueFormReducer } from '../reducers/newIssueFormReducer';
+import { type NewIssueState } from '../types';
 
 export const initialNewIssueFormState: NewIssueState = {
   title: '',
   content: '',
-  milestoneId: null,
-  labelIds: [],
-  assigneeIds: [],
+  milestone: null,
+  labels: [],
+  assignees: [],
 };
 
 export function useNewIssueForm() {

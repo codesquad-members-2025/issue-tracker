@@ -40,15 +40,15 @@ export default function NewIssuePage() {
         onContentChange={val =>
           updateIssueForm({ type: 'SET_CONTENT', payload: val })
         }
-        milestoneId={issueForm.milestoneId}
+        milestoneId={issueForm.milestone}
         onMilestoneChange={id =>
           updateIssueForm({ type: 'SET_MILESTONE', payload: id })
         }
-        selectedLabelIds={issueForm.labelIds}
+        selectedLabelIds={issueForm.labels}
         onToggleLabel={id =>
           updateIssueForm({ type: 'TOGGLE_LABEL', payload: id })
         }
-        selectedAssigneeIds={issueForm.assigneeIds}
+        selectedAssigneeIds={issueForm.assignees}
         onToggleAssignee={id =>
           updateIssueForm({ type: 'TOGGLE_ASSIGNEE', payload: id })
         }

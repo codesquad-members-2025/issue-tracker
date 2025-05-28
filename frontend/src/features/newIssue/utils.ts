@@ -9,16 +9,16 @@ export function buildIssuePayload(form: NewIssueState) {
     payload.content = form.content;
   }
 
-  if (form.milestoneId !== null) {
-    payload.milestoneId = form.milestoneId;
+  if (form.milestone !== null) {
+    payload.milestone = form.milestone;
   }
 
-  if (form.labelIds.length > 0) {
-    payload.labelIds = form.labelIds;
+  if (form.labels.length > 0) {
+    payload.labels = form.labels;
   }
 
-  if (form.assigneeIds.length > 0) {
-    payload.assigneeIds = form.assigneeIds;
+  if (form.assignees.length > 0) {
+    payload.assignees = form.assignees;
   }
 
   return payload;
