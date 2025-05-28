@@ -12,4 +12,6 @@ public class ExceptionMessage {
     public static final String NOT_FOUND_COMMENT = "댓글을 찾을 수 없습니다. commentId = ";
     public static final String INVALID_COMMENT_ACCESS = "댓글이 이슈에 속하지 않습니다.";
     public static final String INVALID_FILTERING_CONDITION = "authorId, assigneeId, commentAuthorId 중 하나만 사용할 수 있습니다.";
+    public static final String EMAIL_ALREADY_EXIST = "이미 존재하는 이메일입니다";
+    public static final String NICKNAME_ALREADY_EXIST = "이미 존재하는 닉네임입니다";
 }
