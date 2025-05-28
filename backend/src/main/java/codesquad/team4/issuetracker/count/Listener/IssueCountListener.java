@@ -19,10 +19,10 @@ public class IssueCountListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onStatusChanged(IssueEvent.StatusChanged e) {
-        if (e.isOldIsOpen() && !e.isNewIsOpen()) {
+        if (e.isClosing()) {
             countDao.decrement(CountDao.ISSUE_OPEN);
             countDao.increment(CountDao.ISSUE_CLOSED);
-        } else if (!e.isOldIsOpen() && e.isNewIsOpen()) {
+        } else if (e.isOpening()) {
             countDao.increment(CountDao.ISSUE_OPEN);
             countDao.decrement(CountDao.ISSUE_CLOSED);
         }
