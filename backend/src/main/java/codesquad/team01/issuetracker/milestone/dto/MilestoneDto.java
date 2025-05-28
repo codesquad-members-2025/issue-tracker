@@ -8,22 +8,20 @@ public class MilestoneDto {
 	private MilestoneDto() {
 	}
 
-	/**
+	/*
 	 * 응답 DTO
 	 */
 	// 이슈 목록 - 마일스톤 응답 DTO
 	@Builder
 	public record ListItemResponse(
-		Integer id,
-
+		int id,
 		String title
 	) {
 	}
 
 	@Builder
 	public record MilestoneFilterResponse(
-		Integer id,
-
+		int id,
 		String title
 	) {
 	}

@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@RequestMapping("/api")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -26,7 +30,7 @@ public class AuthController {
 	private final AuthorizationUrlBuilder authorizationUrlBuilder;
 
 	// Authorization endpoint
-	@GetMapping("/api/v1/oauth/github/login")
+	@GetMapping("/v1/oauth/github/login")
 	public void redirectToGithub(HttpServletResponse response, HttpSession session) throws IOException {
 		// CSRF 방지용 state 생성 및 세션 저장
 		String state = UUID.randomUUID().toString();
@@ -39,7 +43,7 @@ public class AuthController {
 	}
 
 	// Redirect(Callback) endpoint
-	@GetMapping("/api/v1/oauth/callback")
+	@GetMapping("/v1/oauth/callback")
 	public AuthDto.LoginResponse githubCallback(
 		@RequestParam("code") String code,
 		@RequestParam("state") String state,
@@ -55,7 +59,7 @@ public class AuthController {
 
 	//자체 로그인
 	//에러 발생 시 API Response 적용 예정
-	@PostMapping("/api/v1/auth/login")
+	@PostMapping("/v1/auth/login")
 	public AuthDto.LoginResponse login(@RequestBody @Valid AuthDto.LoginRequest request) {
 		return authService.login(request.loginId(), request.password());
 	}

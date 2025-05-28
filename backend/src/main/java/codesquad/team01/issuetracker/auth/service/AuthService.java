@@ -2,11 +2,9 @@ package codesquad.team01.issuetracker.auth.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import codesquad.team01.issuetracker.auth.client.GitHubClient;
 import codesquad.team01.issuetracker.auth.dto.AuthDto;
-import codesquad.team01.issuetracker.common.config.GithubOAuthProperties;
 import codesquad.team01.issuetracker.user.domain.User;
 import codesquad.team01.issuetracker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,33 +17,23 @@ public class AuthService {
 
 	private final GitHubClient gitHubClient;
 	private final UserRepository userRepository;
-	private final GithubOAuthProperties properties;
-	private final RestTemplate restTemplate;
 
 	private final String GITHUB = "github";
 	private final TokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
-	private final String CLIENT_ID = "client_id";
-	private final String CLIENT_SECRET = "client_secret";
-	private final String AUTHORIZATION_CODE = "code";
-	private final String REDIRECT_URI = "redirect_uri";
-	private final String ID = "id";
-	private final String LOGIN = "login";
-	private final String AVATAR_URL = "avatar_url";
-	private final String ACCESS_TOKEN = "access_token";
 
 	public AuthDto.LoginResponse loginWithGitHub(String code) {
 		// 깃헙에 access token 요청
-		log.info("Starting GitHub login flow with code={}", code);
+		log.info("GitHub 에서 받은 인증 코드로 로그인 시작 ={}", code);
 		String accessToken = gitHubClient.fetchAccessToken(code);
 
 		// 사용자 정보 요청
 		log.debug("Received access token");
 		AuthDto.GitHubUser gitHubUser = gitHubClient.fetchUserInfo(accessToken);
-		log.info("Fetched user info: id={}, githubId={}", gitHubUser.id(), gitHubUser.githubId());
+		log.info("사용자 정보 요청 : id={}, githubId={}", gitHubUser.id(), gitHubUser.githubId());
 
 		User oauthUser = findOrCreateUser(gitHubUser);
-		log.info("Created LoginResponse for userId={}", oauthUser.getId());
+		log.info("사용자 id로 로그인 응답 생성 ={}", oauthUser.getId());
 
 		AuthDto.LoginResponse response = createJwtToken(oauthUser.getId(),
 			oauthUser.getProfileImageUrl(),

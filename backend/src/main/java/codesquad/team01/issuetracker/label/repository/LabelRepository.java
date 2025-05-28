@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import codesquad.team01.issuetracker.label.domain.Label;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 
-public interface LabelRepository extends CrudRepository<Label, Integer>, LabelQueryRepository {
+public interface LabelRepository extends CrudRepository<Label, Integer> {
 	@Query("""
 		SELECT 
 			id,
@@ -19,5 +19,5 @@ public interface LabelRepository extends CrudRepository<Label, Integer>, LabelQu
 		FROM label
 		WHERE deleted_at IS NULL
 		""")
-	List<LabelDto.ListItemResponse> findLabels();
+	List<LabelDto.LabelRow> findLabels();
 }

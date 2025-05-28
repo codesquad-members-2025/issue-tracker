@@ -6,8 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import codesquad.team01.issuetracker.user.domain.User;
 
-public interface UserRepository extends CrudRepository<User, Integer>, UserQueryRepository {
-	Optional<User> findByLoginId(String id);
+public interface UserRepository extends CrudRepository<User, Integer> {
+	Optional<User> findByLoginId(String loginId);
 
 	Optional<User> findByProviderIdAndAuthProvider(Long providerId, String authProvider);
 
