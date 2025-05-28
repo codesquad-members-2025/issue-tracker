@@ -127,7 +127,7 @@ ALTER TABLE `issue_label`
     ADD CONSTRAINT `fk_issue_label_label`
         FOREIGN KEY (`label_id`) REFERENCES `label`(`id`);
 
-CREATE TABLE IF NOT EXISTS `refresh_tokens` (
+CREATE TABLE IF NOT EXISTS `refresh_token` (
       `id` INTEGER AUTO_INCREMENT PRIMARY KEY,
       `user_id` INT UNIQUE,
       `token` VARCHAR(1024) NOT NULL
