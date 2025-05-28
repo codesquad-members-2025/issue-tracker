@@ -57,8 +57,6 @@ public class TokenService {
 				.build();
 			refreshTokenRepository.save(created);
 		}
-
 		return new AuthDto.LoginResponse(accessToken, refreshToken);
 	}
-
 }
