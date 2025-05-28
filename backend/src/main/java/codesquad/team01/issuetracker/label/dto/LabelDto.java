@@ -26,6 +26,7 @@ public class LabelDto {
 	) {
 	}
 
+	// 레이블 리스트를 구성하는 레이블
 	@Builder
 	public record ListItemResponse(
 		int id,
@@ -45,6 +46,7 @@ public class LabelDto {
 		}
 	}
 
+	// 레이블 목록 조회 시 반환하는 레이블 리스트
 	public record ListResponse(
 		int totalCount,
 		List<ListItemResponse> labels
