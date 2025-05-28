@@ -55,14 +55,12 @@ public class IssueController {
 	public ResponseEntity<ApiResponse<IssueDto.BatchUpdateResponse>> batchUpdateIssueState(
 		@RequestBody @Valid IssueDto.BatchUpdateRequest request) {
 
-		log.info("이슈 일괄 상태 변경 요청 - 선택된 이슈 Id 목록: {}, 변경할 상태: {}",
-			request.issueIds(), request.action());
+		log.info(request.toString());
 
 		IssueDto.BatchUpdateResponse response =
-			issueService.batchUpdateIssueState(request.issueIds(), request.getTargetState());
+			issueService.batchUpdateIssueState(request);
 
-		log.info("이슈 일괄 상태 변경 완료 - 총 개수: {}, 성공: {}개, 실패: {}개, 상태 변경 실패한 이슈 id 목록: {}",
-			response.totalCount(), response.successCount(), response.failedCount(), response.failedIssueIds());
+		log.info(response.toString());
 
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}

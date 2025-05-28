@@ -204,6 +204,13 @@ public class IssueDto {
 	) {
 	}
 
+	@Builder
+	public record BatchIssueRow(
+		int issueId,
+		IssueState currentState
+	) {
+	}
+
 	/**
 	 * 서비스 계층 DTO
 	 */
