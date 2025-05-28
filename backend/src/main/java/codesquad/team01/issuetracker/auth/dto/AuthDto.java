@@ -35,7 +35,6 @@ public class AuthDto {
 		String accessToken,
 		String refreshToken
 	) {
-
 	}
 
 }

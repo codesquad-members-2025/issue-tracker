@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import codesquad.team01.issuetracker.label.dto.LabelDto;
-import codesquad.team01.issuetracker.label.repository.LabelQueryRepository;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 public class LabelService {
 
 	private final LabelRepository labelRepository;
-	private final LabelQueryRepository labelQueryRepository;
 
 	public LabelDto.ListResponse getLabels() {
 		List<LabelDto.ListItemResponse> items = labelRepository.findLabels()
@@ -26,7 +24,7 @@ public class LabelService {
 	}
 
 	public LabelDto.LabelFilterListResponse findLabelsForFilter() {
-		List<LabelDto.LabelFilterResponse> labels = labelQueryRepository.findLabelsForFilter();
+		List<LabelDto.LabelFilterResponse> labels = labelRepository.findLabelsForFilter();
 
 		return LabelDto.LabelFilterListResponse.builder()
 			.totalCount(labels.size())

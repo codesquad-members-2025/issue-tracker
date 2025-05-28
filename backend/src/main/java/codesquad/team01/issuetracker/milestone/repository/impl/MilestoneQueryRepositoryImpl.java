@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Repository
-public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
+public class MilestoneQueryRepositoryImpl implements MilestoneQueryRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
