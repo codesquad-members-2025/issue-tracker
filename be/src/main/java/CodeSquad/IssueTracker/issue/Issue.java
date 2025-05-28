@@ -18,7 +18,7 @@ Issue {
     private Long milestoneId;
     private Boolean isOpen;
     private LocalDateTime lastModifiedAt;
-    private String imageUrl;
+    private String issueFileUrl;
 }
 
 
