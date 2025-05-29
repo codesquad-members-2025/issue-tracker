@@ -6,10 +6,10 @@ import static codesquad.team4.issuetracker.exception.ExceptionMessage.NICKNAME_A
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.LoginRequestDto;
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.SignupRequestDto;
 import codesquad.team4.issuetracker.entity.User;
-import codesquad.team4.issuetracker.exception.badrequest.PasswordNotEqualException;
+import codesquad.team4.issuetracker.exception.unauthorized.PasswordNotEqualException;
 import codesquad.team4.issuetracker.exception.conflict.EmailAlreadyExistException;
 import codesquad.team4.issuetracker.exception.conflict.NicknameAlreadyExistException;
-import codesquad.team4.issuetracker.exception.notfound.UserByEmailNotFoundException;
+import codesquad.team4.issuetracker.exception.unauthorized.UserByEmailNotFoundException;
 import codesquad.team4.issuetracker.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
