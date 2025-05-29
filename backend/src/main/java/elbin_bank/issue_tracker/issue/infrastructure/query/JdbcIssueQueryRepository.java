@@ -32,7 +32,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
         String baseSql = """
                 SELECT
                   i.id,
-                  a.login       AS author,
+                  a.nickname       AS author,
                   i.title       AS title,
                   i.is_closed   AS isClosed,
                   i.created_at  AS createdAt,
