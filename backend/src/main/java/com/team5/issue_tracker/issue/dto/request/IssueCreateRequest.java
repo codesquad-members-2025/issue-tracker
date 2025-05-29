@@ -2,7 +2,7 @@ package com.team5.issue_tracker.issue.dto.request;
 
 import java.util.List;
 
-import com.team5.issue_tracker.common.comment.dto.CommentRequest;
+import com.team5.issue_tracker.comment.dto.CommentRequest;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

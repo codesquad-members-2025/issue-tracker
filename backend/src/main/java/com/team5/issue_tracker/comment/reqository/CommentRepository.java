@@ -1,7 +1,7 @@
-package com.team5.issue_tracker.common.comment.reqository;
+package com.team5.issue_tracker.comment.reqository;
 
 import org.springframework.data.repository.CrudRepository;
-import com.team5.issue_tracker.common.comment.domain.Comment;
+import com.team5.issue_tracker.comment.domain.Comment;
 
 public interface CommentRepository extends CrudRepository<Comment, Long> {
 }

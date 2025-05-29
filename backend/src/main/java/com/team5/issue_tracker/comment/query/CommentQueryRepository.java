@@ -1,4 +1,4 @@
-package com.team5.issue_tracker.common.comment.query;
+package com.team5.issue_tracker.comment.query;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.team5.issue_tracker.common.comment.dto.CommentResponse;
+import com.team5.issue_tracker.comment.dto.CommentResponse;
 import com.team5.issue_tracker.user.dto.UserSummaryResponse;
 
 import lombok.RequiredArgsConstructor;

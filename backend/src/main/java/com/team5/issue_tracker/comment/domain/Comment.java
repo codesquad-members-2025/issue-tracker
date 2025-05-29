@@ -1,4 +1,4 @@
-package com.team5.issue_tracker.common.comment.domain;
+package com.team5.issue_tracker.comment.domain;
 
 import java.time.Instant;
 

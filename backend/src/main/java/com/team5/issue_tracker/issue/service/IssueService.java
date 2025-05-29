@@ -8,9 +8,9 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.team5.issue_tracker.common.comment.domain.Comment;
-import com.team5.issue_tracker.common.comment.dto.CommentRequest;
-import com.team5.issue_tracker.common.comment.reqository.CommentRepository;
+import com.team5.issue_tracker.comment.domain.Comment;
+import com.team5.issue_tracker.comment.dto.CommentRequest;
+import com.team5.issue_tracker.comment.reqository.CommentRepository;
 import com.team5.issue_tracker.issue.domain.Issue;
 import com.team5.issue_tracker.issue.domain.IssueAssignee;
 import com.team5.issue_tracker.issue.domain.IssueLabel;
