@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LabelCreateRequest {
+public class LabelRequest {
 
   @NotBlank(message = "라벨 이름을 작성해주세요.")
   private String name;
