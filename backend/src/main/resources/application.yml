@@ -39,3 +39,5 @@ springdoc:
     swagger-ui:
         path: /issue-tracker/swagger-ui.html
         url: /issue-tracker/api-docs
+profile:
+    default-image-url: ${DEFAULT_PROFILE_URL}

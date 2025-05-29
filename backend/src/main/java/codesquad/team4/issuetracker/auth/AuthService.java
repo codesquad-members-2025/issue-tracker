@@ -12,11 +12,14 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    @Value("${profile.default-image-url}")
+    private String DEFAULT_PROFILE_URL;
 
     private final UserRepository userRepository;
     public void createNewUser(SignupRequestDto request) {
@@ -31,8 +34,9 @@ public class AuthService {
             .email(request.getEmail())
             .nickname(request.getNickname())
             .password(hashPassword)
+            .profileImage(DEFAULT_PROFILE_URL)
             .createdAt(LocalDateTime.now())
-            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
             .build();
 
         userRepository.save(user);
