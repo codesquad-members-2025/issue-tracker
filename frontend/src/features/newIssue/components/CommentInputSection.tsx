@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
+import uploadToS3 from '../apis/uploadToS3';
 import CommentMetaBar from './CommentMetaBar';
 
 interface CommentInputSectionProps {
@@ -17,8 +18,27 @@ export default function CommentInputSection({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = () => {
-    // TODO file upload 로직
+  const handleFileUpload = async () => {
+    const files = fileInputRef.current?.files;
+    if (!files || files.length === 0) return;
+
+    const fileArray = Array.from(files);
+
+    try {
+      const urls = await Promise.all(fileArray.map(file => uploadToS3(file)));
+
+      const markdownStrings = urls.map(url => `![image](${url})`);
+      const markdownToInsert = markdownStrings.join('\n');
+
+      onChange(prev => prev + '\n' + markdownToInsert);
+    } catch (err) {
+      console.error('파일 업로드 실패:', err);
+      // TODO 사용자에게 에러 메시지 표시
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleCharCountVisibility = (value: string) => {
