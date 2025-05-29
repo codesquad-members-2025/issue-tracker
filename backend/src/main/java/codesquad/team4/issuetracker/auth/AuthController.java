@@ -41,6 +41,7 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("jwt", token)
             .httpOnly(true)
+            .sameSite("Strict")
             .path("/")
             .maxAge(60 * 60 * 24) // 1일
             .build();
