@@ -17,7 +17,7 @@ public class S3Controller {
 
     @GetMapping("/presigned-url")
     public ResponseEntity<String> getPresignedUrl(@RequestParam String filename,
-                                                  @RequestParam String contentType) {
+                                                  @RequestParam("Content-Type") String contentType) {
         String url = s3Service.getPreSignedUrl(filename, contentType);
         return ResponseEntity.ok(url);
     }
