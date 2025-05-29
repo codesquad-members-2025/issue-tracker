@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import DropdownIndicator from './DropdownIndicator';
+import DropdownPortal from './DropdownPortal';
 
 interface DropdownProps {
   label: string;
@@ -10,17 +11,20 @@ interface DropdownProps {
 
 export default function Dropdown({ label, children }: DropdownProps) {
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
     <Wrapper>
       <Trigger onClick={() => setOpen(prev => !prev)}>
-        <DropdownIndicator label={label} />
+        <DropdownIndicator label={label} ref={triggerRef} />
       </Trigger>
       {open && (
-        <Panel>
-          <PanelTitle>{label}</PanelTitle>
-          <PanelContent>{children}</PanelContent>
-        </Panel>
+        <DropdownPortal anchorRef={triggerRef}>
+          <Panel>
+            <PanelTitle>{label}</PanelTitle>
+            <PanelContent>{children}</PanelContent>
+          </Panel>
+        </DropdownPortal>
       )}
     </Wrapper>
   );
@@ -29,13 +33,15 @@ export default function Dropdown({ label, children }: DropdownProps) {
 const Wrapper = styled.div`
   position: relative;
   display: inline-block;
+  width: 100%;
 `;
 
-const Trigger = styled.button`
+const Trigger = styled.div`
   all: unset;
   cursor: pointer;
   display: flex;
   align-items: center;
+  width: 100%;
 `;
 
 const Panel = styled.div`

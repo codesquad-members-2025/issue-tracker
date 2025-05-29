@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
+import { forwardRef } from 'react';
 import DropdownIcon from '@/assets/icons/chevronDown.svg?react';
 
 interface DropdownIndicatorProps {
@@ -7,23 +8,22 @@ interface DropdownIndicatorProps {
   disabled?: boolean;
 }
 
-function DropdownIndicator({
-  label,
-  disabled = false,
-}: DropdownIndicatorProps) {
-  return (
-    <IndicatorWrapper type="button" disabled={disabled}>
-      <IndicatorLabel>{label}</IndicatorLabel>
-      <DropdownIcon width={16} height={16} />
-    </IndicatorWrapper>
-  );
-}
+const DropdownIndicator = forwardRef<HTMLButtonElement, DropdownIndicatorProps>(
+  ({ label, disabled = false }, ref) => {
+    return (
+      <IndicatorWrapper type="button" disabled={disabled} ref={ref}>
+        <IndicatorLabel>{label}</IndicatorLabel>
+        <DropdownIcon width={16} height={16} />
+      </IndicatorWrapper>
+    );
+  },
+);
 
 export default DropdownIndicator;
 
 const IndicatorWrapper = styled.button`
-  all: unset;
-  display: inline-flex;
+  width: 100%;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
