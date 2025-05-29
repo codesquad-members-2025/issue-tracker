@@ -40,7 +40,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (cookies == null) return Optional.empty();
 
         for (Cookie cookie : cookies) {
-            if ("jwt".equals(cookie.getName())) {
+            if ("access_token".equals(cookie.getName())) {
                 return Optional.of(cookie.getValue());
             }
         }

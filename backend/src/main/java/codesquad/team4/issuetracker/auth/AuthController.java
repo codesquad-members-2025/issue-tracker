@@ -5,6 +5,7 @@ import codesquad.team4.issuetracker.auth.dto.AuthResponseDto;
 import codesquad.team4.issuetracker.auth.dto.AuthResponseDto.LoginResponseDto;
 import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.response.ApiResponse;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class AuthController {
 
         String token = jwtProvider.createToken(user.getId());
 
-        ResponseCookie cookie = ResponseCookie.from("jwt", token)
+        ResponseCookie cookie = ResponseCookie.from("access_token", token)
             .httpOnly(true)
             .sameSite("Strict")
             .path("/")
@@ -57,5 +58,15 @@ public class AuthController {
             .nickname(user.getNickname())
             .profileImage(user.getProfileImage())
             .build();
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("access_token", null);
+        cookie.setMaxAge(0); // 즉시 만료
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
     }
 }
