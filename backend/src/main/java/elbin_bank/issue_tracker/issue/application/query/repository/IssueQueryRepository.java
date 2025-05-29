@@ -16,10 +16,10 @@ public interface IssueQueryRepository {
 
     Map<Long, List<String>> findAssigneeNamesByIssueIds(List<Long> issueIds);
 
-    List<UserInfoProjection> findAssigneesByIssueId(long id);
-
     IssueCountProjection countIssueOpenAndClosed();
 
     Optional<IssueDetailProjection> findById(long id);
+
+    List<UserInfoProjection> findAssigneeByIssueId(long id);
 
 }

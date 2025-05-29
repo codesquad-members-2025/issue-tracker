@@ -44,7 +44,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
                 """;
 
         SqlClauseResult buildResult = sqlBuilder.build(crit);
-
+//todo softdelete
         String sql = new StringBuilder()
                 .append(baseSql)
                 .append(buildResult.joinClause())
@@ -99,30 +99,6 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
     }
 
     @Override
-    public List<UserInfoProjection> findAssigneesByIssueId(long id) {
-        String sql = """
-                    SELECT u.id            AS id,
-                           u.nickname      AS nickname,
-                           u.profile_image_url AS profileImage
-                      FROM assignee a
-                 JOIN `user` u ON a.user_id = u.id
-                              AND u.deleted_at IS NULL
-                     WHERE a.issue_id = :id
-                """;
-
-        var params = new MapSqlParameterSource("id", id);
-        return jdbc.query(
-                sql,
-                params,
-                (rs, rowNum) -> new UserInfoProjection(
-                        rs.getLong("id"),
-                        rs.getString("nickname"),
-                        rs.getString("profileImage")
-                )
-        );
-    }
-
-    @Override
     public IssueCountProjection countIssueOpenAndClosed() {
         String sql = """
                     SELECT status_key, issue_count
@@ -154,46 +130,41 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
     @Override
     public Optional<IssueDetailProjection> findById(long id) {
         String sql = """
-                    SELECT i.id,
-                           i.author_id,
-                           u.nickname          AS authorNickname,
-                           u.profile_image_url AS authorProfileImage,
-                           i.title,
-                           i.contents,
-                           i.milestone_id,
-                           m.title             AS milestoneName,
-                             COALESCE(m.total_issues, 0) AS milestoneTotalIssues,
-                             COALESCE(m.closed_issues, 0) AS milestoneClosedIssues,
-                           i.is_closed,
-                           i.created_at,
-                           i.updated_at
-                      FROM issue i
-                 JOIN `user` u  ON i.author_id = u.id AND u.deleted_at IS NULL
-                 LEFT JOIN milestone m
-                        ON i.milestone_id = m.id AND m.deleted_at IS NULL
-                     WHERE i.id = :id
-                       AND i.deleted_at IS NULL
+                SELECT
+                  i.id                           AS id,
+                  i.author_id                    AS authorId,
+                  u.nickname                     AS authorNickname,
+                  u.profile_image_url            AS authorProfileImage,
+                  i.title                        AS title,
+                  i.contents                     AS contents,
+                  i.is_closed                    AS isClosed,
+                  i.created_at                   AS createdAt,
+                  i.updated_at                   AS updatedAt
+                FROM issue i
+                JOIN `user` u
+                  ON i.author_id = u.id
+                 AND u.deleted_at IS NULL
+                WHERE i.id = :id
+                  AND i.deleted_at IS NULL
                 """;
+
         var params = new MapSqlParameterSource("id", id);
 
         try {
             IssueDetailProjection proj = jdbc.queryForObject(
-                    sql, params,
-                    (rs, rn) -> new IssueDetailProjection(
+                    sql,
+                    params,
+                    (rs, rowNum) -> new IssueDetailProjection(
                             rs.getLong("id"),
-                            rs.getLong("author_id"),
+                            rs.getLong("authorId"),
                             rs.getString("authorNickname"),
                             rs.getString("authorProfileImage"),
                             rs.getString("title"),
                             rs.getString("contents"),
-                            rs.getObject("milestone_id", Long.class),
-                            rs.getString("milestoneName"),
-                            rs.getObject("milestoneTotalIssues", Long.class),
-                            rs.getObject("milestoneClosedIssues", Long.class),
-                            rs.getBoolean("is_closed"),
-                            rs.getTimestamp("created_at").toLocalDateTime(),
-                            rs.getTimestamp("updated_at") != null
-                                    ? rs.getTimestamp("updated_at").toLocalDateTime()
+                            rs.getBoolean("isClosed"),
+                            rs.getTimestamp("createdAt").toLocalDateTime(),
+                            rs.getTimestamp("updatedAt") != null
+                                    ? rs.getTimestamp("updatedAt").toLocalDateTime()
                                     : null
                     )
             );
@@ -202,6 +173,30 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<UserInfoProjection> findAssigneeByIssueId(long id) {
+        String sql = """
+                SELECT u.id AS id, 
+                       u.nickname AS nickname,
+                       u.profile_image_url AS profileImage
+                FROM assignee a
+                JOIN `user` u ON a.user_id = u.id
+                WHERE a.issue_id = :id
+                """;
+
+        var params = new MapSqlParameterSource("id", id);
+
+        return jdbc.query(
+                sql,
+                params,
+                (rs, rowNum) -> new UserInfoProjection(
+                        rs.getLong("id"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage")
+                )
+        );
     }
 
 }
