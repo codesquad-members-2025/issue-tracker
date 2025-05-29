@@ -4,6 +4,7 @@ export interface MilestoneShort {
 }
 
 export interface MilestoneDetail extends MilestoneShort {
+  progressRate: number;
   totalIssueCount: number;
   closedIssueCount: number;
 }

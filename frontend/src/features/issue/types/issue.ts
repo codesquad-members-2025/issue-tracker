@@ -1,11 +1,8 @@
-export type IssueStatus = 'open' | 'closed';
+import type { Label } from '@/features/label/types';
+import type { User } from '@/features/user/types';
+import type { MilestoneDetail } from '@/features/milestone/types';
 
-export interface Label {
-  id: number;
-  name: string;
-  color: string;
-  description: string | null;
-}
+export type IssueStatus = 'open' | 'closed';
 
 export interface Issue {
   id: number;
@@ -25,19 +22,7 @@ export interface IssuesResponse {
   closeCount: number;
 }
 
-export interface Milestone {
-  id: number;
-  name: string;
-  progressRate: number;
-}
-
 export interface Assignee {
-  id: number;
-  nickname: string;
-  profileImage: string;
-}
-
-export interface Author {
   id: number;
   nickname: string;
   profileImage: string;
@@ -45,11 +30,11 @@ export interface Author {
 
 export interface IssueDetailResponse {
   id: number;
-  author: Author;
+  author: User;
   title: string;
   content: string | null;
   labels: Label[];
-  milestone: Milestone | null;
+  milestone: MilestoneDetail | null;
   assignees: Assignee[];
   isClosed: boolean;
   createdAt: string;
