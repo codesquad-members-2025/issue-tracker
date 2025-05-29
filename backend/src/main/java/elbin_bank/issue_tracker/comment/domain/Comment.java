@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("comment")
@@ -17,9 +16,13 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Comment extends BaseEntity {
 
     @Id
-    private long id;
+    private Long id;
     private long issueId;
     private long userId;
     private String contents;
+
+    public static Comment of(long issueId, long userId, String contents) {
+        return new Comment(null, issueId, userId, contents); // id는 DB에서 생성
+    }
 
 }
