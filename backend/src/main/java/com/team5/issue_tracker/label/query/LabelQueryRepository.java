@@ -128,4 +128,9 @@ public class LabelQueryRepository {
 
     return result.isEmpty() ? List.of(-1L) : result;
   }
+
+  public Long getLabelCount() {
+    String sql = "SELECT COUNT(id) FROM label";
+    return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
+  }
 }

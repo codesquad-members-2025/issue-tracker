@@ -58,4 +58,10 @@ public class LabelController {
     labelService.deleteLabel(labelId);
     return ResponseEntity.noContent().build();
   }
+
+  @GetMapping("/count")
+  public ResponseEntity<ApiResponse<Long>> getLabelCount() {
+    Long count = labelQueryService.getLabelCount();
+    return ResponseEntity.ok(ApiResponse.success(count));
+  }
 }
