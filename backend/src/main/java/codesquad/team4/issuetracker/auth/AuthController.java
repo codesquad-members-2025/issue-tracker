@@ -1,7 +1,6 @@
 package codesquad.team4.issuetracker.auth;
 
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto;
-import codesquad.team4.issuetracker.auth.dto.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

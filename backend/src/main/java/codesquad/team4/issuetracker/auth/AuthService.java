@@ -1,4 +1,4 @@
-package codesquad.team4.issuetracker.auth.dto;
+package codesquad.team4.issuetracker.auth;
 
 import static codesquad.team4.issuetracker.exception.ExceptionMessage.EMAIL_ALREADY_EXIST;
 import static codesquad.team4.issuetracker.exception.ExceptionMessage.NICKNAME_ALREADY_EXIST;
@@ -25,8 +25,8 @@ public class AuthService {
 
         //패스워드 해싱
         String hashPassword = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
-        //DB에 저장
 
+        //DB에 저장
         User user = User.builder()
             .email(request.getEmail())
             .nickname(request.getNickname())
