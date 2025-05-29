@@ -10,7 +10,7 @@ public record IssueDto(long id,
                        String title,
                        boolean isClosed,
                        List<LabelProjection> labels,
-                       List<String> assignees,
+                       List<String> assigneesProfileImages,
                        LocalDateTime createdAt,
                        LocalDateTime updatedAt,
                        String milestone) {
