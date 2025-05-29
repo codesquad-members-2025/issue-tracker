@@ -96,13 +96,13 @@ export default function IssuesPage() {
   //   null | "assignee" | "label" | "milestone" | "writer"
   // >(null);
 
-  // // 필터 옵션 상태
-  // const [filterOptions, setFilterOptions] = useState({
-  //   assignee: [],
-  //   label: [],
-  //   milestone: [],
-  //   writer: [],
-  // });
+  // 필터 옵션 상태
+  const [filterOptions, setFilterOptions] = useState({
+    assignee: [],
+    label: [],
+    milestone: [],
+    writer: [],
+  });
 
   // // 선택된 필터 상태
   // const [selectedFilters, setSelectedFilters] = useState({
@@ -112,20 +112,61 @@ export default function IssuesPage() {
   //   writer: undefined,
   // });
 
-  // 필터 데이터 비동기 요청
+
+  const fetchFilterOptions = async () => {
+    try {
+      const [labelRes, milestoneRes, userRes] = await Promise.all([
+        fetch("http://localhost:8080/api/v1/labels/filters"),
+        fetch("http://localhost:8080/api/v1/milestones/filters"),
+        fetch("http://localhost:8080/api/v1/users/filters"),
+      ]);
+  
+      const [labelJson, milestoneJson, userJson] = await Promise.all([
+        labelRes.json(),
+        milestoneRes.json(),
+        userRes.json(),
+      ]);
+  
+      setFilterOptions({
+        label: labelJson.data.labels.map((l) => ({
+          id: String(l.id),
+          label: l.name,
+          color: l.color,
+        })),
+        milestone: milestoneJson.data.milestones.map((m) => ({
+          id: String(m.id),
+          label: m.title,
+        })),
+        assignee: userJson.data.users.map((u) => ({
+          id: String(u.id),
+          label: u.username,
+          iconUrl: u.profileImageUrl,
+        })),
+        writer: userJson.data.users.map((u) => ({
+          id: String(u.id),
+          label: u.username,
+          iconUrl: u.profileImageUrl,
+        })),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  //  필터 데이터 비동기 요청
   // const fetchFilterOptions = async () => {
-  //   try {
+  //   try { 
   //     const [labelRes, milestoneRes, userRes] = await Promise.all([
-  //       fetch("/api/v1/issue-metadata/labels"),
-  //       fetch("/api/v1/issue-metadata/milestones"),
-  //       fetch("/api/v1/issue-metadata/users"),
+  //       fetch("http://localhost:8080/api/v1/labels/filters"),
+  //       fetch("http://localhost:8080/api/v1/milestones/filters"),
+  //       fetch("http://localhost:8080/api/v1/users/filters"),
   //     ]);
 
-  //     const [labelJson, milestoneJson, userJson] = await Promise.all([
-  //       labelRes.json(),
-  //       milestoneRes.json(),
-  //       userRes.json(),
-  //     ]);
+      // const [labelJson, milestoneJson, userJson] = await Promise.all([
+      //   labelRes.json(),
+      //   milestoneRes.json(),
+      //   userRes.json(),
+      // ]);
 
   //     const authors: { id: string; label: string }[] = [...new Set(issues.map((i) => i.writerName))].map(
   //       (name, idx) => ({
@@ -134,23 +175,28 @@ export default function IssuesPage() {
   //       })
   //     );
 
-  //     setFilterOptions({
-  //       label: labelJson.data.labels.map((l) => ({
-  //         id: String(l.id),
-  //         label: l.name,
-  //         color: l.color,
-  //       })),
-  //       milestone: milestoneJson.data.milestones.map((m) => ({
-  //         id: String(m.id),
-  //         label: m.title,
-  //       })),
-  //       assignee: userJson.data.users.map((u) => ({
-  //         id: String(u.id),
-  //         label: u.username,
-  //         iconUrl: u.profileImageUrl,
-  //       })),
-  //       writer: authors,
-  //     });
+    //   setFilterOptions({
+    //     label: labelJson.data.labels.map((l) => ({
+    //       id: String(l.id),
+    //       label: l.name,
+    //       color: l.color,
+    //     })),
+    //     milestone: milestoneJson.data.milestones.map((m) => ({
+    //       id: String(m.id),
+    //       label: m.title,
+    //     })),
+    //     assignee: userJson.data.users.map((u) => ({
+    //       id: String(u.id),
+    //       label: u.username,
+    //       iconUrl: u.profileImageUrl,
+    //     })),
+    //     writer: userJson.data.users.map((u) => ({
+    //       id: String(u.id),
+    //       label: u.username,
+    //       iconUrl: u.profileImageUrl,
+    //     })),
+    //   }
+    // );
   //   } catch (err) {
   //     console.error(err);
   //   }
@@ -165,6 +211,10 @@ export default function IssuesPage() {
     fetchIssues();
     // fetchMoreIssues();
   }, []);
+
+  useEffect(() => {
+  fetchFilterOptions();
+}, []);
 
   // mock 데이터를 사용하여 이슈 목록을 가져오는 함수 (삭제 예정)
   const fetchIssues = async () => {
@@ -223,7 +273,7 @@ export default function IssuesPage() {
           <FilterGroup>
             <Link href="/labels">
               <LabelMoveBtn
-                label={`레이블(${3})`}
+                label={`레이블(${filterOptions.label.length})`}
                 hasDownIcon={false}
                 onClick={() => {
                   /* 레이블 팝업 */
@@ -232,7 +282,7 @@ export default function IssuesPage() {
             </Link>
             <Link href="/milestones">
               <MileStoneMoveBtn
-                label={`마일스톤(${2})`}
+                label={`마일스톤(${filterOptions.milestone.length})`}
                 hasDownIcon={false}
                 onClick={() => {
                   /* 마일스톤 팝업 */
