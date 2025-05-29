@@ -1,12 +1,18 @@
 package elbin_bank.issue_tracker.issue.application.command;
 
 import elbin_bank.issue_tracker.issue.application.command.dto.IssueCreateResponseDto;
+import elbin_bank.issue_tracker.issue.application.event.IssueClosedEvent;
+import elbin_bank.issue_tracker.issue.application.event.IssueCreatedEvent;
+import elbin_bank.issue_tracker.issue.application.event.IssueReopenedEvent;
 import elbin_bank.issue_tracker.issue.domain.Issue;
 import elbin_bank.issue_tracker.issue.domain.IssueCommandRepository;
+import elbin_bank.issue_tracker.issue.exception.IssueDetailNotFoundException;
 import elbin_bank.issue_tracker.issue.presentation.command.dto.request.IssueCreateRequestDto;
+import elbin_bank.issue_tracker.issue.presentation.command.dto.request.IssueStateUpdateRequestDto;
 import elbin_bank.issue_tracker.label.domain.LabelCommandRepository;
 import elbin_bank.issue_tracker.user.domain.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IssueCommandService {
 
-    private final LabelCommandRepository labelCommandRepository;
+    private final ApplicationEventPublisher publisher;
     private final IssueCommandRepository issueCommandRepository;
+    private final LabelCommandRepository labelCommandRepository;
     private final UserCommandRepository userCommandRepository;
 
     @Transactional
@@ -31,7 +38,34 @@ public class IssueCommandService {
         labelCommandRepository.saveLabelsToIssue(newIssue.getId(), requestDto.labels());
         userCommandRepository.saveAssigneesToIssue(newIssue.getId(), requestDto.assignees());
 
+        publisher.publishEvent(new IssueCreatedEvent());
+
         return new IssueCreateResponseDto(newIssue.getId());
+    }
+
+    @Transactional
+    public void updateState(long issueId, IssueStateUpdateRequestDto dto) {
+        Issue issue = issueCommandRepository.findById(issueId)
+                .orElseThrow(() -> new IssueDetailNotFoundException(issueId));
+
+        boolean wasClosed = issue.isClosed();
+        boolean targetClosed = dto.targetClosed();
+
+        issue.changeState(targetClosed);
+        if (issue.isClosed() == wasClosed) {
+            return;
+        }
+
+        issueCommandRepository.updateState(issueId, targetClosed);
+        publishStateChangeEvent(targetClosed);
+    }
+
+    private void publishStateChangeEvent(boolean nowClosed) {
+        if (nowClosed) {
+            publisher.publishEvent(new IssueClosedEvent());
+        } else {
+            publisher.publishEvent(new IssueReopenedEvent());
+        }
     }
 
 }

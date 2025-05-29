@@ -17,7 +17,7 @@ public class Issue extends BaseEntity {
     private final String title;
     private final String contents;
     private final Long milestoneId;
-    private final boolean isClosed;
+    private boolean isClosed;
 
     public static Issue of(long id, long authorId, String title, String contents, Long milestoneId) {
         return new Issue(id, authorId, title, contents, milestoneId, false);
@@ -25,6 +25,14 @@ public class Issue extends BaseEntity {
 
     public static Issue of(long authorId, String title, String contents, Long milestoneId, boolean isClosed) {
         return new Issue(null, authorId, title, contents, milestoneId, isClosed);
+    }
+
+    public void changeState(boolean targetClosed) {
+        if (this.isClosed == targetClosed) {
+            return;
+        }
+
+        this.isClosed = targetClosed;
     }
 
 }
