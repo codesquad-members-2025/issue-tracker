@@ -6,4 +6,5 @@ public final class IssueConstants {
 	}
 
 	public static final int PAGE_SIZE = 10;
+	public static final String CLOSE = "close";
 }

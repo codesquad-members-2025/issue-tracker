@@ -1,6 +1,7 @@
 package codesquad.team01.issuetracker.issue.domain;
 
 import codesquad.team01.issuetracker.common.exception.InvalidParameterException;
+import codesquad.team01.issuetracker.issue.constants.IssueConstants;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -31,14 +32,11 @@ public enum IssueState {
 
 		if (action == null) {
 			throw new InvalidParameterException("action은 필수 값입니다.");
+		} else if (action.equalsIgnoreCase(OPEN.name())) {
+			return OPEN;
+		} else if (action.equalsIgnoreCase(IssueConstants.CLOSE)) {
+			return CLOSED;
 		}
-
-		for (IssueState issueState : IssueState.values()) {
-			if (issueState.value.equalsIgnoreCase(action)) {
-				return issueState;
-			}
-		}
-
 		throw new InvalidParameterException("지원하지 않는 action입니다.");
 	}
 }
