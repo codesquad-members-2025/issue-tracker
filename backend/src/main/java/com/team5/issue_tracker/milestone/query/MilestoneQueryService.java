@@ -45,4 +45,8 @@ public class MilestoneQueryService {
         milestones
     );
   }
+
+  public MilestoneResponse getMilestoneById(Long id) {
+    return milestoneQueryRepository.getMilestoneById(id);
+  }
 }

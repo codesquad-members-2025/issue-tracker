@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.team5.issue_tracker.common.dto.ApiResponse;
 import com.team5.issue_tracker.milestone.dto.request.MilestoneCreateRequest;
 import com.team5.issue_tracker.milestone.dto.response.MilestonePageResponse;
+import com.team5.issue_tracker.milestone.dto.response.MilestoneResponse;
 import com.team5.issue_tracker.milestone.query.MilestoneQueryService;
 import com.team5.issue_tracker.milestone.service.MilestoneService;
 
@@ -39,5 +40,10 @@ public class MilestoneController {
       @Valid @RequestBody MilestoneCreateRequest request
   ) {
     return ResponseEntity.ok(ApiResponse.success(milestoneService.createMilestone(request)));
+  }
+
+  @GetMapping("/id")
+  public ResponseEntity<ApiResponse<MilestoneResponse>> getMilestoneById(@RequestParam Long id) {
+    return ResponseEntity.ok(ApiResponse.success(milestoneQueryService.getMilestoneById(id)));
   }
 }
