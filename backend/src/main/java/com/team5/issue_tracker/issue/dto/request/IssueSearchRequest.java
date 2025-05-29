@@ -31,9 +31,16 @@ public class IssueSearchRequest {
     return queryString.toString().trim();
   }
 
+  private String quoteIfContainsWhitespace(String value) {
+    if (value.contains(" ")) {
+      return "\"" + value + "\"";
+    }
+    return value;
+  }
+
   private void appendCondition(StringBuilder queryString, String key, String value) {
     if (value != null && !value.isEmpty()) {
-      queryString.append(key).append(":").append(value).append(" ");
+      queryString.append(key).append(":").append(quoteIfContainsWhitespace(value)).append(" ");
     }
   }
 }
