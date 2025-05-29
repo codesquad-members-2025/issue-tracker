@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.issue.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,7 @@ public interface IssueQueryRepository {
 	IssueDto.CountResponse countIssuesWithFilters(Integer writerId, Integer milestoneId,
 		List<Integer> labelIds, List<Integer> assigneeIds);
 
-	// IssueDto.BatchUpdateResponse batchUpdateIssueState(List<Integer> issueIds, IssueState action);
+	int batchUpdateIssueStates(List<Integer> issueIds, IssueState action, LocalDateTime now);
+
+	List<IssueDto.BatchIssueRow> findExistingIssuesByIds(List<Integer> issueIds);
 }
