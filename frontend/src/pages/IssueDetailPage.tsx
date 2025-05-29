@@ -20,21 +20,18 @@ export default function IssueDetailPage() {
     issueLabels,
     isLoading: isLabelsLoading,
     isError: isLabelsError,
-    refetch: refetchLabels,
   } = useIssueLabels(issueId);
 
   const {
     issueAssignees,
     isLoading: isAssigneesLoading,
     isError: isAssigneesError,
-    refetch: refetchAssignees,
   } = useIssueAssignees(issueId);
 
   const {
     issueMilestone,
     isLoading: isMilestoneLoading,
     isError: isMilestoneError,
-    refetch: refetchMilestone,
   } = useIssueMilestone(issueId);
 
   const {

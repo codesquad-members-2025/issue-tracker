@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import { getTimeAgoString } from '@/shared/utils/time';
-import type { Author } from '../../types/issue';
+import type { User } from '@/features/user/types';
 import Button from '@/shared/components/Button';
 import Profile from '@/shared/components/Profile';
 import EditIcon from '@/assets/icons/edit.svg?react';
 import SmileIcon from '@/assets/icons/smile.svg?react';
 
 interface DescriptionHeaderProps {
-  author: Author;
+  author: User;
   createdAt: string;
   isAuthor: boolean;
 }

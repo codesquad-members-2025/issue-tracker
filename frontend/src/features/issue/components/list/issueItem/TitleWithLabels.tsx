@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { getAccessibleLabelStyle } from '@/shared/utils/color';
-import { type Label } from '../../../types/issue';
+import { type Label } from '@/features/label/types';
 
 interface Props {
   issueId: number;
