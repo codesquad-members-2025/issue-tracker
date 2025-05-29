@@ -3,15 +3,19 @@ package codesquad.team4.issuetracker.auth;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
+import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.LoginRequestDto;
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.SignupRequestDto;
 import codesquad.team4.issuetracker.entity.User;
+import codesquad.team4.issuetracker.exception.unauthorized.PasswordNotEqualException;
 import codesquad.team4.issuetracker.exception.conflict.EmailAlreadyExistException;
 import codesquad.team4.issuetracker.exception.conflict.NicknameAlreadyExistException;
+import codesquad.team4.issuetracker.exception.unauthorized.UserByEmailNotFoundException;
 import codesquad.team4.issuetracker.user.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -59,5 +63,35 @@ public class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.createNewUser(request))
             .isInstanceOf(NicknameAlreadyExistException.class);
+    }
+
+    @Test
+    @DisplayName("로그인시 입력 이메일과 일치하는 유저가 없으면 예외가 발생한다")
+    void notfoundUserByEmailTest() {
+        LoginRequestDto request = new LoginRequestDto("test@example.com", "password");
+
+        given(userRepository.findByEmail("test@example.com"))
+            .willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> authService.checkEmailAndPassword(request))
+            .isInstanceOf(UserByEmailNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("비밀번호가 다른 경우 예외가 발생한다")
+    void passwordInvalidLoginTest() {
+        LoginRequestDto request = new LoginRequestDto("test@example.com", "password");
+
+        User existingUser = User.builder()
+            .id(1L)
+            .email("test@example.com")
+            .password(BCrypt.hashpw("different", BCrypt.gensalt()))
+            .build();
+
+        given(userRepository.findByEmail("test@example.com"))
+            .willReturn(Optional.of(existingUser));
+
+        assertThatThrownBy(() -> authService.checkEmailAndPassword(request))
+            .isInstanceOf(PasswordNotEqualException.class);
     }
 }
