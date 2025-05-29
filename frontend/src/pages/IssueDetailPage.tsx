@@ -56,11 +56,8 @@ export default function IssueDetailPage() {
           author={issueDetail.author}
         />
         <SideSection>
-          <IssueSidebar
-            assignees={issueDetail.assignees}
-            labels={issueDetail.labels}
-            milestone={issueDetail.milestone}
-          />
+          {/* TODO 이슈 상세 편집을 위한 상태 설계 후 사이드바 추가 */}
+          {/* <IssueSidebar /> */}
           <TabItem icon={<TrashIcon />} label="이슈 삭제" />
         </SideSection>
       </MainArea>
