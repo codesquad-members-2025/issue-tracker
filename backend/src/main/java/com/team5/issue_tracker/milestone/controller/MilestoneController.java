@@ -1,6 +1,7 @@
 package com.team5.issue_tracker.milestone.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +46,12 @@ public class MilestoneController {
   @GetMapping("/id")
   public ResponseEntity<ApiResponse<MilestoneResponse>> getMilestoneById(@RequestParam Long id) {
     return ResponseEntity.ok(ApiResponse.success(milestoneQueryService.getMilestoneById(id)));
+  }
+
+  @DeleteMapping("/id")
+  public ResponseEntity<Void> deleteMilestoneById(@RequestParam Long id) {
+    milestoneService.deleteMilestoneById(id);
+    return  ResponseEntity.noContent().build();
   }
 
   @GetMapping("/count")

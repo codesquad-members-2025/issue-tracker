@@ -26,4 +26,9 @@ public class MilestoneService {
     Milestone savedMilestone = milestoneRepository.save(milestone);
     return savedMilestone.getId();
   }
+
+  @Transactional
+  public void deleteMilestoneById(Long id) {
+    milestoneRepository.deleteById(id);
+  }
 }
