@@ -16,6 +16,7 @@ interface IssueHeaderProps {
   };
   createdAt: string;
   commentCount: number;
+  onToggleIssueState: () => void;
 }
 
 //TODO 편집 기능, 이슈 열림 토글 기능 추가시 prop도 추가
@@ -26,6 +27,7 @@ export default function IssueHeader({
   author,
   createdAt,
   commentCount,
+  onToggleIssueState,
 }: IssueHeaderProps) {
   return (
     <HeaderWrapper>
@@ -34,7 +36,7 @@ export default function IssueHeader({
           {title} <IssueNumber>#{issueNumber}</IssueNumber>
         </Title>
         <IssueMetaWrapper>
-          <IsClosedButton>
+          <IsClosedButton isClosed={isClosed}>
             <AlertCircleIcon />
             <StateBadge>{isClosed ? '닫힌 이슈' : '열린 이슈'}</StateBadge>
           </IsClosedButton>
@@ -59,9 +61,7 @@ export default function IssueHeader({
           variant="outline"
           size="small"
           icon={<ClosedIcon />}
-          onClick={() => {
-            /* 이슈 열기/닫기 토글 로직 */
-          }}
+          onClick={onToggleIssueState}
         >
           {isClosed ? '이슈 열기' : '이슈 닫기'}
         </Button>
@@ -119,12 +119,14 @@ const CommentCount = styled.span`
   ${({ theme }) => theme.typography.displayMedium16};
 `;
 
-const IsClosedButton = styled.button`
+const IsClosedButton = styled.button<{ isClosed: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 8px 16px;
-  background-color: ${({ theme }) => theme.palette.blue};
+  background-color: ${({ theme, isClosed }) =>
+    isClosed ? theme.palette.navy : theme.palette.blue};
+
   border-radius: ${({ theme }) => theme.radius.large};
   color: ${({ theme }) => theme.brand.text.default};
 

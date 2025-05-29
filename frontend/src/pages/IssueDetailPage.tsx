@@ -6,6 +6,7 @@ import useIssueLabels from '@/features/issue/hooks/useIssueLabels';
 import useIssueMilestone from '@/features/issue/hooks/useIssueMilestone';
 import useIssueDetail from '@/features/issue/hooks/useIssueDetail';
 import useIssueComments from '@/features/issue/hooks/useIssueComments';
+import usePatchIssueState from '@/features/issue/hooks/usePatchIssueState';
 import Divider from '@/shared/components/Divider';
 import IssueHeader from '@/features/issue/components/detail/IssueHeader';
 import IssueMainSection from '@/features/issue/components/detail/IssueMainSection';
@@ -15,6 +16,8 @@ import VerticalStack from '@/layouts/VerticalStack';
 export default function IssueDetailPage() {
   const { id } = useParams();
   const issueId = Number(id);
+  const { mutate: toggleIssueState, isPending: isToggleLoading } =
+    usePatchIssueState(issueId);
 
   const {
     issueLabels,
@@ -45,6 +48,11 @@ export default function IssueDetailPage() {
     isLoading: isCommentLoading,
     isError: isCommentError,
   } = useIssueComments(issueId);
+
+  const handleIssueStateToggle = () => {
+    if (!issueDetail || isToggleLoading) return;
+    toggleIssueState({ issueId, targetClosed: !issueDetail.isClosed });
+  };
 
   // TODO 로딩,에러 상태에 따라 분기처리 내부적으로 처리
   if (
@@ -79,6 +87,7 @@ export default function IssueDetailPage() {
         {...issueDetail}
         issueNumber={issueDetail.id}
         commentCount={commentList.length}
+        onToggleIssueState={handleIssueStateToggle}
       />
       <Divider />
       <MainArea>
