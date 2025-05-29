@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.oauth.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,20 @@ public class OAuthResponseDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class OAuthLoginUrlResponse {
+    public static class OAuthLoginUrl {
         private String url;
+    }
+
+    //외부 API(GitHub)응답 받기 위한 Dto
+    @Getter
+    @AllArgsConstructor
+    public class GitHubUserResponse {
+        private Long id;
+        private String login;
+        private String email;
+        @JsonProperty("avatar_url")
+        private String avatarUrl;
+        @JsonProperty("name")
+        private String nickname;
     }
 }
