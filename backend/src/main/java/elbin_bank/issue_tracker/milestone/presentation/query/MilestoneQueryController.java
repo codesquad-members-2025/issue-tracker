@@ -17,7 +17,7 @@ public class MilestoneQueryController {
     private final MilestoneQueryService milestoneQueryService;
 
     @GetMapping("")
-    public ResponseEntity<MilestonesResponseDto> getMilestones() {
+    public ResponseEntity<MilestonesResponseDto> getMilestonesForMain() {
         return ResponseEntity.ok(milestoneQueryService.getMilestones());
     }
 

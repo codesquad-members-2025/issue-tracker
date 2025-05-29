@@ -64,4 +64,32 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
         );
     }
 
+    @Override
+    public MilestoneProjection findByIssueId(long issueId) {
+        String sql = """
+                SELECT
+                  m.id            AS id,
+                  m.title         AS title,
+                  m.total_issues  AS totalIssueCount,
+                  m.closed_issues AS closedIssueCount
+                FROM milestone m
+                JOIN issue i ON i.milestone_id = m.id
+                WHERE i.id = :issueId AND m.deleted_at IS NULL
+                """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("issueId", issueId);
+
+        return jdbc.queryForObject(
+                sql,
+                params,
+                (rs, rn) -> new MilestoneProjection(
+                        rs.getLong("id"),
+                        rs.getString("title"),
+                        rs.getLong("totalIssueCount"),
+                        rs.getLong("closedIssueCount")
+                )
+        );
+    }
+
 }

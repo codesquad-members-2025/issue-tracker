@@ -11,4 +11,6 @@ public interface MilestoneQueryRepository {
 
     List<MilestoneProjection> findAllDetailed();
 
+    MilestoneProjection findByIssueId(long issueId);
+
 }
