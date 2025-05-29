@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import type { ReactNode } from "react";
 import { ThemeProvider as EmotionThemeProvider } from "@emotion/react";
-import { useThemeStore } from "@/lib/useThemeStore";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 interface Props {
   children: ReactNode;
