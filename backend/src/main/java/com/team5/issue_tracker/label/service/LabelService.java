@@ -43,4 +43,12 @@ public class LabelService {
 
     labelRepository.save(updatedLabel);
   }
+
+  @Transactional
+  public void deleteLabel(Long labelId) {
+    if (!labelRepository.existsById(labelId)) {
+      throw new IllegalArgumentException("Label not found with id: " + labelId);
+    }
+    labelRepository.deleteById(labelId);
+  }
 }
