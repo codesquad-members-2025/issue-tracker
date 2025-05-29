@@ -181,6 +181,6 @@ public class MilestoneQueryRepository {
     MapSqlParameterSource params = new MapSqlParameterSource("milestoneName", milestoneName);
     List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);
 
-    return result.isEmpty() ? null : result.get(0);
+    return result.isEmpty() ? -1L : result.get(0);
   }
 }
