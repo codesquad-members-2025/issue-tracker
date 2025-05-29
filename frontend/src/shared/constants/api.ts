@@ -13,5 +13,5 @@ export const API = {
   MILESTONES: `${API_BASE_URL}/milestones`,
   MILESTONES_SHORT: `${API_BASE_URL}/milestones/short`,
   USERS: `${API_BASE_URL}/users`,
-  S3_PRESIGNED_URL: `${API_BASE_URL}/s3/presigned-url`,
+  S3_PRESIGNED_URL: '/api/s3/presigned-url',
 };
