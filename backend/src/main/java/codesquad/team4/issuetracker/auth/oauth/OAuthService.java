@@ -78,8 +78,15 @@ public class OAuthService {
         //Github 사용자 정보 요청
         OAuthResponseDto.GitHubUserResponse userInfo = fetchGitHubUser(accessToken);
         //회원가입/로그인 처리
-        return userRepository.findByEmail(userInfo.getEmail())
-            .orElseGet(() -> registerUser(userInfo));
+        Optional<User> optionalUser = userRepository.findByEmail(userInfo.getEmail());
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            validateLoginType(user);
+            return user;
+        } else {
+            return registerUser(userInfo);
+        }
     }
 
     private String requestAccessToken(String code) {
@@ -144,5 +151,11 @@ public class OAuthService {
                 .loginType(LoginType.GITHUB)
                 .build()
         );
+    }
+
+    private void validateLoginType(User user) {
+        if (user.getLoginType() != LoginType.GITHUB) {
+            throw new InvalidLoginTypeException(ExceptionMessage.INVALID_LOGINTYPE_GITHUB);
+        }
     }
 }

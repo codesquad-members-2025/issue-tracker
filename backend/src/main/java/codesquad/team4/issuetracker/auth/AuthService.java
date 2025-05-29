@@ -6,6 +6,8 @@ import static codesquad.team4.issuetracker.exception.ExceptionMessage.NICKNAME_A
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.LoginRequestDto;
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.SignupRequestDto;
 import codesquad.team4.issuetracker.entity.User;
+import codesquad.team4.issuetracker.exception.ExceptionMessage;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidLoginTypeException;
 import codesquad.team4.issuetracker.exception.unauthorized.PasswordNotEqualException;
 import codesquad.team4.issuetracker.exception.conflict.EmailAlreadyExistException;
 import codesquad.team4.issuetracker.exception.conflict.NicknameAlreadyExistException;
@@ -63,6 +65,10 @@ public class AuthService {
     public User checkEmailAndPassword(LoginRequestDto request) {
         User user = userRepository.findByEmail(request.getEmail())
             .orElseThrow(UserByEmailNotFoundException::new);
+
+        if (user.getLoginType() != LoginType.LOCAL) {
+            throw new InvalidLoginTypeException(ExceptionMessage.INVALID_LOGINTYPE_LOCAL);
+        }
 
         if (!BCrypt.checkpw(request.getPassword(), user.getPassword())) {
             throw new PasswordNotEqualException();
