@@ -34,9 +34,10 @@ public class CommentController {
     }
 
     @PatchMapping("/{commentId}")
-    public CommentResponseDto updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentUpdateDto request
-                                            ,@RequestPart(value = "files", required = false) List<MultipartFile> files,
-     HttpServletRequest httpRequest) throws IOException {
+    public CommentResponseDto updateComment(@PathVariable("commentId") Long commentId,
+                                            @RequestPart("data") CommentUpdateDto request,
+                                            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                            HttpServletRequest httpRequest) throws IOException {
         String authorId = httpRequest.getAttribute("id").toString();
         return commentService.update(commentId,request,files, Long.valueOf(authorId));
     }

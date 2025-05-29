@@ -33,7 +33,7 @@ public class MilestoneController {
 
 
     @PatchMapping("/{milestoneId}")
-    public String updateMilestone(@RequestParam Long milestoneId, @RequestBody MilestoneUpdateDto request){
+    public String updateMilestone(@PathVariable Long milestoneId, @RequestBody MilestoneUpdateDto request){
         milestoneService.update(milestoneId,request);
         return "redirect:/milestones";
     }
