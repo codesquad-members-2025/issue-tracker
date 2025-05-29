@@ -3,6 +3,7 @@ import UserAvatar from '@/base-ui/utils/UserAvatar';
 import { typography } from '@/styles/foundation';
 import { GhostButton } from '@/base-ui/components/Button';
 import useTimeAgo from '@/hooks/useTimeAgo';
+import { radius } from '@/styles/foundation';
 
 export default function CommentHeader({
   authorNickname,

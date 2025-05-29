@@ -30,6 +30,7 @@ export default function DetailIssueHeader({ issueFetchHandler }) {
           titleLabel="제목"
           titleType="detail"
           titleValue={editTitle}
+          isValid={isValid}
           changeHandler={(e) => {
             setEditTitle(e.target.value);
             setCurrentInput(e.target.value);
@@ -70,7 +71,10 @@ export default function DetailIssueHeader({ issueFetchHandler }) {
 
       return (
         <CompleteEditBtn
-          onClick={() => issueFetchHandler('PATCH', PATCHoptions)}
+          onClick={() => {
+            issueFetchHandler('PATCH', PATCHoptions);
+            setIsEdit(false);
+          }}
           isValid={isValid}
         />
       );
@@ -128,10 +132,12 @@ const TitleAndButtons = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 `;
 
 const Title = styled.div`
   display: flex;
+  width: 100%;
   gap: 8px;
   align-items: center;
 `;

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import isImageFile from '@/utils/common/isImageFile';
 import { typography } from '@/styles/foundation';
 
-const CommentDisplayArea = styled.div`
+const CommentWrapper = styled.div`
   ${typography.display.medium16}
   background-color:${({ theme }) => theme.surface.strong};
   white-space: pre-line;
@@ -14,9 +14,9 @@ const CommentDisplayArea = styled.div`
 
 export default function CommentDisplayArea({ content, issueFileUrl }) {
   return (
-    <CommentDisplayArea>
+    <CommentWrapper>
       <span>{content}</span>
       {isImageFile ? <img src={issueFileUrl} /> : <a href={issueFileUrl}>첨부파일입니다.</a>}
-    </CommentDisplayArea>
+    </CommentWrapper>
   );
 }

@@ -11,12 +11,15 @@ import {
 } from '@/api/detailIssue';
 import { useParams } from 'react-router-dom';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
+import DisplayComment from '@/units/issuePage/DisplayComment';
+import { comment } from 'postcss';
 
 export default function IssueDetailPage() {
   const { response, fetchData, isLoading } = useDataFetch({ fetchType: '이슈 상세 페이지' });
   const { id } = useParams();
   const shouldRefetch = useRef(false);
   const initIssueDetailStore = useIssueDetailStore((s) => s.initStore);
+  const comments = useIssueDetailStore((s) => s.comments);
 
   async function issueFetchHandler(method, option) {
     const fetchOption = getOptionWithToken(option);
@@ -32,7 +35,7 @@ export default function IssueDetailPage() {
       }
     }
   }
-  async function commentFetchHandler(method, commentId) {
+  async function commentFetchHandler(method, commentId, option) {
     const fetchOption = getOptionWithToken(option);
     if (method === 'POST') {
       const { ok } = await fetchData(postCommentInDetailIssueAPI(id), fetchOption);
@@ -78,10 +81,23 @@ export default function IssueDetailPage() {
     initIssueDetailStore(response.data);
   }, [response?.data]);
 
-  if (!response) return null;
+  if (!response.data) return null;
   return (
     <Container>
       <DetailIssueHeader issueFetchHandler={issueFetchHandler} />
+      <Kanban>
+        <CommentsWrapper>
+          {comments.map((comment) => {
+            return (
+              <DisplayComment
+                key={comment.commentId}
+                commentObj={comment}
+                commentPatchHandler={commentFetchHandler}
+              />
+            );
+          })}
+        </CommentsWrapper>
+      </Kanban>
     </Container>
   );
 }
@@ -90,4 +106,17 @@ const Container = styled.div`
   padding: 32px 80px 80px 80px;
   display: flex;
   flex-direction: column;
+  gap: 24px;
+`;
+
+const Kanban = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
+const CommentsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 `;

@@ -15,8 +15,11 @@ const Container = styled.div`
   padding: ${({ $isEmpty }) => ($isEmpty ? '16px' : '8px 16px')};
   width: 100%;
   height: ${({ $type }) => ($type === 'new' ? '56px' : '40px')};
-  background-color: ${({ $isEmpty, theme }) =>
-    $isEmpty ? theme.surface.bold : theme.surface.strong};
+  background-color: ${({ $isEmpty = null, $isValid = null, theme }) => {
+    if ($isEmpty) return theme.surface.bold; // 비어있으면 진하게
+    if (!$isValid) return theme.surface.bold; // 채워져 있고 유효하면 진하게
+    return theme.surface.strong; // 채워졌지만 유효하지 않으면 강하게(에러)
+  }};
   border-radius: 16px;
 `;
 
@@ -29,12 +32,20 @@ const TitleGuideLabel = styled.div`
 const TitleInput = styled.input`
   ${typography.display.medium16}
   color: ${({ theme }) => theme.text.default};
+  width: 100%;
+  height: 100%;
 `;
 // 상위에서 prop을 받아서 value를 보여준다.
-export function IssueTitleInput({ titleLabel, titleType, titleValue, changeHandler }) {
+export function IssueTitleInput({
+  titleLabel,
+  titleType,
+  titleValue = null,
+  changeHandler,
+  isValid = null,
+}) {
   const isEmpty = !titleValue;
   return (
-    <Container $isEmpty={isEmpty} $type={titleType}>
+    <Container $isEmpty={isEmpty} $type={titleType} $isValid={isValid}>
       {titleValue && <TitleGuideLabel>{titleLabel}</TitleGuideLabel>}
       <TitleInput placeholder="제목" value={titleValue} onChange={changeHandler} />
     </Container>

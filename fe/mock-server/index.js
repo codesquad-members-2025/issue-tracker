@@ -341,41 +341,15 @@ app.get('/issues/:id', authMiddleware, async (req, res) => {
     const data = await fs.readFile(filePath, 'utf-8');
     const json = JSON.parse(data);
 
-    const issue = json.issues.find((issue) => issue.id === issueId);
+    const issue = json.issues.find(issue => issue.id === issueId);
 
     if (!issue) {
       return res.status(404).json({
         success: false,
         message: '이슈를 찾을 수 없습니다.',
-        data: null,
+        data: null
       });
     }
-
-    // 추가 데이터 조회
-    const assignees = issue.assignees.map((assignee) => {
-      const user = json.users.find((u) => u.id === assignee.id);
-      return user || assignee;
-    });
-    const labels = issue.labels.map((label) => {
-      const fullLabel = json.labels.find((l) => l.labelId === label.labelId);
-      return fullLabel || label;
-    });
-    const milestone = issue.milestone
-      ? json.milestones.find((m) => m.milestoneId === issue.milestone.milestoneId)
-      : null;
-
-    // 🔥 comments의 authorProfileUrl 추가
-    const comments = (issue.comments || []).map((comment) => {
-      // authorNickname으로 user를 찾거나, authorId가 있다면 id로 찾아도 됨
-      const user = json.users.find((u) => u.nickname === comment.authorNickname);
-      return {
-        ...comment,
-        authorProfileUrl: user?.profileImageUrl ?? null,
-      };
-    });
-
-    // 🔥 issue의 authorProfileUrl 추가
-    const authorProfileUrl = issue.author?.profileImageUrl ?? null;
 
     const responseData = {
       success: true,
@@ -387,17 +361,40 @@ app.get('/issues/:id', authMiddleware, async (req, res) => {
           content: issue.content,
           authorId: issue.author.id,
           authorNickname: issue.author.nickname,
-          milestoneId: issue.milestone?.milestoneId ?? issue.milestone?.id ?? null,
+          milestoneId: issue.milestone?.milestoneId ?? null,
           isOpen: issue.isOpen,
-          lastModifiedAt: issue.lastModifiedAt,
-          issueFileUrl: issue.issueFileUrl ?? null,
-          authorProfileUrl, // 👈 추가!
+          lastModifiedAt: issue.lastModifiedAt || issue.createdAt,
+          issueFileUrl: issue.issueFileUrl || null,
+          authorProfileUrl: issue.author.profileImageUrl || `https://dummy.local/profile/${issue.author.nickname}.png`
         },
-        assignees,
-        labels,
-        milestone,
-        comments, // 👈 각 comment에 authorProfileUrl 추가됨!
-      },
+        assignees: (issue.assignees || []).map(assignee => ({
+          id: assignee.id,
+          nickname: assignee.nickname,
+          profileImageUrl: assignee.profileImageUrl || `https://dummy.local/profile/${assignee.nickname}.png`
+        })),
+        labels: (issue.labels || []).map(label => ({
+          labelId: label.labelId,
+          name: label.name,
+          color: label.color,
+          description: label.description || ''
+        })),
+        milestone: issue.milestone ? {
+          milestoneId: issue.milestone.milestoneId,
+          name: issue.milestone.name,
+          description: issue.milestone.description,
+          endDate: issue.milestone.endDate,
+          processingRate: issue.milestone.processingRate || 0,
+          isOpen: issue.milestone.isOpen
+        } : null,
+        comments: (issue.comments || []).map(comment => ({
+          commentId: comment.id,
+          content: comment.content,
+          issueFileUrl: comment.issueFileUrl || null,
+          authorNickname: comment.authorNickname,
+          lastModifiedAt: comment.lastModifiedAt || comment.createdAt,
+          authorProfileUrl: comment.authorProfileUrl || `https://dummy.local/profile/${comment.authorNickname}.png`
+        }))
+      }
     };
 
     res.json(responseData);
@@ -405,7 +402,7 @@ app.get('/issues/:id', authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: '이슈 조회 중 서버 오류 발생',
-      error: error.message,
+      error: error.message
     });
   }
 });

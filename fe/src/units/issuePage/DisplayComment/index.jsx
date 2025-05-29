@@ -49,7 +49,19 @@ export default function DisplayComment({ commentObj, commentPatchHandler }) {
     // 기존의 작성중인 스토어의 코멘트 상태는 초기화할 필요가 없다! -> 다시 편집 버튼을 누르면 덮어 씌워서 괜찮다.
   }
 
-  function completeEditHandler() {}
+  function completeEditHandler() {
+    const PATCHoptions = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content: editingContent, issueFileUrl: editingIssueFileUrl }),
+    };
+    commentPatchHandler('PATCH', commentId, PATCHoptions);
+    setIsEdit(false);
+  }
+
+  if (!response.data) return null;
 
   return (
     <EditModeWrapper>
@@ -87,10 +99,7 @@ export default function DisplayComment({ commentObj, commentPatchHandler }) {
       {isEdit && (
         <ButtonWrapper>
           <CancelEditBtn onClick={cancleEditHandler} />
-          <CompleteEditBtn
-            onClick={'등록 핸들러(PATCH 요청)+ 편집모드 false 로 변경.'}
-            isValid={isValid}
-          />
+          <CompleteEditBtn onClick={completeEditHandler} isValid={isValid} />
         </ButtonWrapper>
       )}
     </EditModeWrapper>
