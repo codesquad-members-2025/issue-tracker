@@ -41,9 +41,9 @@ public class IssueController {
         return issueService.toDetailResponse(byIdIssue);
     }
 
-    @PatchMapping("{issueId}")
-    public void updateIssue(@PathVariable Long issueId, @RequestBody IssueUpdateDto updateParam) {
-        issueService.update(issueId, updateParam);
+    @PatchMapping("/{issueId}")
+    public IssueDetailResponse updateIssue(@PathVariable Long issueId, @RequestBody IssueUpdateDto updateParam) {
+        return issueService.update(issueId, updateParam);
     }
 
 

@@ -43,8 +43,18 @@ public class IssueService {
     private final CommentService commentService;
     private final Uploader s3Uploader;
 
-    public void update(Long issueId, IssueUpdateDto updateParam) {
+    public IssueDetailResponse update(Long issueId, IssueUpdateDto updateParam) {
         issueRepository.update(issueId, updateParam);
+
+        if(updateParam.getAssigneeIds() != null && !updateParam.getAssigneeIds().isEmpty()) {
+            issueAssigneeService.assignAssignees(issueId, updateParam.getAssigneeIds());
+        }
+
+        if(updateParam.getLabelIds() != null && !updateParam.getLabelIds().isEmpty()) {
+            issueLabelService.assignLabels(issueId, updateParam.getLabelIds());
+        }
+
+        return toDetailResponse(findById(issueId).get());
     }
 
     public Optional<Issue> findById(Long issueId) {
@@ -88,6 +98,7 @@ public class IssueService {
 
     public IssueDetailResponse toDetailResponse(Issue issue) {
         IssueDetailResponse response = new IssueDetailResponse();
+        response.setIssue(issue);
 
         // ✅ 1. Assignees
         List<IssueAssigneeResponse> issueAssignees = issueAssigneeService.findAssigneeResponsesByIssueId(issue.getIssueId());

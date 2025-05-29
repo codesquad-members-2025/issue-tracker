@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Table("issues")
-public class
-Issue {
+public class Issue {
     @Id
     private Long issueId;
     private String title;
