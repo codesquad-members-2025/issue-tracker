@@ -1,15 +1,17 @@
 package CodeSquad.IssueTracker.oauth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public class GithubProfile {
 
-    @JsonProperty("email")
+    @JsonProperty("login")
     private String loginId;
 
     @JsonProperty("name")
     private String nickname;
 
-    @JsonProperty("imgUrl")
+    @JsonProperty("avatar_url")
     private String profileImageUrl;
 }
