@@ -16,11 +16,13 @@ import com.team5.issue_tracker.issue.domain.IssueAssignee;
 import com.team5.issue_tracker.issue.domain.IssueLabel;
 import com.team5.issue_tracker.issue.dto.request.IssueCreateRequest;
 import com.team5.issue_tracker.issue.dto.request.IssueDeleteRequest;
+import com.team5.issue_tracker.issue.dto.request.UpdateBulkIssueStatusRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueAssigneesRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueLabelsRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueMilestoneRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueStatusRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueTitleRequest;
+import com.team5.issue_tracker.issue.query.IssueQueryRepository;
 import com.team5.issue_tracker.issue.repository.IssueAssigneeRepository;
 import com.team5.issue_tracker.issue.repository.IssueLabelRepository;
 import com.team5.issue_tracker.issue.repository.IssueRepository;
@@ -35,6 +37,7 @@ public class IssueService {
   private final IssueLabelRepository issueLabelRepository;
   private final IssueAssigneeRepository issueAssigneeRepository;
   private final CommentRepository commentRepository;
+  private final IssueQueryRepository issueQueryRepository;
   private final UserService userService;
 
   @Transactional
@@ -124,6 +127,18 @@ public class IssueService {
   public void deleteIssues(IssueDeleteRequest request) {
     Iterable<Issue> issues = issueRepository.findAllById(request.getIssueIds());
     issueRepository.deleteAll(issues);
+  }
+
+  @Transactional
+  public void updateBulkIssuesStatus(UpdateBulkIssueStatusRequest request) {
+    List<Long> issueIds = request.getIssueIds();
+    Boolean isOpen = request.getIsOpen();
+
+    List<Issue> issues = issueQueryRepository.findAllByIds(issueIds);
+    for (Issue issue : issues) {
+      issue.setIsOpen(isOpen);
+    }
+    issueRepository.saveAll(issues);
   }
 
   private void saveIssueLabels(Long issueId, Collection<Long> labelIds) {
