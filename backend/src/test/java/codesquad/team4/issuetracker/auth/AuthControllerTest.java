@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.auth;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -18,7 +19,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -74,7 +77,7 @@ public class AuthControllerTest {
             .andExpect(jsonPath("$.data.userId").value(dummyUser.getId()))
             .andExpect(jsonPath("$.data.nickname").value(dummyUser.getNickname()))
             .andExpect(jsonPath("$.data.profileImage").value(dummyUser.getProfileImage()))
-            .andExpect(header().string("Set-Cookie", containsString("jwt=")))
+            .andExpect(header().string("Set-Cookie", containsString("access_token=")))
             .andExpect(header().string("Set-Cookie", containsString("HttpOnly")))
             .andExpect(header().string("Set-Cookie", containsString("SameSite=Strict")))
             .andExpect(header().string("Set-Cookie", containsString("Max-Age=86400")));
@@ -94,5 +97,23 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("로그아웃 시 access_token 쿠키가 삭제된다")
+    void logout_should_delete_cookie() throws Exception {
+        // when
+        MockHttpServletResponse response = mockMvc.perform(post("/api/auth/logout"))
+            .andExpect(status().isNoContent())
+            .andReturn()
+            .getResponse();
+
+        // then
+        String cookieHeader = response.getHeader(HttpHeaders.SET_COOKIE);
+        assertThat(cookieHeader).isNotNull();
+        assertThat(cookieHeader).contains("access_token=");
+        assertThat(cookieHeader).contains("Max-Age=0");
+        assertThat(cookieHeader).contains("Path=/");
+        assertThat(cookieHeader).contains("HttpOnly");
     }
 }
