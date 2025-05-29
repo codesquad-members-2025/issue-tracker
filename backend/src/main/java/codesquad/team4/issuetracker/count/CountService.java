@@ -11,10 +11,14 @@ public class CountService {
     private final CountDao countDao;
 
     public IssueCountDto getIssueCounts() {
-        return countDao.getIssueCounts();
+        int open = countDao.getCount(CountDao.ISSUE_OPEN);
+        int closed = countDao.getCount(CountDao.ISSUE_CLOSED);
+        return new IssueCountDto(open, closed);
     }
 
     public MilestoneCountDto getMilestoneCounts() {
-        return countDao.getMilestoneCount();
+        int open = countDao.getCount(CountDao.MILESTONE_OPEN);
+        int closed = countDao.getCount(CountDao.MILESTONE_CLOSED);
+        return new MilestoneCountDto(open, closed);
     }
 }
