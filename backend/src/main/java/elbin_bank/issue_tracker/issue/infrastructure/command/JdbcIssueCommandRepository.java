@@ -9,11 +9,38 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class JdbcIssueCommandRepository implements IssueCommandRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
+
+    @Override
+    public Optional<Issue> findById(long id) {
+        String sql = """
+                SELECT id,
+                       author_id,
+                       title,
+                       contents, 
+                       milestone_id,
+                       is_closed
+                FROM issue
+                WHERE id = :id
+                """;
+
+        var params = new MapSqlParameterSource().addValue("id", id);
+
+        return Optional.ofNullable(jdbc.queryForObject(sql, params, (rs, rowNum) -> new Issue(
+                rs.getLong("id"),
+                rs.getLong("author_id"),
+                rs.getString("title"),
+                rs.getString("contents"),
+                rs.getObject("milestone_id", Long.class),
+                rs.getBoolean("is_closed")
+        )));
+    }
 
     @Override
     public Issue save(Issue issue) {
@@ -74,6 +101,32 @@ public class JdbcIssueCommandRepository implements IssueCommandRepository {
                 .addValue("id", issue.getId());
 
         jdbc.update(sql, params);
+    }
+
+    @Override
+    public void adjustCount(String statusKey, long delta) {
+        var sql = """
+                UPDATE issue_status_count
+                SET issue_count = issue_count + :delta
+                WHERE status_key = :statusKey
+                """;
+        var p = new MapSqlParameterSource()
+                .addValue("delta", delta)
+                .addValue("statusKey", statusKey);
+        jdbc.update(sql, p);
+    }
+
+    @Override
+    public void updateState(long issueId, boolean isClosed) {
+        String sql = """
+                UPDATE issue
+                SET is_closed = :isClosed
+                 WHERE id = :id
+                """;
+        var p = new MapSqlParameterSource()
+                .addValue("isClosed", isClosed)
+                .addValue("id", issueId);
+        jdbc.update(sql, p);
     }
 
 }
