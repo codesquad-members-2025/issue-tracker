@@ -1,7 +1,10 @@
 import { API } from '@/shared/constants/api';
 
 export default async function uploadToS3(file: File): Promise<string> {
-  const res = await fetch(`${API.S3_PRESIGNED_URL}?filename=${file.name}`);
+  const res = await fetch(
+    `${API.S3_PRESIGNED_URL}?filename=${file.name}&Content-Type=${encodeURIComponent(file.type)}`,
+  );
+
   if (!res.ok) throw new Error('Failed to get presigned URL');
 
   const presignedUrl = await res.text();
