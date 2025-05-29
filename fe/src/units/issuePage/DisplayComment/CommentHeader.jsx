@@ -2,22 +2,25 @@ import styled from 'styled-components';
 import UserAvatar from '@/base-ui/utils/UserAvatar';
 import { typography } from '@/styles/foundation';
 import { GhostButton } from '@/base-ui/components/Button';
+import useTimeAgo from '@/hooks/useTimeAgo';
 
-export default function CommentHeader({ onClick }) {
+export default function CommentHeader({
+  authorNickname,
+  authorProfileUrl,
+  editTriggerHandler,
+  lastModifiedAt,
+}) {
+  const gapTime = useTimeAgo(lastModifiedAt);
   return (
     <Container>
       <LeftWrapper>
-        <UserAvatar
-          avatarUrl={
-            'prop__코멘트 객체의 author의 url -> 서버에서 응답으로 안주면 내가 스토어에서 찾기'
-          }
-        />
-        <AuthorName>{'prop__코멘트의 작성자 이름'}</AuthorName>
-        <ModifiedTime>{'prop__코멘트의 등록 시간'}</ModifiedTime>
+        <UserAvatar avatarUrl={authorProfileUrl} />
+        <AuthorName>{authorNickname}</AuthorName>
+        <ModifiedTime>{gapTime}</ModifiedTime>
       </LeftWrapper>
       <RightWrapper>
         {issue.authorId === comment.authorId && <AuthorLabel />}
-        <EditTriggerBtn onClick={'코멘트 편집 트리거 핸들러->prop__onClick 으로 전달 받는다.'} />
+        <EditTriggerBtn onClick={editTriggerHandler} />
       </RightWrapper>
     </Container>
   );

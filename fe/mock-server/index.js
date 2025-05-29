@@ -9,7 +9,12 @@ const PORT = 8080;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // 인증 미들웨어
@@ -275,6 +280,131 @@ app.patch('/toggleStatus', async (req, res) => {
     res.status(500).json({
       success: false,
       message: '이슈 상태 변경 중 서버 오류 발생',
+      error: error.message,
+    });
+  }
+});
+
+// PATCH /issues/:id - 이슈 수정
+app.patch('/issues/:id', authMiddleware, async (req, res) => {
+  try {
+    const issueId = parseInt(req.params.id);
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const data = await fs.readFile(filePath, 'utf-8');
+    const json = JSON.parse(data);
+
+    const issueIndex = json.issues.findIndex((issue) => issue.id === issueId);
+    if (issueIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: '이슈를 찾을 수 없습니다.',
+      });
+    }
+
+    const updateKeys = Object.keys(req.body);
+    let issue = json.issues[issueIndex];
+
+    updateKeys.forEach((key) => {
+      if (key === 'assigneeId' && Array.isArray(req.body.assigneeId)) {
+        issue.assignees = req.body.assigneeId
+          .map((id) => json.users.find((user) => user.id === id))
+          .filter(Boolean);
+      } else if (key === 'milestoneId') {
+        const milestone = json.milestones.find((m) => m.milestoneId === req.body.milestoneId);
+        issue.milestone = milestone || null;
+      } else if (key in issue) {
+        issue[key] = req.body[key];
+      }
+    });
+
+    // 갱신된 이슈 저장
+    json.issues[issueIndex] = issue;
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+
+    return res.json({
+      success: true,
+      message: '이슈가 성공적으로 수정되었습니다.',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '이슈 수정 중 서버 오류 발생',
+      error: error.message,
+    });
+  }
+});
+
+app.get('/issues/:id', authMiddleware, async (req, res) => {
+  try {
+    const issueId = parseInt(req.params.id);
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const data = await fs.readFile(filePath, 'utf-8');
+    const json = JSON.parse(data);
+
+    const issue = json.issues.find((issue) => issue.id === issueId);
+
+    if (!issue) {
+      return res.status(404).json({
+        success: false,
+        message: '이슈를 찾을 수 없습니다.',
+        data: null,
+      });
+    }
+
+    // 추가 데이터 조회
+    const assignees = issue.assignees.map((assignee) => {
+      const user = json.users.find((u) => u.id === assignee.id);
+      return user || assignee;
+    });
+    const labels = issue.labels.map((label) => {
+      const fullLabel = json.labels.find((l) => l.labelId === label.labelId);
+      return fullLabel || label;
+    });
+    const milestone = issue.milestone
+      ? json.milestones.find((m) => m.milestoneId === issue.milestone.milestoneId)
+      : null;
+
+    // 🔥 comments의 authorProfileUrl 추가
+    const comments = (issue.comments || []).map((comment) => {
+      // authorNickname으로 user를 찾거나, authorId가 있다면 id로 찾아도 됨
+      const user = json.users.find((u) => u.nickname === comment.authorNickname);
+      return {
+        ...comment,
+        authorProfileUrl: user?.profileImageUrl ?? null,
+      };
+    });
+
+    // 🔥 issue의 authorProfileUrl 추가
+    const authorProfileUrl = issue.author?.profileImageUrl ?? null;
+
+    const responseData = {
+      success: true,
+      message: '이슈를 성공적으로 조회했습니다.',
+      data: {
+        issue: {
+          issueId: issue.id,
+          title: issue.title,
+          content: issue.content,
+          authorId: issue.author.id,
+          authorNickname: issue.author.nickname,
+          milestoneId: issue.milestone?.milestoneId ?? issue.milestone?.id ?? null,
+          isOpen: issue.isOpen,
+          lastModifiedAt: issue.lastModifiedAt,
+          issueFileUrl: issue.issueFileUrl ?? null,
+          authorProfileUrl, // 👈 추가!
+        },
+        assignees,
+        labels,
+        milestone,
+        comments, // 👈 각 comment에 authorProfileUrl 추가됨!
+      },
+    };
+
+    res.json(responseData);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '이슈 조회 중 서버 오류 발생',
       error: error.message,
     });
   }

@@ -10,7 +10,8 @@
       "milestoneId": 1,
       "isOpen": true,
       "lastModifiedAt": "2025-05-21T18:13:27",
-      "imageUrl": null
+      "issueFileUrl": null,
+      "authorNickname": "이슈를 작성한 유저 닉네임"
     },
     "assignees": [
       {
@@ -38,9 +39,10 @@
       {
         "commentId": 1,
         "content": "이 문제는 곧 해결될 예정입니다.",
-        "imageUrl": null,
+        "profileImageUrl": "url 예시",
         "authorNickname": "홍길동",
-        "lastModifiedAt": "2025-05-21T18:13:27"
+        "lastModifiedAt": "2025-05-21T18:13:27",
+        "issueFileUrl": null
       }
     ]
   }

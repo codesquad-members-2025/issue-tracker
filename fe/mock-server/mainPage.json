@@ -4,7 +4,7 @@
       "id": 1,
       "title": "로그인 버튼이 작동하지 않음",
       "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -440,7 +440,7 @@
     {
       "id": 12,
       "title": "접근성 개선",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 105,
         "nickname": "david"
