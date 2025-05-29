@@ -28,10 +28,10 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.update("""
-            INSERT INTO `user` (user_id, email, nickname, profile_image, created_at, updated_at, password)
+            INSERT INTO `user` (user_id, email, nickname, profile_image, created_at, updated_at, password, login_type)
             VALUES
-                (1, 'user1@test.com', 'user1', 'image.com/a.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'password'),
-                (2, 'user2@test.com', 'user2', 'image.com/b.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'password')
+                (1, 'user1@test.com', 'user1', 'image.com/a.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'password', 'LOCAL'),
+                (2, 'user2@test.com', 'user2', 'image.com/b.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'password', 'LOCAL')
         """);
     }
 
