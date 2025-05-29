@@ -20,8 +20,12 @@ public class JdbcCommentsQueryRepository implements CommentsQueryRepository {
 
     @Override
     public List<CommentProjection> findByIssueId(Long issueId) {
-        String sql = "SELECT id, user_id, contents, created_at, updated_at FROM comment WHERE issue_id = :issueId";
-
+        String sql = """
+                    SELECT id, user_id, contents, created_at, updated_at
+                      FROM comment
+                     WHERE issue_id = :issueId
+                       AND deleted_at IS NULL
+                """;
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("issueId", issueId);
 
