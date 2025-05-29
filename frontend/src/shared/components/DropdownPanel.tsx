@@ -4,7 +4,7 @@ import SelectedIcon from '@/assets/icons/checkOnCircle.svg?react';
 import UnselectedIcon from '@/assets/icons/checkOffCircle.svg?react';
 
 interface BaseOption {
-  id: string;
+  id: number;
   name: string;
   selected: boolean;
 }
@@ -13,7 +13,7 @@ interface DropdownPanelProps<
   T extends Record<string, unknown> = Record<string, unknown>,
 > {
   options: (BaseOption & T)[];
-  onSelect: (id: string) => void;
+  onSelect: (id: number) => void;
   renderOption?: (option: BaseOption & T) => React.ReactNode;
 }
 

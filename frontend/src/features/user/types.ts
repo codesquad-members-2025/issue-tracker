@@ -1,7 +1,7 @@
 export interface User {
-  id: string;
+  id: number;
   nickname: string;
-  profileImage: string | null;
+  profileImage: string;
 }
 
 export interface GetUsersResponse {
