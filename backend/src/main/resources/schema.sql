@@ -4,7 +4,8 @@ CREATE TABLE user (
                       email VARCHAR(255) NOT NULL UNIQUE,
                       nickname VARCHAR(255) NOT NULL UNIQUE,
                       profile_image VARCHAR(255),
-                      password VARCHAR(255) NOT NULL,
+                      password VARCHAR(255) DEFAULT NULL,
+                      login_type VARCHAR(50) NOT NULL,
                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

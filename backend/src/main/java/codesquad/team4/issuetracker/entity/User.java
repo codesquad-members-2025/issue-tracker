@@ -1,6 +1,8 @@
 package codesquad.team4.issuetracker.entity;
 
 import java.time.LocalDateTime;
+
+import codesquad.team4.issuetracker.auth.LoginType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +30,9 @@ public class User {
 
     @Column("password")
     private String password;
+
+    @Column("login_type")
+    private LoginType loginType;
 
     @Column("created_at")
     private LocalDateTime createdAt;

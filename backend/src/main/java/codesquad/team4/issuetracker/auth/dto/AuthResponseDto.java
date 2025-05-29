@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.auth.dto;
 
+import codesquad.team4.issuetracker.auth.LoginType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

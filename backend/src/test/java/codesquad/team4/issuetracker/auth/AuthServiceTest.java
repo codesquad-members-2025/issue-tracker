@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.LoginRequestDto;
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.SignupRequestDto;
 import codesquad.team4.issuetracker.entity.User;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidLoginTypeException;
 import codesquad.team4.issuetracker.exception.unauthorized.PasswordNotEqualException;
 import codesquad.team4.issuetracker.exception.conflict.EmailAlreadyExistException;
 import codesquad.team4.issuetracker.exception.conflict.NicknameAlreadyExistException;
@@ -86,6 +87,7 @@ public class AuthServiceTest {
             .id(1L)
             .email("test@example.com")
             .password(BCrypt.hashpw("different", BCrypt.gensalt()))
+            .loginType(LoginType.LOCAL)
             .build();
 
         given(userRepository.findByEmail("test@example.com"))
@@ -93,5 +95,25 @@ public class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.checkEmailAndPassword(request))
             .isInstanceOf(PasswordNotEqualException.class);
+    }
+
+    @Test
+    @DisplayName("가입 경로가 다른 경우 예외가 발생한다")
+    void loginTypeMismatchTest() {
+        LoginRequestDto request = new LoginRequestDto("test@example.com", "password");
+
+        User existingUser = User.builder()
+            .id(1L)
+            .email("test@example.com")
+            .password(BCrypt.hashpw("password", BCrypt.gensalt()))
+            .loginType(LoginType.GITHUB)
+            .build();
+
+        given(userRepository.findByEmail("test@example.com"))
+            .willReturn(Optional.of(existingUser));
+
+        assertThatThrownBy(() -> authService.checkEmailAndPassword(request))
+            .isInstanceOf(InvalidLoginTypeException.class)
+            .hasMessageContaining("깃허브로 로그인해 주세요.");
     }
 }

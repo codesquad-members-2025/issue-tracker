@@ -84,17 +84,19 @@ public class MilestoneService {
     }
 
     @Transactional
-    public void updateMilestone(Long milestoneId, MilestoneRequestDto.CreateMilestoneDto request) {
+    public void updateMilestone(Long milestoneId, MilestoneRequestDto.UpdateMilestoneDto request) {
         if (!milestoneRepository.existsById(milestoneId)) {
             throw new MilestoneNotFoundException(milestoneId);
         }
 
         Milestone updatedMilestone = Milestone.builder()
-            .id(milestoneId)
-            .name(request.getName())
-            .description(request.getDescription())
-            .endDate(request.getEndDate())
-            .build();
+                .id(milestoneId)
+                .name(request.getName())
+                .description(request.getDescription())
+                .endDate(request.getEndDate())
+                .isOpen(true)
+                .build();
+
 
         milestoneRepository.save(updatedMilestone);
     }
