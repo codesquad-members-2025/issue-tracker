@@ -1,5 +1,7 @@
 package codesquad.team4.issuetracker.user;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,8 +12,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJdbcTest
@@ -28,10 +28,10 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.update("""
-            INSERT INTO `user` (user_id, email, nickname, profile_image, created_at, updated_at)
-            VALUES 
-                (1, 'user1@test.com', 'user1', 'image.com/a.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                (2, 'user2@test.com', 'user2', 'image.com/b.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            INSERT INTO `user` (user_id, email, nickname, profile_image, created_at, updated_at, password)
+            VALUES
+                (1, 'user1@test.com', 'user1', 'image.com/a.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'password'),
+                (2, 'user2@test.com', 'user2', 'image.com/b.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'password')
         """);
     }
 

@@ -10,13 +10,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class ParserTest {
+public class IssueFilteringParserTest {
     @ParameterizedTest
     @MethodSource("provideFilterConditions")
     @DisplayName("문자열 필터링 조건을 파싱하여 Dto로 만든다")
     void filteringConditionToDto(String q, String state, Long authorId, Long assigneeId, Long milestoneId, Long commentAuthorId, List<Long> labelIds) {
         // when
-        IssueRequestDto.IssueFilterParamDto filterDto = Parser.parseFilterCondition(q);
+        IssueRequestDto.IssueFilterParamDto filterDto = IssueFilteringParser.parseFilterCondition(q);
 
         // then
         assertThat(filterDto.getStatus().getValue()).isEqualTo(state);

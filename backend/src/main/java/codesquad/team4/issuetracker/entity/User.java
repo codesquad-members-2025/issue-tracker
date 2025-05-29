@@ -26,6 +26,9 @@ public class User {
     @Column("profile_image")
     private String profileImage;
 
+    @Column("password")
+    private String password;
+
     @Column("created_at")
     private LocalDateTime createdAt;
 

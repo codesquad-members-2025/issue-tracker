@@ -1,15 +1,13 @@
     package codesquad.team4.issuetracker.issue;
 
-    import static codesquad.team4.issuetracker.util.Parser.camelToSnake;
+    import static codesquad.team4.issuetracker.util.IssueFilteringParser.camelToSnake;
 
     import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
     import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
     import java.util.ArrayList;
     import java.util.HashMap;
-    import java.util.HashSet;
     import java.util.List;
     import java.util.Map;
-    import java.util.Set;
     import java.util.stream.Collectors;
     import lombok.RequiredArgsConstructor;
     import lombok.extern.slf4j.Slf4j;

@@ -9,9 +9,9 @@ public class TestDataHelper {
 
     public static void insertUser(JdbcTemplate jdbcTemplate, Long id, String nickname) {
         jdbcTemplate.update("""
-            INSERT INTO `user` (user_id, email, nickname)
-            VALUES (?, ?, ?)
-        """, id, "user" + id + "@test.com", nickname);
+            INSERT INTO `user` (user_id, email, nickname, password)
+            VALUES (?, ?, ?, ?)
+        """, id, "user" + id + "@test.com", nickname, "password");
     }
 
     public static void insertIssue(JdbcTemplate jdbcTemplate, Long id, String title, boolean isOpen, Long authorId) {
