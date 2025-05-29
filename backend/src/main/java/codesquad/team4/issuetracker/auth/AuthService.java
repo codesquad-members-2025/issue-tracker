@@ -38,6 +38,7 @@ public class AuthService {
             .nickname(request.getNickname())
             .password(hashPassword)
             .profileImage(DEFAULT_PROFILE_URL)
+            .loginType(LoginType.LOCAL)
             .createdAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now())
             .build();

@@ -57,6 +57,7 @@ public class AuthController {
             .userId(user.getId())
             .nickname(user.getNickname())
             .profileImage(user.getProfileImage())
+            .loginType(LoginType.LOCAL)
             .build();
     }
 
