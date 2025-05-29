@@ -2,6 +2,7 @@ package CodeSquad.IssueTracker.oauth;
 
 import CodeSquad.IssueTracker.oauth.dto.GithubAccessTokenRequest;
 import CodeSquad.IssueTracker.oauth.dto.GithubAccessTokenResponse;
+import CodeSquad.IssueTracker.oauth.dto.GithubProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -53,5 +54,23 @@ public class GithubApiClient {
                 .block(); // 결과를 기다려서 동기적으로 반환
 
         return Objects.requireNonNull(githubAccessToken).getAccessToken();
+    }
+
+    /*
+     * GitHub OAuth로 받은 Access Token을 사용해
+     * GitHub 사용자 정보를 조회합니다.
+     */
+    public GithubProfile getUserInfo(String accessToken) {
+        String url = "https://api.github.com/user";
+
+        return webClient.get()
+                .uri(url)
+                .headers(headers -> {
+                    headers.setBearerAuth(accessToken);
+                    headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+                })
+                .retrieve()
+                .bodyToMono(GithubProfile.class)
+                .block(); // 결과를 기다려서 동기적으로 반환
     }
 }
