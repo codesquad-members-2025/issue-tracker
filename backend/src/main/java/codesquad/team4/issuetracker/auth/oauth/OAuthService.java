@@ -1,8 +1,17 @@
 package codesquad.team4.issuetracker.auth.oauth;
 
+import codesquad.team4.issuetracker.auth.JwtProvider;
+import codesquad.team4.issuetracker.auth.LoginType;
+import codesquad.team4.issuetracker.auth.dto.AuthResponseDto;
+import codesquad.team4.issuetracker.entity.User;
+import codesquad.team4.issuetracker.exception.ExceptionMessage;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidLoginTypeException;
 import codesquad.team4.issuetracker.exception.badrequest.InvalidOAuthStateException;
 import codesquad.team4.issuetracker.auth.oauth.dto.OAuthRequestDto;
 import codesquad.team4.issuetracker.auth.oauth.dto.OAuthResponseDto;
+import codesquad.team4.issuetracker.exception.notfound.EmailNotFoundException;
+import codesquad.team4.issuetracker.user.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,6 +39,8 @@ public class OAuthService {
     private String clientSecret;
 
     private final RestTemplate restTemplate;
+    private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
 
     private static final String GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize";
     private static final String GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token";
@@ -53,7 +66,7 @@ public class OAuthService {
             .build();
     }
 
-    public void handleCallback(OAuthRequestDto.GitHubCallback callback, HttpSession session) {
+    public User handleCallback(OAuthRequestDto.GitHubCallback callback, HttpSession session) {
         //state 값 비교
         String savedState = (String) session.getAttribute("oauth_state");
         if (!callback.getState().equals(savedState)) {
@@ -64,7 +77,9 @@ public class OAuthService {
         String accessToken = requestAccessToken(callback.getCode());
         //Github 사용자 정보 요청
         OAuthResponseDto.GitHubUserResponse userInfo = fetchGitHubUser(accessToken);
-        //(아직 구현 안함)사용자 DB 확인 -> 회원가입/로그인 처리
+        //회원가입/로그인 처리
+        return userRepository.findByEmail(userInfo.getEmail())
+            .orElseGet(() -> registerUser(userInfo));
     }
 
     private String requestAccessToken(String code) {
@@ -110,5 +125,24 @@ public class OAuthService {
         );
 
         return response.getBody();
+    }
+
+    public AuthResponseDto.LoginResponseDto loginUser(User user) {
+        return AuthResponseDto.LoginResponseDto.builder()
+            .userId(user.getId())
+            .nickname(user.getNickname())
+            .profileImage(user.getProfileImage())
+            .build();
+    }
+
+    public User registerUser(OAuthResponseDto.GitHubUserResponse userInfo) {
+        return userRepository.save(
+            User.builder()
+                .email(userInfo.getEmail())
+                .nickname(userInfo.getNickname())
+                .profileImage(userInfo.getAvatarUrl())
+                .loginType(LoginType.GITHUB)
+                .build()
+        );
     }
 }
