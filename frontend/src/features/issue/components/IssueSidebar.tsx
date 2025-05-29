@@ -1,47 +1,43 @@
 import styled from '@emotion/styled';
-import { getAccessibleLabelStyle } from '@/shared/utils/color';
-import Profile from '@/shared/components/Profile';
-import { type Assignee, type Milestone, type Label } from '../types/issue';
-import SidebarSection from './SidebarSection';
-import MilestoneProgressBar from '@/shared/components/MilestoneProgressBar';
+import AssigneeSection from './AssigneeSection';
+import LabelSection from './LabelSection';
+import MilestoneSection from './MilestoneSection';
 
-interface SidebarProps {
-  assignees: Assignee[];
-  labels: Label[];
-  milestone: Milestone | null;
+interface IssueSidebarProps {
+  selectedAssigneeIds: number[];
+  onToggleAssignee: (id: number) => void;
+
+  selectedLabelIds: number[];
+  onToggleLabel: (id: number) => void;
+
+  selectedMilestoneId: number | null;
+  onSelectMilestone: (id: number) => void;
 }
 
 export default function IssueSidebar({
-  assignees,
-  labels,
-  milestone,
-}: SidebarProps) {
+  selectedAssigneeIds,
+  onToggleAssignee,
+  selectedLabelIds,
+  onToggleLabel,
+  selectedMilestoneId,
+  onSelectMilestone,
+}: IssueSidebarProps) {
   return (
     <SidebarWrapper>
-      <SidebarSection title="담당자" isEmpty={assignees.length === 0}>
-        <SectionList>
-          {assignees.map(assignee => (
-            <Profile
-              key={assignee.id}
-              size="sm"
-              name={assignee.nickname}
-              imageUrl={assignee.profileImage}
-            />
-          ))}
-        </SectionList>
-      </SidebarSection>
+      <AssigneeSection
+        selectedAssigneeIds={selectedAssigneeIds}
+        onToggleAssignee={onToggleAssignee}
+      />
 
-      <SidebarSection title="레이블" isEmpty={assignees.length === 0}>
-        <LabelList>{renderLabelList(labels)}</LabelList>
-      </SidebarSection>
+      <LabelSection
+        selectedLabelIds={selectedLabelIds}
+        onToggleLabel={onToggleLabel}
+      />
 
-      <SidebarSection title="마일스톤" isEmpty={!milestone}>
-        {milestone && (
-          <MilestoneProgressBar percentage={milestone.progressRate}>
-            <MilestoneLabel>{milestone.name}</MilestoneLabel>
-          </MilestoneProgressBar>
-        )}
-      </SidebarSection>
+      <MilestoneSection
+        selectedMilestoneId={selectedMilestoneId}
+        onSelectMilestone={onSelectMilestone}
+      />
     </SidebarWrapper>
   );
 }
@@ -61,62 +57,3 @@ const SidebarWrapper = styled.div`
     border-bottom: 1px solid ${({ theme }) => theme.neutral.border.default};
   }
 `;
-
-const LabelList = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 4px;
-
-  ${({ theme }) => theme.typography.availableMedium12};
-  color: ${({ theme }) => theme.neutral.text.strong};
-`;
-
-const SectionList = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  ${({ theme }) => theme.typography.availableMedium12};
-  color: ${({ theme }) => theme.neutral.text.strong};
-`;
-
-const MilestoneLabel = styled.span`
-  ${({ theme }) => theme.typography.displayMedium12};
-  color: ${({ theme }) => theme.neutral.text.strong};
-`;
-
-//TODO 공용 라벨 컴포넌트 분리
-interface LabelTagProps {
-  backgroundColor: string;
-  borderColor: string;
-  color: string;
-}
-
-const LabelTag = styled.span<LabelTagProps>`
-  padding: 4px 9px;
-  border-radius: ${({ theme }) => theme.radius.medium};
-  color: ${({ color }) => color};
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  border: 1px solid ${({ borderColor }) => borderColor};
-  ${({ theme }) => theme.typography.displayMedium12};
-`;
-
-//TODO 공용 분리
-function renderLabelList(labels: Label[]) {
-  return labels.map(label => {
-    const { textColor, borderColor } = getAccessibleLabelStyle(label.color);
-    return (
-      <LabelTag
-        key={label.id}
-        backgroundColor={label.color}
-        borderColor={borderColor}
-        color={textColor}
-      >
-        {label.name}
-      </LabelTag>
-    );
-  });
-}
