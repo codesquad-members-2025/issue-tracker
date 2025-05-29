@@ -46,4 +46,10 @@ public class MilestoneController {
   public ResponseEntity<ApiResponse<MilestoneResponse>> getMilestoneById(@RequestParam Long id) {
     return ResponseEntity.ok(ApiResponse.success(milestoneQueryService.getMilestoneById(id)));
   }
+
+  @GetMapping("/count")
+  public ResponseEntity<ApiResponse<Long>> getMilestoneCount() {
+    Long count = milestoneQueryService.getMilestoneCount();
+    return ResponseEntity.ok(ApiResponse.success(count));
+  }
 }

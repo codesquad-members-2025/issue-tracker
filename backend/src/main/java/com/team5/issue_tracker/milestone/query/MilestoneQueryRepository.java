@@ -183,4 +183,9 @@ public class MilestoneQueryRepository {
 
     return result.isEmpty() ? -1L : result.get(0);
   }
+
+  public Long getMilestoneCount() {
+    String sql = "SELECT COUNT(id) FROM milestone";
+    return jdbcTemplate.queryForObject(sql, Collections.emptyMap(), Long.class);
+  }
 }
