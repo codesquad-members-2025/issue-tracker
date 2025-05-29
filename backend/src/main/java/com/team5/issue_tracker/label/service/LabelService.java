@@ -5,6 +5,9 @@ import java.time.Instant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.team5.issue_tracker.common.exception.BaseException;
+import com.team5.issue_tracker.common.exception.ErrorCode;
+import com.team5.issue_tracker.common.exception.NotFoundException;
 import com.team5.issue_tracker.label.domain.Label;
 import com.team5.issue_tracker.label.dto.request.LabelRequest;
 import com.team5.issue_tracker.label.repository.LabelRepository;
@@ -31,7 +34,7 @@ public class LabelService {
   @Transactional
   public void updateLabel(Long labelId, LabelRequest request) {
     Label label = labelRepository.findById(labelId)
-        .orElseThrow(() -> new IllegalArgumentException("Label not found with id: " + labelId));
+        .orElseThrow(() -> new NotFoundException(ErrorCode.LABEL_NOT_FOUND));
 
     Label updatedLabel = new Label(
         label.getId(),
@@ -49,7 +52,7 @@ public class LabelService {
   @Transactional
   public void deleteLabel(Long labelId) {
     if (!labelRepository.existsById(labelId)) {
-      throw new IllegalArgumentException("Label not found with id: " + labelId);
+      throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
     }
     labelRepository.deleteById(labelId);
   }

@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.team5.issue_tracker.comment.domain.Comment;
 import com.team5.issue_tracker.comment.dto.CommentRequest;
 import com.team5.issue_tracker.comment.reqository.CommentRepository;
+import com.team5.issue_tracker.common.exception.ErrorCode;
+import com.team5.issue_tracker.common.exception.NotFoundException;
 import com.team5.issue_tracker.issue.domain.Issue;
 import com.team5.issue_tracker.issue.domain.IssueAssignee;
 import com.team5.issue_tracker.issue.domain.IssueLabel;
@@ -44,8 +46,8 @@ public class IssueService {
   public Long createIssue(IssueCreateRequest request) {
     Long userId = 1L; // TODO: 유저가 없으니 우선 임시데이터 넣음!, 유저가 없으면 생성 불가!
     if (!userService.existsById(userId)) {
-      throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
-    } //TODO: 커스텀 에러 만들지 고민중
+      throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
+    }
 
     Instant now = Instant.now();
     Issue issue = new Issue(request.getTitle(), userId, request.getMilestoneId(), true, now, now);
@@ -171,12 +173,12 @@ public class IssueService {
 
   private void validateIssueExists(Long issueId) {
     if (!issueRepository.existsById(issueId)) {
-      throw new IllegalArgumentException("존재하지 않는 이슈입니다.");
-    } //TODO: 커스텀 에러 만들지 고민중
+      throw new NotFoundException(ErrorCode.ISSUE_NOT_FOUND);
+    }
   }
 
   private Issue getIssueOrThrow(Long issueId) {
     return issueRepository.findById(issueId)
-        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이슈입니다."));
-  } //TODO: 커스텀 에러 만들지 고민중
+        .orElseThrow(() -> new NotFoundException(ErrorCode.ISSUE_NOT_FOUND));
+  }
 }

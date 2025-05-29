@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.team5.issue_tracker.comment.domain.Comment;
 import com.team5.issue_tracker.comment.dto.CommentRequest;
 import com.team5.issue_tracker.comment.reqository.CommentRepository;
+import com.team5.issue_tracker.common.exception.ErrorCode;
+import com.team5.issue_tracker.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +30,7 @@ public class CommentService {
   @Transactional
   public void editComment(Long commentId, CommentRequest updateCommentRequest) {
     Comment comment = commentRepository.findById(commentId)
-        .orElseThrow(() -> new IllegalArgumentException("Comment not found")); // TODO: 예외 처리 개선
+        .orElseThrow(() -> new NotFoundException(ErrorCode.COMMENT_NOT_FOUND));
 
     comment.setContent(updateCommentRequest.getContent());
     comment.setUpdatedAt(Instant.now());

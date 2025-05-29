@@ -5,6 +5,8 @@ import java.time.Instant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.team5.issue_tracker.common.exception.ErrorCode;
+import com.team5.issue_tracker.common.exception.NotFoundException;
 import com.team5.issue_tracker.milestone.domain.Milestone;
 import com.team5.issue_tracker.milestone.dto.request.MilestoneRequest;
 import com.team5.issue_tracker.milestone.repository.MilestoneRepository;
@@ -37,7 +39,7 @@ public class MilestoneService {
   @Transactional
   public void updateMilestone(Long milestoneId, MilestoneRequest request) {
     Milestone milestone = milestoneRepository.findById(milestoneId)
-        .orElseThrow(() -> new IllegalArgumentException("해당 마일스톤이 존재하지 않습니다."));
+        .orElseThrow(() -> new NotFoundException(ErrorCode.MILESTONE_NOT_FOUND));
 
     Milestone updatedMilestone = new Milestone(
         milestone.getId(),
