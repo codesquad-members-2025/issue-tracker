@@ -1,8 +1,11 @@
 package codesquad.team01.issuetracker.issue.api;
 
+import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +56,7 @@ public class IssueController {
 
 	@PatchMapping("/v1/issues/batch")
 	public ResponseEntity<ApiResponse<IssueDto.BatchUpdateResponse>> batchUpdateIssueState(
-		@RequestBody @Valid IssueDto.BatchUpdateRequest request) {
+		@Valid @RequestBody IssueDto.BatchUpdateRequest request) {
 
 		log.info(request.toString());
 
@@ -63,6 +66,23 @@ public class IssueController {
 		log.info(response.toString());
 
 		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	@PostMapping("/v1/issues")
+	public ResponseEntity<ApiResponse<IssueDto.IssueCreationResponse>> createIssue(
+		@Valid @RequestBody IssueDto.IssueCreationRequest request) {
+
+		log.info(request.toString());
+
+		int id = issueService.createIssue(request);
+		URI location = URI.create("/api/v1/issues" + id);
+
+		log.info("새로운 이슈 생성 id: {}", id);
+
+		return ResponseEntity.created(location)
+			.body(ApiResponse.success(
+				new IssueDto.IssueCreationResponse(id))
+			);
 	}
 }
 

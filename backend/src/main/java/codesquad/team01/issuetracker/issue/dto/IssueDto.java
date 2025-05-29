@@ -247,4 +247,8 @@ public class IssueDto {
 		}
 	}
 
+	public record IssueCreationResponse(
+		int id
+	) {
+	}
 }
