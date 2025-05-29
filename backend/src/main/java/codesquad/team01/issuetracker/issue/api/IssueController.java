@@ -51,7 +51,7 @@ public class IssueController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	@PatchMapping("/issues/batch")
+	@PatchMapping("/v1/issues/batch")
 	public ResponseEntity<ApiResponse<IssueDto.BatchUpdateResponse>> batchUpdateIssueState(
 		@RequestBody @Valid IssueDto.BatchUpdateRequest request) {
 
