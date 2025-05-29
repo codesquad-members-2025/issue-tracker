@@ -25,7 +25,7 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
             return Map.of();
         }
 
-        String sql = "SELECT id, nickname FROM user WHERE id IN (:ids)";
+        String sql = "SELECT id, nickname FROM user WHERE id IN (:ids) AND deleted_at IS NULL";
         Map<String, Object> params = Map.of("ids", ids);
 
         return jdbc.query(sql, params, rs -> {
@@ -47,6 +47,7 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
                 SELECT id, nickname, profile_image_url
                 FROM user
                 WHERE id IN (:Ids)
+                AND deleted_at IS NULL
                 """;
 
         var params = new MapSqlParameterSource("Ids", userIds);

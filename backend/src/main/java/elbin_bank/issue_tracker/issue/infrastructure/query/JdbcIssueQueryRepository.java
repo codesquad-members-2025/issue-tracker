@@ -44,11 +44,12 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
                 """;
 
         SqlClauseResult buildResult = sqlBuilder.build(crit);
-//todo softdelete
+
         String sql = new StringBuilder()
                 .append(baseSql)
                 .append(buildResult.joinClause())
                 .append(buildResult.whereClause())
+                .append(" AND i.deleted_at IS NULL")
                 .append(" GROUP BY i.id")
                 .append(buildResult.havingClause())
                 .append(" ORDER BY i.id DESC")
@@ -77,10 +78,11 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
         }
 
         String sql = """
-                    SELECT a.issue_id, u.profile_image_url
-                      FROM assignee a
-                 JOIN `user` u ON u.id = a.user_id
-                     WHERE a.issue_id IN (:ids)
+                SELECT a.issue_id, u.profile_image_url
+                FROM assignee a
+                JOIN `user` u ON u.id = a.user_id
+                WHERE a.issue_id IN (:ids)
+                AND u.deleted_at IS NULL
                 """;
 
         var params = new MapSqlParameterSource("ids", issueIds);
@@ -184,6 +186,7 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
                 FROM assignee a
                 JOIN `user` u ON a.user_id = u.id
                 WHERE a.issue_id = :id
+                AND u.deleted_at IS NULL
                 """;
 
         var params = new MapSqlParameterSource("id", id);
