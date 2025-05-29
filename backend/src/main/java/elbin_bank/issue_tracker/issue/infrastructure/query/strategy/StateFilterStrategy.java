@@ -1,33 +1,33 @@
 package elbin_bank.issue_tracker.issue.infrastructure.query.strategy;
 
 import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Map;
 
 @Component
 public class StateFilterStrategy implements FilterStrategy {
 
     @Override
     public boolean supports(FilterCriteria c) {
-        /* 기본값이 List.of(false)이므로 “open/closed 아무 조건도 없음” 판별 */
+        // 항상 isClosed 조건은 들어가도록
         return true;
     }
 
     @Override
-    public void appendWhere(StringBuilder where,
-                            MapSqlParameterSource p,
-                            FilterCriteria c) {
-        List<Boolean> states = c.states();
-        if (states.contains(Boolean.TRUE) && states.contains(Boolean.FALSE)) {
-            where.append(" AND 1 = 0 ");
-            return;
-        }
+    public void applyJoin(StringBuilder join, FilterCriteria c) {
+        // no-op
+    }
 
+    @Override
+    public void applyWhere(StringBuilder where, Map<String, Object> params, FilterCriteria c) {
+        where.append(" AND i.is_closed = :isClosed");
+        params.put("isClosed", c.isClosed());
+    }
 
-        where.append(" AND i.is_closed IN (:states)");
-        p.addValue("states", c.states());
+    @Override
+    public void applyHaving(StringBuilder having, Map<String, Object> params, FilterCriteria c) {
+        // no-op
     }
 
 }
