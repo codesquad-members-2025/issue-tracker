@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useThemeStore } from "@/lib/useThemeStore";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 const ThemeToggleButton = styled.button`
   background: none;

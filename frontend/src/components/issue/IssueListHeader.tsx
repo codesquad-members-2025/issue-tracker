@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useIssueFilterStore } from "@/stores/useIssueFilterStore";
 import styled from "@emotion/styled";
 import IssueOpenTabFilter from "@components/filter/IssueOpenTabFilter";
 import FilterDropdownButton from "@components/filter/FilterDropdownButton";
@@ -106,25 +107,6 @@ export default function IssueListHeader({
 }: ListHeaderProps) {
   const options = useIssueFilterOptions();
 
-  /** 현재 열린 팝업 종류(null → 닫힘) */
-  const [activePopup, setActivePopup] = useState<FilterKey | null>(null);
-
-  /** 각 필터에서 현재 선택한 값(ID) — 추후 Zustand로 올릴 예정 */
-  const [selectedFilters, setSelectedFilters] = useState<
-    Partial<Record<FilterKey, string>>
-  >({});
-
-  /** 버튼 클릭 → 팝업 토글 */
-  const togglePopup = useCallback((key: FilterKey) => {
-    setActivePopup((prev) => (prev === key ? null : key));
-  }, []);
-
-  /** 팝업 항목 선택 시 처리 */
-  const handleSelect = (key: FilterKey, id: string) => {
-    setSelectedFilters((prev) => ({ ...prev, [key]: id }));
-    setActivePopup(null);
-  };
-
   /** 제목·옵션 매핑 */
   const titleMap: Record<FilterKey, string> = {
     assignee: "담당자",
@@ -159,10 +141,10 @@ export default function IssueListHeader({
             filterKey={key}
             title={titleMap[key]}
             options={options[key]}
-            selectedId={selectedFilters[key]}
-            onSelect={(id) =>
-              setSelectedFilters((prev) => ({ ...prev, [key]: id }))
-            }
+            /* ▼ ① 전역 selected 값 읽기 */
+            selectedId={useIssueFilterStore.getState().selected[key]}
+            /* ▼ ② 전역 setFilter 로 저장 */
+            onSelect={(id) => useIssueFilterStore.getState().setFilter(key, id)}
           />
         ))}
       </RightSection>

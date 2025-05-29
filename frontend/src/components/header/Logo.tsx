@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useThemeStore } from "@lib/useThemeStore";
+import { useThemeStore } from "@/stores/useThemeStore";
 import styled from "@emotion/styled";
 
 const Container = styled.div`

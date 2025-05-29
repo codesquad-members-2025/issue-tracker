@@ -4,7 +4,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useThemeStore } from "@lib/useThemeStore";
+import { useThemeStore } from "@/stores/useThemeStore";
 import styled from "@emotion/styled";
 import theme from "@/styles/theme";
 import ThemeToggleBtn from "@components/theme/ThemeToggleBtn";
