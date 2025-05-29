@@ -1,7 +1,7 @@
 package codesquad.team4.issuetracker.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.SignupRequestDto;
 import codesquad.team4.issuetracker.entity.User;
@@ -29,7 +29,7 @@ public class AuthServiceH2Test {
     @DisplayName("비밀번호는 해싱된 후 DB에 저장되어야 한다")
     void passwordShouldBeHashed() {
         // given
-        SignupRequestDto request = new SignupRequestDto("test@email.com", "nickname", "plainPassword");
+        SignupRequestDto request = new SignupRequestDto("test@email.com", "plainPassword", "nickname");
 
         // when
         authService.createNewUser(request);
@@ -38,7 +38,7 @@ public class AuthServiceH2Test {
         // then
         assertThat(savedUser.getPassword()).isNotEqualTo("plainPassword");
         //무작위 솔트 값으로 인해 해싱마다 변경
-        assertFalse(BCrypt.checkpw("plainPassword", savedUser.getPassword()));
+        assertTrue(BCrypt.checkpw("plainPassword", savedUser.getPassword()));
     }
 
 }
