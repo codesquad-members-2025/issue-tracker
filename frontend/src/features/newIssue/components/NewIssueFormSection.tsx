@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Profile from '@/shared/components/Profile';
 import IssueForm from './NewIssueForm';
+import IssueSidebar from '@/features/issue/components/IssueSidebar';
 
 interface NewIssueFormSectionProps {
   title: string;
@@ -10,7 +11,7 @@ interface NewIssueFormSectionProps {
   onContentChange: (value: string) => void;
 
   milestoneId: number | null;
-  onMilestoneChange: (id: number | null) => void;
+  onMilestoneChange: (id: number) => void;
 
   selectedLabelIds: number[];
   onToggleLabel: (id: number) => void;
@@ -24,6 +25,12 @@ export default function NewIssueFormSection({
   onTitleChange,
   content,
   onContentChange,
+  milestoneId,
+  onMilestoneChange,
+  selectedLabelIds,
+  onToggleLabel,
+  selectedAssigneeIds,
+  onToggleAssignee,
 }: NewIssueFormSectionProps) {
   return (
     <MainWrapper>
@@ -34,7 +41,14 @@ export default function NewIssueFormSection({
         onTitleChange={onTitleChange}
         onContentChange={onContentChange}
       />
-      {/* sidebar */}
+      <IssueSidebar
+        selectedAssigneeIds={selectedAssigneeIds}
+        onToggleAssignee={onToggleAssignee}
+        selectedLabelIds={selectedLabelIds}
+        onToggleLabel={onToggleLabel}
+        selectedMilestoneId={milestoneId}
+        onSelectMilestone={onMilestoneChange}
+      />
     </MainWrapper>
   );
 }

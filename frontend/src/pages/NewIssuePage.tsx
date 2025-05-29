@@ -25,8 +25,30 @@ export default function NewIssuePage() {
   function handleCreateIssue() {
     const payload = buildIssuePayload(issueForm);
     console.log('[POST] /api/v1/issues payload:', payload);
-
     postNewIssue(payload);
+  }
+
+  function handleTitleChange(val: string) {
+    updateIssueForm({ type: 'SET_TITLE', payload: val });
+  }
+
+  function handleContentChange(val: string) {
+    updateIssueForm({ type: 'SET_CONTENT', payload: val });
+  }
+
+  function handleMilestoneChange(id: number) {
+    updateIssueForm({
+      type: 'SET_MILESTONE',
+      payload: issueForm.milestone === id ? null : id,
+    });
+  }
+
+  function handleToggleLabel(id: number) {
+    updateIssueForm({ type: 'TOGGLE_LABEL', payload: id });
+  }
+
+  function handleToggleAssignee(id: number) {
+    updateIssueForm({ type: 'TOGGLE_ASSIGNEE', payload: id });
   }
 
   return (
@@ -35,25 +57,15 @@ export default function NewIssuePage() {
       <Divider />
       <NewIssueFormSection
         title={issueForm.title}
-        onTitleChange={val =>
-          updateIssueForm({ type: 'SET_TITLE', payload: val })
-        }
+        onTitleChange={handleTitleChange}
         content={issueForm.content}
-        onContentChange={val =>
-          updateIssueForm({ type: 'SET_CONTENT', payload: val })
-        }
+        onContentChange={handleContentChange}
         milestoneId={issueForm.milestone}
-        onMilestoneChange={id =>
-          updateIssueForm({ type: 'SET_MILESTONE', payload: id })
-        }
+        onMilestoneChange={handleMilestoneChange}
         selectedLabelIds={issueForm.labels}
-        onToggleLabel={id =>
-          updateIssueForm({ type: 'TOGGLE_LABEL', payload: id })
-        }
+        onToggleLabel={handleToggleLabel}
         selectedAssigneeIds={issueForm.assignees}
-        onToggleAssignee={id =>
-          updateIssueForm({ type: 'TOGGLE_ASSIGNEE', payload: id })
-        }
+        onToggleAssignee={handleToggleAssignee}
       />
       <Divider />
       <NewIssueActionButtons
