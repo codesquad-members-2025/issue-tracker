@@ -20,6 +20,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: 🛠️ Grant execute permission to gradlew
+        run: |
+          cd be
+          chmod +x gradlew
+      
+
       - name: 🏗️ Build with Gradle
         run: |
           cd be
@@ -58,3 +64,19 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
           scp -i private_key.pem -o StrictHostKeyChecking=no .env ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/.env
+          
+
+      - name: 🔔 Trigger CodeDeploy deployment
+        run: |
+          aws deploy create-deployment \
+          --application-name IssueTrackerApp \
+          --deployment-group-name IssueTrackerGroup \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --s3-location bucket=${{ secrets.CODEDEPLOY_S3_BUCKET }},bundleType=zip,key=codedeploy.zip \
+          --region ${{ secrets.AWS_REGION }}
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
