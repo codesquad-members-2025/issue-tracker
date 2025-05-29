@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.team5.issue_tracker.comment.dto.UpdateCommentRequest;
+import com.team5.issue_tracker.comment.dto.CommentRequest;
 import com.team5.issue_tracker.comment.service.CommentService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +24,7 @@ public class CommentController {
 
   @PatchMapping("/{commentId}")
   public ResponseEntity<Void> patchComment(@PathVariable Long commentId,
-      @RequestBody UpdateCommentRequest updateCommentRequest) {
+      @Valid @RequestBody CommentRequest updateCommentRequest) {
     commentService.editComment(commentId, updateCommentRequest);
 
     return ResponseEntity.noContent().build();
