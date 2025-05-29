@@ -1,7 +1,6 @@
 package CodeSquad.IssueTracker.global;
 
 import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
-import CodeSquad.IssueTracker.global.exception.ApplicationException;
 import CodeSquad.IssueTracker.jwt.exception.JwtValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,13 +16,6 @@ import java.util.Map;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler
-    public ResponseEntity<BaseResponseDto<String>> handleCustomExceptions(ApplicationException e) {
-        log.error(e.getMessage(), e);
-        return ResponseEntity
-                .status(e.getHttpStatus())
-                .body(BaseResponseDto.failure(e.getMessage()));
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponseDto<Void>> handleValidationException(MethodArgumentNotValidException ex) {
