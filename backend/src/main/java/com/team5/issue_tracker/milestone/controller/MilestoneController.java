@@ -3,6 +3,7 @@ package com.team5.issue_tracker.milestone.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,20 +46,20 @@ public class MilestoneController {
     return ResponseEntity.ok(ApiResponse.success(milestoneService.createMilestone(request)));
   }
 
-  @GetMapping("/id")
-  public ResponseEntity<ApiResponse<MilestoneResponse>> getMilestoneById(@RequestParam Long id) {
+  @GetMapping("/{id}")
+  public ResponseEntity<ApiResponse<MilestoneResponse>> getMilestoneById(@PathVariable Long id) {
     return ResponseEntity.ok(ApiResponse.success(milestoneQueryService.getMilestoneById(id)));
   }
 
-  @DeleteMapping("/id")
-  public ResponseEntity<Void> deleteMilestoneById(@RequestParam Long id) {
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteMilestoneById(@PathVariable Long id) {
     milestoneService.deleteMilestoneById(id);
     return ResponseEntity.noContent().build();
   }
 
-  @PutMapping("/id")
+  @PutMapping("/{id}")
   public ResponseEntity<Void> updateMilestone(
-      @RequestParam Long id,
+      @PathVariable Long id,
       @RequestBody MilestoneRequest request
   ) {
     milestoneService.updateMilestone(id, request);

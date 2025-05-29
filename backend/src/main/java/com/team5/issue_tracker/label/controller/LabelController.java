@@ -3,6 +3,7 @@ package com.team5.issue_tracker.label.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +45,7 @@ public class LabelController {
 
   @PutMapping("/{labelId}")
   public ResponseEntity<Void> updateLabel(
-      @RequestParam Long labelId,
+      @PathVariable Long labelId,
       @Valid @RequestBody LabelRequest request
   ) {
     labelService.updateLabel(labelId, request);
@@ -53,8 +54,8 @@ public class LabelController {
 
   @DeleteMapping("/{labelId}")
   public ResponseEntity<Void> deleteLabel(
-      @RequestParam Long labelId
-  ){
+      @PathVariable Long labelId
+  ) {
     labelService.deleteLabel(labelId);
     return ResponseEntity.noContent().build();
   }
