@@ -13,6 +13,5 @@ public class AuthResponseDto {
         private Long userId;
         private String nickname;
         private String profileImage;
-        private LoginType loginType;
     }
 }

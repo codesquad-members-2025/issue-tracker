@@ -11,7 +11,6 @@ import codesquad.team4.issuetracker.auth.oauth.dto.OAuthRequestDto;
 import codesquad.team4.issuetracker.auth.oauth.dto.OAuthResponseDto;
 import codesquad.team4.issuetracker.exception.notfound.EmailNotFoundException;
 import codesquad.team4.issuetracker.user.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,11 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,11 +35,11 @@ public class OAuthService {
 
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
 
     private static final String GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize";
     private static final String GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token";
     private static final String GITHUB_USER_API_URL = "https://api.github.com/user";
+    private static final String GITHUB_USER_EMAIL_API_URL = "https://api.github.com/user/emails";
 
 
     public OAuthResponseDto.OAuthLoginUrl createGithubAuthorizeUrl(HttpSession session) {
@@ -131,7 +126,14 @@ public class OAuthService {
             OAuthResponseDto.GitHubUserResponse.class
         );
 
-        return response.getBody();
+        OAuthResponseDto.GitHubUserResponse userResponse = response.getBody();
+        // 이메일이 null(비공개)이면 /user/emails API 호출
+        if (userResponse.getEmail() == null) {
+            String fallbackEmail = fetchPrimaryEmail(accessToken);
+            userResponse.setEmail(fallbackEmail);
+        }
+
+        return userResponse;
     }
 
     public AuthResponseDto.LoginResponseDto loginUser(User user) {
@@ -157,5 +159,27 @@ public class OAuthService {
         if (user.getLoginType() != LoginType.GITHUB) {
             throw new InvalidLoginTypeException(ExceptionMessage.INVALID_LOGINTYPE_GITHUB);
         }
+    }
+
+    //이메일 비공개인 경우 user/emails
+    public String fetchPrimaryEmail(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        ResponseEntity<OAuthResponseDto.GitHubEmailResponse[]> response = restTemplate.exchange(
+            GITHUB_USER_EMAIL_API_URL,
+            HttpMethod.GET,
+            request,
+            OAuthResponseDto.GitHubEmailResponse[].class
+        );
+
+        return Arrays.stream(response.getBody())
+            .filter(OAuthResponseDto.GitHubEmailResponse::isPrimary)
+            .map(OAuthResponseDto.GitHubEmailResponse::getEmail)
+            .findFirst()
+            .orElseThrow(() -> new EmailNotFoundException());
     }
 }
