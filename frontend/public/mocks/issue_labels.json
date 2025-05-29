@@ -1,0 +1,16 @@
+{
+  "labels": [
+    {
+      "id": 2,
+      "name": "bug",
+      "color": "#d73a4a",
+      "description": "버그 관련 이슈"
+    },
+    {
+      "id": 3,
+      "name": "urgent",
+      "color": "#e99695",
+      "description": "긴급한 이슈"
+    }
+  ]
+}
