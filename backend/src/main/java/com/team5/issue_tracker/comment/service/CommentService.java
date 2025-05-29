@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.team5.issue_tracker.comment.domain.Comment;
 import com.team5.issue_tracker.comment.dto.CommentRequest;
+import com.team5.issue_tracker.comment.dto.UpdateCommentRequest;
 import com.team5.issue_tracker.comment.reqository.CommentRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,14 @@ public class CommentService {
     Comment savedComment = commentRepository.save(comment);
 
     return savedComment.getId();
+  }
+
+  @Transactional
+  public void editComment(Long commentId, UpdateCommentRequest updateCommentRequest) {
+    Comment comment = commentRepository.findById(commentId)
+        .orElseThrow(() -> new IllegalArgumentException("Comment not found")); // TODO: 예외 처리 개선
+
+    comment.setContent(updateCommentRequest.getContent());
+    commentRepository.save(comment);
   }
 }

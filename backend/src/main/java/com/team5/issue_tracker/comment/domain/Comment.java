@@ -6,8 +6,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class Comment {
   @Id
   private Long id;
