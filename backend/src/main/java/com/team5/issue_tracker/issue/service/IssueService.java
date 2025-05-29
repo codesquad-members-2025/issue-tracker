@@ -28,7 +28,7 @@ import com.team5.issue_tracker.issue.query.IssueQueryRepository;
 import com.team5.issue_tracker.issue.repository.IssueAssigneeRepository;
 import com.team5.issue_tracker.issue.repository.IssueLabelRepository;
 import com.team5.issue_tracker.issue.repository.IssueRepository;
-import com.team5.issue_tracker.user.service.UserService;
+import com.team5.issue_tracker.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,12 +40,12 @@ public class IssueService {
   private final IssueAssigneeRepository issueAssigneeRepository;
   private final CommentRepository commentRepository;
   private final IssueQueryRepository issueQueryRepository;
-  private final UserService userService;
+  private final UserRepository userRepository;
 
   @Transactional
   public Long createIssue(IssueCreateRequest request) {
     Long userId = 1L; // TODO: 유저가 없으니 우선 임시데이터 넣음!, 유저가 없으면 생성 불가!
-    if (!userService.existsById(userId)) {
+    if (!userRepository.existsById(userId)) {
       throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
     }
 

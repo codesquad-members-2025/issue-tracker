@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.team5.issue_tracker.common.dto.ApiResponse;
 import com.team5.issue_tracker.user.dto.UserScrollResponse;
 import com.team5.issue_tracker.user.query.UserQueryService;
-import com.team5.issue_tracker.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-  private final UserService userService;
   private final UserQueryService userQueryService;
 
   @GetMapping

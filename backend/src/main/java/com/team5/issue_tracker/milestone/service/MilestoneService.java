@@ -33,6 +33,9 @@ public class MilestoneService {
 
   @Transactional
   public void deleteMilestoneById(Long id) {
+    if (!milestoneRepository.existsById(id)) {
+      throw new NotFoundException(ErrorCode.MILESTONE_NOT_FOUND);
+    }
     milestoneRepository.deleteById(id);
   }
 
