@@ -6,7 +6,7 @@ export async function getIssueMilestone(
 ): Promise<MilestoneDetail | null> {
   const res = await fetch(API.ISSUE_MILESTONE(issueId), {
     method: 'GET',
-    credentials: 'include',
+    // credentials: 'include',
   });
 
   const statusCodeHandler: Record<
