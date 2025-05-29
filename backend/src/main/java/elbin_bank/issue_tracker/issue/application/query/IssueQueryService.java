@@ -71,7 +71,8 @@ public class IssueQueryService {
 
     @Transactional(readOnly = true)
     public MilestoneResponseDto getMilestoneForIssue(long id) {
-        MilestoneProjection milestone = milestoneQueryRepository.findByIssueId(id);
+        MilestoneProjection milestone = milestoneQueryRepository.findByIssueId(id)
+                .orElseThrow(() -> new IssueDetailNotFoundException(id));
 
         return issueDtoMapper.toMilestoneResponseDto(milestone);
     }

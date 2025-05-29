@@ -4,6 +4,7 @@ import elbin_bank.issue_tracker.milestone.infrastructure.query.projection.Milest
 import elbin_bank.issue_tracker.milestone.infrastructure.query.projection.MilestoneShortProjection;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MilestoneQueryRepository {
 
@@ -11,6 +12,6 @@ public interface MilestoneQueryRepository {
 
     List<MilestoneProjection> findAllDetailed();
 
-    MilestoneProjection findByIssueId(long issueId);
+    Optional<MilestoneProjection> findByIssueId(long issueId);
 
 }

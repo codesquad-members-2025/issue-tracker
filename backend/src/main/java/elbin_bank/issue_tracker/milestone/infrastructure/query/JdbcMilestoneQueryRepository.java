@@ -3,11 +3,13 @@ package elbin_bank.issue_tracker.milestone.infrastructure.query;
 import elbin_bank.issue_tracker.milestone.application.query.repository.MilestoneQueryRepository;
 import elbin_bank.issue_tracker.milestone.infrastructure.query.projection.MilestoneProjection;
 import elbin_bank.issue_tracker.milestone.infrastructure.query.projection.MilestoneShortProjection;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
@@ -65,7 +67,7 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
     }
 
     @Override
-    public MilestoneProjection findByIssueId(long issueId) {
+    public Optional<MilestoneProjection> findByIssueId(long issueId) {
         String sql = """
                 SELECT
                   m.id            AS id,
@@ -80,16 +82,21 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("issueId", issueId);
 
-        return jdbc.queryForObject(
-                sql,
-                params,
-                (rs, rn) -> new MilestoneProjection(
-                        rs.getLong("id"),
-                        rs.getString("title"),
-                        rs.getLong("totalIssueCount"),
-                        rs.getLong("closedIssueCount")
-                )
-        );
+        try {
+            MilestoneProjection proj = jdbc.queryForObject(
+                    sql,
+                    params,
+                    (rs, rowNum) -> new MilestoneProjection(
+                            rs.getLong("id"),
+                            rs.getString("title"),
+                            rs.getLong("totalIssueCount"),
+                            rs.getLong("closedIssueCount")
+                    )
+            );
+            return Optional.of(proj);
+        } catch (EmptyResultDataAccessException ex) {
+            return Optional.empty();
+        }
     }
 
 }
