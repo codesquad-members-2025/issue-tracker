@@ -10,16 +10,18 @@ import java.time.LocalDateTime;
 public class CommentResponseDto {
     private Long commentId;
     private String content;
-    private String imageUrl;
+    private String issueFileUrl;
     private String authorNickname;
     private final LocalDateTime lastModifiedAt;
+    private String authorProfileUrl;
 
     public CommentResponseDto(Comment comment, User author) {
         this.commentId = comment.getCommentId();
         this.content = comment.getContent();
-        this.imageUrl = comment.getIssueFileUrl();
+        this.issueFileUrl = comment.getIssueFileUrl();
         this.authorNickname=author.getNickName();
         this.lastModifiedAt = comment.getLastModifiedAt();
+        this.authorProfileUrl = author.getProfileImageUrl();
     }
 }
 
