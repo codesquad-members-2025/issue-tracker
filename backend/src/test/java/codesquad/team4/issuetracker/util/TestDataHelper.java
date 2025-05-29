@@ -1,6 +1,6 @@
 package codesquad.team4.issuetracker.util;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class TestDataHelper {
@@ -24,7 +24,7 @@ public class TestDataHelper {
         VALUES (?, ?, ?, ?, ?, ?, ?)
     """, id, title, isOpen, authorId, content, fileUrl, milestoneId);
     }
-    public static void insertMilestone(JdbcTemplate jdbcTemplate, Long id, String name, String description, LocalDateTime endDate, Boolean isOpen) {
+    public static void insertMilestone(JdbcTemplate jdbcTemplate, Long id, String name, String description, LocalDate endDate, Boolean isOpen) {
         jdbcTemplate.update("""
         INSERT INTO milestone (milestone_id, name, description, end_date, is_open)
         VALUES (?, ?, ?, ?, ?)
@@ -56,5 +56,25 @@ public class TestDataHelper {
         INSERT INTO comment (comment_id, content, author_id, issue_id, file_url)
         VALUES (?, ?, ?, ?, ?)
     """, id, content, authorId, issueId, fileUrl);
+    }
+
+    public static void insertSummaryCount(JdbcTemplate jdbcTemplate,
+                                          int id,
+                                          int issueOpenCount,
+                                          int issueClosedCount,
+                                          int milestoneOpenCount,
+                                          int milestoneClosedCount,
+                                          int labelsCount,
+                                          int milestonesCount) {
+        jdbcTemplate.update("""
+        UPDATE summary_count SET
+            issue_open_count = ?,
+            issue_closed_count = ?,
+            milestone_open_count = ?,
+            milestone_closed_count = ?,
+            labels_count = ?,
+            milestones_count = ?
+        WHERE id = 1
+    """, issueOpenCount, issueClosedCount, milestoneOpenCount, milestoneClosedCount, labelsCount, milestonesCount);
     }
 }

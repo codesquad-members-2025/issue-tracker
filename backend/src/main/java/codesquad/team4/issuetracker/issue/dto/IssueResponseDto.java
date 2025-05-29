@@ -2,7 +2,7 @@ package codesquad.team4.issuetracker.issue.dto;
 
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelInfo;
-import codesquad.team4.issuetracker.milestone.dto.MilestoneDto;
+import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +33,7 @@ public class IssueResponseDto {
         private UserDto.UserInfo author;
         private Set<LabelInfo> labels;
         private Set<UserDto.UserInfo> assignees;
-        private MilestoneDto.MilestoneInfo milestone;
+        private MilestoneResponseDto.MilestoneInfo milestone;
         private String createdAt;
     }
 

@@ -1,18 +1,13 @@
 package codesquad.team4.issuetracker.issue;
 
-import static codesquad.team4.issuetracker.exception.ExceptionMessage.INVALID_FILTERING_CONDITION;
-
 import codesquad.team4.issuetracker.aws.S3FileService;
-import codesquad.team4.issuetracker.exception.badrequest.InvalidFilteringConditionException;
-import codesquad.team4.issuetracker.issue.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.response.ApiResponse;
+import codesquad.team4.issuetracker.util.Parser;
 import jakarta.validation.Valid;
-import java.util.Objects;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,29 +39,12 @@ public class IssueController {
     private final S3FileService s3FileService;
 
     @GetMapping("")
-    public ApiResponse<IssueResponseDto.IssueListDto> showIssueList(@Valid IssueRequestDto.IssueFilterParamDto params, Pageable pageable) {
-        //authorId, assigneeId, commentAuthorId 중 두개 이상의 조건은 불가
-        validateFilterConditionCount(params);
+    public ApiResponse<IssueResponseDto.IssueListDto> showIssueList(@RequestParam(required = false) String q, Pageable pageable) {
 
-        IssueResponseDto.IssueListDto issues = issueService.getIssues(params, pageable.getPageNumber(), pageable.getPageSize());
+        IssueFilterParamDto filter = Parser.parseFilterCondition(q);
+        IssueResponseDto.IssueListDto issues = issueService.getIssues(filter, pageable.getPageNumber(), pageable.getPageSize());
 
         return ApiResponse.success(issues);
-    }
-
-    private void validateFilterConditionCount(IssueFilterParamDto params) {
-        long filterCount = Stream.of(params.getAuthorId(), params.getAssigneeId(), params.getCommentAuthorId())
-            .filter(Objects::nonNull)
-            .count();
-
-        if (filterCount > 1) {
-            throw new InvalidFilteringConditionException(INVALID_FILTERING_CONDITION);
-        }
-    }
-
-    @GetMapping("/count")
-    public ApiResponse<IssueCountDto> showIssueCount() {
-        IssueCountDto result = issueService.getIssueCounts();
-        return ApiResponse.success(result);
     }
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -40,4 +40,20 @@ public class LabelDao {
 
         return namedParameterJdbcTemplate.queryForList(sql, params, Long.class);
     }
+
+    public List<LabelResponseDto.LabelDto> findAllLabels() {
+        String sql = """
+        SELECT label_id, name, description, color
+        FROM label
+        ORDER BY created_at DESC
+    """;
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+            LabelResponseDto.LabelDto.builder()
+                .id(rs.getLong("label_id"))
+                .name(rs.getString("name"))
+                .description(rs.getString("description"))
+                .color(rs.getString("color"))
+                .build()
+        );
+    }
 }

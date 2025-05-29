@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.issue.dto;
 
+import codesquad.team4.issuetracker.util.OpenStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ public class IssueRequestDto {
     @AllArgsConstructor
     @Getter
     @Builder
-    public static class CreateIssueDto{
+    public static class CreateIssueDto {
         @NotNull
         private String title;
         @NotNull
@@ -68,7 +69,8 @@ public class IssueRequestDto {
         private Long authorId;
         private Long assigneeId;
         private Long commentAuthorId;
-        @NotNull
-        private Boolean isOpen;
+        private Long milestoneId;
+        private OpenStatus status;
+        private List<Long> labelIds;
     }
 }
