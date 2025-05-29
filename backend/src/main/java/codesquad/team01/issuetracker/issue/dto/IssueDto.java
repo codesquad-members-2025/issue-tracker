@@ -204,6 +204,7 @@ public class IssueDto {
 	) {
 	}
 
+	// 다중 선택 이슈 행 DTO
 	@Builder
 	public record BatchIssueRow(
 		int issueId,

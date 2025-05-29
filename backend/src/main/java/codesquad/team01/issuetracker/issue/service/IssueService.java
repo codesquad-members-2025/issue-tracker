@@ -1,12 +1,17 @@
 package codesquad.team01.issuetracker.issue.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.common.util.CursorEncoder;
 import codesquad.team01.issuetracker.issue.constants.IssueConstants;
+import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
@@ -109,10 +114,60 @@ public class IssueService {
 		return response;
 	}
 
-	public IssueDto.BatchUpdateResponse batchUpdateIssueState(
-		List<Integer> issueIds, IssueState action) {
+	@Transactional
+	public IssueDto.BatchUpdateResponse batchUpdateIssueState(IssueDto.BatchUpdateRequest request) {
+		List<Integer> issueIds = request.issueIds();
+		IssueState targetState = request.getTargetState();
+		LocalDateTime now = LocalDateTime.now();
 
-		IssueDto.BatchUpdateResponse batchUpdateResponse =
-			issueRepository.batchUpdateIssueState(issueIds, action);
+		log.debug("{}개 이슈 {} 상태로 변화 시작", issueIds.size(), targetState);
+
+		// 요청으로 들어온 issueIds 중 실제로 존재하는 issue들만 조회
+		List<IssueDto.BatchIssueRow> existingIssues = issueRepository.findExistingIssuesByIds(issueIds);
+
+		// 조회한 issue들의 id 추출
+		Set<Integer> foundIssueIds = existingIssues.stream()
+			.map(IssueDto.BatchIssueRow::issueId)
+			.collect(Collectors.toSet());
+
+		// issueIds 중 조회하지 못한 ids - 존재하지 않거나 삭제된 이슈 ids
+		List<Integer> failedIssueIds = issueIds.stream()
+			.filter(id -> !foundIssueIds.contains(id))
+			.toList();
+
+		// 업데이트 해야하는 이슈 ids
+		List<Integer> issuesToUpdate = existingIssues.stream()
+			.filter(issue -> issue.currentState() != targetState)
+			.map(IssueDto.BatchIssueRow::issueId)
+			.toList();
+
+		// 이미 targetState인 이슈 개수
+		int alreadyInTargetStateCount = existingIssues.size() - issuesToUpdate.size();
+
+		// 실제 업데이트된 이슈 개수
+		int updatedCount = 0;
+
+		// 배치 업데이트
+		if (!issuesToUpdate.isEmpty()) {
+			updatedCount = issueRepository.batchUpdateIssueStates(issuesToUpdate, targetState, now);
+
+			if (updatedCount != issuesToUpdate.size()) {
+				log.warn("예상 업데이트 수와 실제 업데이트된 이슈 개수가 다릅니다. 예상: {}, 실제: {}",
+					issuesToUpdate.size(), updatedCount);
+			}
+		}
+
+		int successCount = updatedCount + alreadyInTargetStateCount;
+		int failedCount = failedIssueIds.size();
+
+		log.info("배치 상태 업데이트 종료 - 전체: {}, 성공: {}, 실패: {}, 이미 해당 상태: {}",
+			issueIds.size(), successCount, failedCount, alreadyInTargetStateCount);
+
+		return IssueDto.BatchUpdateResponse.builder()
+			.totalCount(issueIds.size())
+			.successCount(successCount)
+			.failedCount(failedCount)
+			.failedIssueIds(failedIssueIds)
+			.build();
 	}
 }
