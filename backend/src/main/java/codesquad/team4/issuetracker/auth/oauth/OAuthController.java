@@ -1,10 +1,9 @@
-package codesquad.team4.issuetracker.oauth;
+package codesquad.team4.issuetracker.auth.oauth;
 
-import codesquad.team4.issuetracker.oauth.dto.OAuthRequestDto;
-import codesquad.team4.issuetracker.oauth.dto.OAuthResponseDto;
+import codesquad.team4.issuetracker.auth.oauth.dto.OAuthRequestDto;
+import codesquad.team4.issuetracker.auth.oauth.dto.OAuthResponseDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

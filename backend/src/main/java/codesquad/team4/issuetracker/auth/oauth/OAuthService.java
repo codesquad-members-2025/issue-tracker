@@ -1,8 +1,8 @@
-package codesquad.team4.issuetracker.oauth;
+package codesquad.team4.issuetracker.auth.oauth;
 
 import codesquad.team4.issuetracker.exception.badrequest.InvalidOAuthStateException;
-import codesquad.team4.issuetracker.oauth.dto.OAuthRequestDto;
-import codesquad.team4.issuetracker.oauth.dto.OAuthResponseDto;
+import codesquad.team4.issuetracker.auth.oauth.dto.OAuthRequestDto;
+import codesquad.team4.issuetracker.auth.oauth.dto.OAuthResponseDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

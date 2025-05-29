@@ -1,4 +1,4 @@
-package codesquad.team4.issuetracker.oauth.dto;
+package codesquad.team4.issuetracker.auth.oauth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
