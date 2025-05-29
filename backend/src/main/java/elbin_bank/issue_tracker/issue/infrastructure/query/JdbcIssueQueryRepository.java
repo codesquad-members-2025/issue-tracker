@@ -1,8 +1,5 @@
 package elbin_bank.issue_tracker.issue.infrastructure.query;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
 import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRepository;
 import elbin_bank.issue_tracker.issue.domain.IssueState;
@@ -10,13 +7,13 @@ import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCount
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
-import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -29,83 +26,46 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
     private final SqlBuilder sqlBuilder;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public List<IssueProjection> findIssues(FilterCriteria crit) {
-        SqlClauseResult sp = sqlBuilder.buildSql(crit);
-
-        String sql = """
+        String baseSql = """
                 SELECT
                   i.id,
-                  au.nickname AS author_nickname,
-                  i.title,
-                  m.title     AS milestone_title,
-                  i.is_closed,
-                  i.created_at,
-                  i.updated_at,
-                
-                  JSON_ARRAYAGG(JSON_OBJECT(
-                     'id', lb.id, 'name', lb.name, 'color', lb.color, 'description', lb.description
-                  ))                       AS labels_json,
-                
-                  JSON_ARRAYAGG(asu.profile_image_url) AS assignee_imgs_json
-                
+                  a.login       AS author,
+                  i.title       AS title,
+                  i.is_closed   AS isClosed,
+                  i.created_at  AS createdAt,
+                  i.updated_at  AS updatedAt,
+                  m.title       AS milestone
                 FROM issue i
-                JOIN user au ON au.id = i.author_id
+                JOIN `user` a ON a.id = i.author_id
                 LEFT JOIN milestone m ON m.id = i.milestone_id
-                
-                LEFT JOIN issue_label il ON il.issue_id = i.id
-                LEFT JOIN label lb       ON lb.id       = il.label_id
-                LEFT JOIN assignee a     ON a.issue_id  = i.id
-                LEFT JOIN user asu       ON asu.id      = a.user_id
                 """;
 
-        sql += "\nWHERE i.deleted_at IS NULL"
-                + sp.where()
-                + "\nGROUP BY i.id" + sp.having()
-                + "\nORDER BY i.id DESC";
+        SqlClauseResult buildResult = sqlBuilder.build(crit);
+
+        String sql = new StringBuilder()
+                .append(baseSql)
+                .append(buildResult.joinClause())
+                .append(buildResult.whereClause())
+                .append(" GROUP BY i.id")
+                .append(buildResult.havingClause())
+                .append(" ORDER BY i.id DESC")
+                .toString();
 
         return jdbc.query(
                 sql,
-                sp.params(),
-                (rs, rn) -> {
-                    try {
-                        List<LabelProjection> rawLabels = objectMapper.readValue(
-                                rs.getString("labels_json"),
-                                new TypeReference<>() {}
-                        );
-                        // 중복 제거
-                        List<LabelProjection> lbls = rawLabels.stream()
-                                .distinct()
-                                .toList();
-
-                        List<String> rawImgs = objectMapper.readValue(
-                                rs.getString("assignee_imgs_json"),
-                                new TypeReference<>() {}
-                        );
-                        // 중복 제거
-                        List<String> assg = rawImgs.stream()
-                                .distinct()
-                                .toList();
-
-                        return new IssueProjection(
-                                rs.getLong("id"),
-                                rs.getString("author_nickname"),
-                                rs.getString("title"),
-                                lbls,
-                                rs.getBoolean("is_closed"),
-                                rs.getTimestamp("created_at").toLocalDateTime(),
-                                rs.getTimestamp("updated_at") != null
-                                        ? rs.getTimestamp("updated_at").toLocalDateTime()
-                                        : null,
-                                assg,
-                                rs.getString("milestone_title")
-                        );
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                buildResult.params(),
+                (ResultSet rs, int rn) -> new IssueProjection(
+                        rs.getLong("id"),
+                        rs.getString("author"),
+                        rs.getString("title"),
+                        rs.getBoolean("isClosed"),
+                        rs.getTimestamp("createdAt").toLocalDateTime(),
+                        rs.getTimestamp("updatedAt").toLocalDateTime(),
+                        rs.getString("milestone")
+                )
         );
     }
 

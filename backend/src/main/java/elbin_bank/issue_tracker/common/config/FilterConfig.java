@@ -16,7 +16,8 @@ public class FilterConfig {
                 new StateFilterStrategy(),
                 new LabelFilterStrategy(),
                 new MilestoneFilterStrategy(),
-                new AssigneeFilterStrategy()
+                new AssigneeFilterStrategy(),
+                new AuthorFilterStrategy()
         );
     }
 

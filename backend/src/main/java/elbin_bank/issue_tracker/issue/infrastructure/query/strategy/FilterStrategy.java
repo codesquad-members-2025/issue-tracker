@@ -1,19 +1,29 @@
 package elbin_bank.issue_tracker.issue.infrastructure.query.strategy;
 
 import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
+import java.util.Map;
 
 public interface FilterStrategy {
 
-    boolean supports(FilterCriteria c);
+    /**
+     * 이 필터가 이번 요청(FilterCriteria)에 적용되어야 하는지 여부
+     */
+    boolean supports(FilterCriteria criteria);
 
-    void appendWhere(StringBuilder where,
-                     MapSqlParameterSource p,
-                     FilterCriteria c);
+    /**
+     * JOIN 절에 추가할 SQL fragment (ex: " JOIN assignee …")
+     */
+    void applyJoin(StringBuilder join, FilterCriteria criteria);
 
-    default void appendHaving(StringBuilder having,
-                              MapSqlParameterSource p,
-                              FilterCriteria c) {
-    }
+    /**
+     * WHERE 절에 추가할 SQL fragment, 파라미터 세팅
+     */
+    void applyWhere(StringBuilder where, Map<String, Object> params, FilterCriteria criteria);
+
+    /**
+     * HAVING 절에 추가할 SQL fragment, 파라미터 세팅
+     */
+    void applyHaving(StringBuilder having, Map<String, Object> params, FilterCriteria criteria);
 
 }
