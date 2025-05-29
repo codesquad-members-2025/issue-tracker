@@ -46,10 +46,6 @@ export default function IssueDetailPage() {
     isError: isCommentError,
   } = useIssueComments(issueId);
 
-  const selectedAssigneeIds = issueAssignees.map(assignee => assignee.id);
-  const selectedLabelIds = issueLabels.map(label => label.id);
-  const selectedMilestoneId = issueMilestone?.id ?? null;
-
   // TODO 로딩,에러 상태에 따라 분기처리 내부적으로 처리
   if (
     isIssueDetailLoading ||
@@ -71,14 +67,11 @@ export default function IssueDetailPage() {
     return <div>에러 발생</div>;
   }
 
-  if (
-    !issueDetail ||
-    !commentList ||
-    !issueAssignees ||
-    !issueLabels ||
-    !issueMilestone
-  )
-    return;
+  if (!issueDetail || !commentList || !issueAssignees || !issueLabels) return;
+
+  const selectedAssigneeIds = issueAssignees.map(assignee => assignee.id);
+  const selectedLabelIds = issueLabels.map(label => label.id);
+  const selectedMilestoneId = issueMilestone?.id ?? null;
 
   return (
     <VerticalStack>
