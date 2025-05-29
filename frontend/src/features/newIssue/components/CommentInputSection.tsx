@@ -5,7 +5,7 @@ import CommentMetaBar from './CommentMetaBar';
 
 interface CommentInputSectionProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | ((prev: string) => string)) => void;
 }
 
 export default function CommentInputSection({

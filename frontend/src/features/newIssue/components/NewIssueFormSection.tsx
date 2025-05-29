@@ -8,7 +8,7 @@ interface NewIssueFormSectionProps {
   onTitleChange: (value: string) => void;
 
   content: string;
-  onContentChange: (value: string) => void;
+  onContentChange: (value: string | ((prev: string) => string)) => void;
 
   milestoneId: number | null;
   onMilestoneChange: (id: number) => void;

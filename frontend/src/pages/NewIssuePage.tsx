@@ -32,10 +32,9 @@ export default function NewIssuePage() {
     updateIssueForm({ type: 'SET_TITLE', payload: val });
   }
 
-  function handleContentChange(val: string) {
+  function handleContentChange(val: string | ((prev: string) => string)) {
     updateIssueForm({ type: 'SET_CONTENT', payload: val });
   }
-
   function handleMilestoneChange(id: number) {
     updateIssueForm({
       type: 'SET_MILESTONE',

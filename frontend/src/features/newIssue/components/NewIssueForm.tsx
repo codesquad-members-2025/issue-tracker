@@ -7,7 +7,7 @@ interface NewIssueFormProps {
   onTitleChange: (value: string) => void;
 
   content: string;
-  onContentChange: (value: string) => void;
+  onContentChange: (value: string | ((prev: string) => string)) => void;
 }
 
 export default function NewIssueForm({

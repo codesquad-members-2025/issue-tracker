@@ -3,7 +3,7 @@ import { type NewIssueState } from '../types';
 
 export type Action =
   | { type: 'SET_TITLE'; payload: string }
-  | { type: 'SET_CONTENT'; payload: string }
+  | { type: 'SET_CONTENT'; payload: string | ((prev: string) => string) }
   | { type: 'SET_MILESTONE'; payload: number | null }
   | { type: 'TOGGLE_LABEL'; payload: number }
   | { type: 'TOGGLE_ASSIGNEE'; payload: number }
@@ -16,8 +16,13 @@ export function newIssueFormReducer(
   switch (action.type) {
     case 'SET_TITLE':
       return { ...state, title: action.payload };
-    case 'SET_CONTENT':
-      return { ...state, content: action.payload };
+    case 'SET_CONTENT': {
+      const nextContent =
+        typeof action.payload === 'function'
+          ? action.payload(state.content)
+          : action.payload;
+      return { ...state, content: nextContent };
+    }
     case 'SET_MILESTONE':
       return { ...state, milestone: action.payload };
     case 'TOGGLE_LABEL':
