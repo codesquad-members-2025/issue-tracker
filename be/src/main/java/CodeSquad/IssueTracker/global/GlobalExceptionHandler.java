@@ -6,14 +6,17 @@ import CodeSquad.IssueTracker.jwt.exception.JwtValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
     @ExceptionHandler
     public ResponseEntity<BaseResponseDto<String>> handleCustomExceptions(ApplicationException e) {
         log.error(e.getMessage(), e);
@@ -22,15 +25,15 @@ public class GlobalExceptionHandler {
                 .body(BaseResponseDto.failure(e.getMessage()));
     }
 
-    @ExceptionHandler
-    public ResponseEntity<BaseResponseDto<String>> handleValidationException(MethodArgumentNotValidException e) {
-        FieldError fieldError = e.getBindingResult().getFieldError();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<BaseResponseDto<Void>> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new LinkedHashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
 
-        log.error(fieldError.getDefaultMessage());
-
-        return ResponseEntity
-                .badRequest()
-                .body(BaseResponseDto.failure(fieldError.getDefaultMessage()));
+        return ResponseEntity.badRequest()
+                .body(BaseResponseDto.failure(errors));
     }
 
     @ExceptionHandler

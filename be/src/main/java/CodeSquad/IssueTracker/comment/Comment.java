@@ -33,14 +33,14 @@ public class Comment {
 
     public static Comment createComment(Long issueId, String content, Long authorId) {
         if (content == null || content.isBlank()) {
-            throw new NoParametersException("댓글 내용은 필수입니다.", HttpStatus.BAD_REQUEST);
+            throw new NoParametersException("댓글");
         }
         return new Comment(null, issueId, content, authorId, LocalDateTime.now());
     }
 
     private void verifyAuthor(Long requesterId) {
         if (!this.authorId.equals(requesterId)) {
-            throw new NoAuthorityException("작성자만 댓글을 수정할 수 있습니다.", HttpStatus.valueOf(401));
+            throw new NoAuthorityException();
         }
     }
 

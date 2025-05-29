@@ -1,8 +1,8 @@
 package CodeSquad.IssueTracker.login.service;
 
+import CodeSquad.IssueTracker.global.exception.PasswordMismatchException;
 import CodeSquad.IssueTracker.login.dto.LoginRequestDto;
 import CodeSquad.IssueTracker.login.dto.LoginResponseDto;
-import CodeSquad.IssueTracker.login.exception.PasswordMismatchException;
 import CodeSquad.IssueTracker.login.exception.UserNotFoundException;
 import CodeSquad.IssueTracker.jwt.util.JWTUtil;
 import CodeSquad.IssueTracker.user.User;

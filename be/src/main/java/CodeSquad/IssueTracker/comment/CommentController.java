@@ -35,7 +35,7 @@ public class CommentController {
 
     @PatchMapping("/{commentId}")
     public CommentResponseDto updateComment(@PathVariable("commentId") Long commentId,
-                                            @RequestPart("data") CommentUpdateDto request,
+                                            @RequestPart("data") @Validated CommentUpdateDto request,
                                             @RequestPart(value = "files", required = false) List<MultipartFile> files,
                                             HttpServletRequest httpRequest) throws IOException {
         String authorId = httpRequest.getAttribute("id").toString();
