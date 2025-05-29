@@ -1,5 +1,7 @@
 package com.team5.issue_tracker.comment.service;
 
+import java.time.Instant;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class CommentService {
         .orElseThrow(() -> new IllegalArgumentException("Comment not found")); // TODO: 예외 처리 개선
 
     comment.setContent(updateCommentRequest.getContent());
+    comment.setUpdatedAt(Instant.now());
     commentRepository.save(comment);
   }
 }

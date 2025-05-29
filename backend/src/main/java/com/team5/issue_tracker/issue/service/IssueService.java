@@ -68,6 +68,7 @@ public class IssueService {
     Issue issue = getIssueOrThrow(issueId);
 
     issue.setTitle(title);
+    issue.setUpdatedAt(Instant.now());
     issueRepository.save(issue);
   }
 
@@ -84,7 +85,8 @@ public class IssueService {
   public void updateIssueLabels(Long issueId, UpdateIssueLabelsRequest request) {
     Set<Long> labelIds = request.getLabelIds();
 
-    validateIssueExists(issueId);
+    Issue issue = getIssueOrThrow(issueId);
+
     // 스프링 데이터 jdbc에서는 한 번에 지우는게 안되는 것 같아서 분리
     List<IssueLabel> issueLabels = issueLabelRepository.findAllByIssueId(issueId);
     issueLabelRepository.deleteAll(issueLabels);
@@ -92,6 +94,7 @@ public class IssueService {
     if (labelIds != null && !labelIds.isEmpty()) {
       saveIssueLabels(issueId, labelIds);
     }
+    issue.setUpdatedAt(Instant.now());
   }
 
   @Transactional
@@ -100,6 +103,7 @@ public class IssueService {
     Issue issue = getIssueOrThrow(issueId);
 
     issue.setMilestoneId(milestoneId);
+    issue.setUpdatedAt(Instant.now());
     issueRepository.save(issue);
   }
 
@@ -107,7 +111,7 @@ public class IssueService {
   public void updateIssueAssignees(Long issueId, UpdateIssueAssigneesRequest request) {
     Set<Long> assigneeIds = request.getAssigneeIds();
 
-    validateIssueExists(issueId);
+    Issue issue = getIssueOrThrow(issueId);
     // 스프링 데이터 jdbc에서는 한 번에 지우는게 안되는 것 같아서 분리
     List<IssueAssignee> issueAssignees = issueAssigneeRepository.findAllByIssueId(issueId);
     issueAssigneeRepository.deleteAll(issueAssignees);
@@ -115,6 +119,7 @@ public class IssueService {
     if (assigneeIds != null && !assigneeIds.isEmpty()) {
       saveIssueAssignees(issueId, assigneeIds);
     }
+    issue.setUpdatedAt(Instant.now());
   }
 
   @Transactional
@@ -137,6 +142,7 @@ public class IssueService {
     List<Issue> issues = issueQueryRepository.findAllByIds(issueIds);
     for (Issue issue : issues) {
       issue.setIsOpen(isOpen);
+      issue.setUpdatedAt(Instant.now());
     }
     issueRepository.saveAll(issues);
   }

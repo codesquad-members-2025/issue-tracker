@@ -1,5 +1,7 @@
 package com.team5.issue_tracker.label.service;
 
+import java.time.Instant;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +40,7 @@ public class LabelService {
         request.getTextColor(),
         request.getBackgroundColor(),
         label.getCreatedAt(),
-        label.getUpdatedAt()
+        Instant.now()
     );
 
     labelRepository.save(updatedLabel);
