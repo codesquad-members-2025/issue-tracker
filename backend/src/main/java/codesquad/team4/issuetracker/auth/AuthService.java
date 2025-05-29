@@ -3,10 +3,13 @@ package codesquad.team4.issuetracker.auth;
 import static codesquad.team4.issuetracker.exception.ExceptionMessage.EMAIL_ALREADY_EXIST;
 import static codesquad.team4.issuetracker.exception.ExceptionMessage.NICKNAME_ALREADY_EXIST;
 
+import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.LoginRequestDto;
 import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.SignupRequestDto;
 import codesquad.team4.issuetracker.entity.User;
+import codesquad.team4.issuetracker.exception.badrequest.PasswordNotEqualException;
 import codesquad.team4.issuetracker.exception.conflict.EmailAlreadyExistException;
 import codesquad.team4.issuetracker.exception.conflict.NicknameAlreadyExistException;
+import codesquad.team4.issuetracker.exception.notfound.UserByEmailNotFoundException;
 import codesquad.team4.issuetracker.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -54,5 +57,16 @@ public class AuthService {
                 throw new NicknameAlreadyExistException(NICKNAME_ALREADY_EXIST);
             }
         }
+    }
+
+    public User checkEmailAndPassword(LoginRequestDto request) {
+        User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(UserByEmailNotFoundException::new);
+
+        if (!BCrypt.checkpw(request.getPassword(), user.getPassword())) {
+            throw new PasswordNotEqualException();
+        }
+
+        return user;
     }
 }
