@@ -60,13 +60,34 @@
 
 ### Infra
 
+![img.png](img.png)
+
 - GitHub Actions
-- Nginx
-- Docker
 - AWS
   - S3
   - EC2
-  - Route53
+  - CodeDeploy
+- Front
+  1. GitHub Actions가 React 코드를 npm run build로 정적 파일(dist/)로 만듦
+
+  2. 그 정적 파일을 S3 버킷에 업로드
+
+  3. 사용자는 S3 정적 호스팅 주소 (예: http://your-s3-site.amazonaws.com)로 접속
+
+  4. 브라우저에서 HTML/JS를 로딩하고, API 요청은 리엑트가 EC2 백엔드로 보냄 (http://EC2-IP:8080)
+
+- BackEnd
+  1. GitHub Actions가 백엔드 코드를 ./gradlew build로 빌드 → .jar 생성
+
+  2. .jar, appspec.yml, start.sh, stop.sh 등을 묶어 .zip으로 만들어 S3에 업로드
+
+  3. GitHub Actions가 AWS CodeDeploy에 배포 요청 (zip 경로 전달)
+
+  4. CodeDeploy가 EC2 인스턴스에 접속해:
+
+  5. stop.sh: 기존 서버 중단
+
+  6. start.sh: 환경변수 설정하고 java -jar로 Spring Boot 실행
 
 
 ### Communication

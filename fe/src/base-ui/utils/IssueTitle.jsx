@@ -1,18 +1,30 @@
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
 
-const Container = styled.div`
-  ${typography.available.medium20};
+const BaseTitle = styled.div`
   color: ${({ theme }) => theme.text.strong};
   display: flex;
-  gap: 8px;
   align-items: center;
 `;
 
-export default function IssueTitle({ title }) {
+const SmallTitle = styled(BaseTitle)`
+  ${typography.available.medium20};
+`;
+const LargeTitle = styled(BaseTitle)`
+  ${typography.display.bold32};
+`;
+
+export function IssueTitle({ title }) {
   return (
-    <Container>
+    <SmallTitle>
       <div>{title}</div>
-    </Container>
+    </SmallTitle>
+  );
+}
+export function LargeIssueTitle({ title }) {
+  return (
+    <LargeTitle>
+      <div>{title}</div>
+    </LargeTitle>
   );
 }

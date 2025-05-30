@@ -9,8 +9,8 @@ import { FilterSearchField } from '@/base-ui/issueListPage/mainPageHeaderTap/Fil
 import { DropdownMenuTemplate } from '@/utils/dropDown/DropdownMenuTemplate';
 import useFilterStore from '@/stores/filterStore';
 import { useAuthStore } from '@/stores/authStore';
-import { useLocation } from 'react-router-dom';
-import { useMemo } from 'react';
+import useQueryObject from '@/utils/queryParams/useQueryObject';
+import { useApplyQueryParams } from '@/utils/queryParams/useApplyQueryParams';
 
 const Container = styled.div`
   border: 1px solid ${({ theme }) => theme.border.default};
@@ -20,37 +20,36 @@ const Container = styled.div`
   align-items: center;
   min-width: 560px;
   max-width: 760px;
-  overflow: hidden;
   background-color: ${({ theme, $isActive }) =>
     $isActive ? theme.surface.strong : theme.surface.bold};
 `;
 
-function getMenuItems(filteredObj, setFilter, userId) {
+function getMenuItems(filteredObj, userId, menuClickHandler) {
   const issueFilterItems = [
     {
       label: '열린 이슈',
-      isSelected: filteredObj.isOpen,
-      onClick: () => setFilter('isOpen', true),
+      isSelected: filteredObj.isOpen === 'true',
+      onClick: () => menuClickHandler('isOpen', true),
     },
     {
       label: '내가 작성한 이슈',
-      isSelected: filteredObj.author === userId,
-      onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
+      isSelected: filteredObj.author === userId?.toString(),
+      onClick: () => menuClickHandler('author', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '나에게 할당된 이슈',
-      isSelected: filteredObj.assignee === userId,
-      onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
+      isSelected: filteredObj.assignee === userId?.toString(),
+      onClick: () => menuClickHandler('assignee', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '내가 댓글을 남긴 이슈',
-      isSelected: false, //🤩추후 백엔드와 협의구 구현 예정
-      onClick: () => setFilter('isOpen', true), //백엔드와 api 협의 후 추가 구현 필요
+      isSelected: filteredObj.commentedBy === userId?.toString(),
+      onClick: () => menuClickHandler('commentedBy', userId), //백엔드와 api 협의 후 추가 구현 필요
     },
     {
       label: '닫힌 이슈',
-      isSelected: !filteredObj.isOpen,
-      onClick: () => setFilter('isOpen', false),
+      isSelected: filteredObj.isOpen === 'false',
+      onClick: () => menuClickHandler('isOpen', false),
     },
   ];
 
@@ -58,21 +57,20 @@ function getMenuItems(filteredObj, setFilter, userId) {
 }
 
 export default function FilterBar() {
-  const filteredObj = useFilterStore((state) => state.selectedFilters);
+  const filteredObj = useQueryObject();
   const isActive = Object.keys(filteredObj).length > 0;
   const setFilter = useFilterStore((state) => state.setFilter);
-  const userId = useAuthStore((state) => state.userId);
-  const items = getMenuItems(filteredObj, setFilter, userId);
-  const location = useLocation();
-  // ✅ 현재 쿼리파람을 객체로 변환
-  const currentQueryParams = useMemo(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const result = {};
-    for (const [key, value] of searchParams.entries()) {
-      result[key] = isNaN(value) ? value : Number(value); // 숫자 자동 변환
-    }
-    return result;
-  }, [location.search]);
+  const initFilter = useFilterStore((state) => state.initFilter);
+  const userId = useAuthStore((state) => state.loginId);
+  const applyQueryParams = useApplyQueryParams();
+  const items = getMenuItems(filteredObj, userId, menuClickHandler);
+
+  function menuClickHandler(key, value) {
+    initFilter(filteredObj);
+    setFilter(key, value);
+    const updated = useFilterStore.getState().selectedFilters;
+    applyQueryParams(updated);
+  }
 
   return (
     <Container $isActive={isActive}>
@@ -82,7 +80,7 @@ export default function FilterBar() {
         label={'이슈 필터'}
         items={items}
       />
-      <FilterSearchField selectedFilters={currentQueryParams} />
+      <FilterSearchField selectedFilters={filteredObj} />
     </Container>
   );
 }

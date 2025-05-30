@@ -5,17 +5,33 @@
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
 
-const Container = styled.div`
-  ${typography.display.medium16}
-  color:${({ theme }) => theme.text.weak};
+const BaseNumber = styled.div`
+  color: ${({ theme }) => theme.text.weak};
 `;
 
-export default function IssueNumber({ issueNumber }) {
+const SmallNumber = styled(BaseNumber)`
+  ${typography.display.medium16}
+`;
+
+const LargeNumber = styled(BaseNumber)`
+  ${typography.display.bold32}
+`;
+
+export function IssueNumber({ issueNumber }) {
   const issueLabel = '#';
   return (
-    <Container>
+    <SmallNumber>
       {issueLabel}
       {issueNumber}
-    </Container>
+    </SmallNumber>
+  );
+}
+export function LargeIssueNumber({ issueNumber }) {
+  const issueLabel = '#';
+  return (
+    <LargeNumber>
+      {issueLabel}
+      {issueNumber}
+    </LargeNumber>
   );
 }

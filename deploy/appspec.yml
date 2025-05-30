@@ -1,0 +1,15 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/deploy
+
+hooks:
+  BeforeInstall:
+    - location: scripts/stop.sh
+      timeout: 20
+      runas: ubuntu
+  AfterInstall:
+    - location: scripts/start.sh
+      timeout: 60
+      runas: ubuntu

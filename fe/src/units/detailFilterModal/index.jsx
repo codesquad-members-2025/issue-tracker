@@ -25,6 +25,23 @@ const Container = styled.div`
   color: ${({ theme }) => theme.text.default};
   border-radius: 8px;
   z-index: 1000;
+
+  animation: slideDown 0.2s ease-out forwards;
+
+  @keyframes slideDown {
+    0% {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    60% {
+      transform: translateY(5px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+  }
 `;
 
 const Header = styled.div`

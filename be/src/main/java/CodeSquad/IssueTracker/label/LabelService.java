@@ -1,8 +1,12 @@
 package CodeSquad.IssueTracker.label;
 
+import CodeSquad.IssueTracker.label.dto.CreateLabelRequest;
 import CodeSquad.IssueTracker.label.dto.LabelUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -14,11 +18,11 @@ public class LabelService {
         return labelRepository.save(label);
     }
 
-    public Iterable<Label> findAll() {
+    public List<Label> findAll() {
         return labelRepository.findAll();
     }
 
-    public Iterable<Label> findByIssueId(Long issueId) {
+    public List<Label> findByIssueId(Long issueId) {
         return labelRepository.findByIssueId(issueId);
     }
 

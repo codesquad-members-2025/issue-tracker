@@ -36,6 +36,7 @@ export const lightTheme = {
     navy: `#0025E6`,
     red: `#FF3B30`,
   },
+  click: '#c8e9fd',
 };
 
 export const darkTheme = {
@@ -76,4 +77,5 @@ export const darkTheme = {
     navy: `#0025E6`,
     red: `#FF3B30`,
   },
+  click: ' #1761a0',
 };

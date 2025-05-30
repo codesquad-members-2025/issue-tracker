@@ -26,12 +26,14 @@ export default function useDataFetch({ fetchType }) {
         if (!res.ok) throw new Error(`오류: ${data.message}`);
         if (!data.success) throw new Error(data.message || '요청 실패'); // 서버에서 응답으로 보내주는 에러 메세지 렌더링
         setResponse(data);
+        return { ok: true };
       } catch (err) {
         if (err.name === 'TypeError') {
           setError(fetchType, '서버와 연결할 수 없습니다.'); // 네트워크 문제(서버 꺼짐, DNS 오류, CORS 실패 등)
         } else {
           setError(fetchType, err.message);
         }
+        return { ok: false };
       } finally {
         setIsLoading(false);
       }

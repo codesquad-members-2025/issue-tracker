@@ -1,55 +1,20 @@
 spring:
-  config:
-    activate:
-      on-profile: local
-  datasource:
-    url: jdbc:h2:mem:issueTracker;MODE=MYSQL;NON_KEYWORDS=USER
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+  profiles:
+    group:
+      dev:
+        - application-dev
+      local:
+        - application-local
+
+  sql:
+    init:
+      mode: always
+
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         format_sql: true
         show_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
-    open-in-view: false
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  cloud:
-    aws:
-      s3:
-        bucket: my-issue-image-bucket
-      region:
-        static: ap-northeast-2
-      credentials:
-        access-key: dummy
-        secret-key: dummy # TODO: 실제 키 등록 시 주의
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
-  datasource:
-    url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul
-    username: root
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jwt:
-    access-key: ${SPRING_JWT_ACCESS_KEY}
-    refresh-key: ${SPRING_JWT_REFRESH_KEY}
-  cloud:
-    aws:
-      s3:
-        bucket: my-issue-image-bucket
-      region:
-        static: ap-northeast-2
-      credentials:
-        access-key: dummy
-        secret-key: dummy # TODO: 실제 키 등록 시 주의

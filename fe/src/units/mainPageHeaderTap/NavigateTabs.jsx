@@ -3,6 +3,7 @@ import { MilestoneButton, LabelButton } from '@/base-ui/issueListPage/mainPageHe
 import { radius } from '@/styles/foundation';
 import { SmallContainerButton } from '@/base-ui/components/ContainerButtons';
 import { useNavigate } from 'react-router-dom';
+import useIssueDetailStore from '@/stores/IssueDetailStore';
 
 const Container = styled.div`
   display: flex;
@@ -24,6 +25,7 @@ const ButtonWrapper = styled.div`
 `;
 
 export function NavigateTabs() {
+  const resetStore = useIssueDetailStore((s) => s.resetStore);
   const navigate = useNavigate();
   const buttonLabel = '이슈작성';
   return (
@@ -32,7 +34,12 @@ export function NavigateTabs() {
         <LabelButton number={2} />
         <MilestoneButton number={3} />
       </ButtonWrapper>
-      <NewIssueButton onClick={() => navigate('new')}>
+      <NewIssueButton
+        onClick={() => {
+          navigate('new');
+          resetStore();
+        }}
+      >
         <svg
           width="17"
           height="16"
