@@ -2,8 +2,6 @@
 
 echo "🚀 Starting Spring Boot app..."
 
-cd /home/ubuntu/deploy
-
 # .env 파일 로드
 if [ -f /home/ubuntu/.env ]; then
   echo "📦 Loading environment variables from .env"
@@ -14,7 +12,8 @@ else
 fi
 
 # 애플리케이션 실행
-JAR_NAME=$(ls *.jar | grep 'IssueTracker' | head -n 1)
+cd /home/ubuntu
+JAR_NAME=app.jar
 
 nohup java \
   -Dspring.profiles.active=dev \
