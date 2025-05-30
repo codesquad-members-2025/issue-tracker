@@ -25,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class IssueController {
 
+	private static final Integer FIRST_USER_ID = 1; // 임시 사용자 id
+
 	private final IssueService issueService;
 
 	@GetMapping("/v1/issues")
@@ -69,20 +71,19 @@ public class IssueController {
 	}
 
 	@PostMapping("/v1/issues")
-	public ResponseEntity<ApiResponse<IssueDto.IssueCreationResponse>> createIssue(
-		@Valid @RequestBody IssueDto.IssueCreationRequest request) {
+	public ResponseEntity<ApiResponse<IssueDto.CreateResponse>> createIssue(
+		@Valid @RequestBody IssueDto.CreateRequest request/*, Integer userId*/) { // filter 구현 시 적용
 
 		log.info(request.toString());
 
-		int id = issueService.createIssue(request);
-		URI location = URI.create("/api/v1/issues" + id);
+		IssueDto.CreateResponse response = issueService.createIssue(request, FIRST_USER_ID);
+		URI location = URI.create("/api/v1/issues" + response.id());
 
-		log.info("새로운 이슈 생성 id: {}", id);
+		log.info("새로운 이슈 생성 id: {}", response.id());
 
 		return ResponseEntity.created(location)
-			.body(ApiResponse.success(
-				new IssueDto.IssueCreationResponse(id))
-			);
+			.body(ApiResponse.success(response));
+
 	}
 }
 

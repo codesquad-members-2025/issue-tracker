@@ -37,6 +37,17 @@ public class UserDto {
 		}
 	}
 
+	@Builder
+	public record IssueDetailAssigneeResponse(
+		int id,
+		String name,
+		String profileImageUrl
+	) {
+		public String profileImageUrl() {
+			return profileImageUrl != null ? profileImageUrl : DEFAULT_PROFILE_IMAGE_URL;
+		}
+	}
+
 	// 필터용 사용자 목록 응답 Dto
 	@Builder
 	public record UserFilterListResponse(

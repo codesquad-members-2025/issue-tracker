@@ -107,6 +107,42 @@ public class IssueDto {
 		}
 	}
 
+	@Builder
+	public record CreateRequest(
+		@NotBlank(message = "제목은 필수입니다.")
+		String title,
+		String content,
+
+		@Positive(message = "마일스톤 ID는 양수여야 합니다")
+		Integer milestoneId,
+		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
+		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds
+	) {
+
+		public String content() {
+			return content != null ? content : "";
+		}
+
+		public List<Integer> labelIds() {
+			return labelIds != null ? labelIds : List.of();
+		}
+
+		public List<Integer> assigneeIds() {
+			return assigneeIds != null ? assigneeIds : List.of();
+		}
+
+		@Override
+		public String toString() {
+			return "IssueCreationRequest{" +
+				"title='" + title + '\'' +
+				", content='" + content + '\'' +
+				", milestoneId=" + milestoneId +
+				", labelIds=" + labelIds +
+				", assigneeIds=" + assigneeIds +
+				'}';
+		}
+	}
+
 	/**
 	 * 응답 DTO
 	 */
@@ -247,8 +283,19 @@ public class IssueDto {
 		}
 	}
 
-	public record IssueCreationResponse(
-		int id
+	public record CreateResponse(
+		int id,
+		String title,
+		String content,
+		String state,
+		LocalDateTime createdAt,
+		LocalDateTime updatedAt,
+		LocalDateTime closedAt,
+		UserDto.WriterResponse writer,
+		MilestoneDto.IssueDetailMilestoneResponse milestone,
+		List<LabelDto.FilterListItemResponse> labels,
+		List<UserDto.IssueDetailAssigneeResponse> assignees,
+		int commentCount
 	) {
 	}
 }

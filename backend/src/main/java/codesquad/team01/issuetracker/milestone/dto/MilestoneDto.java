@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.milestone.dto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.Builder;
@@ -16,6 +17,14 @@ public class MilestoneDto {
 	public record ListItemResponse(
 		int id,
 		String title
+	) {
+	}
+
+	@Builder
+	public record IssueDetailMilestoneResponse(
+		int id,
+		String title,
+		LocalDate dueDate
 	) {
 	}
 
