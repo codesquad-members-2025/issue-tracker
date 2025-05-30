@@ -1,4 +1,4 @@
-package com.team5.issue_tracker.common.comment.dto;
+package com.team5.issue_tracker.comment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

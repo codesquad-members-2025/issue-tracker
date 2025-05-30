@@ -19,3 +19,9 @@ springdoc:
   api-docs:
     path: /api/v3/api-docs
 
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: team5-issue-tracker-images

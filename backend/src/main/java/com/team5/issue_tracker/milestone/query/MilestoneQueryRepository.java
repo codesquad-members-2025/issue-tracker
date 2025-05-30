@@ -1,5 +1,6 @@
 package com.team5.issue_tracker.milestone.query;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,7 @@ public class MilestoneQueryRepository {
             ELSE ROUND((ic.closed_count) * 100.0 / ic.total)
           END AS progress
         FROM milestone m
-        INNER JOIN issue_counts ic ON m.id = ic.milestone_id
+        LEFT JOIN issue_counts ic ON m.id = ic.milestone_id
         WHERE m.id = :milestoneId
         LIMIT 1
         """;
@@ -73,7 +74,7 @@ public class MilestoneQueryRepository {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getString("description"),
-            rs.getDate("deadline") != null ? rs.getDate("deadline").toLocalDate() : null,
+            rs.getObject("deadline", LocalDate.class),
             rs.getBoolean("is_open"),
             rs.getLong("open_issue_count"),
             rs.getLong("closed_issue_count"),
@@ -181,6 +182,11 @@ public class MilestoneQueryRepository {
     MapSqlParameterSource params = new MapSqlParameterSource("milestoneName", milestoneName);
     List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);
 
-    return result.isEmpty() ? null : result.get(0);
+    return result.isEmpty() ? -1L : result.get(0);
+  }
+
+  public Long getMilestoneCount() {
+    String sql = "SELECT COUNT(id) FROM milestone";
+    return jdbcTemplate.queryForObject(sql, Collections.emptyMap(), Long.class);
   }
 }

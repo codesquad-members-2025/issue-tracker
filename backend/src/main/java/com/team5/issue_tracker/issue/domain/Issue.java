@@ -2,6 +2,7 @@ package com.team5.issue_tracker.issue.domain;
 
 import java.time.Instant;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class Issue {
   @Id
   private Long id;

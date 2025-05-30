@@ -1,4 +1,4 @@
-package com.team5.issue_tracker.common.comment.domain;
+package com.team5.issue_tracker.comment.domain;
 
 import java.time.Instant;
 
@@ -6,8 +6,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class Comment {
   @Id
   private Long id;

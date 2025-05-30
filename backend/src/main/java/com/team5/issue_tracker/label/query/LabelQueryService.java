@@ -35,4 +35,8 @@ public class LabelQueryService {
     List<LabelResponse> labels = labelQueryRepository.findLabels(page, perPage);
     return new LabelPageResponse(labels.size(), page, perPage, labels);
   }
+
+  public Long getLabelCount() {
+    return labelQueryRepository.getLabelCount();
+  }
 }

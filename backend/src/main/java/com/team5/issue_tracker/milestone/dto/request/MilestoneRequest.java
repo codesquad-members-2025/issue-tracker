@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MilestoneCreateRequest {
+public class MilestoneRequest {
   @NotBlank(message = "마일스톤 이름을 작성해주세요.")
   private String name;
 
