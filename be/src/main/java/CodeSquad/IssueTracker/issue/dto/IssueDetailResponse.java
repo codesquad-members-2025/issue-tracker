@@ -10,6 +10,7 @@ import java.util.List;
 
 @Data
 public class IssueDetailResponse {
+
     private IssueWithAuthorInfo issue = null;
     private List<IssueAssigneeResponse> assignees = List.of();
     private List<IssueLabelResponse> labels = List.of();

@@ -38,7 +38,7 @@ public class JdbcTemplatesCommentRepository implements CommentRepository {
 
     @Override
     public Optional<Comment> findById(Long commentId) {
-        String sql = "SELECT * FROM comments WHERE commentId = :commentId";
+        String sql = "SELECT * FROM comments WHERE comment_Id = :commentId";
         Map<String, Object> param = Map.of("commentId", commentId);
         Comment comment = template.queryForObject(sql, param, commentRowMapper());
         return Optional.ofNullable(comment);
@@ -52,7 +52,7 @@ public class JdbcTemplatesCommentRepository implements CommentRepository {
 
     @Override
     public void deleteById(Long commentId) {
-        String sql = "DELETE FROM comments WHERE commentId = :commentId";
+        String sql = "DELETE FROM comments WHERE comment_Id = :commentId";
         Map<String, Object> param = Map.of("commentId", commentId);
         template.update(sql, param);
     }

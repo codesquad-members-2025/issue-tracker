@@ -40,15 +40,25 @@ public class IssueService {
     private final CommentService commentService;
     private final Uploader s3Uploader;
 
-    public void update(Long issueId, IssueUpdateDto updateParam){
+    public IssueDetailResponse update(Long issueId, IssueUpdateDto updateParam) {
         issueRepository.update(issueId, updateParam);
+
+        if(updateParam.getAssigneeIds() != null && !updateParam.getAssigneeIds().isEmpty()) {
+            issueAssigneeService.assignAssignees(issueId, updateParam.getAssigneeIds());
+        }
+
+        if(updateParam.getLabelIds() != null && !updateParam.getLabelIds().isEmpty()) {
+            issueLabelService.assignLabels(issueId, updateParam.getLabelIds());
+        }
+
+        return toDetailResponse(findById(issueId).get());
     }
 
-    public Optional<Issue> findById(Long issueId){
+    public Optional<Issue> findById(Long issueId) {
         return issueRepository.findById(issueId);
     }
 
-    public Iterable<Issue> findAll(){
+    public Iterable<Issue> findAll() {
         return issueRepository.findAll();
     }
 
@@ -111,6 +121,15 @@ public class IssueService {
                 commentService.findCommentResponsesByIssueId(issue.getIssueId());
         response.setComments(comments);
 
+        Optional<User> byId = userService.findById(response.getIssue().getAuthorId());
+
+        if (byId.isPresent()) {
+            User author = byId.get();
+            response.setAuthorName(author.getNickName());
+            response.setAuthorProfileImage(author.getProfileImageUrl());
+        }
+
+
         return response;
     }
 
@@ -126,8 +145,8 @@ public class IssueService {
     }
 
     public int getIssueMaxPage(IssueFilterCondition condition) {
-        int totalCount =  issueRepository.countFilteredIssuesByIsOpen(condition.getIsOpen(), condition);
-        return  (int) Math.ceil((double) totalCount / LIMIT_SIZE);
+        int totalCount = issueRepository.countFilteredIssuesByIsOpen(condition.getIsOpen(), condition);
+        return (int) Math.ceil((double) totalCount / LIMIT_SIZE);
     }
 
     public int countIssuesByOpenStatus(boolean isOpen, IssueFilterCondition condition) {

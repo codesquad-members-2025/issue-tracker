@@ -1,70 +1,20 @@
 spring:
-  config:
-    activate:
-      on-profile: local
-  jwt:
-    access-key: 3Three-Squad-AccessKey-1234567890-abcdefg
-    refresh-key: 3Three-Squad-RefreshKey-1234567890-hijklmn
-  datasource:
-    url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul
-    username: JOHNNIE
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    group:
+      dev:
+        - application-dev
+      local:
+        - application-local
+
   sql:
     init:
       mode: always
+
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         format_sql: true
         show_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
-    open-in-view: false
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  cloud:
-    aws:
-      s3:
-        bucket: my-issue-image-bucket
-      region:
-        static: ap-northeast-2
-      credentials:
-        access-key: dummy
-        secret-key: dummy # TODO: 실제 키 등록 시 주의
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul
-    username: root
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jwt:
-    access-key: ${JWT_ACCESS_KEY}
-    refresh-key: ${JWT_REFRESH_KEY}
-
-  cloud:
-    aws:
-      credentials:
-        access-key: ${AWS_ACCESS_KEY_ID}
-        secret-key: ${AWS_SECRET_ACCESS_KEY}
-      region:
-        static: ${AWS_REGION}
-      s3:
-        bucket: ${S3_BUCKET_NAME}
-        url: ${S3_URL_NAME}
-
-  sql:
-    init:
-      mode: always
-
