@@ -4,14 +4,14 @@ import CodeSquad.IssueTracker.global.exception.message.Error;
 import CodeSquad.IssueTracker.global.exception.model.CustomException;
 import org.springframework.http.HttpStatus;
 
-public class UserNotFoundException extends CustomException {
-
-    public UserNotFoundException() {
-        super(Error.NO_USER_EXCEPTION);
-    }
+public class PasswordMismatchException extends CustomException {
 
     @Override
     public HttpStatus getHttpStatus() {
         return super.getHttpStatus();
+    }
+
+    public PasswordMismatchException() {
+        super(Error.PASSWORD_MISMATCH_EXCEPTION);
     }
 }

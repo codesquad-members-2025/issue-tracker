@@ -10,14 +10,18 @@ import lombok.RequiredArgsConstructor;
 public class BaseResponseDto<T> {
 
     private final boolean success;
-    private final String message;
+    private final Object message; // String or Map<String, String>
     private final T data;
 
-    public static <T> BaseResponseDto<T> success(String message, T data) {
+    public static <T> BaseResponseDto<T> success(Object message, T data) {
         return new BaseResponseDto<>(true, message, data);
     }
 
-    public static <T> BaseResponseDto<T> failure(String message) {
-        return new BaseResponseDto<>(false, message, null); //null 수정 -> todo
+    public static <T> BaseResponseDto<T> failure(Object message, T data) {
+        return new BaseResponseDto<>(false, message, data);
+    }
+
+    public static <T> BaseResponseDto<T> failure(Object message) {
+        return new BaseResponseDto<>(false, message, null);
     }
 }

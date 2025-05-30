@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,14 +46,13 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
 
     @Override
     public void update(Long issueId, IssueUpdateDto updateParam) {
-        String sql = "UPDATE issues SET title = :title, content = :content, is_Open = :isOpen, timestamp = :timestamp, assignee_Id = :assigneeId, milestone_Id = :milestoneId WHERE id = :id";
+        String sql = "UPDATE issues SET title = :title, content = :content, is_Open = :isOpen, last_modified_at = :lastModifiedAt, milestone_Id = :milestoneId WHERE issue_Id = :id";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("title", updateParam.getTitle())
                 .addValue("content", updateParam.getContent())
                 .addValue("isOpen", updateParam.getIsOpen())
-                .addValue("timestamp", updateParam.getTimestamp())
+                .addValue("lastModifiedAt", LocalDateTime.now())
                 .addValue("milestoneId", updateParam.getMilestoneId())
-                .addValue("assigneeId", updateParam.getAssigneeId())
                 .addValue("id", issueId);
         template.update(sql, param);
     }

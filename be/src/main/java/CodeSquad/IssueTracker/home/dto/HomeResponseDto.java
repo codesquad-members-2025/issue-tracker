@@ -14,5 +14,5 @@ public class HomeResponseDto {
     private Iterable<DetailUserDto> users;
     private Iterable<Label> labels;
     private Iterable<Milestone> milestones;
-    private MetaData meta;
+    private MetaData metaData;
 }
