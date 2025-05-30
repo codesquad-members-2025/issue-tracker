@@ -1,33 +1,41 @@
 name: Deploy Frontend and Backend
+
 on:
   push:
     branches:
       - main
       - BE_Johnnie_newLogic_week3
       - dev
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: :흰색_확인_표시: Checkout code
+      - name: ✅ Checkout code
         uses: actions/checkout@v3
+
       # ---------------------------
-      # :자오선이_있는_지구: FRONTEND DEPLOY
+      # 🌐 FRONTEND DEPLOY
       # ---------------------------
-      - name: :톱니바퀴: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-      - name: :메모: Create .env.production
+
+      - name: 📝 Create .env.production
         run: |
           echo "VITE_API_BASE_URL=http://${{ secrets.EC2_HOST }}:8080" > fe/.env.production
           echo "VITE_TEST_URL=http://testserver.com:5001" >> fe/.env.production
-      - name: :벽돌: Build Frontend
+      
+
+      - name: 🧱 Build Frontend
         run: |
           cd fe
           npm ci
           npm run build
-      - name: :로켓: Upload frontend to S3
+
+      - name: 🚀 Upload frontend to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
           args: --delete
@@ -37,21 +45,26 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           SOURCE_DIR: "fe/dist"
+
       # ---------------------------
-      # :커피: BACKEND DEPLOY
+      # ☕ BACKEND DEPLOY
       # ---------------------------
-      - name: :커피: Setup JDK 21
+      - name: ☕ Setup JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
-      - name: :망치와_렌치: Grant execute permission
+
+
+      - name: 🛠️ Grant execute permission
         run: chmod +x ./be/gradlew
-      - name: :건설_현장: Build Backend
+
+      - name: 🏗️ Build Backend
         run: |
           cd be
           ./gradlew clean build -x test
-      - name: :포장: Package for CodeDeploy
+
+      - name: 📦 Package for CodeDeploy
         run: |
           mkdir -p codedeploy/deploy/scripts
           cp be/build/libs/*.jar codedeploy/
@@ -59,14 +72,16 @@ jobs:
           cp deploy/scripts/*.sh codedeploy/deploy/scripts/
           chmod +x codedeploy/deploy/scripts/*.sh
           zip -r codedeploy.zip codedeploy/
-      - name: :구름: Upload codedeploy.zip to S3
+
+      - name: ☁️ Upload codedeploy.zip to S3
         run: |
           aws s3 cp codedeploy.zip s3://${{ secrets.CODEDEPLOY_S3_BUCKET }}/codedeploy.zip --region ${{ secrets.AWS_REGION }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-      - name: :글씨를_쓰는_손: Generate .env
+
+      - name: ✍️ Generate .env
         run: |
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" > .env
           echo "JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}" >> .env
@@ -76,12 +91,14 @@ jobs:
           echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
           echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> .env
           echo "S3_URL_NAME=https://${{ secrets.S3_BUCKET_NAME }}.s3.${{ secrets.AWS_REGION }}.amazonaws.com" >> .env
-      - name: :보낼_편지함_트레이: Upload .env to EC2
+
+      - name: 📤 Upload .env to EC2
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
           scp -i private_key.pem -o StrictHostKeyChecking=no .env ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/.env
-      - name: :종: Trigger CodeDeploy
+
+      - name: 🔔 Trigger CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name ${{ secrets.CODEDEPLOY_APP_NAME }} \
