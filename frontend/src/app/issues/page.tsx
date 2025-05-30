@@ -12,7 +12,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 const Page = styled.div`
   display: flex;
-  height: 105vh;
+  min-height: 105vh;
   flex-direction: column;
   padding: 1rem 5rem 5rem 5rem;
   background-color: ${({ theme }) => theme.colors.surface.default};
@@ -20,7 +20,6 @@ const Page = styled.div`
 
 const Toolbar = styled.div`
   display: flex;
-  min-height: 105vh;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
