@@ -4,11 +4,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import codesquad.team01.issuetracker.common.exception.DuplicateLabelName;
+import codesquad.team01.issuetracker.common.exception.LabelNotFoundException;
+import codesquad.team01.issuetracker.label.domain.Label;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class LabelService {
@@ -30,5 +36,51 @@ public class LabelService {
 			.totalCount(labels.size())
 			.labels(labels)
 			.build();
+	}
+
+	@Transactional
+	public LabelDto.LabelCreateResponse saveLabel(LabelDto.LabelCreateRequest request) {
+		String labelName = request.name();
+		if (labelRepository.existsByName(labelName)) {
+			throw new DuplicateLabelName(labelName);
+		}
+
+		Label entity = Label.builder()
+			.name(request.name())
+			.description(request.description())
+			.color(request.color())
+			.textColor(request.textColor())
+			.build();
+
+		Label savedLabel = labelRepository.save(entity);
+
+		return LabelDto.LabelCreateResponse.from(savedLabel);
+	}
+
+	@Transactional
+	public LabelDto.LabelUpdateResponse updateLabel(int id, LabelDto.LabelUpdateRequest request) {
+		String newName = request.name();
+
+		Label updateTarget = labelRepository.findById(id)
+			.orElseThrow(() -> new LabelNotFoundException(id));
+
+		// newName 과 동일한 이름을 가진 값 중에 id 가 다른 값이 있는지 확인 (중복확인)
+		if (labelRepository.existsByNameAndIdNot(newName, id)) {
+			throw new DuplicateLabelName(newName);
+		}
+
+		updateTarget.update(newName, request.description(), request.color(), request.textColor());
+		Label saved = labelRepository.save(updateTarget);
+
+		return LabelDto.LabelUpdateResponse.from(saved);
+	}
+
+	@Transactional
+	public void deleteLabel(int id) {
+		Label targetLabel = labelRepository.findById(id)
+			.orElseThrow(() -> new LabelNotFoundException(id));
+
+		targetLabel.delete();
+		labelRepository.save(targetLabel);
 	}
 }
