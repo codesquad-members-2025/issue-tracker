@@ -8,8 +8,6 @@ public interface IssueCommandRepository {
 
     Issue save(Issue issue);
 
-    void adjustCount(String statusKey, long delta);
-
     void updateState(long issueId, boolean isClosed);
 
 }

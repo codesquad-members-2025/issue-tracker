@@ -104,19 +104,6 @@ public class JdbcIssueCommandRepository implements IssueCommandRepository {
     }
 
     @Override
-    public void adjustCount(String statusKey, long delta) {
-        var sql = """
-                UPDATE issue_status_count
-                SET issue_count = issue_count + :delta
-                WHERE status_key = :statusKey
-                """;
-        var p = new MapSqlParameterSource()
-                .addValue("delta", delta)
-                .addValue("statusKey", statusKey);
-        jdbc.update(sql, p);
-    }
-
-    @Override
     public void updateState(long issueId, boolean isClosed) {
         String sql = """
                 UPDATE issue

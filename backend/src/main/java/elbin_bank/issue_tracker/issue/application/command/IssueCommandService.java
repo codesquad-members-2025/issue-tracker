@@ -1,9 +1,6 @@
 package elbin_bank.issue_tracker.issue.application.command;
 
 import elbin_bank.issue_tracker.issue.application.command.dto.IssueCreateResponseDto;
-import elbin_bank.issue_tracker.issue.application.event.IssueClosedEvent;
-import elbin_bank.issue_tracker.issue.application.event.IssueCreatedEvent;
-import elbin_bank.issue_tracker.issue.application.event.IssueReopenedEvent;
 import elbin_bank.issue_tracker.issue.domain.Issue;
 import elbin_bank.issue_tracker.issue.domain.IssueCommandRepository;
 import elbin_bank.issue_tracker.issue.exception.IssueDetailNotFoundException;
@@ -12,7 +9,6 @@ import elbin_bank.issue_tracker.issue.presentation.command.dto.request.IssueStat
 import elbin_bank.issue_tracker.label.domain.LabelCommandRepository;
 import elbin_bank.issue_tracker.user.domain.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IssueCommandService {
 
-    private final ApplicationEventPublisher publisher;
     private final IssueCommandRepository issueCommandRepository;
     private final LabelCommandRepository labelCommandRepository;
     private final UserCommandRepository userCommandRepository;
@@ -37,8 +32,6 @@ public class IssueCommandService {
         Issue newIssue = issueCommandRepository.save(issue);
         labelCommandRepository.saveLabelsToIssue(newIssue.getId(), requestDto.labels());
         userCommandRepository.saveAssigneesToIssue(newIssue.getId(), requestDto.assignees());
-
-        publisher.publishEvent(new IssueCreatedEvent());
 
         return new IssueCreateResponseDto(newIssue.getId());
     }
@@ -57,15 +50,6 @@ public class IssueCommandService {
         }
 
         issueCommandRepository.updateState(issueId, targetClosed);
-        publishStateChangeEvent(targetClosed);
-    }
-
-    private void publishStateChangeEvent(boolean nowClosed) {
-        if (nowClosed) {
-            publisher.publishEvent(new IssueClosedEvent());
-        } else {
-            publisher.publishEvent(new IssueReopenedEvent());
-        }
     }
 
 }
