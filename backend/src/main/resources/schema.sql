@@ -92,9 +92,3 @@ CREATE TABLE `issue_label`
     FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
     FOREIGN KEY (`label_id`) REFERENCES `label` (`id`)
 );
-
-CREATE TABLE issue_status_count
-(
-    status_key  VARCHAR(20) NOT NULL PRIMARY KEY,
-    issue_count BIGINT      NOT NULL DEFAULT 0
-);

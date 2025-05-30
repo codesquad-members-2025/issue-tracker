@@ -34,13 +34,6 @@ VALUES ('bug', 'Bug', '#d73a4a'),
        ('design', 'Design', '#cfd3d7');
 
 -- ─────────────────────────────────────────────────────────────────────────────
--- 4) Pre-calc Issue Status Counts (open/closed)
--- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO `issue_status_count` (`status_key`, `issue_count`)
-VALUES ('OPEN', 50),
-       ('CLOSED', 50);
-
--- ─────────────────────────────────────────────────────────────────────────────
 -- 5) Bulk-generate 100 Issues + Comments + Assignees + Issue-Label Relations
 --    using a recursive CTE for numbers 1..100
 -- ─────────────────────────────────────────────────────────────────────────────
