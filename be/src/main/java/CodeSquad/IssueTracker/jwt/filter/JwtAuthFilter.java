@@ -19,6 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Log4j2
 public class JwtAuthFilter implements Filter {
+
     private final JWTUtil jwtUtil;
 
     @Override
@@ -26,20 +27,21 @@ public class JwtAuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
-        String requestURI =  httpRequest.getRequestURI();
+        // ✅ 모든 요청에 대해 CORS 헤더 추가
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
 
-        // ✅ OPTIONS 요청은 필터 로직 통과
+        // ✅ OPTIONS 요청은 여기서 처리 끝
         if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
-            httpResponse.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
-            httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
+        String requestURI = httpRequest.getRequestURI();
 
-        // 특정 URL 경로는 필터를 적용하지 않도록 처리
+        // ✅ 인증 예외 경로
         if (requestURI.equals("/login") || requestURI.equals("/signup")) {
             filterChain.doFilter(httpRequest, httpResponse);
             return;
@@ -48,13 +50,10 @@ public class JwtAuthFilter implements Filter {
         log.info("[JWT Filter] Request URI: {}", requestURI);
         String authHeader = httpRequest.getHeader("Authorization");
 
+        // ✅ Authorization 헤더가 없거나 잘못된 경우
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             BaseResponseDto responseDto = BaseResponseDto.failure("Authorization 헤더가 없거나 형식이 잘못되었습니다.");
-            String json = new ObjectMapper().writeValueAsString(responseDto);
-
-            httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-            httpResponse.setContentType("application/json; charset=UTF-8");
-            httpResponse.getWriter().write(json);
+            writeJsonResponse(httpResponse, responseDto, HttpStatus.UNAUTHORIZED);
             return;
         }
 
@@ -62,19 +61,22 @@ public class JwtAuthFilter implements Filter {
 
         try {
             Claims claims = jwtUtil.validateAccessToken(accessToken);
-            httpRequest.setAttribute("id", claims.get("loginId")); // 사용자의 식별자 id
-            httpRequest.setAttribute("loginId", claims.get("loginUser")); // 로그인 시 사용되는 id
+            httpRequest.setAttribute("id", claims.get("loginId"));      // 사용자 식별자
+            httpRequest.setAttribute("loginId", claims.get("loginUser")); // 사용자 로그인 ID
             log.info("[JWT Filter] loginId: {}", claims.get("loginUser"));
         } catch (JwtValidationException e) {
             BaseResponseDto responseDto = BaseResponseDto.failure(e.getMessage());
-            String json = new ObjectMapper().writeValueAsString(responseDto);
-
-            httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-            httpResponse.setContentType("application/json; charset=UTF-8");
-            httpResponse.getWriter().write(json);
+            writeJsonResponse(httpResponse, responseDto, HttpStatus.UNAUTHORIZED);
             return;
         }
 
         filterChain.doFilter(httpRequest, httpResponse);
+    }
+
+    private void writeJsonResponse(HttpServletResponse response, BaseResponseDto dto, HttpStatus status) throws IOException {
+        response.setStatus(status.value());
+        response.setContentType("application/json; charset=UTF-8");
+        String json = new ObjectMapper().writeValueAsString(dto);
+        response.getWriter().write(json);
     }
 }
