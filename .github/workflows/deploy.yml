@@ -1,4 +1,4 @@
-name: Deploy Frontend and Backend
+name: Deploy Frontend and Backend to EC2
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
 
       # ---------------------------
-      # 🌐 FRONTEND DEPLOY
+      # 🌐 FRONTEND BUILD
       # ---------------------------
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v3
@@ -25,9 +25,8 @@ jobs:
 
       - name: 📝 Create .env.production
         run: |
-          echo "VITE_API_BASE_URL=http://${{ secrets.EC2_HOST }}:8080" > fe/.env.production
+          echo "VITE_API_BASE_URL=http://localhost/api" > fe/.env.production
           echo "VITE_TEST_URL=http://testserver.com:5001" >> fe/.env.production
-
 
       - name: 🧱 Build Frontend
         run: |
@@ -35,26 +34,14 @@ jobs:
           npm ci
           npm run build
 
-      - name: 🚀 Upload frontend to S3
-        uses: jakejarvis/s3-sync-action@v0.5.1
-        with:
-          args: --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }} # issue-tracker-fe-hosting
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SOURCE_DIR: "fe/dist"
-
       # ---------------------------
-      # ☕ BACKEND DEPLOY
+      # ☕ BACKEND BUILD
       # ---------------------------
       - name: ☕ Setup JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
-
 
       - name: 🛠️ Grant execute permission
         run: chmod +x ./be/gradlew
@@ -64,12 +51,16 @@ jobs:
           cd be
           ./gradlew clean build -x test
 
+      # ---------------------------
+      # 📦 PACKAGE FOR CODEDEPLOY
+      # ---------------------------
       - name: 📦 Package for CodeDeploy
         run: |
           mkdir -p codedeploy/deploy/scripts
-          cp be/build/libs/*.jar codedeploy/
+          cp be/build/libs/*.jar codedeploy/app.jar
           cp deploy/appspec.yml codedeploy/deploy/
           cp deploy/scripts/*.sh codedeploy/deploy/scripts/
+          cp -r fe/dist codedeploy/fe/dist
           chmod +x codedeploy/deploy/scripts/*.sh
           zip -r codedeploy.zip codedeploy/
 
@@ -81,6 +72,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
+      # ---------------------------
+      # 🔐 UPLOAD .ENV TO EC2
+      # ---------------------------
       - name: ✍️ Generate .env
         run: |
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" > .env
@@ -98,6 +92,9 @@ jobs:
           chmod 600 private_key.pem
           scp -i private_key.pem -o StrictHostKeyChecking=no .env ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/.env
 
+      # ---------------------------
+      # 🚀 DEPLOY WITH CODEDEPLOY
+      # ---------------------------
       - name: 🔔 Trigger CodeDeploy
         run: |
           aws deploy create-deployment \

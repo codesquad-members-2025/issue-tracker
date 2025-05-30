@@ -2,7 +2,6 @@
 
 echo "🚀 Starting Spring Boot app..."
 
-# .env 파일 로드
 if [ -f /home/ubuntu/.env ]; then
   echo "📦 Loading environment variables from .env"
   source /home/ubuntu/.env
@@ -11,7 +10,6 @@ else
   exit 1
 fi
 
-# 애플리케이션 실행
 cd /home/ubuntu
 JAR_NAME=app.jar
 

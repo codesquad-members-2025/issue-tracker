@@ -13,3 +13,6 @@ hooks:
     - location: scripts/start.sh
       timeout: 60
       runas: ubuntu
+    - location: scripts/frontend.sh
+      timeout: 30
+      runas: ubuntu
