@@ -25,5 +25,3 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket: team5-issue-tracker-images
-
-
