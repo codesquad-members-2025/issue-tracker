@@ -81,7 +81,7 @@ export default function IssueDetailPage() {
     initIssueDetailStore(response.data);
   }, [response?.data]);
 
-  if (!response.data) return null;
+  if (!response?.data) return null;
   return (
     <Container>
       <DetailIssueHeader issueFetchHandler={issueFetchHandler} />

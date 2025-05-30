@@ -2,7 +2,7 @@
   "issues": [
     {
       "id": 1,
-      "title": "로그인 버튼이 작동하지 않음",
+      "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴ",
       "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음",
       "isOpen": true,
       "author": {
@@ -42,24 +42,24 @@
       "comments": [
         {
           "commentId": 1,
-          "content": "이 문제는 곧 해결될 예정입니다. 현재 원인 파악 중입니다.",
+          "content": "이 문제는 곧 해결될 예정입니다. 현재 원인 파악 중입니다.-> 테스트 ",
           "issueFileUrl": null,
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-05-21T18:13:27"
+          "lastModifiedAt": "2025-05-30T02:21:12.521Z"
         },
         {
           "commentId": 2,
-          "content": "onClick 이벤트 핸들러가 제대로 등록되지 않은 것 같습니다. 코드 첨부합니다.",
+          "content": "onClick 이벤트 핸들러가 제대로 등록되지 않은 것 같습니다. 코드 첨부합니다. ------> 이것도 테스트\n\n개행 테스트",
           "issueFileUrl": "https://dummy.local/files/code-snippet.png",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-21T19:20:00"
+          "lastModifiedAt": "2025-05-30T02:31:00.233Z"
         },
         {
           "commentId": 3,
-          "content": "PR #123에서 수정되었습니다. 리뷰 부탁드립니다.",
+          "content": "PR #123에서 수정되었습니다. 리뷰 부탁드립니다. -> 테스트 22",
           "issueFileUrl": null,
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-05-22T10:15:00"
+          "lastModifiedAt": "2025-05-30T02:21:27.010Z"
         }
       ]
     },
@@ -97,7 +97,22 @@
       },
       "lastModifiedAt": "2025-05-21T19:20:00",
       "issueFileUrl": "https://dummy.local/files/mobile-ui-bug.png",
-      "comments": []
+      "comments": [
+        {
+          "commentId": 101,
+          "content": "모바일 반응형 디자인 가이드라인을 작성했습니다.",
+          "issueFileUrl": "https://dummy.local/files/responsive-design-guide.md",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-05-21T20:30:00"
+        },
+        {
+          "commentId": 102,
+          "content": "iPhone SE 환경에서 추가 테스트를 진행했습니다. 첨부된 스크린샷을 확인해주세요.",
+          "issueFileUrl": "https://dummy.local/files/iphone-se-test.png",
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-05-22T09:15:00"
+        }
+      ]
     },
     {
       "id": 3,
@@ -468,7 +483,7 @@
     {
       "id": 13,
       "title": "패스워드 변경 오류",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 101,
         "nickname": "devchan"
@@ -501,7 +516,7 @@
     {
       "id": 14,
       "title": "릴리즈 노트 자동 생성",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 102,
         "nickname": "alice"
@@ -529,7 +544,7 @@
     {
       "id": 15,
       "title": "다국어 지원",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 103,
         "nickname": "bob"
@@ -557,7 +572,7 @@
     {
       "id": 16,
       "title": "로그아웃 버튼 위치 변경",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 104,
         "nickname": "charlie"
@@ -585,7 +600,7 @@
     {
       "id": 17,
       "title": "API 응답 속도 개선",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 105,
         "nickname": "david"
@@ -618,7 +633,7 @@
     {
       "id": 18,
       "title": "마일스톤 삭제 오류",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 101,
         "nickname": "devchan"
@@ -647,7 +662,7 @@
       "id": 55,
       "title": "마일스톤 진행률 자동 계산 오류",
       "content": "마일스톤에 연결된 이슈들의 상태가 변경될 때 진행률이 정확하게 업데이트되지 않는 문제가 있습니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -691,7 +706,7 @@
       "id": 19,
       "title": "페이지네이션 구현",
       "content": "이슈 목록이 길어질 경우를 대비해 페이지네이션 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
         "nickname": "홍길동",
@@ -727,7 +742,7 @@
       "id": 20,
       "title": "이슈 필터링 기능 개선",
       "content": "현재 구현된 필터링 기능이 직관적이지 않아 사용자들이 어려움을 겪고 있습니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
         "nickname": "이영희",
@@ -771,7 +786,7 @@
       "id": 21,
       "title": "코드 스플리팅 적용",
       "content": "초기 로딩 시간이 너무 깁니다. 코드 스플리팅을 통해 성능을 개선해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -807,7 +822,7 @@
       "id": 22,
       "title": "웹 접근성 가이드라인 준수",
       "content": "스크린 리더 사용자를 위한 ARIA 속성 추가 및 키보드 네비게이션 개선이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
         "nickname": "김철수",
@@ -843,7 +858,7 @@
       "id": 23,
       "title": "이슈 템플릿 기능 추가",
       "content": "자주 사용되는 이슈 형식을 템플릿으로 저장하고 불러올 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
         "nickname": "홍길동",
@@ -887,7 +902,7 @@
       "id": 24,
       "title": "마크다운 에디터 버그 수정",
       "content": "코드 블록 내부에서 줄바꿈이 제대로 적용되지 않는 문제가 있습니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
         "nickname": "이영희",
@@ -923,7 +938,7 @@
       "id": 25,
       "title": "이슈 자동 분류 시스템",
       "content": "AI를 활용하여 이슈의 내용을 분석하고 적절한 라벨을 자동으로 추천하는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -972,7 +987,7 @@
       "id": 26,
       "title": "실시간 알림 시스템 구현",
       "content": "이슈가 생성되거나 코멘트가 달릴 때 실시간으로 알림을 받을 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
         "nickname": "김철수",
@@ -1008,7 +1023,7 @@
       "id": 27,
       "title": "이슈 통계 대시보드",
       "content": "이슈 처리 현황, 해결 시간, 담당자별 통계 등을 시각화하여 보여주는 대시보드가 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
         "nickname": "홍길동",
@@ -1062,7 +1077,7 @@
       "id": 28,
       "title": "이슈 히스토리 추적 기능",
       "content": "이슈의 상태 변경, 담당자 변경 등의 히스토리를 시간순으로 확인할 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
         "nickname": "이영희",
@@ -1141,13 +1156,35 @@
       },
       "lastModifiedAt": "2025-06-12T14:30:00",
       "issueFileUrl": "https://dummy.local/files/doc-integration.png",
-      "comments": []
+      "comments": [
+        {
+          "commentId": 201,
+          "content": "Confluence API 연동 방식을 제안합니다.",
+          "issueFileUrl": "https://dummy.local/files/confluence-integration.md",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-06-12T15:45:00"
+        },
+        {
+          "commentId": 202,
+          "content": "노션 API도 함께 고려해보면 좋을 것 같습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-12T16:20:00"
+        },
+        {
+          "commentId": 203,
+          "content": "문서 동기화 주기와 권한 관리에 대한 논의가 필요해 보입니다.",
+          "issueFileUrl": null,
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-06-13T09:10:00"
+        }
+      ]
     },
     {
       "id": 30,
       "title": "이슈 중복 검사 기능",
       "content": "새로운 이슈 생성 시 유사한 이슈가 있는지 자동으로 검사하는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
         "nickname": "홍길동",
@@ -1191,7 +1228,7 @@
       "id": 31,
       "title": "이슈 마일스톤 자동 추천",
       "content": "이슈의 내용과 라벨을 기반으로 적절한 마일스톤을 자동으로 추천하는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
         "nickname": "김철수",
@@ -1232,7 +1269,7 @@
       "id": 32,
       "title": "이슈 담당자 워크로드 시각화",
       "content": "각 담당자별 할당된 이슈의 수와 예상 작업 시간을 시각화하여 보여주는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
         "nickname": "이영희",
@@ -1276,7 +1313,7 @@
       "id": 33,
       "title": "이슈 우선순위 자동화",
       "content": "이슈의 긴급도, 영향도, 난이도 등을 고려하여 우선순위를 자동으로 계산하는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -1330,7 +1367,7 @@
       "id": 34,
       "title": "이슈 관련 코드 리뷰 연동",
       "content": "이슈와 관련된 PR의 코드 리뷰 내용을 이슈 페이지에서 바로 확인할 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
         "nickname": "홍길동",
@@ -1366,7 +1403,7 @@
       "id": 35,
       "title": "이슈 해결 시간 예측",
       "content": "과거 유사 이슈들의 해결 시간을 분석하여 현재 이슈의 예상 해결 시간을 예측하는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
         "nickname": "김철수",
@@ -1415,7 +1452,7 @@
       "id": 36,
       "title": "이슈 관련 테스트 케이스 관리",
       "content": "이슈와 관련된 테스트 케이스를 생성하고 관리할 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
         "nickname": "이영희",
@@ -1464,7 +1501,7 @@
       "id": 37,
       "title": "이슈 의존성 관리",
       "content": "이슈 간의 의존 관계를 설정하고 시각화하는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -1538,7 +1575,22 @@
       },
       "lastModifiedAt": "2025-06-21T13:40:00",
       "issueFileUrl": null,
-      "comments": []
+      "comments": [
+        {
+          "commentId": 301,
+          "content": "태그 계층 구조 설계안을 공유드립니다.",
+          "issueFileUrl": "https://dummy.local/files/tag-hierarchy.png",
+          "authorNickname": "이영희",
+          "lastModifiedAt": "2025-06-21T14:50:00"
+        },
+        {
+          "commentId": 302,
+          "content": "태그 그룹핑 기능도 함께 구현하면 좋을 것 같습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-06-21T15:30:00"
+        }
+      ]
     },
     {
       "id": 39,
@@ -1672,10 +1724,10 @@
       "comments": [
         {
           "commentId": 21,
-          "content": "JSON 스키마 기반의 커스텀 필드 정의 방식을 제안합니다.",
+          "content": "JSON 스키마 기반의 커스텀 필드 정의 방식을 제안합니다.-> 수정 테스트",
           "issueFileUrl": "https://dummy.local/files/schema-proposal.md",
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-06-24T13:20:00"
+          "lastModifiedAt": "2025-05-30T02:38:59.967Z"
         }
       ]
     },
@@ -2253,7 +2305,7 @@
       "id": 55,
       "title": "이슈 보드 보안 강화",
       "content": "HTTPS 적용 및 XSS 방어 로직 구현이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
         "nickname": "김철수",
@@ -2382,6 +2434,21 @@
           "lastModifiedAt": "2025-07-10T16:25:00"
         }
       ]
+    },
+    {
+      "id": 58,
+      "title": "이슈 작성 테스트",
+      "content": "테스트 입니다",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-05-30T02:32:41.057Z"
     }
   ],
   "users": [

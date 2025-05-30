@@ -8,6 +8,7 @@ const CommentWrapper = styled.div`
   white-space: pre-line;
   padding: 16px 24px;
   display: flex;
+  flex-direction: column;
   gap: 10px;
   align-items: flex-start;
 `;

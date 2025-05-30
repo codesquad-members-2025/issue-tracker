@@ -2,6 +2,25 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { someHandler } from '@/utils/common/someHandler';
 
+const initialState = {
+  issue: {
+    issueId: '',
+    title: '',
+    content: '',
+    issueFileUrl: null,
+    authorId: null,
+    milestoneId: null,
+    isOpen: '',
+    lastModifiedAt: '',
+  },
+  comments: [],
+  commentsEditing: {},
+  newComment: { content: '', issueFileUrl: null },
+  assignees: [],
+  labels: [],
+  milestone: {},
+};
+
 const useIssueDetailStore = create(
   immer((set) => ({
     // issue 프로퍼티 -> 서버로부터 DB에 있는 데이터를 보내줄때 업데이트하는 용도입니다.
@@ -161,6 +180,11 @@ const useIssueDetailStore = create(
         state.newComment = { content: '', issueFileUrl: null };
       });
     },
+
+    resetStore: () =>
+      set((state) => {
+        Object.assign(state, initialState);
+      }),
   })),
 );
 

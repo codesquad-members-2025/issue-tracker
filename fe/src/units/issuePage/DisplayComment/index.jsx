@@ -10,8 +10,15 @@ import useValidation from '@/hooks/useValidation';
 
 // 하단 부의 새로운 코멘트 입력은 제외한 컴포넌트 -> 새로운 코멘트는 다른 유닛 컴포넌트에서 다루기!
 export default function DisplayComment({ commentObj, commentPatchHandler }) {
-  const { commentId, content, issueFileUrl, authorNickname, lastModifiedAt, profileImageUrl } =
-    commentObj;
+  const {
+    commentId,
+    content,
+    issueFileUrl,
+    authorNickname,
+    lastModifiedAt,
+    profileImageUrl,
+    authorId,
+  } = commentObj;
   const [isEdit, setIsEdit] = useState(false);
   const startEditComment = useIssueDetailStore((s) => s.startEditComment);
   const updateEditComment = useIssueDetailStore((s) => s.updateEditComment);
@@ -30,12 +37,20 @@ export default function DisplayComment({ commentObj, commentPatchHandler }) {
 
   //편집 모드일 경우 사용되는 코멘트의 value
   // '이슈 디테일 스토어의 comment 상태를 구독하고 있어야한다. -> 실시간으로 편집 되는 ui를 유저에게 실시간으로 렌더링 시켜서 보여줘야한다.'
+  /*
+
   const { editingContent, editingIssueFileUrl } = useIssueDetailStore(
     (s) => ({
       editingContent: s.commentsEditing[commentId]?.content || '',
       editingIssueFileUrl: s.commentsEditing[commentId]?.issueFileUrl || null,
     }),
     shallow,
+  );
+-> ❗️shallow 를 쓰는데 계속 무한루프 발생❗️
+  */
+  const editingContent = useIssueDetailStore((s) => s.commentsEditing[commentId]?.content || '');
+  const editingIssueFileUrl = useIssueDetailStore(
+    (s) => s.commentsEditing[commentId]?.issueFileUrl || null,
   );
 
   //   '디테일 이슈의 코멘트의 파일 상태를 변경시키는 액션구독'
@@ -61,7 +76,7 @@ export default function DisplayComment({ commentObj, commentPatchHandler }) {
     setIsEdit(false);
   }
 
-  if (!response.data) return null;
+  // if (!response?.data) return null;
 
   return (
     <EditModeWrapper>
@@ -80,6 +95,7 @@ export default function DisplayComment({ commentObj, commentPatchHandler }) {
                 authorProfileUrl={profileImageUrl}
                 editTriggerHandler={editTriggerHandler}
                 lastModifiedAt={lastModifiedAt}
+                commentAuthorId={authorId}
               />
             }
           />
@@ -91,6 +107,7 @@ export default function DisplayComment({ commentObj, commentPatchHandler }) {
               authorProfileUrl={profileImageUrl}
               editTriggerHandler={editTriggerHandler}
               lastModifiedAt={lastModifiedAt}
+              commentAuthorId={authorId}
             />,
             <CommentDisplayArea content={content} issueFileUrl={issueFileUrl} />,
           ]
@@ -111,6 +128,8 @@ const CommentContainer = styled.div`
   flex-direction: column;
   border: 1px solid ${({ theme }) => theme.border.default};
   border-radius: 16px;
+  overflow: hidden;
+  width: 960px;
 `;
 
 const EditModeWrapper = styled.div`
