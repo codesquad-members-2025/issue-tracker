@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +18,7 @@ public class SqlBuilder {
         StringBuilder join = new StringBuilder();
         StringBuilder where = new StringBuilder(" WHERE 1=1");
         StringBuilder having = new StringBuilder();
-        Map<String, Object> params = new HashMap<>();
+        MapSqlParameterSource params = new MapSqlParameterSource();
 
         for (FilterStrategy s : strategies) {
             if (s.supports(crit)) {

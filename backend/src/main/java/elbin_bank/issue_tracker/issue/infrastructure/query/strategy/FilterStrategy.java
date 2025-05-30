@@ -1,6 +1,7 @@
 package elbin_bank.issue_tracker.issue.infrastructure.query.strategy;
 
 import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import java.util.Map;
 
@@ -19,11 +20,11 @@ public interface FilterStrategy {
     /**
      * WHERE 절에 추가할 SQL fragment, 파라미터 세팅
      */
-    void applyWhere(StringBuilder where, Map<String, Object> params, FilterCriteria criteria);
+    void applyWhere(StringBuilder where, MapSqlParameterSource params, FilterCriteria criteria);
 
     /**
      * HAVING 절에 추가할 SQL fragment, 파라미터 세팅
      */
-    void applyHaving(StringBuilder having, Map<String, Object> params, FilterCriteria criteria);
+    void applyHaving(StringBuilder having, MapSqlParameterSource params, FilterCriteria criteria);
 
 }

@@ -1,9 +1,8 @@
 package elbin_bank.issue_tracker.issue.infrastructure.query.strategy;
 
 import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
 public class AssigneeFilterStrategy implements FilterStrategy {
@@ -20,13 +19,13 @@ public class AssigneeFilterStrategy implements FilterStrategy {
     }
 
     @Override
-    public void applyWhere(StringBuilder where, Map<String, Object> params, FilterCriteria c) {
+    public void applyWhere(StringBuilder where, MapSqlParameterSource params, FilterCriteria c) {
         where.append(" AND u2.login IN (:assignees)");
-        params.put("assignees", c.assignees());
+        params.addValue("assignees", c.assignees());
     }
 
     @Override
-    public void applyHaving(StringBuilder having, Map<String, Object> params, FilterCriteria c) {
+    public void applyHaving(StringBuilder having, MapSqlParameterSource params, FilterCriteria c) {
         // no-op
     }
 

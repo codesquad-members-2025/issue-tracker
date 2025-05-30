@@ -13,7 +13,6 @@ public class FilterConfig {
     @Bean
     public List<FilterStrategy> filterStrategies() {
         return List.of(
-                new StateFilterStrategy(),
                 new LabelFilterStrategy(),
                 new MilestoneFilterStrategy(),
                 new AssigneeFilterStrategy(),

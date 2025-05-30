@@ -1,7 +1,6 @@
 package elbin_bank.issue_tracker.issue.application.query.mapper;
 
 import elbin_bank.issue_tracker.issue.application.query.dto.*;
-import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
@@ -18,10 +17,9 @@ public class IssueDtoMapper {
 
     public IssuesResponseDto toIssuesResponseDto(List<IssueProjection> issueProjections,
                                                  Map<Long, List<String>> assigneeNames,
-                                                 Map<Long, List<LabelProjection>> labels,
-                                                 IssueCountProjection issueCountProjection) {
-        return new IssuesResponseDto(
-                issueProjections.stream().map(i -> new IssueDto(
+                                                 Map<Long, List<LabelProjection>> labels) {
+        List<IssueDto> issueDtos = issueProjections.stream()
+                .map(i -> new IssueDto(
                         i.id(),
                         i.author(),
                         i.title(),
@@ -31,9 +29,22 @@ public class IssueDtoMapper {
                         i.createdAt(),
                         i.updatedAt(),
                         i.milestone()
-                )).toList(),
-                issueCountProjection.openCount(),
-                issueCountProjection.closedCount());
+                ))
+                .toList();
+
+        // 첫 번째 프로젝션에서 open/closed count 꺼내기 (null-safe)
+        long openCount = issueProjections.stream()
+                .findFirst()
+                // IssueProjection.openCount() 가 Long wrapper 라면 null 체크
+                .map(p -> p.openCount() != null ? p.openCount() : 0L)
+                .orElse(0L);
+
+        long closedCount = issueProjections.stream()
+                .findFirst()
+                .map(p -> p.closedCount() != null ? p.closedCount() : 0L)
+                .orElse(0L);
+
+        return new IssuesResponseDto(issueDtos, openCount, closedCount);
     }
 
     public IssueDetailResponseDto toIssueDetailDto(IssueDetailProjection issueDetailProjection) {

@@ -4,9 +4,6 @@ import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
-
 @Component
 public class MilestoneFilterStrategy implements FilterStrategy {
 
@@ -21,13 +18,13 @@ public class MilestoneFilterStrategy implements FilterStrategy {
     }
 
     @Override
-    public void applyWhere(StringBuilder where, Map<String, Object> params, FilterCriteria c) {
+    public void applyWhere(StringBuilder where, MapSqlParameterSource params, FilterCriteria c) {
         where.append(" AND m.title = :milestone");
-        params.put("milestone", c.milestone());
+        params.addValue("milestone", c.milestone());
     }
 
     @Override
-    public void applyHaving(StringBuilder having, Map<String, Object> params, FilterCriteria c) {
+    public void applyHaving(StringBuilder having, MapSqlParameterSource params, FilterCriteria c) {
         // no-op
     }
 

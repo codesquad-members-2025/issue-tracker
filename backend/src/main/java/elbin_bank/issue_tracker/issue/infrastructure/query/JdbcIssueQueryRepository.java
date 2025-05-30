@@ -29,43 +29,74 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 
     @Override
     public List<IssueProjection> findIssues(FilterCriteria crit) {
-        String baseSql = """
-                SELECT
-                  i.id,
-                  a.nickname       AS author,
-                  i.title       AS title,
-                  i.is_closed   AS isClosed,
-                  i.created_at  AS createdAt,
-                  i.updated_at  AS updatedAt,
-                  m.title       AS milestone
-                FROM issue i
-                JOIN `user` a ON a.id = i.author_id
-                LEFT JOIN milestone m ON m.id = i.milestone_id
-                """;
+        SqlClauseResult sqlClauseResult = sqlBuilder.build(crit);
 
-        SqlClauseResult buildResult = sqlBuilder.build(crit);
-
-        String sql = new StringBuilder()
-                .append(baseSql)
-                .append(buildResult.joinClause())
-                .append(buildResult.whereClause())
-                .append(" AND i.deleted_at IS NULL")
-                .append(" GROUP BY i.id")
-                .append(buildResult.havingClause())
-                .append(" ORDER BY i.id DESC")
-                .toString();
+        String sql = """
+                WITH
+                  base AS (
+                    SELECT
+                      i.id,
+                      au.nickname    AS author,
+                      i.title        AS title,
+                      i.is_closed    AS isClosed,
+                      i.created_at   AS createdAt,
+                      i.updated_at   AS updatedAt,
+                      m.title        AS milestone
+                    FROM issue i
+                    JOIN `user` au
+                      ON au.id = i.author_id
+                     AND au.deleted_at IS NULL
+                    LEFT JOIN milestone m
+                      ON m.id = i.milestone_id
+                     AND m.deleted_at IS NULL
+                """
+                + sqlClauseResult.joinClause() + "\n"
+                + sqlClauseResult.whereClause() + " AND i.deleted_at IS NULL\n"
+                + "    GROUP BY i.id\n"
+                + sqlClauseResult.havingClause() +
+                """
+                                  ),
+                                  counts AS (
+                                    SELECT
+                                      SUM(CASE WHEN isClosed = FALSE THEN 1 ELSE 0 END) AS openCount,
+                                      SUM(CASE WHEN isClosed = TRUE  THEN 1 ELSE 0 END) AS closedCount
+                                    FROM base
+                                  ),
+                                  filtered AS (
+                                    SELECT * 
+                                    FROM base 
+                                    WHERE isClosed = :isClosed
+                                  )
+                                SELECT
+                                  f.id,
+                                  f.author,
+                                  f.title,
+                                  f.isClosed,
+                                  f.createdAt,
+                                  f.updatedAt,
+                                  f.milestone,
+                                  c.openCount,
+                                  c.closedCount
+                                FROM filtered f
+                                CROSS JOIN counts c
+                                ORDER BY f.id DESC
+                        """;
 
         return jdbc.query(
                 sql,
-                buildResult.params(),
-                (ResultSet rs, int rn) -> new IssueProjection(
+                sqlClauseResult.params(),
+                (ResultSet rs, int rowNum) -> new IssueProjection(
                         rs.getLong("id"),
                         rs.getString("author"),
                         rs.getString("title"),
                         rs.getBoolean("isClosed"),
                         rs.getTimestamp("createdAt").toLocalDateTime(),
-                        rs.getTimestamp("updatedAt").toLocalDateTime(),
-                        rs.getString("milestone")
+                        rs.getTimestamp("updatedAt") != null
+                                ? rs.getTimestamp("updatedAt").toLocalDateTime()
+                                : null,
+                        rs.getString("milestone"),
+                        rs.getLong("openCount"),
+                        rs.getLong("closedCount")
                 )
         );
     }

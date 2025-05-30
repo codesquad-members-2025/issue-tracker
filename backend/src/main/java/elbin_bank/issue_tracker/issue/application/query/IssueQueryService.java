@@ -33,11 +33,9 @@ public class IssueQueryService {
 
     @Transactional(readOnly = true)
     public IssuesResponseDto getFilteredIssues(String dsl) {
-        IssueCountProjection issueCount = issueQueryRepository.countIssueOpenAndClosed();
-
         FilterCriteria crit = DslParser.parse(dsl);
         if (crit.isInvalidFilter()) {
-            return issueDtoMapper.toIssuesResponseDto(List.of(), Map.of(), Map.of(), issueCount);
+            return issueDtoMapper.toIssuesResponseDto(List.of(), Map.of(), Map.of());
         }
 
         List<IssueProjection> issues = issueQueryRepository.findIssues(crit);
@@ -45,7 +43,7 @@ public class IssueQueryService {
         Map<Long, List<String>> assigneeNames = issueQueryRepository.findAssigneeNamesByIssueIds(ids);
         Map<Long, List<LabelProjection>> labels = labelQueryRepository.findByIssueIds(ids);
 
-        return issueDtoMapper.toIssuesResponseDto(issues, assigneeNames, labels, issueCount);
+        return issueDtoMapper.toIssuesResponseDto(issues, assigneeNames, labels);
     }
 
     @Transactional(readOnly = true)

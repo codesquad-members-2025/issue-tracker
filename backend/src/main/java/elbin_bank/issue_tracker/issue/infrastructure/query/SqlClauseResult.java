@@ -1,13 +1,12 @@
 package elbin_bank.issue_tracker.issue.infrastructure.query;
 
-import java.util.Map;
-
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 public record SqlClauseResult(
         String joinClause,
         String whereClause,
         String havingClause,
-        Map<String, Object> params
+        MapSqlParameterSource params
 ) {
     /**
      * build 시점에 AND 접두어 제거 + HAVING 키워드 붙이기
@@ -16,7 +15,7 @@ public record SqlClauseResult(
             String joinPart,
             StringBuilder wherePart,
             StringBuilder havingPart,
-            Map<String, Object> params
+            MapSqlParameterSource params
     ) {
         String whereSql = wherePart.toString(); // ex. " WHERE 1=1 AND ... AND ..."
         String havingSql = "";
