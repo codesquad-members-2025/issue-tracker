@@ -1,0 +1,2753 @@
+{
+  "issues": [
+    {
+      "id": 1,
+      "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴsss",
+      "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 101,
+          "nickname": "devchan",
+          "email": "devchan@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        },
+        {
+          "id": 103,
+          "nickname": "bob",
+          "email": "bob@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
+        },
+        {
+          "id": 104,
+          "nickname": "charlie",
+          "email": "charlie@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 6,
+          "name": "discussion",
+          "color": "#FF00FF",
+          "description": "논의 필요"
+        },
+        {
+          "labelId": 7,
+          "name": "test",
+          "color": "#CCCCCC",
+          "description": "테스트 관련"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-05-21T18:13:27",
+      "issueFileUrl": "https://dummy.local/files/login-button-error.gif",
+      "comments": [
+        {
+          "commentId": 1,
+          "content": "이 문제는 곧 해결될 예정입니다. 현재 원인 파악 중입니다.-> 테스트 sss",
+          "issueFileUrl": null,
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-05-30T03:40:41.884Z"
+        },
+        {
+          "commentId": 2,
+          "content": "asdonClick 이벤트 핸들러가 제대로 등록되지 않은 것 같습니다. 코드 첨부합니다. ------> 이것도 테스트\n\n개행 테스트",
+          "issueFileUrl": "https://dummy.local/files/code-snippet.png",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-05-30T03:40:45.039Z"
+        },
+        {
+          "commentId": 3,
+          "content": "PR #123에서 수정되었습니다. 리뷰 부탁드립니다. -> 테스트 22ㅁㄴㅇ",
+          "issueFileUrl": null,
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-05-30T04:12:47.030Z"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "UI 개선 요청",
+      "content": "메인 페이지의 UI가 모바일에서 깨지는 현상이 있습니다. 특히 iPhone SE에서 심각합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-05-21T19:20:00",
+      "issueFileUrl": "https://dummy.local/files/mobile-ui-bug.png",
+      "comments": [
+        {
+          "commentId": 101,
+          "content": "모바일 반응형 디자인 가이드라인을 작성했습니다.",
+          "issueFileUrl": "https://dummy.local/files/responsive-design-guide.md",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-05-21T20:30:00"
+        },
+        {
+          "commentId": 102,
+          "content": "iPhone SE 환경에서 추가 테스트를 진행했습니다. 첨부된 스크린샷을 확인해주세요.",
+          "issueFileUrl": "https://dummy.local/files/iphone-se-test.png",
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-05-22T09:15:00"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "성능 최적화 필요",
+      "content": "이미지 로딩 시 성능이 저하되는 현상이 발생합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 4,
+          "name": "performance",
+          "color": "#0000FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-05-20T14:30:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 4,
+          "content": "이미지 최적화 작업을 진행했습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-05-20T15:45:00"
+        },
+        {
+          "commentId": 5,
+          "content": "성능이 50% 개선되었습니다. 클로징하겠습니다.",
+          "issueFileUrl": "https://dummy.local/files/performance-improvement.png",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-05-20T16:20:00"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "새로운 기능 제안",
+      "content": "드래그 앤 드롭으로 이슈 순서를 변경할 수 있으면 좋겠습니다.",
+      "isOpen": false,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        },
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 6,
+          "name": "discussion",
+          "color": "#FF00FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-05-23T09:00:00",
+      "issueFileUrl": "https://dummy.local/files/feature-mockup.png",
+      "comments": [
+        {
+          "commentId": 6,
+          "content": "좋은 제안이네요. 기술적 검토를 진행해보겠습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-05-23T10:30:00"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "테스트 코드 작성 필요",
+      "content": "현재 테스트 커버리지가 낮습니다. 주요 컴포넌트들에 대한 테스트 코드가 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 7,
+          "name": "test",
+          "color": "#CCCCCC"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "name": "v1.0",
+        "description": "1차 출시",
+        "endDate": "2025-06-30",
+        "processingRate": 0,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-05-24T11:00:00",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 6,
+      "title": "검색 기능 성능 개선",
+      "content": "검색어 입력 시 지연이 발생하며, 대량의 데이터에서 검색할 때 브라우저가 버벅입니다.",
+      "isOpen": false,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 4,
+          "name": "performance",
+          "color": "#0000FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-05-25T09:00:00",
+      "issueFileUrl": "https://dummy.local/files/search-performance.gif",
+      "comments": [
+        {
+          "commentId": 7,
+          "content": "디바운스 적용으로 개선해보겠습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-05-25T10:15:00"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "다크모드 테마 구현",
+      "content": "사용자 경험 향상을 위한 다크모드 테마가 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        },
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-05-26T11:30:00",
+      "issueFileUrl": "https://dummy.local/files/dark-mode-design.png",
+      "comments": []
+    },
+    {
+      "id": 8,
+      "title": "보안 취약점 발견",
+      "isOpen": false,
+      "author": {
+        "id": 105,
+        "nickname": "david"
+      },
+      "assignees": [
+        {
+          "id": 102,
+          "nickname": "alice"
+        },
+        {
+          "id": 103,
+          "nickname": "bob"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 6,
+          "name": "security",
+          "color": "#800000"
+        },
+        {
+          "labelId": 2,
+          "name": "urgent",
+          "color": "#ffcc00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 6,
+        "name": "v1.1 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-20T10:00:00Z"
+    },
+    {
+      "id": 9,
+      "title": "다크 모드 지원",
+      "isOpen": false,
+      "author": {
+        "id": 102,
+        "nickname": "alice"
+      },
+      "assignees": [
+        {
+          "id": 101,
+          "nickname": "devchan",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 6,
+        "name": "v1.1 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-22T17:45:00Z"
+    },
+    {
+      "id": 10,
+      "title": "이메일 알림 기능 추가",
+      "isOpen": false,
+      "author": {
+        "id": 103,
+        "nickname": "bob"
+      },
+      "assignees": [
+        {
+          "id": 104,
+          "nickname": "charlie",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 5,
+        "name": "v1.0 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-23T09:15:00Z"
+    },
+    {
+      "id": 11,
+      "title": "이미지 업로드 버그",
+      "isOpen": false,
+      "author": {
+        "id": 104,
+        "nickname": "charlie"
+      },
+      "assignees": [
+        {
+          "id": 102,
+          "nickname": "alice",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+        },
+        {
+          "id": 103,
+          "nickname": "bob",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 1,
+          "name": "bug",
+          "color": "#ff0000"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 7,
+        "name": "v0.9 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-24T11:30:00Z"
+    },
+    {
+      "id": 12,
+      "title": "접근성 개선",
+      "isOpen": false,
+      "author": {
+        "id": 105,
+        "nickname": "david"
+      },
+      "assignees": [
+        {
+          "id": 106,
+          "nickname": "eve",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 6,
+        "name": "v1.1 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-25T08:20:00Z"
+    },
+    {
+      "id": 13,
+      "title": "패스워드 변경 오류",
+      "isOpen": false,
+      "author": {
+        "id": 101,
+        "nickname": "devchan"
+      },
+      "assignees": [
+        {
+          "id": 102,
+          "nickname": "alice",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 1,
+          "name": "bug",
+          "color": "#ff0000"
+        },
+        {
+          "labelId": 6,
+          "name": "security",
+          "color": "#800000"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 5,
+        "name": "v1.0 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-26T13:40:00Z"
+    },
+    {
+      "id": 14,
+      "title": "릴리즈 노트 자동 생성",
+      "isOpen": false,
+      "author": {
+        "id": 102,
+        "nickname": "alice"
+      },
+      "assignees": [
+        {
+          "id": 103,
+          "nickname": "bob",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "documentation",
+          "color": "#ffa500"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 6,
+        "name": "v1.1 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-27T16:55:00Z"
+    },
+    {
+      "id": 15,
+      "title": "다국어 지원",
+      "isOpen": false,
+      "author": {
+        "id": 103,
+        "nickname": "bob"
+      },
+      "assignees": [
+        {
+          "id": 104,
+          "nickname": "charlie",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 6,
+        "name": "v1.1 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-28T19:10:00Z"
+    },
+    {
+      "id": 16,
+      "title": "로그아웃 버튼 위치 변경",
+      "isOpen": false,
+      "author": {
+        "id": 104,
+        "nickname": "charlie"
+      },
+      "assignees": [
+        {
+          "id": 105,
+          "nickname": "david",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "feature",
+          "color": "#00ff00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 5,
+        "name": "v1.0 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-29T11:05:00Z"
+    },
+    {
+      "id": 17,
+      "title": "API 응답 속도 개선",
+      "isOpen": false,
+      "author": {
+        "id": 105,
+        "nickname": "david"
+      },
+      "assignees": [
+        {
+          "id": 101,
+          "nickname": "devchan",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        },
+        {
+          "id": 106,
+          "nickname": "eve",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 4,
+          "name": "performance",
+          "color": "#0000ff"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 7,
+        "name": "v0.9 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-30T15:30:00Z"
+    },
+    {
+      "id": 18,
+      "title": "마일스톤 삭제 오류",
+      "isOpen": false,
+      "author": {
+        "id": 101,
+        "nickname": "devchan"
+      },
+      "assignees": [
+        {
+          "id": 102,
+          "nickname": "alice",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 1,
+          "name": "bug",
+          "color": "#ff0000"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 5,
+        "name": "v1.0 릴리즈"
+      },
+      "lastModifiedAt": "2025-05-31T20:00:00Z"
+    },
+    {
+      "id": 55,
+      "title": "마일스톤 진행률 자동 계산 오류",
+      "content": "마일스톤에 연결된 이슈들의 상태가 변경될 때 진행률이 정확하게 업데이트되지 않는 문제가 있습니다.",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 1,
+          "name": "bug",
+          "color": "#FF0000"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "name": "v1.0",
+        "description": "1차 출시",
+        "endDate": "2025-06-30",
+        "processingRate": 0,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-01T14:20:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 8,
+          "content": "진행률 계산 로직에 문제가 있네요. PR 작성하겠습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-06-01T15:30:00"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "title": "페이지네이션 구현",
+      "content": "이슈 목록이 길어질 경우를 대비해 페이지네이션 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-02T09:00:00",
+      "issueFileUrl": "https://dummy.local/files/pagination-design.png",
+      "comments": []
+    },
+    {
+      "id": 20,
+      "title": "이슈 필터링 기능 개선",
+      "content": "현재 구현된 필터링 기능이 직관적이지 않아 사용자들이 어려움을 겪고 있습니다.",
+      "isOpen": false,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-03T10:15:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 9,
+          "content": "필터 UI 개선안을 작성해보겠습니다.",
+          "issueFileUrl": "https://dummy.local/files/filter-ui-proposal.png",
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-06-03T11:30:00"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "title": "코드 스플리팅 적용",
+      "content": "초기 로딩 시간이 너무 깁니다. 코드 스플리팅을 통해 성능을 개선해야 합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 4,
+          "name": "performance",
+          "color": "#0000FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "name": "v1.0",
+        "description": "1차 출시",
+        "endDate": "2025-06-30",
+        "processingRate": 0,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-04T13:45:00",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 22,
+      "title": "웹 접근성 가이드라인 준수",
+      "content": "스크린 리더 사용자를 위한 ARIA 속성 추가 및 키보드 네비게이션 개선이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-05T15:20:00",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 23,
+      "title": "이슈 템플릿 기능 추가",
+      "content": "자주 사용되는 이슈 형식을 템플릿으로 저장하고 불러올 수 있는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-06T16:40:00",
+      "issueFileUrl": "https://dummy.local/files/issue-template-mockup.png",
+      "comments": [
+        {
+          "commentId": 10,
+          "content": "템플릿 관리 UI 초안입니다.",
+          "issueFileUrl": "https://dummy.local/files/template-ui-draft.png",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-06T17:30:00"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "title": "마크다운 에디터 버그 수정",
+      "content": "코드 블록 내부에서 줄바꿈이 제대로 적용되지 않는 문제가 있습니다.",
+      "isOpen": false,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 1,
+          "name": "bug",
+          "color": "#FF0000"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "name": "v1.0",
+        "description": "1차 출시",
+        "endDate": "2025-06-30",
+        "processingRate": 0,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-07T09:10:00",
+      "issueFileUrl": "https://dummy.local/files/markdown-bug.gif",
+      "comments": []
+    },
+    {
+      "id": 25,
+      "title": "이슈 자동 분류 시스템",
+      "content": "AI를 활용하여 이슈의 내용을 분석하고 적절한 라벨을 자동으로 추천하는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 6,
+          "name": "discussion",
+          "color": "#FF00FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-08T11:25:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 11,
+          "content": "OpenAI API를 활용한 프로토타입을 만들어보겠습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-06-08T14:30:00"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "title": "실시간 알림 시스템 구현",
+      "content": "이슈가 생성되거나 코멘트가 달릴 때 실시간으로 알림을 받을 수 있는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-09T13:50:00",
+      "issueFileUrl": "https://dummy.local/files/notification-design.png",
+      "comments": []
+    },
+    {
+      "id": 27,
+      "title": "이슈 통계 대시보드",
+      "content": "이슈 처리 현황, 해결 시간, 담당자별 통계 등을 시각화하여 보여주는 대시보드가 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        },
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-10T15:20:00",
+      "issueFileUrl": "https://dummy.local/files/dashboard-mockup.png",
+      "comments": [
+        {
+          "commentId": 12,
+          "content": "Chart.js를 사용한 프로토타입입니다.",
+          "issueFileUrl": "https://dummy.local/files/dashboard-prototype.png",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-10T16:45:00"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "title": "이슈 히스토리 추적 기능",
+      "content": "이슈의 상태 변경, 담당자 변경 등의 히스토리를 시간순으로 확인할 수 있는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-11T10:00:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 13,
+          "content": "타임라인 형태의 UI를 제안합니다.",
+          "issueFileUrl": "https://dummy.local/files/timeline-ui.png",
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-06-11T11:20:00"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "title": "이슈 관련 문서 연동",
+      "content": "이슈와 관련된 기술 문서나 회의록을 연결할 수 있는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 6,
+          "name": "discussion",
+          "color": "#FF00FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-12T14:30:00",
+      "issueFileUrl": "https://dummy.local/files/doc-integration.png",
+      "comments": [
+        {
+          "commentId": 201,
+          "content": "Confluence API 연동 방식을 제안합니다.",
+          "issueFileUrl": "https://dummy.local/files/confluence-integration.md",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-06-12T15:45:00"
+        },
+        {
+          "commentId": 202,
+          "content": "노션 API도 함께 고려해보면 좋을 것 같습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-12T16:20:00"
+        },
+        {
+          "commentId": 203,
+          "content": "문서 동기화 주기와 권한 관리에 대한 논의가 필요해 보입니다.",
+          "issueFileUrl": null,
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-06-13T09:10:00"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "title": "이슈 중복 검사 기능",
+      "content": "새로운 이슈 생성 시 유사한 이슈가 있는지 자동으로 검사하는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-13T16:45:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 14,
+          "content": "자연어 처리 API를 활용한 구현 방안을 검토 중입니다.",
+          "issueFileUrl": null,
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-13T17:30:00"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "title": "이슈 마일스톤 자동 추천",
+      "content": "이슈의 내용과 라벨을 기반으로 적절한 마일스톤을 자동으로 추천하는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-14T09:15:00",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 32,
+      "title": "이슈 담당자 워크로드 시각화",
+      "content": "각 담당자별 할당된 이슈의 수와 예상 작업 시간을 시각화하여 보여주는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-15T11:30:00",
+      "issueFileUrl": "https://dummy.local/files/workload-visualization.png",
+      "comments": [
+        {
+          "commentId": 15,
+          "content": "히트맵 형태의 시각화를 제안합니다.",
+          "issueFileUrl": "https://dummy.local/files/heatmap-mockup.png",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-15T13:45:00"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "title": "이슈 우선순위 자동화",
+      "content": "이슈의 긴급도, 영향도, 난이도 등을 고려하여 우선순위를 자동으로 계산하는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        },
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 2,
+          "name": "high-priority",
+          "color": "#FF9900"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-16T14:20:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 16,
+          "content": "우선순위 계산 알고리즘 초안입니다.",
+          "issueFileUrl": "https://dummy.local/files/priority-algorithm.md",
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-06-16T16:30:00"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "이슈 관련 코드 리뷰 연동",
+      "content": "이슈와 관련된 PR의 코드 리뷰 내용을 이슈 페이지에서 바로 확인할 수 있는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-17T09:40:00",
+      "issueFileUrl": "https://dummy.local/files/code-review-integration.png",
+      "comments": []
+    },
+    {
+      "id": 35,
+      "title": "이슈 해결 시간 예측",
+      "content": "과거 유사 이슈들의 해결 시간을 분석하여 현재 이슈의 예상 해결 시간을 예측하는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 4,
+          "name": "performance",
+          "color": "#0000FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-18T11:25:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 17,
+          "content": "머신러닝 모델을 활용한 예측 시스템을 구상 중입니다.",
+          "issueFileUrl": null,
+          "authorNickname": "이영희",
+          "lastModifiedAt": "2025-06-18T14:30:00"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "title": "이슈 관련 테스트 케이스 관리",
+      "content": "이슈와 관련된 테스트 케이스를 생성하고 관리할 수 있는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        },
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 7,
+          "name": "test",
+          "color": "#CCCCCC"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "name": "v1.0",
+        "description": "1차 출시",
+        "endDate": "2025-06-30",
+        "processingRate": 0,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-19T15:50:00",
+      "issueFileUrl": "https://dummy.local/files/test-case-management.png",
+      "comments": [
+        {
+          "commentId": 18,
+          "content": "Jest를 활용한 테스트 자동화 방안을 제안합니다.",
+          "issueFileUrl": "https://dummy.local/files/test-automation.md",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-06-19T16:45:00"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "title": "이슈 의존성 관리",
+      "content": "이슈 간의 의존 관계를 설정하고 시각화하는 기능이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-20T10:15:00",
+      "issueFileUrl": "https://dummy.local/files/dependency-graph.png",
+      "comments": [
+        {
+          "commentId": 19,
+          "content": "D3.js를 활용한 의존성 그래프 구현 방안입니다.",
+          "issueFileUrl": "https://dummy.local/files/d3-implementation.md",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-06-20T11:30:00"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "title": "이슈 태그 시스템 개선",
+      "content": "현재의 라벨 시스템을 확장하여 계층적 태그 구조를 지원해야 합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-21T13:40:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 301,
+          "content": "태그 계층 구조 설계안을 공유드립니다.",
+          "issueFileUrl": "https://dummy.local/files/tag-hierarchy.png",
+          "authorNickname": "이영희",
+          "lastModifiedAt": "2025-06-21T14:50:00"
+        },
+        {
+          "commentId": 302,
+          "content": "태그 그룹핑 기능도 함께 구현하면 좋을 것 같습니다.",
+          "issueFileUrl": null,
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-06-21T15:30:00"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "title": "이슈 보드 커스터마이징",
+      "content": "사용자가 이슈 보드의 컬럼과 필터를 자유롭게 커스터마이징할 수 있는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        },
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-22T16:20:00",
+      "issueFileUrl": "https://dummy.local/files/board-customization.png",
+      "comments": [
+        {
+          "commentId": 20,
+          "content": "드래그 앤 드롭으로 컬럼을 재배치하는 기능을 구현했습니다.",
+          "issueFileUrl": "https://dummy.local/files/column-dnd.gif",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-22T17:45:00"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "title": "이슈 템플릿 버전 관리",
+      "content": "이슈 템플릿의 버전을 관리하고 이전 버전으로 롤백할 수 있는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-23T09:30:00",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 41,
+      "title": "이슈 메타데이터 확장",
+      "content": "이슈에 커스텀 필드를 추가할 수 있는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-24T11:45:00",
+      "issueFileUrl": "https://dummy.local/files/custom-fields.png",
+      "comments": [
+        {
+          "commentId": 21,
+          "content": "JSON 스키마 기반의 커스텀 필드 정의 방식을 제안합니다.-> 수정 테스트",
+          "issueFileUrl": "https://dummy.local/files/schema-proposal.md",
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-05-30T02:38:59.967Z"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "title": "이슈 워크플로우 자동화",
+      "content": "특정 조건이 충족되면 자동으로 이슈의 상태나 담당자가 변경되는 워크플로우 자동화 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        },
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-25T14:10:00",
+      "issueFileUrl": "https://dummy.local/files/workflow-automation.png",
+      "comments": [
+        {
+          "commentId": 22,
+          "content": "Node-RED 스타일의 워크플로우 에디터를 구현해보겠습니다.",
+          "issueFileUrl": "https://dummy.local/files/workflow-editor.png",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-06-25T15:30:00"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "title": "이슈 보드 성능 최적화",
+      "content": "대량의 이슈가 있을 때 보드 렌더링 성능이 저하되는 문제를 해결해야 합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 4,
+          "name": "performance",
+          "color": "#0000FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "name": "v1.0",
+        "description": "1차 출시",
+        "endDate": "2025-06-30",
+        "processingRate": 0,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-26T10:20:00",
+      "issueFileUrl": "https://dummy.local/files/performance-analysis.png",
+      "comments": [
+        {
+          "commentId": 23,
+          "content": "가상 스크롤링 적용으로 초기 렌더링 시간을 50% 단축했습니다.",
+          "issueFileUrl": "https://dummy.local/files/virtual-scroll-demo.gif",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-26T11:45:00"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "title": "이슈 검색 필터 개선",
+      "content": "고급 검색 필터와 저장된 검색 쿼리 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-27T13:35:00",
+      "issueFileUrl": "https://dummy.local/files/advanced-search.png",
+      "comments": []
+    },
+    {
+      "id": 45,
+      "title": "이슈 마일스톤 간트 차트",
+      "content": "마일스톤별 이슈 진행 상황을 간트 차트로 시각화하는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        },
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-28T15:50:00",
+      "issueFileUrl": "https://dummy.local/files/gantt-chart-design.png",
+      "comments": [
+        {
+          "commentId": 24,
+          "content": "dhtmlxGantt 라이브러리를 사용한 프로토타입입니다.",
+          "issueFileUrl": "https://dummy.local/files/gantt-prototype.png",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-06-28T16:40:00"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "title": "이슈 보드 다크 모드",
+      "content": "시스템 설정에 따라 자동으로 다크 모드가 적용되는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-29T09:15:00",
+      "issueFileUrl": "https://dummy.local/files/dark-mode-preview.png",
+      "comments": [
+        {
+          "commentId": 25,
+          "content": "CSS 변수를 활용한 테마 시스템을 구현했습니다.",
+          "issueFileUrl": "https://dummy.local/files/theme-implementation.md",
+          "authorNickname": "이영희",
+          "lastModifiedAt": "2025-06-29T10:30:00"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "title": "이슈 보드 접근성 개선",
+      "content": "스크린 리더 지원과 키보드 네비게이션을 개선해야 합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-06-30T11:40:00",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 48,
+      "title": "이슈 보드 국제화",
+      "content": "다국어 지원을 위한 i18n 시스템 구축이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        },
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-01T14:20:00",
+      "issueFileUrl": "https://dummy.local/files/i18n-structure.png",
+      "comments": [
+        {
+          "commentId": 26,
+          "content": "react-i18next 설정과 번역 파일 구조를 정리했습니다.",
+          "issueFileUrl": "https://dummy.local/files/i18n-setup.md",
+          "authorNickname": "홍길동",
+          "lastModifiedAt": "2025-07-01T15:45:00"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "title": "이슈 보드 오프라인 지원",
+      "content": "오프라인 상태에서도 기본적인 이슈 조회와 수정이 가능하도록 PWA 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-02T09:30:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 27,
+          "content": "IndexedDB를 활용한 로컬 캐싱 전략을 수립했습니다.",
+          "issueFileUrl": "https://dummy.local/files/offline-strategy.md",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-07-02T10:45:00"
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "title": "이슈 보드 모바일 최적화",
+      "content": "모바일 환경에서의 사용성을 개선하고 반응형 디자인을 적용해야 합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-03T13:20:00",
+      "issueFileUrl": "https://dummy.local/files/mobile-mockup.png",
+      "comments": []
+    },
+    {
+      "id": 51,
+      "title": "이슈 보드 데이터 백업",
+      "content": "주기적으로 이슈 데이터를 백업하고 복원할 수 있는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        },
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-04T15:40:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 28,
+          "content": "JSON 형식의 데이터 내보내기/가져오기 기능을 구현했습니다.",
+          "issueFileUrl": "https://dummy.local/files/backup-restore-demo.gif",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-07-04T16:55:00"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "title": "이슈 보드 알림 시스템",
+      "content": "이슈 상태 변경이나 새로운 코멘트가 있을 때 브라우저 알림을 보내는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-05T10:15:00",
+      "issueFileUrl": "https://dummy.local/files/notification-flow.png",
+      "comments": [
+        {
+          "commentId": 29,
+          "content": "Web Push API 구현 예시입니다.",
+          "issueFileUrl": "https://dummy.local/files/push-api-demo.gif",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-07-05T11:30:00"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "title": "이슈 보드 단축키 지원",
+      "content": "주요 기능들에 대한 키보드 단축키를 지원해야 합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-06T14:25:00",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 54,
+      "title": "이슈 보드 데이터 내보내기",
+      "content": "이슈 데이터를 CSV나 Excel 형식으로 내보낼 수 있는 기능이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        },
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-07T16:40:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 30,
+          "content": "SheetJS 라이브러리를 활용한 구현 방안입니다.",
+          "issueFileUrl": "https://dummy.local/files/export-example.xlsx",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-07-07T17:55:00"
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "title": "이슈 보드 보안 강화",
+      "content": "HTTPS 적용 및 XSS 방어 로직 구현이 필요합니다.",
+      "isOpen": false,
+      "author": {
+        "id": 3,
+        "nickname": "김철수",
+        "profileImageUrl": "https://dummy.local/profile/user2.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 6,
+          "name": "security",
+          "color": "#800000"
+        },
+        {
+          "labelId": 2,
+          "name": "high-priority",
+          "color": "#FF9900"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "name": "v1.0",
+        "description": "1차 출시",
+        "endDate": "2025-06-30",
+        "processingRate": 0,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-08T09:20:00",
+      "issueFileUrl": null,
+      "comments": [
+        {
+          "commentId": 31,
+          "content": "보안 취약점 분석 보고서입니다.",
+          "issueFileUrl": "https://dummy.local/files/security-report.pdf",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-07-08T10:35:00"
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "title": "이슈 보드 성능 모니터링",
+      "content": "프론트엔드 성능 메트릭을 수집하고 분석하는 시스템이 필요합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 4,
+        "nickname": "이영희",
+        "profileImageUrl": "https://dummy.local/profile/user3.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 4,
+          "name": "performance",
+          "color": "#0000FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-09T13:45:00",
+      "issueFileUrl": "https://dummy.local/files/performance-metrics.png",
+      "comments": []
+    },
+    {
+      "id": 57,
+      "title": "이슈 보드 에러 처리 개선",
+      "content": "사용자 친화적인 에러 메시지와 복구 방안을 제공해야 합니다.",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 3,
+          "nickname": "김철수",
+          "profileImageUrl": "https://dummy.local/profile/user2.png"
+        },
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
+        "isOpen": true
+      },
+      "lastModifiedAt": "2025-07-10T15:10:00",
+      "issueFileUrl": "https://dummy.local/files/error-handling-flow.png",
+      "comments": [
+        {
+          "commentId": 32,
+          "content": "에러 바운더리 컴포넌트를 구현했습니다.",
+          "issueFileUrl": "https://dummy.local/files/error-boundary-demo.gif",
+          "authorNickname": "김철수",
+          "lastModifiedAt": "2025-07-10T16:25:00"
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "title": "이슈 작성 테스트",
+      "content": "테스트 입니다",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-05-30T02:32:41.057Z"
+    },
+    {
+      "id": 59,
+      "title": "사이드바 테스트",
+      "content": "사이드바 테스트",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 101,
+          "nickname": "devchan",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        }
+      ],
+      "labels": [],
+      "milestone": {
+        "milestoneId": 1,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:10:39.206Z"
+    },
+    {
+      "id": 60,
+      "title": "이슈 등록 테스트",
+      "content": "좋네요^^",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 106,
+          "nickname": "eve",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 7,
+          "name": "test",
+          "color": "#CCCCCC",
+          "description": "테스트 관련"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:41:43.477Z"
+    },
+    {
+      "id": 61,
+      "title": "ㄴㄴㅁㅇ",
+      "content": "ㅁㄴㅇ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [],
+      "milestone": {
+        "milestoneId": 2,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:42:02.253Z"
+    },
+    {
+      "id": 62,
+      "title": "ㅁㄴㅇ",
+      "content": "ㅁㄴㅇ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [],
+      "milestone": {
+        "milestoneId": 1,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:42:51.865Z"
+    },
+    {
+      "id": 63,
+      "title": "ㅁㄴㅇ",
+      "content": "ㅁㄴㅇ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 102,
+          "nickname": "alice",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        },
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 7,
+          "name": "test",
+          "color": "#CCCCCC"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:45:24.513Z"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "nickname": "devchan",
+      "profileImageUrl": "https://dummy.local/profile/devchan.png"
+    },
+    {
+      "id": 2,
+      "nickname": "홍길동",
+      "profileImageUrl": "https://dummy.local/profile/user1.png"
+    },
+    {
+      "id": 3,
+      "nickname": "김철수",
+      "profileImageUrl": "https://dummy.local/profile/user2.png"
+    },
+    {
+      "id": 4,
+      "nickname": "이영희",
+      "profileImageUrl": "https://dummy.local/profile/user3.png"
+    },
+    {
+      "id": 101,
+      "nickname": "devchan",
+      "email": "devchan@example.com",
+      "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+    },
+    {
+      "id": 102,
+      "nickname": "alice",
+      "email": "alice@example.com",
+      "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+    },
+    {
+      "id": 103,
+      "nickname": "bob",
+      "email": "bob@example.com",
+      "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
+    },
+    {
+      "id": 104,
+      "nickname": "charlie",
+      "email": "charlie@example.com",
+      "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
+    },
+    {
+      "id": 105,
+      "nickname": "david",
+      "email": "david@example.com",
+      "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
+    },
+    {
+      "id": 106,
+      "nickname": "eve",
+      "email": "eve@example.com",
+      "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
+    }
+  ],
+  "labels": [
+    {
+      "labelId": 1,
+      "name": "bug",
+      "color": "#FF0000",
+      "description": "버그 관련 이슈"
+    },
+    {
+      "labelId": 2,
+      "name": "high-priority",
+      "color": "#FF9900",
+      "description": "높은 우선순위"
+    },
+    {
+      "labelId": 3,
+      "name": "enhancement",
+      "color": "#0366D6",
+      "description": "기능 개선 요청"
+    },
+    {
+      "labelId": 4,
+      "name": "performance",
+      "color": "#0000FF",
+      "description": "성능 관련"
+    },
+    {
+      "labelId": 5,
+      "name": "feature",
+      "color": "#00FF00",
+      "description": "새로운 기능"
+    },
+    {
+      "labelId": 6,
+      "name": "discussion",
+      "color": "#FF00FF",
+      "description": "논의 필요"
+    },
+    {
+      "labelId": 7,
+      "name": "test",
+      "color": "#CCCCCC",
+      "description": "테스트 관련"
+    }
+  ],
+  "milestones": [
+    {
+      "milestoneId": 1,
+      "name": "v1.0",
+      "description": "1차 출시",
+      "endDate": "2025-06-30",
+      "processingRate": 0,
+      "isOpen": true
+    },
+    {
+      "milestoneId": 2,
+      "name": "v1.1",
+      "description": "UI/UX 개선",
+      "endDate": "2025-07-31",
+      "processingRate": 30,
+      "isOpen": true
+    },
+    {
+      "milestoneId": 3,
+      "name": "v2.0",
+      "description": "메이저 업데이트",
+      "endDate": "2025-12-31",
+      "processingRate": 10,
+      "isOpen": true
+    }
+  ]
+}
