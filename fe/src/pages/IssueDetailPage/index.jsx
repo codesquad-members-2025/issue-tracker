@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import DisplayComment from '@/units/issuePage/DisplayComment';
 import SideBar from '@/units/SideBar';
+import NewComment from '@/units/issuePage/NewComment';
 
 export default function IssueDetailPage() {
   const { response, fetchData, isLoading } = useDataFetch({ fetchType: '이슈 상세 페이지' });
@@ -20,6 +21,9 @@ export default function IssueDetailPage() {
   const shouldRefetch = useRef(false);
   const initIssueDetailStore = useIssueDetailStore((s) => s.initStore);
   const comments = useIssueDetailStore((s) => s.comments);
+  const issue = useIssueDetailStore((s) => s.issue);
+
+  const commentObj = {}; // ------------------------> 따로 구현해야한다....-> 메인 코멘트 전용
 
   async function issueFetchHandler(method, option) {
     const fetchOption = getOptionWithToken(option);
@@ -86,6 +90,7 @@ export default function IssueDetailPage() {
     <Container>
       <DetailIssueHeader issueFetchHandler={issueFetchHandler} />
       <Kanban>
+        {/* <DisplayComment commentObj={} commentPatchHandler={}/> */}
         <CommentsWrapper>
           {comments.map((comment) => {
             return (
@@ -96,6 +101,7 @@ export default function IssueDetailPage() {
               />
             );
           })}
+          <NewComment />
         </CommentsWrapper>
         <SideBar pageType={'detail'} issueFetchHandler={issueFetchHandler} />
       </Kanban>

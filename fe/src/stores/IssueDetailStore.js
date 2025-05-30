@@ -103,6 +103,12 @@ const useIssueDetailStore = create(
       });
     },
 
+    addNewComment: (value) => {
+      set((s) => {
+        s.newComment.content = value;
+      });
+    },
+
     //상세 이슈페이지의 코멘트 관련 액션
     addOrEditComment: (value, commentId = null) => {
       set((state) => {
