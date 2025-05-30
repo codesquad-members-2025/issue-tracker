@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "VITE_API_BASE_URL=http://${{ secrets.EC2_HOST }}:8080" > fe/.env.production
           echo "VITE_TEST_URL=http://testserver.com:5001" >> fe/.env.production
-      
+
 
       - name: 🧱 Build Frontend
         run: |
