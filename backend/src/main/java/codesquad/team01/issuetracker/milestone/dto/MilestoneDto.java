@@ -46,7 +46,11 @@ public class MilestoneDto {
 	}
 
 	// 마일스톤 목록 조회용 응답 DTO
-	public record
+	public record MilestoneListItem(
+		String title,
+		String description,
+
+	)
 
 	// 목록의 구성요소 DTO
 	public record ListResponse(
