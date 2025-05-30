@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - BE_Johnnie_newLogic_week3
 
 jobs:
   deploy:
