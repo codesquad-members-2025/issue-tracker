@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class IssueQueryDto {
   private Long id;
   private String title;
-  private boolean isOpen;
+  private Boolean isOpen;
   private Instant createdAt;
   private Instant updatedAt;
 }

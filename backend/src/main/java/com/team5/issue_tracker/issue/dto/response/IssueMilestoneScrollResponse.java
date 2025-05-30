@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IssueMilestonePageResponse {
-  private Long total;
-  private Long page;
-  private Long perPage;
+public class IssueMilestoneScrollResponse {
+  private Boolean hasNext;
+  private String nextCursor;
   private List<MilestoneSummaryResponse> milestones;
 }

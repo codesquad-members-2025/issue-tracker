@@ -19,9 +19,18 @@ import lombok.RequiredArgsConstructor;
 public class LabelQueryRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public List<LabelSummaryResponse> findIssueLabels() {
-    String lableSql = "SELECT id, name, text_color, background_color FROM label";
-    return jdbcTemplate.query(lableSql, (rs, rowNum) ->
+  public List<LabelSummaryResponse> findIssueLabels(String cursor, Integer limit) {
+    String lableSql = """
+        SELECT id, name, text_color, background_color FROM label
+        WHERE (:cursor IS NULL OR name > :cursor)
+        ORDER BY name ASC
+        LIMIT :limitPlusOne;
+        """;
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("cursor", cursor);
+    params.addValue("limitPlusOne", limit + 1);
+
+    return jdbcTemplate.query(lableSql, params, (rs, rowNum) ->
         new LabelSummaryResponse(
             rs.getLong("id"),
             rs.getString("name"),
@@ -31,9 +40,18 @@ public class LabelQueryRepository {
     );
   }
 
-  public List<LabelResponse> findAllLabels() {
-    String lableSql = "SELECT id, name, description, text_color, background_color FROM label";
-    return jdbcTemplate.query(lableSql, (rs, rowNum) ->
+  public List<LabelResponse> findLabels(Integer page, Integer perPage) {
+    String lableSql =
+        "SELECT id, name, description, text_color, background_color FROM label LIMIT :limit OFFSET :offset";
+
+    MapSqlParameterSource params = new MapSqlParameterSource();
+
+    int limit = perPage;
+    int offset = (page - 1) * perPage;
+    params.addValue("limit", limit);
+    params.addValue("offset", offset);
+
+    return jdbcTemplate.query(lableSql, params, (rs, rowNum) ->
         new LabelResponse(
             rs.getLong("id"),
             rs.getString("name"),
@@ -44,7 +62,27 @@ public class LabelQueryRepository {
     );
   }
 
-  public Map<Long, List<LabelSummaryResponse>> getLabelListByIssueIds(List<Long> issueIds) {
+  public List<LabelResponse> getLabelsByIssueId(Long issueId) {
+    String sql = """
+        SELECT 
+            l.id, l.name, l.description, l.text_color, l.background_color
+        FROM issue_label il
+        JOIN label l ON il.label_id = l.id
+        WHERE il.issue_id = :issueId
+        """;
+
+    MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
+
+    return jdbcTemplate.query(sql, params, (rs, rowNum) -> new LabelResponse(
+        rs.getLong("id"),
+        rs.getString("name"),
+        rs.getString("description"),
+        rs.getString("text_color"),
+        rs.getString("background_color")
+    ));
+  }
+
+  public Map<Long, List<LabelResponse>> getLabelListByIssueIds(List<Long> issueIds) {
     if (issueIds == null || issueIds.isEmpty()) {
       return Collections.emptyMap(); // 빈 결과 반환
     }
@@ -54,6 +92,7 @@ public class LabelQueryRepository {
             i.id AS issue_id,
             l.id AS label_id,
             l.name AS label_name,
+            l.description AS label_description,
             l.text_color AS label_text_color,
             l.background_color AS label_background_color
         FROM issue i
@@ -69,9 +108,10 @@ public class LabelQueryRepository {
     return rows.stream()
         .collect(Collectors.groupingBy(
             row -> ((Number) row.get("issue_id")).longValue(),
-            Collectors.mapping(row -> new LabelSummaryResponse(
+            Collectors.mapping(row -> new LabelResponse(
                 ((Number) row.get("label_id")).longValue(),
                 (String) row.get("label_name"),
+                (String) row.get("label_description"),
                 (String) row.get("label_text_color"),
                 (String) row.get("label_background_color")
             ), Collectors.toList())

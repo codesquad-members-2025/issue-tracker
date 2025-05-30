@@ -20,28 +20,14 @@ public class IssueSearchRequest {
 
   public String toQueryString() {
     StringBuilder queryString = new StringBuilder();
-    if (isOpen != null) {
-      queryString.append("is:").append(isOpen ? "open" : "closed").append(" ");
-    }
 
-    if (assigneeName != null && !assigneeName.isEmpty()) {
-      queryString.append("assignee:").append(quoteIfContainsWhitespace(assigneeName)).append(" ");
+    appendCondition(queryString, "is", isOpen != null ? (isOpen ? "open" : "closed") : null);
+    appendCondition(queryString, "assignee", assigneeName);
+    for (String labelName : labelNames) {
+      appendCondition(queryString, "label", labelName);
     }
-
-    if (labelNames != null && !labelNames.isEmpty()) {
-      for (String labelName : labelNames) {
-        queryString.append("label:").append(quoteIfContainsWhitespace(labelName)).append(" ");
-      }
-    }
-
-    if (milestoneName != null && !milestoneName.isEmpty()) {
-      queryString.append("milestone:").append(quoteIfContainsWhitespace(milestoneName)).append(" ");
-    }
-
-    if (authorName != null && !authorName.isEmpty()) {
-      queryString.append("author:").append(quoteIfContainsWhitespace(authorName)).append(" ");
-    }
-
+    appendCondition(queryString, "milestone", milestoneName);
+    appendCondition(queryString, "author", authorName);
     return queryString.toString().trim();
   }
 
@@ -50,5 +36,11 @@ public class IssueSearchRequest {
       return "\"" + value + "\"";
     }
     return value;
+  }
+
+  private void appendCondition(StringBuilder queryString, String key, String value) {
+    if (value != null && !value.isEmpty()) {
+      queryString.append(key).append(":").append(quoteIfContainsWhitespace(value)).append(" ");
+    }
   }
 }

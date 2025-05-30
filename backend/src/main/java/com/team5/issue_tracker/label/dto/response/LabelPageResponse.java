@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LabelPageResponse {
-  private Long total;
-  private Long page;
-  private Long perPage;
+  private Integer total;
+  private Integer page;
+  private Integer perPage;
   private List<LabelResponse> labels;
 }

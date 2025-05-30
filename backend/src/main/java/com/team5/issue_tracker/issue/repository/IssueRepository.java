@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface IssueRepository extends CrudRepository<Issue, Long> {
 
   Optional<Issue> findByTitle(String title);
+
+  void deleteById(Long id);
 }

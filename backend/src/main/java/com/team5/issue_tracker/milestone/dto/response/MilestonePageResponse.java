@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MilestonePageResponse {
-  private Long total;
-  private Long page;
-  private Long perPage;
+  private Integer total;
+  private Integer page;
+  private Integer perPage;
   private Long OpenCount;
   private Long ClosedCount;
   private List<MilestoneResponse> milestones;
