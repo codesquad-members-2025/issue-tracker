@@ -17,7 +17,7 @@ public class Issue {
     private Long milestoneId;
     private Boolean isOpen;
     private LocalDateTime lastModifiedAt;
-    private String imageUrl; // -> issueFileUrl
+    private String issueFileUrl;
 }
 
 

@@ -27,19 +27,23 @@ export default function StatusEditDropDown({ onPatchSuccess }) {
   const selectedIdArr = getSelectedId(checkBoxEntry);
   const patchRef = useRef(false);
   const location = useLocation();
-  const optionObject = {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ id: selectedIdArr }),
-  };
+
+  function getOptionObject(isOpen) {
+    const optionObject = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: selectedIdArr, isOpen: isOpen }),
+    };
+    return optionObject;
+  }
   const items = [
     {
       label: '선택한 이슈 열기',
       isSelected: true,
       onClick: () => {
-        fetchData(TOGGLE_STATUS_URL, getOptionWithToken(optionObject, accessToken));
+        fetchData(TOGGLE_STATUS_URL, getOptionWithToken(getOptionObject(true), accessToken));
         patchRef.current = true;
       },
     },
@@ -47,7 +51,7 @@ export default function StatusEditDropDown({ onPatchSuccess }) {
       label: '선택한 이슈 닫기',
       isSelected: true,
       onClick: () => {
-        fetchData(TOGGLE_STATUS_URL, getOptionWithToken(optionObject, accessToken));
+        fetchData(TOGGLE_STATUS_URL, getOptionWithToken(getOptionObject(false), accessToken));
         patchRef.current = true;
       },
     },

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { IssueBadge, IssueNumber } from '@/base-ui/issueListPage/issueItem';
 import CheckBox from '@/base-ui/utils/CheckBox';
-import IssueTitle from '@/base-ui/utils/IssueTitle';
+import { IssueTitle } from '@/base-ui/utils/IssueTitle';
 import Label from '@/base-ui/utils/Label';
 import MileStoneTitle from '@/base-ui/utils/MileStoneTitle';
 import AuthorInform from '@/base-ui/utils/AuthorInform';
@@ -9,6 +9,7 @@ import UserAvatar from '@/base-ui/utils/UserBadge';
 import ItemLabels from './ItemLabels';
 import OverlappingAvatars from './OverlappingAvatars';
 import useCheckBoxStore from '@/stores/useCheckBoxStore';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100%;
@@ -49,10 +50,24 @@ const Information = styled.div`
   align-items: center;
 `;
 
+const ClickableTitle = styled.span`
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #3498db; // 호버시 색상
+    text-decoration: underline; // 호버시 밑줄
+  }
+
+  &:active {
+    color: #1d5fa7; // 클릭(누르고 있는 중) 색상
+  }
+`;
 export default function IssueItem({ issue }) {
   const { id, isOpen, title, labels, lastModifiedAt, author, milestone, assignees } = issue;
   const toggleCheckBox = useCheckBoxStore((state) => state.toggleCheckBox);
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
+  const navigate = useNavigate();
 
   return (
     <Container id={id}>
@@ -67,7 +82,9 @@ export default function IssueItem({ issue }) {
         <Main>
           <Header>
             <IssueBadge isOpen={isOpen} />
-            <IssueTitle title={title} />
+            <ClickableTitle onClick={() => navigate(`/${id}`)}>
+              <IssueTitle title={title} />
+            </ClickableTitle>
             <ItemLabels labels={labels} />
           </Header>
           <Information>

@@ -37,7 +37,7 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 990;
 `;
 
 const ToggleContainer = styled.div`
@@ -56,7 +56,7 @@ const MenuTriggerButton = styled.button`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 900;
 
   &::after {
     content: '';
@@ -81,12 +81,29 @@ const SubMenuWrapper = styled.div`
   align-items: center;
 `;
 
+function getFetchBody(toggleType, value) {
+  const typeMap = {
+    assignee: 'assigneeId',
+    label: 'labelId',
+    milestone: 'milestoneId',
+  };
+
+  const bodyKey = typeMap[toggleType];
+  const body = {
+    [bodyKey]: Array.isArray(value)
+      ? value.filter((selected) => selected && selected.id).map((selected) => selected.id)
+      : value.id,
+  };
+  return JSON.stringify(body);
+}
+
 //itemsArr는 객체배열을 받는다/
 export default function AddStatusToggle({
   toggleType,
   triggerButtonLabel,
   itemsArr,
   pageTypeContext = null,
+  issueFetchHandler = null,
 }) {
   const [open, setOpen] = useState(false);
   // const { toggleAssignee, toggleLabel, toggleMilestone } = useIssueDetailStore(
@@ -124,17 +141,25 @@ export default function AddStatusToggle({
   function handleCloseOverlay(context) {
     setOpen((prev) => !prev);
     if (context === 'detail') {
-      /*
-      BE 에서 API 나와야 적용 가능
-      - PATCH 할때 구조 협의 후 구현 ***TODO***      
-      - fetchData()
-      */
+      const PATCHoption = {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: getFetchBody(toggleType, selected),
+      };
+      issueFetchHandler('PATCH', PATCHoption);
     }
   }
   function handleToggle() {
     setOpen((prev) => !prev);
   }
 
+  const isEmpty = (value) => {
+    if (Array.isArray(value)) return value.length === 0;
+    if (value && typeof value === 'object') return Object.keys(value).length === 0;
+    return true; // null, undefined, '' 등도 “빈 값”으로 취급
+  };
   return (
     <ToggleContainer>
       <MenuTriggerButton $open={open} onClick={handleToggle}>
@@ -142,7 +167,7 @@ export default function AddStatusToggle({
       </MenuTriggerButton>
       <SubMenuContainer open={open}>
         <SubMenuWrapper>
-          {itemsArr.map((item) => {
+          {itemsArr?.map((item) => {
             const isSelected =
               toggleType === 'milestone'
                 ? selected?.id === item.id
@@ -161,7 +186,7 @@ export default function AddStatusToggle({
         </SubMenuWrapper>
       </SubMenuContainer>
       {open && <Overlay onClick={() => handleCloseOverlay(pageTypeContext)} />}
-      {!open && <GetSelectedElements type={toggleType} />}
+      {!open && !isEmpty(selected) && <GetSelectedElements type={toggleType} />}
     </ToggleContainer>
   );
 }

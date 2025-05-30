@@ -1,6 +1,6 @@
 /*
 itemsArr의 구조
-const itemsArr = [{ imgUrl: '~~~', label: 'XXX' isSelect: boolean }, ...];
+const itemsArr = [{ profileImageUrl: '~~~', label: 'XXX' isSelect: boolean }, ...];
 
 */
 
@@ -117,7 +117,7 @@ function getDropdownItem(title, item, selectedFilters, onClick) {
           $isSelect={selectedFilters[title] === item.id}
           onClick={() => onClick(title, item.id)}
         >
-          <img src={item.imgUrl} alt={item.nickname} />
+          <img src={item.profileImageUrl} alt={item.nickname} />
           <span>{item.nickname}</span>
         </Content>
       );
@@ -129,7 +129,7 @@ function getDropdownItem(title, item, selectedFilters, onClick) {
           $isSelect={selectedFilters[title] === item.id}
           onClick={() => onClick(title, item.id)}
         >
-          <img src={item.imgUrl} alt={item.nickname} />
+          <img src={item.profileImageUrl} alt={item.nickname} />
           <span>{item.nickname}</span>
         </Content>
       );
