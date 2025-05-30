@@ -2,14 +2,22 @@ spring:
   config:
     activate:
       on-profile: default
+  profiles:
+    group:
+      dev:
+        - application-dev
+      local:
+        - application-local
+
   sql:
     init:
       mode: always
+
   jpa:
     open-in-view: false
     hibernate:
       ddl-auto: create
-      properties:
-        hibernate:
-          format_sql: true
-          show_sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
