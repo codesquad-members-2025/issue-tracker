@@ -44,7 +44,7 @@ spring:
       on-profile: dev
 
   datasource:
-    url: jdbc:mysql://issue-tracker-db.cfwu6aug6ywt.ap-northeast-2.rds.amazonaws.com:3306/issue_tracker?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://issue-tracker-db.cfwu6aug6ywt.ap-northeast-2.rds.amazonaws.com:3306/issue_tracker_db?serverTimezone=Asia/Seoul
     username: admin
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
