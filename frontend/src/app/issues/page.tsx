@@ -20,7 +20,7 @@ const Page = styled.div`
 
 const Toolbar = styled.div`
   display: flex;
-  height: 105vh;
+  min-height: 105vh;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
@@ -112,7 +112,6 @@ export default function IssuesPage() {
   //   writer: undefined,
   // });
 
-
   const fetchFilterOptions = async () => {
     try {
       const [labelRes, milestoneRes, userRes] = await Promise.all([
@@ -120,29 +119,29 @@ export default function IssuesPage() {
         fetch("http://localhost:8080/api/v1/milestones/filters"),
         fetch("http://localhost:8080/api/v1/users/filters"),
       ]);
-  
+
       const [labelJson, milestoneJson, userJson] = await Promise.all([
         labelRes.json(),
         milestoneRes.json(),
         userRes.json(),
       ]);
-  
+
       setFilterOptions({
-        label: labelJson.data.labels.map((l) => ({
+        label: labelJson.data.labels.map((l: { id: number; name: string; color: string }) => ({
           id: String(l.id),
           label: l.name,
           color: l.color,
         })),
-        milestone: milestoneJson.data.milestones.map((m) => ({
+        milestone: milestoneJson.data.milestones.map((m: { id: number; title: string }) => ({
           id: String(m.id),
           label: m.title,
         })),
-        assignee: userJson.data.users.map((u) => ({
+        assignee: userJson.data.users.map((u: { id: number; username: string; profileImageUrl: string }) => ({
           id: String(u.id),
           label: u.username,
           iconUrl: u.profileImageUrl,
         })),
-        writer: userJson.data.users.map((u) => ({
+        writer: userJson.data.users.map((u: { id: number; username: string; profileImageUrl: string }) => ({
           id: String(u.id),
           label: u.username,
           iconUrl: u.profileImageUrl,
@@ -155,18 +154,18 @@ export default function IssuesPage() {
 
   //  필터 데이터 비동기 요청
   // const fetchFilterOptions = async () => {
-  //   try { 
+  //   try {
   //     const [labelRes, milestoneRes, userRes] = await Promise.all([
   //       fetch("http://localhost:8080/api/v1/labels/filters"),
   //       fetch("http://localhost:8080/api/v1/milestones/filters"),
   //       fetch("http://localhost:8080/api/v1/users/filters"),
   //     ]);
 
-      // const [labelJson, milestoneJson, userJson] = await Promise.all([
-      //   labelRes.json(),
-      //   milestoneRes.json(),
-      //   userRes.json(),
-      // ]);
+  // const [labelJson, milestoneJson, userJson] = await Promise.all([
+  //   labelRes.json(),
+  //   milestoneRes.json(),
+  //   userRes.json(),
+  // ]);
 
   //     const authors: { id: string; label: string }[] = [...new Set(issues.map((i) => i.writerName))].map(
   //       (name, idx) => ({
@@ -175,28 +174,28 @@ export default function IssuesPage() {
   //       })
   //     );
 
-    //   setFilterOptions({
-    //     label: labelJson.data.labels.map((l) => ({
-    //       id: String(l.id),
-    //       label: l.name,
-    //       color: l.color,
-    //     })),
-    //     milestone: milestoneJson.data.milestones.map((m) => ({
-    //       id: String(m.id),
-    //       label: m.title,
-    //     })),
-    //     assignee: userJson.data.users.map((u) => ({
-    //       id: String(u.id),
-    //       label: u.username,
-    //       iconUrl: u.profileImageUrl,
-    //     })),
-    //     writer: userJson.data.users.map((u) => ({
-    //       id: String(u.id),
-    //       label: u.username,
-    //       iconUrl: u.profileImageUrl,
-    //     })),
-    //   }
-    // );
+  //   setFilterOptions({
+  //     label: labelJson.data.labels.map((l) => ({
+  //       id: String(l.id),
+  //       label: l.name,
+  //       color: l.color,
+  //     })),
+  //     milestone: milestoneJson.data.milestones.map((m) => ({
+  //       id: String(m.id),
+  //       label: m.title,
+  //     })),
+  //     assignee: userJson.data.users.map((u) => ({
+  //       id: String(u.id),
+  //       label: u.username,
+  //       iconUrl: u.profileImageUrl,
+  //     })),
+  //     writer: userJson.data.users.map((u) => ({
+  //       id: String(u.id),
+  //       label: u.username,
+  //       iconUrl: u.profileImageUrl,
+  //     })),
+  //   }
+  // );
   //   } catch (err) {
   //     console.error(err);
   //   }
@@ -213,8 +212,8 @@ export default function IssuesPage() {
   }, []);
 
   useEffect(() => {
-  fetchFilterOptions();
-}, []);
+    fetchFilterOptions();
+  }, []);
 
   // mock 데이터를 사용하여 이슈 목록을 가져오는 함수 (삭제 예정)
   const fetchIssues = async () => {
