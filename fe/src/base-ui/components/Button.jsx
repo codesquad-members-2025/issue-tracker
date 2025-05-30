@@ -8,6 +8,7 @@ const DefaultButton = styled.button`
   box-sizing: border-box;
   display: flex;
   align-items: center;
+  justify-content: center;
   opacity: 1;
   border-radius: ${radius.medium};
   cursor: pointer;

@@ -2,6 +2,12 @@ import styled from 'styled-components';
 import { LargeContainerButton } from '@/base-ui/components/ContainerButtons';
 import { GhostButton } from '@/base-ui/components/Button';
 import { useNavigate } from 'react-router-dom';
+import useDataFetch from '@/hooks/useDataFetch';
+import useIssueDetailStore from '@/stores/IssueDetailStore';
+import { NEW_ISSUE } from '@/api/newIssue';
+import { useAuthStore } from '@/stores/authStore';
+import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
+import { useEffect } from 'react';
 
 const Container = styled.div`
   display: flex;
@@ -24,7 +30,35 @@ const ClearBtn = styled(LargeContainerButton)`
 `;
 
 export default function NewIssueFooter({ isValid }) {
+  const { response, isLoading, fetchData } = useDataFetch({ fetchType: 'New_Issue' });
+  const token = useAuthStore((s) => s.accessToken);
+  const issue = useIssueDetailStore((s) => s.issue);
+  const assignees = useIssueDetailStore((s) => s.assignees);
+  const labels = useIssueDetailStore((s) => s.labels);
+  const milestone = useIssueDetailStore((s) => s.milestone);
   const navigator = useNavigate();
+  const POSToption = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title: issue.title,
+      content: issue.content,
+      assigneeIds: assignees.map((n) => n.id),
+      labelIds: labels.map((n) => n.id),
+      milestoneId: milestone.id,
+    }),
+  };
+
+  function submitHandler() {
+    fetchData(NEW_ISSUE, getOptionWithToken(POSToption, token));
+  }
+
+  useEffect(() => {
+    if (!response?.data?.issue?.issueId) return;
+    navigator(`/${response.data.issue.issueId}`);
+  }, [response]);
   return (
     <Container>
       <Wrapper>
@@ -46,7 +80,9 @@ export default function NewIssueFooter({ isValid }) {
           </svg>
           <span>작성취소</span>
         </GhostButton>
-        <ClearBtn disabled={!isValid}>완료</ClearBtn>
+        <ClearBtn onClick={submitHandler} disabled={!isValid}>
+          완료
+        </ClearBtn>
       </Wrapper>
     </Container>
   );

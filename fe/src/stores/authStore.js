@@ -1,5 +1,5 @@
 /*
-로그인 ID (nickName)
+로그인 ID (nickname)
 비밀번호
 devchan - 1234
 alice - 1234

@@ -37,8 +37,8 @@ export default function OverlappingAvatars({ avatars, maxVisible = 3 }) {
     <>
       {avatars && (
         <AvatarGroup>
-          {visibleAvatars.map(({ profileImageUrl, nickName }, index) => (
-            <Avatar key={index} src={profileImageUrl} alt={`avatar-${nickName}`} />
+          {visibleAvatars.map(({ profileImageUrl, nickname }, index) => (
+            <Avatar key={index} src={profileImageUrl} alt={`avatar-${nickname}`} />
           ))}
           {overflowCount > 0 && <OverflowBadge>+{overflowCount}</OverflowBadge>}
         </AvatarGroup>

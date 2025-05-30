@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import NewIssueTile from '@/base-ui/IssuePage/NewIssueTile';
 import SideBar from '@/units/SideBar';
-import UserAvatar from '@/base-ui/utils/UserBadge';
+import UserAvatar from '@/base-ui/utils/UserAvatar';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import NewIssueInputForm from '@/units/issuePage/NewIssueInputForm';
 import { useAuthStore } from '@/stores/authStore';
@@ -23,6 +23,8 @@ const Main = styled.div`
 `;
 
 export default function NewIssuePage() {
+  const profileImageUrl = useAuthStore((s) => s.profileImageUrl);
+  const accessToken = useAuthStore((s) => s.accessToken);
   const titleText = '새로운 이슈 작성';
 
   //🐛 -> 리렌더링 될때마다 계속해서 커스텀 훅의 초깃값이 변함. -> 유효성 검사 불가.
@@ -34,6 +36,7 @@ export default function NewIssuePage() {
     <Body>
       <NewIssueTile title={titleText} />
       <Main>
+        <UserAvatar avatarUrl={profileImageUrl} />
         <NewIssueInputForm setCurrentInput={setCurrentInput} />
         <SideBar />
       </Main>

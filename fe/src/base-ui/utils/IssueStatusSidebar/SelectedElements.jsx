@@ -47,11 +47,11 @@ function SelectedAssignees() {
   const selectedAssignees = useIssueDetailStore((state) => state.assignees);
   return (
     <AssigneesWrapper>
-      {selectedAssignees.map(({ id, nickName, profileImageUrl }) => {
+      {selectedAssignees.map(({ id, nickname, profileImageUrl }) => {
         return (
           <SelectedAssignee key={id}>
             <UserAvatar avatarUrl={profileImageUrl} />
-            <span>{nickName}</span>
+            <span>{nickname}</span>
           </SelectedAssignee>
         );
       })}

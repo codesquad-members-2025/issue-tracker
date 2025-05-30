@@ -2,6 +2,25 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { someHandler } from '@/utils/common/someHandler';
 
+const initialState = {
+  issue: {
+    issueId: '',
+    title: '',
+    content: '',
+    issueFileUrl: null,
+    authorId: null,
+    milestoneId: null,
+    isOpen: '',
+    lastModifiedAt: '',
+  },
+  comments: [],
+  commentsEditing: {},
+  newComment: { content: '', issueFileUrl: null },
+  assignees: [],
+  labels: [],
+  milestone: {},
+};
+
 const useIssueDetailStore = create(
   immer((set) => ({
     // issue 프로퍼티 -> 서버로부터 DB에 있는 데이터를 보내줄때 업데이트하는 용도입니다.
@@ -18,7 +37,13 @@ const useIssueDetailStore = create(
 
     //입력 액션이 발생하면 계속해서 변하는 필드
     comments: [],
-    comment: { commentId: null, content: '', issueFileUrl: [] },
+    // comment: { commentId: null, content: '', issueFileUrl: [] },
+    commentsEditing: {
+      // [commentId]: { content: '', issueFileUrl: [] } -> 여러 코멘트 동시 관리.
+    },
+
+    //상세 이슈 페이지에서 새로운 코멘트 작성
+    newComment: { content: '', issueFileUrl: null },
 
     /* 
     - 아래의 프로퍼티 4개는 서버로부터 데이터를 받을때(*이슈 상세페이지_이슈가 이미 존재할경우*) 업데이트 됩니다.
@@ -78,6 +103,12 @@ const useIssueDetailStore = create(
       });
     },
 
+    addNewComment: (value) => {
+      set((s) => {
+        s.newComment.content = value;
+      });
+    },
+
     //상세 이슈페이지의 코멘트 관련 액션
     addOrEditComment: (value, commentId = null) => {
       set((state) => {
@@ -89,15 +120,8 @@ const useIssueDetailStore = create(
         state.comment = {
           commentId: null,
           content: value,
-          issueFileUrl: [],
+          issueFileUrl: null,
         };
-      });
-    },
-
-    // 상세 이슈페이지 GET 패치 후 초기화 로직
-    initComments: (comments) => {
-      set((state) => {
-        state.comments = comments;
       });
     },
 
@@ -109,9 +133,63 @@ const useIssueDetailStore = create(
 
     // 2. 상세 이슈페이지의 특정 코멘트 파일첨부용
     //항상 comment 작업은 comments에서 comment로 추출해서 편집 후, 서버에 comment 를 보낸다.
-    setFileForComment: (file) =>
+    setFileForEditComment: (commentId, file) =>
       set((state) => {
-        state.comment.issueFileUrl = file ? file : null;
+        state.commentsEditing[commentId].issueFileUrl = file ? file : null;
+      }),
+    // 새로운 코멘트 등록의 파일 첨부용
+    setFileForNewComment: (file) =>
+      set((state) => {
+        state.newComment.issueFileUrl = file ? file : null;
+      }),
+
+    //편집 버튼 누르는 순간 GET 요청으로 받아온 comments 에서 comment로 데이터 이동-> 코멘트 편집 해야함!
+    startEditComment: (commentId) =>
+      set((state) => {
+        const target = state.comments.find((comment) => comment.commentId === commentId);
+        state.commentsEditing[commentId] = target;
+      }),
+
+    updateEditComment: (commentId, value) => {
+      set((state) => {
+        if (state.commentsEditing[commentId]) {
+          state.commentsEditing[commentId].content = value;
+        }
+      });
+    },
+
+    cancelEditComment: (commentId) => {
+      (state) => {
+        delete state.commentsEditing[commentId];
+      };
+    },
+
+    // 상세 이슈페이지 GET 패치 후 초기화 로직
+    initStore: (data) => {
+      set((state) => {
+        // 1. 이슈 정보
+        state.issue = { ...data.issue };
+
+        // 2. 담당자, 라벨, 마일스톤
+        state.assignees = data.assignees || [];
+        state.labels = data.labels || [];
+        state.milestone = data.milestone || {};
+
+        // 3. 코멘트 (comments)
+        // 서버에서 받은 comments 배열을 그대로 할당 (가공이 필요하다면 여기서 변환)
+        state.comments = data.comments || [];
+
+        // 4. 코멘트 편집 중 상태 초기화
+        state.commentsEditing = {};
+
+        // 5. 새로운 코멘트(입력폼) 상태 초기화
+        state.newComment = { content: '', issueFileUrl: null };
+      });
+    },
+
+    resetStore: () =>
+      set((state) => {
+        Object.assign(state, initialState);
       }),
   })),
 );

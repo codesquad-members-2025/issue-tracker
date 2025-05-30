@@ -1,35 +1,73 @@
 {
   "success": true,
-  "message": "요청에 성공했습니다.",
-  "data": [
-    {
-      "id": 1,
-      "title": "로그인 오류",
+  "message": "이슈를 성공적으로 조회했습니다.",
+  "data": {
+    "issue": {
+      "issueId": 1,
+      "title": "로그인 버튼이 작동하지 않음->>>테스트 입니다.",
+      "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음",
+      "authorId": 1,
+      "authorNickname": "devchan",
+      "milestoneId": 1,
       "isOpen": true,
-      "author": { "id": 101, "nickName": "devchan" },
-      "assignees": [
-        { "id": 102, "nickName": "alice" },
-        { "id": 103, "nickName": "bob" }
-      ],
-      "labels": [
-        { "id": 1, "name": "bug", "color": "#ff0000" },
-        { "id": 2, "name": "urgent", "color": "#ffcc00" }
-      ],
-      "milestone": { "id": 5, "name": "v1.0 릴리즈" },
-      "createdAt": "2025-05-12T09:00:00Z"
+      "lastModifiedAt": "2025-05-21T18:13:27",
+      "issueFileUrl": "https://dummy.local/files/login-button-error.gif",
+      "authorProfileUrl": "https://dummy.local/profile/devchan.png"
     },
-    {
-      "id": 3,
-      "title": "서버 응답 지연 문제",
-      "isOpen": false,
-      "author": { "id": 103, "nickName": "bob" },
-      "assignees": [{ "id": 101, "nickName": "devchan" }],
-      "labels": [
-        { "id": 1, "name": "bug", "color": "#ff0000" },
-        { "id": 4, "name": "performance", "color": "#0000ff" }
-      ],
-      "milestone": { "id": 7, "name": "v0.9 릴리즈" },
-      "createdAt": "2025-04-20T08:00:00Z"
-    }
-  ]
+    "assignees": [
+      {
+        "id": 2,
+        "nickname": "홍길동",
+        "profileImageUrl": "https://dummy.local/profile/user1.png"
+      }
+    ],
+    "labels": [
+      {
+        "labelId": 1,
+        "name": "bug",
+        "color": "#FF0000",
+        "description": "버그 관련 이슈"
+      },
+      {
+        "labelId": 2,
+        "name": "high-priority",
+        "color": "#FF9900",
+        "description": "높은 우선순위"
+      }
+    ],
+    "milestone": {
+      "milestoneId": 1,
+      "name": "v1.0",
+      "description": "1차 출시",
+      "endDate": "2025-06-30",
+      "processingRate": 0,
+      "isOpen": true
+    },
+    "comments": [
+      {
+        "commentId": 1,
+        "content": "이 문제는 곧 해결될 예정입니다. 현재 원인 파악 중입니다.",
+        "issueFileUrl": null,
+        "authorNickname": "홍길동",
+        "lastModifiedAt": "2025-05-21T18:13:27",
+        "authorProfileUrl": "https://dummy.local/profile/user1.png"
+      },
+      {
+        "commentId": 2,
+        "content": "onClick 이벤트 핸들러가 제대로 등록되지 않은 것 같습니다. 코드 첨부합니다.",
+        "issueFileUrl": "https://dummy.local/files/code-snippet.png",
+        "authorNickname": "devchan",
+        "lastModifiedAt": "2025-05-21T19:20:00",
+        "authorProfileUrl": "https://dummy.local/profile/devchan.png"
+      },
+      {
+        "commentId": 3,
+        "content": "PR #123에서 수정되었습니다. 리뷰 부탁드립니다.",
+        "issueFileUrl": null,
+        "authorNickname": "홍길동",
+        "lastModifiedAt": "2025-05-22T10:15:00",
+        "authorProfileUrl": "https://dummy.local/profile/user1.png"
+      }
+    ]
+  }
 }
