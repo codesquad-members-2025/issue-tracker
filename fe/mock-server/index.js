@@ -74,10 +74,10 @@ app.post('/issues', authMiddleware, async (req, res) => {
         .filter(Boolean),
       labels: labelIds
         .map((id) => {
-          const label = json.labels.find((l) => l.id === id);
+          const label = json.labels.find((l) => l.labelId === id);
           return label
             ? {
-                labelId: label.id,
+                labelId: label.labelId,
                 name: label.name,
                 color: label.color,
               }
@@ -303,6 +303,18 @@ app.patch('/issues/:id', authMiddleware, async (req, res) => {
       if (key === 'assigneeId' && Array.isArray(req.body.assigneeId)) {
         issue.assignees = req.body.assigneeId
           .map((id) => json.users.find((user) => user.id === id))
+          .filter(Boolean);
+      } else if (key === 'labelId' && Array.isArray(req.body.labelId)) {
+        issue.labels = req.body.labelId
+          .map((id) => {
+            const label = json.labels.find((l) => l.labelId === id);
+            return label ? {
+              labelId: label.labelId,
+              name: label.name,
+              color: label.color,
+              description: label.description || ''
+            } : null;
+          })
           .filter(Boolean);
       } else if (key === 'milestoneId') {
         const milestone = json.milestones.find((m) => m.milestoneId === req.body.milestoneId);

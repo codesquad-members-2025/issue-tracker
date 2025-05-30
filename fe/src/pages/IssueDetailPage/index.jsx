@@ -12,7 +12,7 @@ import {
 import { useParams } from 'react-router-dom';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import DisplayComment from '@/units/issuePage/DisplayComment';
-import { comment } from 'postcss';
+import SideBar from '@/units/SideBar';
 
 export default function IssueDetailPage() {
   const { response, fetchData, isLoading } = useDataFetch({ fetchType: '이슈 상세 페이지' });
@@ -97,6 +97,7 @@ export default function IssueDetailPage() {
             );
           })}
         </CommentsWrapper>
+        <SideBar pageType={'detail'} issueFetchHandler={issueFetchHandler} />
       </Kanban>
     </Container>
   );

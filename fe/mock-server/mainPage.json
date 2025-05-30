@@ -2,9 +2,9 @@
   "issues": [
     {
       "id": 1,
-      "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴ",
+      "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴsss",
       "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -12,29 +12,44 @@
       },
       "assignees": [
         {
-          "id": 2,
-          "nickname": "홍길동",
-          "profileImageUrl": "https://dummy.local/profile/user1.png"
+          "id": 101,
+          "nickname": "devchan",
+          "email": "devchan@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        },
+        {
+          "id": 103,
+          "nickname": "bob",
+          "email": "bob@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
+        },
+        {
+          "id": 104,
+          "nickname": "charlie",
+          "email": "charlie@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
       "labels": [
         {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#FF0000"
+          "labelId": 6,
+          "name": "discussion",
+          "color": "#FF00FF",
+          "description": "논의 필요"
         },
         {
-          "labelId": 2,
-          "name": "high-priority",
-          "color": "#FF9900"
+          "labelId": 7,
+          "name": "test",
+          "color": "#CCCCCC",
+          "description": "테스트 관련"
         }
       ],
       "milestone": {
-        "milestoneId": 1,
-        "name": "v1.0",
-        "description": "1차 출시",
-        "endDate": "2025-06-30",
-        "processingRate": 0,
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
         "isOpen": true
       },
       "lastModifiedAt": "2025-05-21T18:13:27",
@@ -42,17 +57,17 @@
       "comments": [
         {
           "commentId": 1,
-          "content": "이 문제는 곧 해결될 예정입니다. 현재 원인 파악 중입니다.-> 테스트 ",
+          "content": "이 문제는 곧 해결될 예정입니다. 현재 원인 파악 중입니다.-> 테스트 sss",
           "issueFileUrl": null,
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-05-30T02:21:12.521Z"
+          "lastModifiedAt": "2025-05-30T03:40:41.884Z"
         },
         {
           "commentId": 2,
-          "content": "onClick 이벤트 핸들러가 제대로 등록되지 않은 것 같습니다. 코드 첨부합니다. ------> 이것도 테스트\n\n개행 테스트",
+          "content": "asdonClick 이벤트 핸들러가 제대로 등록되지 않은 것 같습니다. 코드 첨부합니다. ------> 이것도 테스트\n\n개행 테스트",
           "issueFileUrl": "https://dummy.local/files/code-snippet.png",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-30T02:31:00.233Z"
+          "lastModifiedAt": "2025-05-30T03:40:45.039Z"
         },
         {
           "commentId": 3,
@@ -118,13 +133,19 @@
       "id": 3,
       "title": "성능 최적화 필요",
       "content": "이미지 로딩 시 성능이 저하되는 현상이 발생합니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 3,
         "nickname": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
-      "assignees": [],
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
       "labels": [
         {
           "labelId": 4,
@@ -132,7 +153,14 @@
           "color": "#0000FF"
         }
       ],
-      "milestone": null,
+      "milestone": {
+        "milestoneId": 3,
+        "name": "v2.0",
+        "description": "메이저 업데이트",
+        "endDate": "2025-12-31",
+        "processingRate": 10,
+        "isOpen": true
+      },
       "lastModifiedAt": "2025-05-20T14:30:00",
       "issueFileUrl": null,
       "comments": [
@@ -2449,6 +2477,149 @@
       "labels": [],
       "milestone": null,
       "createdAt": "2025-05-30T02:32:41.057Z"
+    },
+    {
+      "id": 59,
+      "title": "사이드바 테스트",
+      "content": "사이드바 테스트",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 101,
+          "nickname": "devchan",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        }
+      ],
+      "labels": [],
+      "milestone": {
+        "milestoneId": 1,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:10:39.206Z"
+    },
+    {
+      "id": 60,
+      "title": "이슈 등록 테스트",
+      "content": "좋네요^^",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 106,
+          "nickname": "eve",
+          "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 7,
+          "name": "test",
+          "color": "#CCCCCC",
+          "description": "테스트 관련"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:41:43.477Z"
+    },
+    {
+      "id": 61,
+      "title": "ㄴㄴㅁㅇ",
+      "content": "ㅁㄴㅇ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [],
+      "milestone": {
+        "milestoneId": 2,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:42:02.253Z"
+    },
+    {
+      "id": 62,
+      "title": "ㅁㄴㅇ",
+      "content": "ㅁㄴㅇ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 1,
+          "nickname": "devchan",
+          "profileImageUrl": "https://dummy.local/profile/devchan.png"
+        }
+      ],
+      "labels": [],
+      "milestone": {
+        "milestoneId": 1,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:42:51.865Z"
+    },
+    {
+      "id": 63,
+      "title": "ㅁㄴㅇ",
+      "content": "ㅁㄴㅇ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 102,
+          "nickname": "alice",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6"
+        },
+        {
+          "labelId": 5,
+          "name": "feature",
+          "color": "#00FF00"
+        },
+        {
+          "labelId": 7,
+          "name": "test",
+          "color": "#CCCCCC"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 1,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T03:45:24.513Z"
     }
   ],
   "users": [

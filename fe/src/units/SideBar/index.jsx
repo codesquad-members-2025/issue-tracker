@@ -14,7 +14,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.surface.strong};
 `;
 
-export default function SideBar({ pageType = null }) {
+export default function SideBar({ pageType = null, issueFetchHandler = null }) {
   //   const { assignee, label, milestone } = useFilterModalStore((state) => ({
   //     assignee: state.filterEntry.assignee,
   //     label: state.filterEntry.label,
@@ -40,6 +40,7 @@ export default function SideBar({ pageType = null }) {
             triggerButtonLabel={label}
             itemsArr={items}
             pageTypeContext={pageType}
+            issueFetchHandler={issueFetchHandler}
           />
         );
       })}
