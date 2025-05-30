@@ -39,3 +39,15 @@ springdoc:
     swagger-ui:
         path: /issue-tracker/swagger-ui.html
         url: /issue-tracker/api-docs
+profile:
+    default-image-url: ${DEFAULT_PROFILE_URL}
+
+jwt:
+    secret: ${JWT_SECRET}
+
+github:
+    client:
+        id: ${GITHUB_CLIENT_ID}
+        secret: ${GITHUB_CLIENT_SECRET}
+    redirect:
+        uri: ${GITHUB_REDIRECT_URI}

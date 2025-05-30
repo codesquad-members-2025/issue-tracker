@@ -37,7 +37,7 @@ public class MilestoneController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMilestone(
         @PathVariable("milestone-id") Long milestoneId,
-        @RequestBody @Valid MilestoneRequestDto.CreateMilestoneDto request) {
+        @RequestBody @Valid MilestoneRequestDto.UpdateMilestoneDto request) {
         milestoneService.updateMilestone(milestoneId, request);
     }
 

@@ -4,6 +4,8 @@ CREATE TABLE `user` (
                         email VARCHAR(255) NOT NULL UNIQUE,
                         nickname VARCHAR(255) NOT NULL UNIQUE,
                         profile_image VARCHAR(255),
+                        password VARCHAR(255) DEFAULT NULL,
+                        login_type VARCHAR(50) NOT NULL,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -81,14 +83,15 @@ CREATE TABLE issue_assignee (
                                 CONSTRAINT fk_issue_assignee_user FOREIGN KEY (assignee_id) REFERENCES `user`(user_id)
 );
 
+-- 1) summary_count 테이블 생성
 CREATE TABLE summary_count (
-                               id TINYINT PRIMARY KEY,
-                               issue_open_count     INT NOT NULL DEFAULT 0,
-                               issue_closed_count   INT NOT NULL DEFAULT 0,
-                               milestone_open_count INT NOT NULL DEFAULT 0,
-                               milestone_closed_count INT NOT NULL DEFAULT 0,
-                               labels_count         INT NOT NULL DEFAULT 0,
-                               milestones_count     INT NOT NULL DEFAULT 0
+                               type  VARCHAR(50) PRIMARY KEY,
+                               cnt INT NOT NULL DEFAULT 0
 );
 
-MERGE INTO summary_count (id) KEY(id) VALUES (1);
+-- 2) 초기 row 삽입
+INSERT INTO summary_count(type) VALUES
+                                    ('issue_open'),
+                                    ('issue_closed'),
+                                    ('milestone_open'),
+                                    ('milestone_closed');

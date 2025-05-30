@@ -84,17 +84,19 @@ public class MilestoneService {
     }
 
     @Transactional
-    public void updateMilestone(Long milestoneId, MilestoneRequestDto.CreateMilestoneDto request) {
+    public void updateMilestone(Long milestoneId, MilestoneRequestDto.UpdateMilestoneDto request) {
         if (!milestoneRepository.existsById(milestoneId)) {
             throw new MilestoneNotFoundException(milestoneId);
         }
 
         Milestone updatedMilestone = Milestone.builder()
-            .id(milestoneId)
-            .name(request.getName())
-            .description(request.getDescription())
-            .endDate(request.getEndDate())
-            .build();
+                .id(milestoneId)
+                .name(request.getName())
+                .description(request.getDescription())
+                .endDate(request.getEndDate())
+                .isOpen(true)
+                .build();
+
 
         milestoneRepository.save(updatedMilestone);
     }
@@ -105,10 +107,7 @@ public class MilestoneService {
                 .orElseThrow(() -> new MilestoneNotFoundException(milestoneId));
 
         boolean wasOpen = milestone.isOpen();
-        log.info("▶ [Service] deleteMilestone: id={} ▶ deleting, wasOpen={}",
-                milestoneId, wasOpen);
         milestoneRepository.deleteById(milestoneId);
-        log.info("▶ [Service] deleteMilestone: id={} ▶ publishing Deleted", milestoneId);
         eventPublisher.publishEvent(new MilestoneEvent.Deleted(wasOpen));
     }
 
@@ -123,8 +122,6 @@ public class MilestoneService {
         boolean newOpen = milestone.isOpen();
 
         if (oldOpen != newOpen) {
-            log.info("▶ [Service] closeMilestone: id={}, {}→{} ▶ publishing StatusChanged",
-                    milestoneId, oldOpen, newOpen);
             eventPublisher.publishEvent(
                     new MilestoneEvent.StatusChanged(oldOpen, false)
             );
