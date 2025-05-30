@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 @AllArgsConstructor
-public class IssueLabelId implements Serializable {
+public class IssueAssigneeId implements Serializable {
 	private Integer issueId;
-	private Integer labelId;
+	private Integer assigneeId;
 }

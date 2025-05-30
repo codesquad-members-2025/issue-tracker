@@ -8,14 +8,14 @@ import org.springframework.data.relational.core.mapping.Table;
 import lombok.Builder;
 
 @Builder
-@Table("issue_label")
-public class IssueLabel {
+@Table("issue_assignee")
+public class IssueAssignee {
 	@Id
-	private IssueLabelId id;
+	private IssueAssigneeId id;
 
-	public static IssueLabel of(Integer issueId, Integer labelId) {
-		return IssueLabel.builder()
-			.id(new IssueLabelId(issueId, labelId))
+	public static IssueAssignee of(Integer issueId, Integer assigneeId) {
+		return IssueAssignee.builder()
+			.id(new IssueAssigneeId(issueId, assigneeId))
 			.build();
 	}
 
@@ -25,7 +25,7 @@ public class IssueLabel {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		IssueLabel that = (IssueLabel)o;
+		IssueAssignee that = (IssueAssignee)o;
 		return Objects.equals(id, that.id);
 	}
 
