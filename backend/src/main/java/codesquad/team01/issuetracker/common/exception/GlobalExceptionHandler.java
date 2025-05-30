@@ -34,8 +34,8 @@ public class GlobalExceptionHandler {
 	}
 
 	// 레이블 생성 시 이미 존재하는 레이블과 이름 중복
-	@ExceptionHandler(DuplicateLabelName.class)
-	public ResponseEntity<ApiResponse<?>> handleDuplicateLabel(DuplicateLabelName e) {
+	@ExceptionHandler(DuplicateLabelNameException.class)
+	public ResponseEntity<ApiResponse<?>> handleDuplicateLabel(DuplicateLabelNameException e) {
 		String labelName = e.getLabelName();
 		return ResponseEntity
 			.badRequest()
