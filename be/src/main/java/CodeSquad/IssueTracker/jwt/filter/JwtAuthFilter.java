@@ -35,8 +35,12 @@ public class JwtAuthFilter implements Filter {
 
         // ✅ OPTIONS 요청은 여기서 처리 끝
         if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            httpResponse.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
+            httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setStatus(HttpServletResponse.SC_OK);
-            return;
+            return; // ❗ 이게 반드시 있어야 인증 필터 우회됨
         }
 
         String requestURI = httpRequest.getRequestURI();
