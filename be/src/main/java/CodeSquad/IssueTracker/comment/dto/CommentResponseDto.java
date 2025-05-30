@@ -11,6 +11,7 @@ public class CommentResponseDto {
     private Long commentId;
     private String content;
     private String issueFileUrl;
+    private Long authorId;
     private String authorNickname;
     private final LocalDateTime lastModifiedAt;
     private String authorProfileUrl;
@@ -19,6 +20,7 @@ public class CommentResponseDto {
         this.commentId = comment.getCommentId();
         this.content = comment.getContent();
         this.issueFileUrl = comment.getIssueFileUrl();
+        this.authorId = author.getId();
         this.authorNickname=author.getNickName();
         this.lastModifiedAt = comment.getLastModifiedAt();
         this.authorProfileUrl = author.getProfileImageUrl();
