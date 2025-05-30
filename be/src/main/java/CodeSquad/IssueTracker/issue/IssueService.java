@@ -3,10 +3,7 @@ package CodeSquad.IssueTracker.issue;
 import CodeSquad.IssueTracker.comment.CommentService;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
 import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
-import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
-import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
-import CodeSquad.IssueTracker.issue.dto.IssueDetailResponse;
-import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
+import CodeSquad.IssueTracker.issue.dto.*;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeRepository;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeService;
 import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
@@ -87,26 +84,32 @@ public class IssueService {
     }
 
     public IssueDetailResponse toDetailResponse(Issue issue) {
+        // ✅ 작성자 정보 조회
+        User author = userService.findById(issue.getAuthorId()).orElseThrow();
+        IssueWithAuthorInfo issueWithAuthorInfo = IssueWithAuthorInfo.from(issue, author);
+
         IssueDetailResponse response = new IssueDetailResponse();
-        response.setIssue(issue);
+        response.setIssue(issueWithAuthorInfo);
 
-        // ✅ 1. Assignees
-        List<IssueAssigneeResponse> issueAssignees = issueAssigneeService.findAssigneeResponsesByIssueId(issue.getIssueId());
+        // ✅ Assignees 정보 조회
+        List<IssueAssigneeResponse> assignees =
+                issueAssigneeService.findAssigneeResponsesByIssueId(issue.getIssueId());
+        response.setAssignees(assignees);
 
+        // ✅ Labels 정보 조회
+        List<IssueLabelResponse> labels =
+                issueLabelService.findIssueLabelResponsesByIssueId(issue.getIssueId());
+        response.setLabels(labels);
 
-        // ✅ 2. Labels
-        List<IssueLabelResponse> issueLabels = issueLabelService.findIssueLabelResponsesByIssueId(issue.getIssueId());
+        // ✅ Milestone 정보 조회
+        MilestoneResponse milestone =
+                milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
+        response.setMilestone(milestone);
 
-        // ✅ 3. Milestone
-        MilestoneResponse milestones = milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
-
-        // ✅ 4. Comments
-        List<CommentResponseDto> comments = commentService.findCommentResponsesByIssueId(issue.getIssueId());
-
-        response.setAssignees(issueAssignees);
-        response.setLabels(issueLabels);
+        // ✅ Comments 정보 조회
+        List<CommentResponseDto> comments =
+                commentService.findCommentResponsesByIssueId(issue.getIssueId());
         response.setComments(comments);
-        response.setMilestone(milestones);
 
         return response;
     }
