@@ -28,6 +28,12 @@ public class JwtAuthFilter implements Filter {
 
         String requestURI =  httpRequest.getRequestURI();
 
+        // ✅ OPTIONS 요청은 필터 로직 통과
+        if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
         // 특정 URL 경로는 필터를 적용하지 않도록 처리
         if (requestURI.equals("/login") || requestURI.equals("/signup")) {
             filterChain.doFilter(httpRequest, httpResponse);
