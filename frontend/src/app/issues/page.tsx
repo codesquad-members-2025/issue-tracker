@@ -127,25 +127,33 @@ export default function IssuesPage() {
       ]);
 
       setFilterOptions({
-        label: labelJson.data.labels.map((l: { id: number; name: string; color: string }) => ({
-          id: String(l.id),
-          label: l.name,
-          color: l.color,
-        })),
-        milestone: milestoneJson.data.milestones.map((m: { id: number; title: string }) => ({
-          id: String(m.id),
-          label: m.title,
-        })),
-        assignee: userJson.data.users.map((u: { id: number; username: string; profileImageUrl: string }) => ({
-          id: String(u.id),
-          label: u.username,
-          iconUrl: u.profileImageUrl,
-        })),
-        writer: userJson.data.users.map((u: { id: number; username: string; profileImageUrl: string }) => ({
-          id: String(u.id),
-          label: u.username,
-          iconUrl: u.profileImageUrl,
-        })),
+        label: labelJson.data.labels.map(
+          (l: { id: number; name: string; color: string }) => ({
+            id: String(l.id),
+            label: l.name,
+            color: l.color,
+          })
+        ),
+        milestone: milestoneJson.data.milestones.map(
+          (m: { id: number; title: string }) => ({
+            id: String(m.id),
+            label: m.title,
+          })
+        ),
+        assignee: userJson.data.users.map(
+          (u: { id: number; username: string; profileImageUrl: string }) => ({
+            id: String(u.id),
+            label: u.username,
+            iconUrl: u.profileImageUrl,
+          })
+        ),
+        writer: userJson.data.users.map(
+          (u: { id: number; username: string; profileImageUrl: string }) => ({
+            id: String(u.id),
+            label: u.username,
+            iconUrl: u.profileImageUrl,
+          })
+        ),
       });
     } catch (err) {
       console.error(err);
