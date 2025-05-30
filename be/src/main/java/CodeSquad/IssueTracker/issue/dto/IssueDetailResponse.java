@@ -1,7 +1,6 @@
 package CodeSquad.IssueTracker.issue.dto;
 
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
-import CodeSquad.IssueTracker.issue.Issue;
 import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
 import CodeSquad.IssueTracker.issueLabel.dto.IssueLabelResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
@@ -11,10 +10,8 @@ import java.util.List;
 
 @Data
 public class IssueDetailResponse {
-    private Issue issue;
-    private String authorName;
-    private String authorProfileImage;
 
+    private IssueWithAuthorInfo issue = null;
     private List<IssueAssigneeResponse> assignees = List.of();
     private List<IssueLabelResponse> labels = List.of();
     private MilestoneResponse milestone = null;
