@@ -32,12 +32,8 @@ public class S3Service {
 
         GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket, path)
                 .withMethod(HttpMethod.PUT)
-                .withExpiration(getExpiration());
-        request.setContentType(contentType);
-
-        request.addRequestParameter(
-                Headers.S3_CANNED_ACL,
-                CannedAccessControlList.PublicRead.toString());
+                .withExpiration(getExpiration())
+                .withContentType(contentType);
 
         URL url = amazonS3.generatePresignedUrl(request);
 
