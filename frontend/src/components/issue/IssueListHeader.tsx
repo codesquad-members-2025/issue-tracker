@@ -48,53 +48,111 @@ const Checkbox = styled.input`
   height: 1rem;
   cursor: pointer;
 `;
+const fetchFilterOptions = async () => {
+  const [labelRes, milestoneRes, userRes] = await Promise.all([
+    fetch("http://localhost:8080/api/v1/labels/filters"),
+    fetch("http://localhost:8080/api/v1/milestones/filters"),
+    fetch("http://localhost:8080/api/v1/users/filters"),
+  ]);
+
+  const [labelJson, milestoneJson, userJson] = await Promise.all([
+    labelRes.json(),
+    milestoneRes.json(),
+    userRes.json(),
+  ]);
+
+  // 이후 filter 옵션 set하는 로직
+};
 
 /* ----------------- 데이터 훅 ----------------- */
 function useIssueFilterOptions() {
   const [options, setOptions] = useState<{
     assignee: Option[];
     label: Option[];
+
     milestone: Option[];
     writer: Option[];
   }>({ assignee: [], label: [], milestone: [], writer: [] });
 
+  // useEffect(() => {
+  //   (async () => {
+  //     const [lbl, ms, usr] = await Promise.all([
+  //       // fetch("/api/v1/issue-metadata/labels").then((r) => r.json()),
+  //       // fetch("/api/v1/issue-metadata/milestones").then((r) => r.json()),
+  //       // fetch("/api/v1/issue-metadata/users").then((r) => r.json()),
+  //       fetch("http://localhost:8080/api/v1/labels/filters").then((r) => r.json()),
+  //       fetch("http://localhost:8080/api/v1/milestones/filters").then((r) => r.json()),
+  //       fetch("http://localhost:8080/api/v1/users/filters").then((r) => r.json()),
+  //     ]);
+
+  //     setOptions({
+  //       label: lbl.data.labels.map(
+  //         (l: { id: number; name: string; color: string }) => ({
+  //           id: String(l.id),
+  //           label: l.name,
+  //           color: l.color,
+  //         })
+  //       ),
+  //       milestone: (ms.data.milestones as { id: number; title: string }[]).map(
+  //         (m) => ({
+  //           id: String(m.id),
+  //           label: m.title,
+  //         })
+  //       ),
+  //       assignee: usr.data.users.map((u: { id: number; username: string }) => ({
+  //         id: String(u.id),
+  //         label: u.username,
+  //       })),
+  //       writer: usr.data.users.map((u: { id: number; username: string }) => ({
+  //         id: String(u.id),
+  //         label: u.username,
+  //       })), // assignee와 동일하게 처리
+  //     });
+  //   })();
+  // }, []);
   useEffect(() => {
     (async () => {
-      const [lbl, ms, usr] = await Promise.all([
-        // fetch("/api/v1/issue-metadata/labels").then((r) => r.json()),
-        // fetch("/api/v1/issue-metadata/milestones").then((r) => r.json()),
-        // fetch("/api/v1/issue-metadata/users").then((r) => r.json()),
-        fetch("/mockDatas/labelFilterMock.json").then((r) => r.json()),
-        fetch("/mockDatas/milestoneFilterMock.json").then((r) => r.json()),
-        fetch("/mockDatas/userFilterMock.json").then((r) => r.json()),
-      ]);
-
-      setOptions({
-        label: lbl.data.labels.map(
-          (l: { id: number; name: string; color: string }) => ({
-            id: String(l.id),
-            label: l.name,
-            color: l.color,
-          })
-        ),
-        milestone: (ms.data.milestones as { id: number; title: string }[]).map(
-          (m) => ({
-            id: String(m.id),
-            label: m.title,
-          })
-        ),
-        assignee: usr.data.users.map((u: { id: number; username: string }) => ({
-          id: String(u.id),
-          label: u.username,
-        })),
-        writer: usr.data.users.map((u: { id: number; username: string }) => ({
-          id: String(u.id),
-          label: u.username,
-        })), // assignee와 동일하게 처리
-      });
+      try {
+        const [lbl, ms, usr] = await Promise.all([
+          fetch("http://localhost:8080/api/v1/labels/filters").then((r) => r.json()),
+          fetch("http://localhost:8080/api/v1/milestones/filters").then((r) => r.json()),
+          fetch("http://localhost:8080/api/v1/users/filters").then((r) => r.json()),
+        ]);
+  
+        setOptions({
+          label: lbl.data.labels.map(
+            (l: { id: number; name: string; color: string }) => ({
+              id: String(l.id),
+              label: l.name,
+              color: l.color,
+            })
+          ),
+          milestone: ms.data.milestones.map(
+            (m: { id: number; title: string }) => ({
+              id: String(m.id),
+              label: m.title,
+            })
+          ),
+          assignee: usr.data.users.map(
+            (u: { id: number; username: string; profileImageUrl?: string }) => ({
+              id: String(u.id),
+              label: u.username,
+              iconUrl: u.profileImageUrl,
+            })
+          ),
+          writer: usr.data.users.map(
+            (u: { id: number; username: string; profileImageUrl?: string }) => ({
+              id: String(u.id),
+              label: u.username,
+              iconUrl: u.profileImageUrl,
+            })
+          ),
+        });
+      } catch (error) {
+        console.error("필터 옵션을 불러오는 데 실패했습니다:", error);
+      }
     })();
   }, []);
-
   return options;
 }
 
