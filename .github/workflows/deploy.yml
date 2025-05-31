@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy Fullstack App to EC2
 
 on:
   push:
@@ -10,44 +10,66 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: ✅ Checkout Code
         uses: actions/checkout@v3
 
-      - name: Build Frontend
+      - name: ☕ Setup JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: 🛠 Set Frontend Environment
+        working-directory: fe
+        run: |
+          echo "REACT_APP_API_BASE_URL=${{ secrets.FRONTEND_API_BASE_URL }}" > .env.production
+
+      - name: 🧱 Build Frontend
         working-directory: fe
         run: |
           npm install
           npm run build
 
-      - name: Build Backend
+      - name: 🧱 Build Backend
         working-directory: be
         run: |
           ./gradlew clean build -x test
 
-      - name: Zip Deployment Files
+      - name: 📦 Zip Deployment Files
         run: |
           mkdir -p deploy/app
-          cp be/build/libs/*.jar deploy/app/app.jar
+          
+          # ✅ 자동으로 JAR 경로 탐색
+          JAR_PATH=$(find be/build/libs -name "*.jar" | head -n 1)
+          echo "JAR found: $JAR_PATH"
+          cp "$JAR_PATH" deploy/app/app.jar
+
+          # ✅ React 빌드 결과 복사
           cp -r fe/dist deploy/app/frontend
+
+          # ✅ 배포 스크립트 복사
           cp appspec.yml deploy/
           cp scripts/start.sh deploy/
           cp scripts/stop.sh deploy/
-          cp scripts/application.env deploy/  # 더미 .env, 실제는 start.sh에서 Secrets로 채움
+          touch deploy/application.env  # placeholder
+
           zip -r deploy.zip deploy
 
-      - name: Upload to S3
+      - name: ☁️ Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - run: aws s3 cp deploy.zip s3://your-bucket-name/deploy.zip
+      - name: ☁️ Upload to S3
+        run: |
+          aws s3 cp deploy.zip s3://your-s3-bucket-name/deploy.zip
 
-      - name: Deploy with CodeDeploy
+      - name: 🚀 Deploy with CodeDeploy
         run: |
           aws deploy create-deployment \
-            --application-name your-app-name \
-            --deployment-group-name your-deployment-group \
-            --s3-location bucket=your-bucket-name,bundleType=zip,key=deploy.zip \
+            --application-name your-codedeploy-app-name \
+            --deployment-group-name your-deployment-group-name \
+            --s3-location bucket=your-s3-bucket-name,bundleType=zip,key=deploy.zip \
             --region ${{ secrets.AWS_REGION }}
