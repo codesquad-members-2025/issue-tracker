@@ -25,7 +25,7 @@ jobs:
 
       - name: 📝 Create .env.production
         run: |
-          echo "VITE_API_BASE_URL=http://localhost/api" > fe/.env.production
+          echo "VITE_API_BASE_URL=${{ secrets.FRONTEND_API_BASE_URL }}" > fe/.env.production
           echo "VITE_TEST_URL=http://testserver.com:5001" >> fe/.env.production
 
       - name: 🧱 Build Frontend
@@ -52,9 +52,9 @@ jobs:
           ./gradlew clean build -x test
 
       # ---------------------------
-      # 📆 PACKAGE FOR CODEDEPLOY
+      # 📦 PACKAGE FOR CODEDEPLOY
       # ---------------------------
-      - name: 📆 Package for CodeDeploy
+      - name: 📦 Package for CodeDeploy
         run: |
           mkdir -p bundle/fe
           mkdir -p bundle/deploy/scripts
@@ -62,7 +62,7 @@ jobs:
           # ✅ 프론트 빌드 복사
           cp -r fe/dist/* bundle/fe/
 
-          # ✅ 백어드 JAR 복사
+          # ✅ 백엔드 JAR 복사
           cp be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar bundle/app.jar
 
           # ✅ 배포 스크립트 복사
