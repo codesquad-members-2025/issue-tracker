@@ -41,13 +41,12 @@ public class JwtAuthFilter implements Filter {
             return;
         }
 
-        // ✅ 인증 없이 통과시킬 경로 (정적 리소스 및 공개 API)
+        // 정적 리소스 및 공개 API 우회
         if (
                 requestURI.equals("/") ||
-                        requestURI.equals("/index.html") ||
-                        requestURI.matches(".*\\.(js|css|ico|svg|png|jpg|jpeg|woff2|ttf|html)$") ||
-                        requestURI.startsWith("/static/") ||
+                        requestURI.contains(".") || // <-- 확장자 있는 모든 요청 우회 (index.html, favicon.ico, js, css 등)
                         requestURI.startsWith("/assets/") ||
+                        requestURI.startsWith("/static/") ||
                         requestURI.equals("/login") ||
                         requestURI.equals("/signup")
         ) {
@@ -55,6 +54,8 @@ public class JwtAuthFilter implements Filter {
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }
+
+
 
         // ✅ Authorization 헤더 검증
         String authHeader = httpRequest.getHeader("Authorization");
