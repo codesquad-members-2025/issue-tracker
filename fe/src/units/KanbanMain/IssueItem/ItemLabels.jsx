@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import Label from '@/base-ui/utils/Label';
+import useLabelStore from '@/stores/labelStore';
+import { typography } from '@/styles/foundation';
 
 const Labels = styled.div`
   display: flex;
@@ -18,11 +20,11 @@ const TooltipWrapper = styled.div`
 `;
 
 const Tooltip = styled.span`
+  ${typography.display.medium12}
   visibility: hidden;
   opacity: 0;
-  width: max-content;
   background-color: ${({ theme }) => theme.text.strong};
-  color: ${({ theme }) => theme.surface.weak};
+  color: ${({ theme }) => theme.surface.strong};
   text-align: center;
   padding: 4px 8px;
   border-radius: 4px;
@@ -32,19 +34,29 @@ const Tooltip = styled.span`
   left: 50%;
   transform: translateX(-50%);
   transition: opacity 0.2s ease-in-out;
-  font-size: 12px;
   white-space: nowrap;
 `;
 
+function getLabelDescription(labelId, labelsArr) {
+  let targetLabelDescription = '';
+  labelsArr.forEach(({ id, description }) => {
+    if (id !== labelId) return;
+    targetLabelDescription = description;
+  });
+  return targetLabelDescription;
+}
+
 export default function ItemLabels({ labels }) {
+  const labelsArr = useLabelStore((state) => state.labels);
+
   return (
     <>
       {labels && (
         <Labels>
-          {labels.map(({ id, color, name, description }) => (
+          {labels.map(({ id, color, name }) => (
             <TooltipWrapper key={id}>
               <Label id={id} color={color} labelTitle={name} />
-              <Tooltip>{description}</Tooltip>
+              <Tooltip>{getLabelDescription(id, labelsArr)}</Tooltip>
             </TooltipWrapper>
           ))}
         </Labels>

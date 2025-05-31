@@ -58,13 +58,13 @@ public class JdbcTemplatesMilestoneRepository implements MilestoneRepository {
     @Override
     public void update(Long id, MilestoneUpdateDto updateDto) {
         String sql = """
-            UPDATE milestones 
-            SET name = :name,
-                description = :description,
-                end_date = :endDate,        
-                is_open = :isOpen           
-            WHERE milestone_id = :id       
-            """;
+                UPDATE milestones 
+                SET name = :name,
+                    description = :description,
+                    end_date = :endDate,        
+                    is_open = :isOpen           
+                WHERE milestone_id = :id       
+                """;
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("name", updateDto.getName())
                 .addValue("description", updateDto.getDescription())
@@ -75,30 +75,31 @@ public class JdbcTemplatesMilestoneRepository implements MilestoneRepository {
     }
 
     @Override
-    public List<MilestoneResponse> findMilestoneResponsesByIssueId(Long issueId) {
+    public MilestoneResponse findMilestoneResponsesByIssueId(Long issueId) {
         String sql = """
-        SELECT
-            m.milestone_id,
-            m.name,
-            m.description,
-            DATE_FORMAT(m.end_date, '%Y-%m-%d') AS end_date,
-            m.is_open,
-            (
-                SELECT COUNT(*) 
-                FROM issues i2
-                WHERE i2.milestone_id = m.milestone_id AND i2.is_open = false
-            ) * 100 / NULLIF((
-                SELECT COUNT(*) 
-                FROM issues i3
-                WHERE i3.milestone_id = m.milestone_id
-            ), 0) AS processing_rate
-        FROM milestones m
-        JOIN issues i ON m.milestone_id = i.milestone_id
-        WHERE i.issue_id = :issueId
-        LIMIT 1
-        """;
+                SELECT
+                    m.milestone_id,
+                    m.name,
+                    m.description,
+                    DATE_FORMAT(m.end_date, '%Y-%m-%d') AS end_date,
+                    m.is_open,
+                    (
+                        SELECT COUNT(*)
+                        FROM issues i2
+                        WHERE i2.milestone_id = m.milestone_id AND i2.is_open = false
+                    ) * 100 / NULLIF((
+                        SELECT COUNT(*)
+                        FROM issues i3
+                        WHERE i3.milestone_id = m.milestone_id
+                    ), 0) AS processing_rate
+                FROM milestones m
+                JOIN issues i ON m.milestone_id = i.milestone_id
+                WHERE i.issue_id = :issueId
+                LIMIT 1
+                """;
 
-        return template.query(sql, Map.of("issueId", issueId), (rs, rowNum) -> {
+
+        return template.queryForObject(sql, Map.of("issueId", issueId), (rs, rowNum) -> {
             MilestoneResponse res = new MilestoneResponse();
             res.setMilestoneId(rs.getLong("milestone_id"));
             res.setName(rs.getString("name"));
@@ -108,6 +109,40 @@ public class JdbcTemplatesMilestoneRepository implements MilestoneRepository {
             res.setProcessingRate(rs.getLong("processing_rate"));
             return res;
         });
+    }
+
+    @Override
+    public Long calculateProcessingRate(Milestone milestone) {
+        String sql = """
+        SELECT (
+            SELECT COUNT(*)
+            FROM issues i2
+            WHERE i2.milestone_id = :milestoneId AND i2.is_open = false
+        ) * 100 / NULLIF((
+            SELECT COUNT(*)
+            FROM issues i3
+            WHERE i3.milestone_id = :milestoneId
+        ), 0) AS processing_rate
+    """;
+
+        Map<String, Object> params = Map.of("milestoneId", milestone.getMilestoneId());
+
+        Long rate = template.queryForObject(sql, params, Long.class);
+        return rate != null ? rate : 0L;
+    }
+
+    @Override
+    public List<Milestone> findByStatus(boolean isOpen) {
+        String sql = "SELECT * FROM milestones WHERE is_open = :isOpen ORDER BY milestone_id DESC";
+        Map<String, Object> param = Map.of("isOpen", isOpen);
+        return template.query(sql, param, milestoneRowMapper());
+    }
+
+    @Override
+    public Integer countByStatus(boolean isOpen) {
+        String sql = "SELECT COUNT(*) FROM milestones WHERE is_open = :isOpen";
+        Map<String, Object> param = Map.of("isOpen", isOpen);
+        return template.queryForObject(sql, param, Integer.class);
     }
 
     private RowMapper<Milestone> milestoneRowMapper() {

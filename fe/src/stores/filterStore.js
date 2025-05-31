@@ -24,6 +24,11 @@ const useFilterStore = create(
         state.selectedFilters[key] = value;
       }),
 
+    initFilter: (filters) =>
+      set((state) => {
+        state.selectedFilters = filters;
+      }),
+
     resetFilters: () =>
       set((state) => {
         state.selectedFilters = {

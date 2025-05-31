@@ -1,20 +1,20 @@
 package CodeSquad.IssueTracker.issue;
 
-import CodeSquad.IssueTracker.comment.Comment;
 import CodeSquad.IssueTracker.comment.CommentService;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
-import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
-import CodeSquad.IssueTracker.issue.dto.IssueDetailResponse;
-import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
+import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
+import CodeSquad.IssueTracker.issue.dto.*;
+import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeRepository;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeService;
 import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
+import CodeSquad.IssueTracker.issueLabel.IssueLabelRepository;
 import CodeSquad.IssueTracker.issueLabel.IssueLabelService;
 import CodeSquad.IssueTracker.issueLabel.dto.IssueLabelResponse;
 import CodeSquad.IssueTracker.milestone.MilestoneService;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.user.User;
 import CodeSquad.IssueTracker.user.UserService;
-import CodeSquad.IssueTracker.util.S3Uploader;
+import CodeSquad.IssueTracker.util.Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,27 +28,37 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueService {
 
+    public static final int LIMIT_SIZE = 20;
+
     private final IssueRepository issueRepository;
+    private final IssueAssigneeRepository issueAssigneeRepository;
+    private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeService issueAssigneeService;
     private final IssueLabelService issueLabelService;
     private final UserService userService;
     private final MilestoneService milestoneService;
     private final CommentService commentService;
-    private final S3Uploader s3Uploader;
+    private final Uploader s3Uploader;
 
-    public Issue save(Issue issue){
-        return issueRepository.save(issue);
-    }
-
-    public void update(Long issueId, IssueUpdateDto updateParam){
+    public IssueDetailResponse update(Long issueId, IssueUpdateDto updateParam) {
         issueRepository.update(issueId, updateParam);
+
+        if(updateParam.getAssigneeIds() != null && !updateParam.getAssigneeIds().isEmpty()) {
+            issueAssigneeService.assignAssignees(issueId, updateParam.getAssigneeIds());
+        }
+
+        if(updateParam.getLabelIds() != null && !updateParam.getLabelIds().isEmpty()) {
+            issueLabelService.assignLabels(issueId, updateParam.getLabelIds());
+        }
+
+        return toDetailResponse(findById(issueId).get());
     }
 
-    public Optional<Issue> findById(Long issueId){
+    public Optional<Issue> findById(Long issueId) {
         return issueRepository.findById(issueId);
     }
 
-    public Iterable<Issue> findAll(){
+    public Iterable<Issue> findAll() {
         return issueRepository.findAll();
     }
 
@@ -65,9 +75,9 @@ public class IssueService {
         issue.setLastModifiedAt(LocalDateTime.now());
 
         if (files != null && !files.isEmpty()) {
-            MultipartFile file = files.get(0);
-            String imageUrl = s3Uploader.upload(file);
-            issue.setImageUrl(imageUrl);
+            MultipartFile file = files.getFirst();
+            String issueFileUrl = s3Uploader.upload(file);
+            issue.setIssueFileUrl(issueFileUrl);
         }
 
         Issue saved = issueRepository.save(issue);
@@ -84,28 +94,62 @@ public class IssueService {
     }
 
     public IssueDetailResponse toDetailResponse(Issue issue) {
+        // ✅ 작성자 정보 조회
+        User author = userService.findById(issue.getAuthorId()).orElseThrow();
+        IssueWithAuthorInfo issueWithAuthorInfo = IssueWithAuthorInfo.from(issue, author);
+
         IssueDetailResponse response = new IssueDetailResponse();
-        response.setIssue(issue);
+        response.setIssue(issueWithAuthorInfo);
 
-        // ✅ 1. Assignees
-        List<IssueAssigneeResponse> issueAssignees = issueAssigneeService.findAssigneeResponsesByIssueId(issue.getIssueId());
+        // ✅ Assignees 정보 조회
+        List<IssueAssigneeResponse> assignees =
+                issueAssigneeService.findAssigneeResponsesByIssueId(issue.getIssueId());
+        response.setAssignees(assignees);
 
+        // ✅ Labels 정보 조회
+        List<IssueLabelResponse> labels =
+                issueLabelService.findIssueLabelResponsesByIssueId(issue.getIssueId());
+        response.setLabels(labels);
 
-        // ✅ 2. Labels
-        List<IssueLabelResponse> issueLabels = issueLabelService.findIssueLabelResponsesByIssueId(issue.getIssueId());
+        // ✅ Milestone 정보 조회
+        MilestoneResponse milestone =
+                milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
+        response.setMilestone(milestone);
 
-        // ✅ 3. Milestone
-        List<MilestoneResponse> milestones = milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
+        // ✅ Comments 정보 조회
+        List<CommentResponseDto> comments =
+                commentService.findCommentResponsesByIssueId(issue.getIssueId());
+        response.setComments(comments);
 
-        // ✅ 4. Comments
-        List<CommentResponseDto> comments = commentService.findCommentResponsesByIssueId(issue.getIssueId());
+        Optional<User> byId = userService.findById(response.getIssue().getAuthorId());
+
+        if (byId.isPresent()) {
+            User author = byId.get();
+            response.setAuthorName(author.getNickName());
+            response.setAuthorProfileImage(author.getProfileImageUrl());
+        }
+
 
         return response;
     }
 
+    public Iterable<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterCondition condition) {
+        List<FilteredIssueDto> issues = issueRepository.findIssuesByFilter(page, condition);
 
+        for (FilteredIssueDto issue : issues) {
+            issue.setAssignees(issueAssigneeRepository.findSummaryAssigneeByIssueId(issue.getIssueId()));
+            issue.setLabels(issueLabelRepository.findSummaryLabelByIssueId(issue.getIssueId()));
+        }
 
+        return issues;
+    }
 
+    public int getIssueMaxPage(IssueFilterCondition condition) {
+        int totalCount = issueRepository.countFilteredIssuesByIsOpen(condition.getIsOpen(), condition);
+        return (int) Math.ceil((double) totalCount / LIMIT_SIZE);
+    }
 
-
+    public int countIssuesByOpenStatus(boolean isOpen, IssueFilterCondition condition) {
+        return issueRepository.countFilteredIssuesByIsOpen(isOpen, condition);
+    }
 }

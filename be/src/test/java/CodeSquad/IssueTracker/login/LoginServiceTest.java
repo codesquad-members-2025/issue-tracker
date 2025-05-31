@@ -1,10 +1,11 @@
 package CodeSquad.IssueTracker.login;
 
+import CodeSquad.IssueTracker.global.exception.PasswordMismatchException;
+import CodeSquad.IssueTracker.global.exception.UserNotFoundException;
 import CodeSquad.IssueTracker.jwt.util.JWTUtil;
 import CodeSquad.IssueTracker.login.dto.LoginRequestDto;
 import CodeSquad.IssueTracker.login.dto.LoginResponseDto;
-import CodeSquad.IssueTracker.login.exception.PasswordMismatchException;
-import CodeSquad.IssueTracker.login.exception.UserNotFoundException;
+
 import CodeSquad.IssueTracker.login.service.LoginService;
 import CodeSquad.IssueTracker.user.JdbcTemplatesUserRepository;
 import CodeSquad.IssueTracker.user.User;
@@ -46,12 +47,11 @@ class LoginServiceTest {
                 .id(1L)
                 .loginId(loginId)
                 .password(password)
-                .emailId("testUser@example.com")
                 .nickName("testUser")
                 .build();
 
         Mockito.when(userRepository.findByLoginId(loginId)).thenReturn(Optional.of(mockUser));
-        Mockito.when(jwtUtil.createAccessToken(Mockito.any(User.class), Mockito.anyString())).thenReturn(accessToken);
+        Mockito.when(jwtUtil.createAccessToken(Mockito.any(User.class))).thenReturn(accessToken);
         Mockito.when(jwtUtil.createRefreshToken()).thenReturn(refreshToken);
 
         // when
@@ -76,7 +76,6 @@ class LoginServiceTest {
                 .id(1L)
                 .loginId(loginId)
                 .password(correctPassword)
-                .emailId("testUser@example.com")
                 .nickName("testUser")
                 .build();
 
