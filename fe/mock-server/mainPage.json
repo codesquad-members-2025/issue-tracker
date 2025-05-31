@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴsss",
-      "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음",
+      "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음\n\n-> 테스트",
       "isOpen": false,
       "author": {
         "id": 1,
@@ -75,6 +75,20 @@
           "issueFileUrl": null,
           "authorNickname": "홍길동",
           "lastModifiedAt": "2025-05-30T04:12:47.030Z"
+        },
+        {
+          "commentId": 303,
+          "content": "ddddddd",
+          "issueFileUrl": null,
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-05-31T14:05:53.816Z"
+        },
+        {
+          "commentId": 304,
+          "content": "aaaaaaasdsd",
+          "issueFileUrl": null,
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-05-31T14:06:00.024Z"
         }
       ]
     },
@@ -132,8 +146,8 @@
     {
       "id": 3,
       "title": "성능 최적화 필요",
-      "content": "이미지 로딩 시 성능이 저하되는 현상이 발생합니다.",
-      "isOpen": true,
+      "content": "이미지 로딩 시 성능이 저하되는 현상이 발생합니다.-> 코멘트 편집 테스트",
+      "isOpen": false,
       "author": {
         "id": 3,
         "nickname": "김철수",
@@ -150,9 +164,22 @@
           "nickname": "alice",
           "email": "alice@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
+        },
+        {
+          "id": 101,
+          "nickname": "devchan",
+          "email": "devchan@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         }
       ],
-      "labels": [],
+      "labels": [
+        {
+          "labelId": 3,
+          "name": "enhancement",
+          "color": "#0366D6",
+          "description": "기능 개선 요청"
+        }
+      ],
       "milestone": {
         "milestoneId": 3,
         "name": "v2.0",
@@ -173,10 +200,10 @@
         },
         {
           "commentId": 5,
-          "content": "성능이 50% 개선되었습니다. 클로징하겠습니다.ㅏㅣㅓ",
+          "content": "성능이 50% 개선되었습니다. 클로징하겠습니다.ㅏㅣㅓ--------->ㄴㄴㄴ",
           "issueFileUrl": "https://dummy.local/files/performance-improvement.png",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-30T07:35:18.964Z"
+          "lastModifiedAt": "2025-05-31T10:47:00.387Z"
         }
       ]
     },
@@ -1206,10 +1233,10 @@
         },
         {
           "commentId": 203,
-          "content": "문서 동기화 주기와 권한 관리에 대한 논의가 필요해 보입니다.",
+          "content": "문서 동기화 주기와 권한 관리에 대한 논의가 필요해 보입니다....",
           "issueFileUrl": null,
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-06-13T09:10:00"
+          "lastModifiedAt": "2025-05-31T13:44:21.629Z"
         }
       ]
     },

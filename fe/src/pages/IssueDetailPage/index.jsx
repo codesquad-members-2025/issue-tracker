@@ -37,7 +37,7 @@ export default function IssueDetailPage() {
       }
     }
   }
-  async function commentFetchHandler(method, commentId, option) {
+  async function commentFetchHandler(method, commentId = null, option) {
     const fetchOption = getOptionWithToken(option);
     if (method === 'POST') {
       const { ok } = await fetchData(postCommentInDetailIssueAPI(id), fetchOption);

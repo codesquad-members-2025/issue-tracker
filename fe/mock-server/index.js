@@ -462,6 +462,60 @@ app.patch('/issues/:issueId/comments/:commentId', async (req, res) => {
   }
 });
 
+// 코멘트 생성
+app.post('/issues/:issueId/comments', async (req, res) => {
+  try {
+    const { issueId } = req.params;
+    const { content, issueFileUrl } = req.body;
+
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+
+    const issue = json.issues.find(issue => issue.id === Number(issueId));
+    if (!issue) {
+      return res.status(404).json({
+        success: false,
+        message: '이슈를 찾을 수 없습니다.'
+      });
+    }
+
+    // 새 코멘트 ID 생성
+    const newCommentId = Math.max(...json.issues.flatMap(issue => 
+      issue.comments?.map(comment => comment.commentId) || [0]
+    )) + 1;
+
+    // 새 코멘트 객체 생성
+    const newComment = {
+      commentId: newCommentId,
+      content,
+      issueFileUrl: issueFileUrl || null,
+      authorNickname: 'devchan', // 현재는 고정값 사용
+      lastModifiedAt: new Date().toISOString()
+    };
+
+    // 이슈의 comments 배열이 없으면 생성
+    if (!issue.comments) {
+      issue.comments = [];
+    }
+
+    // 새 코멘트 추가
+    issue.comments.push(newComment);
+
+    // 파일에 변경사항 저장
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+    
+    res.status(201).json({
+      success: true,
+      message: '코멘트가 성공적으로 생성되었습니다.'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '코멘트 생성 중 서버 오류 발생'
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🟢 Mock server running at http://localhost:${PORT}`);
 });

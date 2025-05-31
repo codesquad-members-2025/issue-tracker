@@ -3,6 +3,7 @@ import CommentInput from '@/base-ui/IssuePage/CommentInput';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import { SmallContainerButton } from '@/base-ui/components/ContainerButtons';
 import useValidation from '@/hooks/useValidation';
+import { useParams } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -17,6 +18,18 @@ export default function NewComment({ commentFetchHandler }) {
   const setFileForNewComment = useIssueDetailStore((s) => s.setFileForNewComment);
   const commentChangeHandler = useIssueDetailStore((s) => s.addNewComment);
   const { isValid, setCurrentInput } = useValidation({ existedString: '' });
+  const { id } = useParams();
+
+  function PostHandler() {
+    const postOption = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ issueId: id, content: newComment.content }),
+    };
+    commentFetchHandler('POST', null, postOption);
+  }
 
   return (
     <Container>
@@ -31,7 +44,7 @@ export default function NewComment({ commentFetchHandler }) {
         setFile={setFileForNewComment}
         files={newComment.issueFileUrl}
       />
-      <SmallContainerButton disabled={!isValid}>
+      <SmallContainerButton disabled={!isValid} onClick={PostHandler}>
         <span>코멘트 작성</span>
       </SmallContainerButton>
     </Container>

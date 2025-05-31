@@ -32,12 +32,12 @@ export default function DisplayComment({ isMainComment, commentObj, commentPatch
 
   function editTriggerHandler() {
     //디테일 이슈 스토어의 comments에서 comment 로 상태 초기화. -> 편집모드에서 해당 상태를 구독해서 보여줘야한다.
-    startEditComment(commentId);
+    isMainComment ? startEditComment() : startEditComment(commentId);
     setIsEdit(true);
   }
 
   function commentValueHandler(value) {
-    updateEditComment(commentId, value);
+    isMainComment ? updateEditComment(value) : updateEditComment(commentId, value);
     setCurrentInput(value);
   }
 
@@ -54,9 +54,15 @@ export default function DisplayComment({ isMainComment, commentObj, commentPatch
   );
 -> ❗️shallow 를 쓰는데 계속 무한루프 발생❗️
   */
-  const editingContent = useIssueDetailStore((s) => s.commentsEditing[commentId]?.content || '');
-  const editingIssueFileUrl = useIssueDetailStore(
-    (s) => s.commentsEditing[commentId]?.issueFileUrl || null,
+  const editingContent = useIssueDetailStore((s) =>
+    isMainComment
+      ? s.mainCommentEditting?.content || ''
+      : s.commentsEditing[commentId]?.content || '',
+  );
+  const editingIssueFileUrl = useIssueDetailStore((s) =>
+    isMainComment
+      ? s.mainCommentEditting?.issueFileUrl || null
+      : s.commentsEditing[commentId]?.issueFileUrl || null,
   );
 
   //   '디테일 이슈의 코멘트의 파일 상태를 변경시키는 액션구독'
@@ -80,7 +86,11 @@ export default function DisplayComment({ isMainComment, commentObj, commentPatch
       },
       body: JSON.stringify({ content: editingContent, issueFileUrl: editingIssueFileUrl }),
     };
-    commentPatchHandler('PATCH', commentId, PATCHoptions);
+    if (isMainComment) {
+      commentPatchHandler('PATCH', PATCHoptions);
+    } else {
+      commentPatchHandler('PATCH', commentId, PATCHoptions);
+    }
     setIsEdit(false);
   }
 

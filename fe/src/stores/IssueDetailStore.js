@@ -169,7 +169,7 @@ const useIssueDetailStore = create(
     // 메인코멘트 편집 핸들러 액션
     startEditMainComment: () =>
       set((state) => {
-        const target = { content: state.issue.content, issueFileUrl: issue.issueFileUrl };
+        const target = { content: state.issue.content, issueFileUrl: state.issue.issueFileUrl };
         state.mainCommentEditting = target;
       }),
 
