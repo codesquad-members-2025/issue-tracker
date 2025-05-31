@@ -9,7 +9,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -17,13 +17,15 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class JwtAuthFilter implements Filter {
 
     private final JWTUtil jwtUtil;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
+
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
@@ -32,12 +34,6 @@ public class JwtAuthFilter implements Filter {
 
         log.info("[JWT Filter] Request URI: {}, Method: {}", requestURI, method);
 
-        // ✅ CORS 헤더 설정
-        httpResponse.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
-        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
-
         // ✅ OPTIONS 요청은 인증 필요 없음
         if ("OPTIONS".equalsIgnoreCase(method)) {
             log.info("[JWT Filter] OPTIONS 요청 우회됨");
@@ -45,17 +41,13 @@ public class JwtAuthFilter implements Filter {
             return;
         }
 
-        // ✅ 인증 없이 통과시킬 경로
+        // ✅ 인증 없이 통과시킬 경로 (정적 리소스 및 공개 API)
         if (
                 requestURI.equals("/") ||
                         requestURI.equals("/index.html") ||
-                        requestURI.equals("/favicon.ico") ||
-                        requestURI.endsWith(".js") ||
-                        requestURI.endsWith(".css") ||
-                        requestURI.endsWith(".ico") ||
-                        requestURI.endsWith(".svg") ||
-                        requestURI.startsWith("/assets") ||
-                        requestURI.startsWith("/static") ||
+                        requestURI.matches(".*\\.(js|css|ico|svg|png|jpg|jpeg|woff2|ttf|html)$") ||
+                        requestURI.startsWith("/static/") ||
+                        requestURI.startsWith("/assets/") ||
                         requestURI.equals("/login") ||
                         requestURI.equals("/signup")
         ) {
@@ -66,11 +58,11 @@ public class JwtAuthFilter implements Filter {
 
         // ✅ Authorization 헤더 검증
         String authHeader = httpRequest.getHeader("Authorization");
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.warn("[JWT Filter] Authorization 헤더 없음 또는 형식 오류");
-            BaseResponseDto responseDto = BaseResponseDto.failure("Authorization 헤더가 없거나 형식이 잘못되었습니다.");
-            writeJsonResponse(httpResponse, responseDto, HttpStatus.UNAUTHORIZED);
+            writeJsonResponse(httpResponse,
+                    BaseResponseDto.failure("Authorization 헤더가 없거나 형식이 잘못되었습니다."),
+                    HttpStatus.UNAUTHORIZED);
             return;
         }
 
@@ -83,8 +75,7 @@ public class JwtAuthFilter implements Filter {
             log.info("[JWT Filter] 유효한 토큰, 사용자 loginId: {}", claims.get("loginUser"));
         } catch (JwtValidationException e) {
             log.warn("[JWT Filter] JWT 검증 실패: {}", e.getMessage());
-            BaseResponseDto responseDto = BaseResponseDto.failure(e.getMessage());
-            writeJsonResponse(httpResponse, responseDto, HttpStatus.UNAUTHORIZED);
+            writeJsonResponse(httpResponse, BaseResponseDto.failure(e.getMessage()), HttpStatus.UNAUTHORIZED);
             return;
         }
 
