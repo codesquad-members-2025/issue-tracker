@@ -59,17 +59,22 @@ jobs:
           mkdir -p bundle/fe
           mkdir -p bundle/deploy/scripts
 
-          # ✅ 빌드 결과 복사
+          # ✅ 프론트 빌드 복사
           cp -r fe/dist/* bundle/fe/
+
+          # ✅ 백엔드 JAR 복사
           cp be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar bundle/app.jar
+
+          # ✅ 배포 스크립트 복사
           cp deploy/appspec.yml bundle/deploy/
           cp deploy/scripts/*.sh bundle/deploy/scripts/
           chmod +x bundle/deploy/scripts/*.sh
 
-          # ✅ zip 루트를 bundle 내부에서 생성 (정상 구조)
+          # ✅ 압축 (중요!)
           cd bundle
-          zip -r ../codedeploy.zip .     # zip 루트에 바로 fe/, app.jar, deploy/
+          zip -r ../codedeploy.zip .
           cd ..
+      
 
       - name: ☁️ Upload codedeploy.zip to S3
         run: |
