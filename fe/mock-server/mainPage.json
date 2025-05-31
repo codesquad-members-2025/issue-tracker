@@ -144,15 +144,15 @@
           "id": 1,
           "nickname": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
-        }
-      ],
-      "labels": [
+        },
         {
-          "labelId": 4,
-          "name": "performance",
-          "color": "#0000FF"
+          "id": 102,
+          "nickname": "alice",
+          "email": "alice@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "name": "v2.0",
@@ -173,10 +173,10 @@
         },
         {
           "commentId": 5,
-          "content": "성능이 50% 개선되었습니다. 클로징하겠습니다.",
+          "content": "성능이 50% 개선되었습니다. 클로징하겠습니다.ㅏㅣㅓ",
           "issueFileUrl": "https://dummy.local/files/performance-improvement.png",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-20T16:20:00"
+          "lastModifiedAt": "2025-05-30T07:35:18.964Z"
         }
       ]
     },
@@ -1147,7 +1147,7 @@
     },
     {
       "id": 29,
-      "title": "이슈 관련 문서 연동",
+      "title": "ㅣㅣ이슈 관련 문서 연동",
       "content": "이슈와 관련된 기술 문서나 회의록을 연결할 수 있는 기능이 필요합니다.",
       "isOpen": true,
       "author": {
@@ -1160,26 +1160,31 @@
           "id": 3,
           "nickname": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
-        }
-      ],
-      "labels": [
-        {
-          "labelId": 5,
-          "name": "feature",
-          "color": "#00FF00"
         },
         {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
+          "id": 101,
+          "nickname": "devchan",
+          "email": "devchan@example.com",
+          "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
+        },
+        {
+          "id": 4,
+          "nickname": "이영희",
+          "profileImageUrl": "https://dummy.local/profile/user3.png"
+        },
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
+      "labels": [],
       "milestone": {
-        "milestoneId": 3,
-        "name": "v2.0",
-        "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
-        "processingRate": 10,
+        "milestoneId": 2,
+        "name": "v1.1",
+        "description": "UI/UX 개선",
+        "endDate": "2025-07-31",
+        "processingRate": 30,
         "isOpen": true
       },
       "lastModifiedAt": "2025-06-12T14:30:00",
@@ -1187,10 +1192,10 @@
       "comments": [
         {
           "commentId": 201,
-          "content": "Confluence API 연동 방식을 제안합니다.",
+          "content": "Confluence API 연동 방식을 제안합니다.--->ㅇㅇ",
           "issueFileUrl": "https://dummy.local/files/confluence-integration.md",
           "authorNickname": "김철수",
-          "lastModifiedAt": "2025-06-12T15:45:00"
+          "lastModifiedAt": "2025-05-30T07:26:14.305Z"
         },
         {
           "commentId": 202,
@@ -2620,6 +2625,96 @@
         "processingRate": 0
       },
       "createdAt": "2025-05-30T03:45:24.513Z"
+    },
+    {
+      "id": 64,
+      "title": "Asa",
+      "content": "aㄴ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-05-30T07:26:01.238Z"
+    },
+    {
+      "id": 65,
+      "title": "ㅁㄴㅇ",
+      "content": "ㅁㄴㅇ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [
+        {
+          "id": 2,
+          "nickname": "홍길동",
+          "profileImageUrl": "https://dummy.local/profile/user1.png"
+        }
+      ],
+      "labels": [
+        {
+          "labelId": 6,
+          "name": "discussion",
+          "color": "#FF00FF"
+        }
+      ],
+      "milestone": {
+        "milestoneId": 3,
+        "processingRate": 0
+      },
+      "createdAt": "2025-05-30T09:28:30.920Z"
+    },
+    {
+      "id": 66,
+      "title": "ㅁㄴ",
+      "content": "ㅇㄴㅁㅇ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-05-30T09:31:38.980Z"
+    },
+    {
+      "id": 67,
+      "title": "코멘트 테스트",
+      "content": "",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-05-30T09:38:29.377Z"
+    },
+    {
+      "id": 68,
+      "title": "asd",
+      "content": "",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-05-30T09:43:30.160Z"
     }
   ],
   "users": [

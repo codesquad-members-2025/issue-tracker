@@ -21,9 +21,7 @@ export default function IssueDetailPage() {
   const shouldRefetch = useRef(false);
   const initIssueDetailStore = useIssueDetailStore((s) => s.initStore);
   const comments = useIssueDetailStore((s) => s.comments);
-  const issue = useIssueDetailStore((s) => s.issue);
-
-  const commentObj = {}; // ------------------------> 따로 구현해야한다....-> 메인 코멘트 전용
+  const issue = useIssueDetailStore((s) => s.issue); //메인 코멘트 전용
 
   async function issueFetchHandler(method, option) {
     const fetchOption = getOptionWithToken(option);
@@ -90,18 +88,23 @@ export default function IssueDetailPage() {
     <Container>
       <DetailIssueHeader issueFetchHandler={issueFetchHandler} />
       <Kanban>
-        {/* <DisplayComment commentObj={} commentPatchHandler={}/> */}
         <CommentsWrapper>
+          <DisplayComment
+            commentObj={mainCommentMap(issue)}
+            commentPatchHandler={issueFetchHandler}
+            isMainComment={true}
+          />
           {comments.map((comment) => {
             return (
               <DisplayComment
                 key={comment.commentId}
+                isMainComment={false}
                 commentObj={comment}
                 commentPatchHandler={commentFetchHandler}
               />
             );
           })}
-          <NewComment />
+          <NewComment commentFetchHandler={commentFetchHandler} />
         </CommentsWrapper>
         <SideBar pageType={'detail'} issueFetchHandler={issueFetchHandler} />
       </Kanban>
@@ -119,6 +122,7 @@ const Container = styled.div`
 const Kanban = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 32px;
   align-items: flex-start;
 `;
 
@@ -126,4 +130,27 @@ const CommentsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 960px;
 `;
+
+function mainCommentMap(issue) {
+  const {
+    issueId,
+    content,
+    issueFileUrl,
+    authorNickname,
+    lastModifiedAt,
+    authorProfileUrl,
+    authorId,
+  } = issue;
+  const commentMap = {
+    commentId: issueId,
+    content,
+    issueFileUrl,
+    authorNickname,
+    lastModifiedAt,
+    profileImageUrl: authorProfileUrl,
+    authorId,
+  };
+  return commentMap;
+}

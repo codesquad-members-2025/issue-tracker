@@ -9,9 +9,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-end;
   gap: 24px;
+  width: 100%;
 `;
 
-export default function NewComment({}) {
+export default function NewComment({ commentFetchHandler }) {
   const newComment = useIssueDetailStore((s) => s.newComment);
   const setFileForNewComment = useIssueDetailStore((s) => s.setFileForNewComment);
   const commentChangeHandler = useIssueDetailStore((s) => s.addNewComment);

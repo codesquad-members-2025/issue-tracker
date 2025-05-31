@@ -9,7 +9,7 @@ import CommentDisplayArea from '@/base-ui/IssuePage/CommentDisplayArea';
 import useValidation from '@/hooks/useValidation';
 
 // 하단 부의 새로운 코멘트 입력은 제외한 컴포넌트 -> 새로운 코멘트는 다른 유닛 컴포넌트에서 다루기!
-export default function DisplayComment({ commentObj, commentPatchHandler }) {
+export default function DisplayComment({ isMainComment, commentObj, commentPatchHandler }) {
   const {
     commentId,
     content,
@@ -20,8 +20,14 @@ export default function DisplayComment({ commentObj, commentPatchHandler }) {
     authorId,
   } = commentObj;
   const [isEdit, setIsEdit] = useState(false);
-  const startEditComment = useIssueDetailStore((s) => s.startEditComment);
-  const updateEditComment = useIssueDetailStore((s) => s.updateEditComment);
+
+  // prop 으로 입력 받는 isMainComment에 따라서 스토어에서 구독하는 액션 핸들러가 달라진다.
+  const startEditComment = useIssueDetailStore((s) =>
+    isMainComment ? s.startEditMainComment : s.startEditComment,
+  );
+  const updateEditComment = useIssueDetailStore((s) =>
+    isMainComment ? s.updateEditMainComment : s.updateEditComment,
+  );
   const { isValid, setCurrentInput } = useValidation({ existedString: content });
 
   function editTriggerHandler() {
@@ -54,7 +60,9 @@ export default function DisplayComment({ commentObj, commentPatchHandler }) {
   );
 
   //   '디테일 이슈의 코멘트의 파일 상태를 변경시키는 액션구독'
-  const setFile = useIssueDetailStore((s) => s.setFileForEditComment);
+  const setFile = useIssueDetailStore((s) =>
+    isMainComment ? s.setFileForEdittingMainComment : s.setFileForEditComment,
+  );
   function commentFileHandler(file) {
     setFile(commentId, file);
   }
