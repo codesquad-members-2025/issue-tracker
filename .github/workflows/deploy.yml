@@ -64,12 +64,12 @@ jobs:
 
       - name: ☁️ Upload to S3
         run: |
-          aws s3 cp deploy.zip s3://your-s3-bucket-name/deploy.zip
+          aws s3 cp deploy.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy.zip
 
       - name: 🚀 Deploy with CodeDeploy
         run: |
           aws deploy create-deployment \
-            --application-name your-codedeploy-app-name \
-            --deployment-group-name your-deployment-group-name \
-            --s3-location bucket=your-s3-bucket-name,bundleType=zip,key=deploy.zip \
+            --application-name ${{ secrets.CODEDEPLOY_APP_NAME }} \
+            --deployment-group-name ${{ secrets.CODEDEPLOY_GROUP_NAME }} \
+            --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy.zip \
             --region ${{ secrets.AWS_REGION }}
