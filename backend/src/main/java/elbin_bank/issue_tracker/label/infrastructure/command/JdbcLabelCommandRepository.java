@@ -50,6 +50,8 @@ public class JdbcLabelCommandRepository implements LabelCommandRepository {
         var params = new MapSqlParameterSource()
                 .addValue("issueId", issueId)
                 .addValue("labelIds", labelIds);
+        jdbc.update(sql, params);
+    }
 
     public void save(Label label) {
         String sql = """
