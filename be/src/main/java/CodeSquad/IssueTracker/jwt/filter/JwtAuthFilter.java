@@ -45,12 +45,27 @@ public class JwtAuthFilter implements Filter {
         }
 
         String requestURI = httpRequest.getRequestURI();
+        log.info("[JWT Filter] Request URI: {}", requestURI);
 
         // ✅ 인증 예외 경로
-        if (requestURI.equals("/login") || requestURI.equals("/signup")) {
+        // ✅ 인증 예외 경로
+        if (
+                requestURI.equals("/login") ||
+                        requestURI.equals("/signup") ||
+                        requestURI.equals("/") ||
+                        requestURI.startsWith("/index") ||
+                        requestURI.startsWith("/favicon") ||
+                        requestURI.endsWith(".js") ||
+                        requestURI.endsWith(".css") ||
+                        requestURI.endsWith(".png") ||
+                        requestURI.endsWith(".jpg") ||
+                        requestURI.endsWith(".ico") ||
+                        requestURI.startsWith("/static") // (정적 파일 경로에 따라 추가)
+        ) {
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }
+
 
         log.info("[JWT Filter] Request URI: {}", requestURI);
         String authHeader = httpRequest.getHeader("Authorization");
