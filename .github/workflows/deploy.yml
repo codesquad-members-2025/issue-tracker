@@ -47,13 +47,13 @@ jobs:
           # ✅ React 빌드 결과 복사
           cp -r fe/dist deploy/app/frontend
 
-          # ✅ 배포 스크립트 및 appspec.yml 경로 수정 (너의 구조 반영)
-          cp deploy/appspec.yml deploy/
+          # ✅ 배포 스크립트 복사만 남기고 appspec.yml은 그대로 둠
           cp deploy/scripts/start.sh deploy/
           cp deploy/scripts/stop.sh deploy/
-          touch deploy/application.env  # placeholder
+          touch deploy/application.env
 
           zip -r deploy.zip deploy
+      
 
       - name: ☁️ Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
