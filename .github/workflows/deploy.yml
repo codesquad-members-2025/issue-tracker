@@ -38,8 +38,8 @@ jobs:
       - name: 📦 Zip Deployment Files
         run: |
           mkdir -p deploy/app
-          
-          # ✅ 자동으로 JAR 경로 탐색
+
+          # ✅ JAR 자동 탐색 및 복사
           JAR_PATH=$(find be/build/libs -name "*.jar" | head -n 1)
           echo "JAR found: $JAR_PATH"
           cp "$JAR_PATH" deploy/app/app.jar
@@ -47,10 +47,10 @@ jobs:
           # ✅ React 빌드 결과 복사
           cp -r fe/dist deploy/app/frontend
 
-          # ✅ 배포 스크립트 복사
-          cp appspec.yml deploy/
-          cp scripts/start.sh deploy/
-          cp scripts/stop.sh deploy/
+          # ✅ 배포 스크립트 및 appspec.yml 경로 수정 (너의 구조 반영)
+          cp deploy/appspec.yml deploy/
+          cp deploy/scripts/start.sh deploy/
+          cp deploy/scripts/stop.sh deploy/
           touch deploy/application.env  # placeholder
 
           zip -r deploy.zip deploy
