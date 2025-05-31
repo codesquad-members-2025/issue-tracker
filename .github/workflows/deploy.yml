@@ -45,31 +45,24 @@ jobs:
           echo "JAR found: $JAR_PATH"
           cp "$JAR_PATH" deploy/app/app.jar
 
-          # ✅ 프론트엔드 빌드 결과 복사
+          # ✅ FE 빌드 결과 복사
           cp -r fe/dist/* deploy/app/frontend/
 
-          # ✅ appspec.yml 복사 (이미 있으면 생략)
-          if [ ! -f deploy/appspec.yml ]; then
-            echo "🚫 deploy/appspec.yml 없음. 워크스페이스에 직접 추가해야 함."
-            exit 1
-          fi
+          # ✅ start.sh, stop.sh 복사
+          cp deploy/scripts/start.sh deploy/scripts/
+          cp deploy/scripts/stop.sh deploy/scripts/
 
-          # ✅ 스크립트 복사 (자기 자신이면 생략)
-          if [ ! -f deploy/scripts/start.sh ]; then
-            echo "🚫 deploy/scripts/start.sh 없음. 추가 필요."
-            exit 1
-          fi
-          if [ ! -f deploy/scripts/stop.sh ]; then
-            echo "🚫 deploy/scripts/stop.sh 없음. 추가 필요."
-            exit 1
-          fi
-
-          # ✅ ENV 파일 추가 (선택)
+          # ✅ .env (필요 시)
           touch deploy/application.env
 
-          # ✅ zip 생성
+          # ✅ 디버깅용 구조 출력
+          echo "🧾 deploy 내부 구조:"
+          find deploy
+
+          # ✅ zip 만들기 (deploy 디렉토리 기준)
           cd deploy
           zip -r ../deploy.zip .
+      
 
       - name: ☁️ Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
