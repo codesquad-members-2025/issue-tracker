@@ -1,120 +1,53 @@
-name: Deploy Frontend and Backend to EC2
+name: Deploy to EC2
 
 on:
   push:
     branches:
       - main
-      - BE_Johnnie_newLogic_week3
-      - dev
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ✅ Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      # ---------------------------
-      # 🌐 FRONTEND BUILD
-      # ---------------------------
-      - name: ⚙️ Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: 📝 Create .env.production
+      - name: Build Frontend
+        working-directory: fe
         run: |
-          echo "VITE_API_BASE_URL=${{ secrets.FRONTEND_API_BASE_URL }}" > fe/.env.production
-          echo "VITE_TEST_URL=http://testserver.com:5001" >> fe/.env.production
-
-      - name: 🧱 Build Frontend
-        run: |
-          cd fe
-          npm ci
+          npm install
           npm run build
 
-      # ---------------------------
-      # ☕ BACKEND BUILD
-      # ---------------------------
-      - name: ☕ Setup JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: 🛠️ Grant execute permission
-        run: chmod +x ./be/gradlew
-
-      - name: 🏗️ Build Backend
+      - name: Build Backend
+        working-directory: be
         run: |
-          cd be
           ./gradlew clean build -x test
 
-      # ---------------------------
-      # 📦 PACKAGE FOR CODEDEPLOY
-      # ---------------------------
-      - name: 📦 Package for CodeDeploy
+      - name: Zip Deployment Files
         run: |
-          mkdir -p bundle/fe
-          mkdir -p bundle/deploy/scripts
+          mkdir -p deploy/app
+          cp be/build/libs/*.jar deploy/app/app.jar
+          cp -r fe/dist deploy/app/frontend
+          cp appspec.yml deploy/
+          cp scripts/start.sh deploy/
+          cp scripts/stop.sh deploy/
+          cp scripts/application.env deploy/  # 더미 .env, 실제는 start.sh에서 Secrets로 채움
+          zip -r deploy.zip deploy
 
-          # ✅ 프론트 빌드 복사
-          cp -r fe/dist/* bundle/fe/
+      - name: Upload to S3
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-          # ✅ 백엔드 JAR 복사
-          cp be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar bundle/app.jar
+      - run: aws s3 cp deploy.zip s3://your-bucket-name/deploy.zip
 
-          # ✅ 배포 스크립트 복사
-          cp deploy/appspec.yml bundle/deploy/
-          cp deploy/scripts/*.sh bundle/deploy/scripts/
-          chmod +x bundle/deploy/scripts/*.sh
-
-          # ✅ 압축 (bundle 내부만 zip)
-          cd bundle
-          zip -r ../codedeploy.zip .
-          cd ..
-
-      - name: ☁️ Upload codedeploy.zip to S3
-        run: |
-          aws s3 cp codedeploy.zip s3://${{ secrets.CODEDEPLOY_S3_BUCKET }}/codedeploy.zip --region ${{ secrets.AWS_REGION }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-
-      # ---------------------------
-      # 🔐 UPLOAD .ENV TO EC2
-      # ---------------------------
-      - name: ✍️ Generate .env
-        run: |
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" > .env
-          echo "JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}" >> .env
-          echo "JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}" >> .env
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
-          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
-          echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> .env
-          echo "S3_URL_NAME=https://${{ secrets.S3_BUCKET_NAME }}.s3.${{ secrets.AWS_REGION }}.amazonaws.com" >> .env
-
-      - name: 📄 Upload .env to EC2
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-          scp -i private_key.pem -o StrictHostKeyChecking=no .env ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/.env
-
-      # ---------------------------
-      # 🚀 DEPLOY WITH CODEDEPLOY
-      # ---------------------------
-      - name: 🔔 Trigger CodeDeploy
+      - name: Deploy with CodeDeploy
         run: |
           aws deploy create-deployment \
-            --application-name ${{ secrets.CODEDEPLOY_APP_NAME }} \
-            --deployment-group-name ${{ secrets.CODEDEPLOY_GROUP_NAME }} \
-            --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --s3-location bucket=${{ secrets.CODEDEPLOY_S3_BUCKET }},bundleType=zip,key=codedeploy.zip \
+            --application-name your-app-name \
+            --deployment-group-name your-deployment-group \
+            --s3-location bucket=your-bucket-name,bundleType=zip,key=deploy.zip \
             --region ${{ secrets.AWS_REGION }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}

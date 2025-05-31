@@ -1,25 +1,16 @@
 version: 0.0
 os: linux
-
 files:
-  - source: fe
-    destination: /home/ubuntu/deploy/fe
-
-  - source: app.jar
-    destination: /home/ubuntu/deploy
-
-  - source: deploy
-    destination: /home/ubuntu/deploy/deploy
+  - source: /app
+    destination: /home/ubuntu/app
 
 hooks:
-  BeforeInstall:
-    - location: deploy/scripts/stop.sh
+  ApplicationStop:
+    - location: scripts/stop.sh
       timeout: 20
       runas: ubuntu
+
   AfterInstall:
-    - location: deploy/scripts/start.sh
+    - location: scripts/start.sh
       timeout: 60
-      runas: ubuntu
-    - location: deploy/scripts/frontend.sh
-      timeout: 30
       runas: ubuntu

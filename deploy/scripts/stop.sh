@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "🛑 Stopping any running app..."
+echo "> Stop previous app..."
 pkill -f 'java -jar' || true

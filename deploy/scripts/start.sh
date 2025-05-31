@@ -1,29 +1,29 @@
 #!/bin/bash
+echo "> Start script running..."
 
-echo "🚀 Starting Spring Boot app..."
+# .env 파일 생성 (GitHub Secrets에서 전달된 값을 직접 여기서 설정)
+cat <<EOF > /home/ubuntu/app/.env
+JWT_ACCESS_KEY=${JWT_ACCESS_KEY}
+JWT_REFRESH_KEY=${JWT_REFRESH_KEY}
+AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+AWS_REGION=${AWS_REGION}
+cloud.aws.region.static=${AWS_REGION}
+cloud.aws.s3.bucket=${S3_BUCKET}
+EOF
 
-# .env 로드
-if [ -f /home/ubuntu/.env ]; then
-  echo "📦 Loading environment variables from .env"
-  source /home/ubuntu/.env
-else
-  echo "❌ .env file not found!"
-  exit 1
-fi
+source /home/ubuntu/app/.env
 
-# JAR 실행
-cd /home/ubuntu
-JAR_NAME=app.jar
+echo "> Kill previous app..."
+pkill -f 'java -jar' || true
 
+echo "> Start app..."
 nohup java \
   -Dspring.profiles.active=dev \
   -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
   -DJWT_REFRESH_KEY=$JWT_REFRESH_KEY \
   -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
   -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-  -DAWS_REGION=$AWS_REGION \
   -Dcloud.aws.region.static=$AWS_REGION \
-  -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
-  -Dcloud.aws.s3.url=$S3_URL_NAME \
-  -Dspring.datasource.password=$DB_PASSWORD \
-  -jar "$JAR_NAME" > app.log 2>&1 &
+  -Dcloud.aws.s3.bucket=$S3_BUCKET \
+  -jar /home/ubuntu/app/app.jar > /home/ubuntu/app/app.log 2>&1 &
