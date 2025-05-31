@@ -20,4 +20,5 @@ nohup java \
   -DAWS_REGION=$AWS_REGION \
   -Dcloud.aws.region.static=$AWS_REGION \
   -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
+  -Dspring.web.resources.static-locations=file:/home/ubuntu/app/frontend/ \
   -jar /home/ubuntu/app/app.jar > /home/ubuntu/app.log 2>&1 &

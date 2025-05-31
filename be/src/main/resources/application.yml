@@ -1,4 +1,7 @@
 spring:
+  web:
+    resources:
+      static-locations: file:/home/ubuntu/app/frontend/
   profiles:
     group:
       dev:
