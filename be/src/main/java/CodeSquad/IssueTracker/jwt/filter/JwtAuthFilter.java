@@ -44,7 +44,7 @@ public class JwtAuthFilter implements Filter {
         // 정적 리소스 및 공개 API 우회
         if (
                 requestURI.equals("/") ||
-                        requestURI.contains(".") || // <-- 확장자 있는 모든 요청 우회 (index.html, favicon.ico, js, css 등)
+                        requestURI.contains(".") ||
                         requestURI.startsWith("/assets/") ||
                         requestURI.startsWith("/static/") ||
                         requestURI.equals("/login") ||
