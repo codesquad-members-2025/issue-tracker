@@ -48,16 +48,16 @@ jobs:
           # ✅ frontend 빌드 결과물 복사
           cp -r fe/dist/* deploy/app/frontend/
 
-          # ✅ 앱스펙, 스크립트 복사
-          cp deploy/appspec.yml deploy/
+          # ✅ scripts 복사
           cp deploy/scripts/*.sh deploy/scripts/
 
-          # ✅ env 파일 (필요 시)
+          # ✅ env 파일 생성
           touch deploy/application.env
 
           # ✅ zip 만들기 (deploy/ 내부만 압축)
           cd deploy
           zip -r ../deploy.zip .
+      
 
       - name: ☁️ Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
