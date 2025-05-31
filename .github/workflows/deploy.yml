@@ -48,15 +48,26 @@ jobs:
           # ✅ frontend 빌드 결과물 복사
           cp -r fe/dist/* deploy/app/frontend/
 
-          # ✅ scripts 복사
-          cp deploy/scripts/*.sh deploy/scripts/
+          # ✅ appspec.yml 복사 (이미 있으면 생략)
+          if [ ! -f deploy/appspec.yml ]; then
+            cp deploy/appspec.yml deploy/
+          fi
+
+          # ✅ 배포 스크립트 복사
+          if [ ! -f deploy/scripts/start.sh ]; then
+            cp deploy/scripts/start.sh deploy/scripts/
+          fi
+          if [ ! -f deploy/scripts/stop.sh ]; then
+            cp deploy/scripts/stop.sh deploy/scripts/
+          fi
 
           # ✅ env 파일 생성
           touch deploy/application.env
 
-          # ✅ zip 만들기 (deploy/ 내부만 압축)
+          # ✅ zip 만들기
           cd deploy
           zip -r ../deploy.zip .
+      
       
 
       - name: ☁️ Configure AWS Credentials
