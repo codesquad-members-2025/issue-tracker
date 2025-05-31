@@ -2,8 +2,14 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./
+  - source: fe
+    destination: /home/ubuntu/deploy/fe
+
+  - source: app.jar
     destination: /home/ubuntu/deploy
+
+  - source: deploy
+    destination: /home/ubuntu/deploy/deploy
 
 hooks:
   BeforeInstall:
