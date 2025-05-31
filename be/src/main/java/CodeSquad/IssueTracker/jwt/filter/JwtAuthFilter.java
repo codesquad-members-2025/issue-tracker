@@ -48,23 +48,22 @@ public class JwtAuthFilter implements Filter {
         log.info("[JWT Filter] Request URI: {}", requestURI);
 
         // ✅ 인증 예외 경로
-        // ✅ 인증 예외 경로
         if (
-                requestURI.equals("/login") ||
-                        requestURI.equals("/signup") ||
-                        requestURI.equals("/") ||
-                        requestURI.startsWith("/index") ||
-                        requestURI.startsWith("/favicon") ||
+                requestURI.equals("/") ||
+                        requestURI.equals("/index.html") ||
+                        requestURI.equals("/favicon.ico") ||
                         requestURI.endsWith(".js") ||
                         requestURI.endsWith(".css") ||
-                        requestURI.endsWith(".png") ||
-                        requestURI.endsWith(".jpg") ||
                         requestURI.endsWith(".ico") ||
-                        requestURI.startsWith("/static") // (정적 파일 경로에 따라 추가)
+                        requestURI.endsWith(".svg") ||         //  vite.svg 대응 추가
+                        requestURI.startsWith("/assets") ||    //  vite 기반 정적 폴더
+                        requestURI.equals("/login") ||
+                        requestURI.equals("/signup")
         ) {
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }
+
 
 
         log.info("[JWT Filter] Request URI: {}", requestURI);
