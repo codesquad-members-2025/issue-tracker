@@ -37,33 +37,33 @@ jobs:
 
       - name: 📦 Prepare Deployment Bundle
         run: |
-          mkdir -p deploy/app/frontend
-          mkdir -p deploy/scripts
+          mkdir -p bundle/app/frontend
+          mkdir -p bundle/scripts
 
           # ✅ JAR 복사
           JAR_PATH=$(find be/build/libs -name "*.jar" | head -n 1)
           echo "JAR found: $JAR_PATH"
-          cp "$JAR_PATH" deploy/app/app.jar
+          cp "$JAR_PATH" bundle/app/app.jar
 
           # ✅ 프론트엔드 빌드 복사
-          cp -r fe/dist/* deploy/app/frontend/
+          cp -r fe/dist/* bundle/app/frontend/
 
           # ✅ 배포 스크립트 복사
-          cp deploy/scripts/start.sh deploy/scripts/
-          cp deploy/scripts/stop.sh deploy/scripts/
+          cp deploy/scripts/start.sh bundle/scripts/
+          cp deploy/scripts/stop.sh bundle/scripts/
 
           # ✅ appspec.yml 압축 루트로 복사
-          cp deploy/appspec.yml appspec.yml
+          cp deploy/appspec.yml bundle/appspec.yml
 
-          # ✅ env 파일 생성
-          touch deploy/application.env
+          # ✅ 환경 변수 파일 템플릿 생성
+          touch bundle/application.env
 
-          # ✅ 디버그용 구조 출력
-          echo "🧾 DEPLOY STRUCTURE:"
-          find deploy
+          # ✅ 구조 확인
+          echo "🧾 bundle 구조:"
+          find bundle
 
-          # ✅ zip 압축 (deploy 내부만 압축)
-          cd deploy
+          # ✅ zip 압축
+          cd bundle
           zip -r ../deploy.zip .
 
       - name: ☁️ Configure AWS Credentials
