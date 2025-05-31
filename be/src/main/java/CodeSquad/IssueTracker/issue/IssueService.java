@@ -121,15 +121,6 @@ public class IssueService {
                 commentService.findCommentResponsesByIssueId(issue.getIssueId());
         response.setComments(comments);
 
-        Optional<User> byId = userService.findById(response.getIssue().getAuthorId());
-
-        if (byId.isPresent()) {
-            User author = byId.get();
-            response.setAuthorName(author.getNickName());
-            response.setAuthorProfileImage(author.getProfileImageUrl());
-        }
-
-
         return response;
     }
 
@@ -151,5 +142,9 @@ public class IssueService {
 
     public int countIssuesByOpenStatus(boolean isOpen, IssueFilterCondition condition) {
         return issueRepository.countFilteredIssuesByIsOpen(isOpen, condition);
+    }
+
+    public void updateIssueOpenState(IssueStatusUpdateRequest condition) {
+        issueRepository.updateIsOpen(condition);
     }
 }
