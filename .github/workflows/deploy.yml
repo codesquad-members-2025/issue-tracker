@@ -72,7 +72,6 @@ jobs:
 
           # ✅ 압축
           zip -r codedeploy.zip codedeploy/
-      
 
       - name: ☁️ Upload codedeploy.zip to S3
         run: |
