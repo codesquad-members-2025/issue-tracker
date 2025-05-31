@@ -27,27 +27,25 @@ public class JwtAuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
-        // ✅ 모든 요청에 대해 CORS 헤더 추가
+        String requestURI = httpRequest.getRequestURI();
+        String method = httpRequest.getMethod();
+
+        log.info("[JWT Filter] Request URI: {}, Method: {}", requestURI, method);
+
+        // ✅ CORS 헤더 설정
         httpResponse.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
         httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
 
-        // ✅ OPTIONS 요청은 여기서 처리 끝
-        if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+        // ✅ OPTIONS 요청은 인증 필요 없음
+        if ("OPTIONS".equalsIgnoreCase(method)) {
             log.info("[JWT Filter] OPTIONS 요청 우회됨");
-            httpResponse.setHeader("Access-Control-Allow-Origin", "http://issue-tracker-fe-hosting.s3-website.ap-northeast-2.amazonaws.com");
-            httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setStatus(HttpServletResponse.SC_OK);
-            return; // ❗ 이게 반드시 있어야 인증 필터 우회됨
+            return;
         }
 
-        String requestURI = httpRequest.getRequestURI();
-        log.info("[JWT Filter] Request URI: {}", requestURI);
-
-        // ✅ 인증 예외 경로
+        // ✅ 인증 없이 통과시킬 경로
         if (
                 requestURI.equals("/") ||
                         requestURI.equals("/index.html") ||
@@ -55,22 +53,22 @@ public class JwtAuthFilter implements Filter {
                         requestURI.endsWith(".js") ||
                         requestURI.endsWith(".css") ||
                         requestURI.endsWith(".ico") ||
-                        requestURI.endsWith(".svg") ||         //  vite.svg 대응 추가
-                        requestURI.startsWith("/assets") ||    //  vite 기반 정적 폴더
+                        requestURI.endsWith(".svg") ||
+                        requestURI.startsWith("/assets") ||
+                        requestURI.startsWith("/static") ||
                         requestURI.equals("/login") ||
                         requestURI.equals("/signup")
         ) {
+            log.info("[JWT Filter] 인증 예외 경로 우회됨 ✅: {}", requestURI);
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }
 
-
-
-        log.info("[JWT Filter] Request URI: {}", requestURI);
+        // ✅ Authorization 헤더 검증
         String authHeader = httpRequest.getHeader("Authorization");
 
-        // ✅ Authorization 헤더가 없거나 잘못된 경우
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn("[JWT Filter] Authorization 헤더 없음 또는 형식 오류");
             BaseResponseDto responseDto = BaseResponseDto.failure("Authorization 헤더가 없거나 형식이 잘못되었습니다.");
             writeJsonResponse(httpResponse, responseDto, HttpStatus.UNAUTHORIZED);
             return;
@@ -80,15 +78,17 @@ public class JwtAuthFilter implements Filter {
 
         try {
             Claims claims = jwtUtil.validateAccessToken(accessToken);
-            httpRequest.setAttribute("id", claims.get("loginId"));      // 사용자 식별자
-            httpRequest.setAttribute("loginId", claims.get("loginUser")); // 사용자 로그인 ID
-            log.info("[JWT Filter] loginId: {}", claims.get("loginUser"));
+            httpRequest.setAttribute("id", claims.get("loginId"));
+            httpRequest.setAttribute("loginId", claims.get("loginUser"));
+            log.info("[JWT Filter] 유효한 토큰, 사용자 loginId: {}", claims.get("loginUser"));
         } catch (JwtValidationException e) {
+            log.warn("[JWT Filter] JWT 검증 실패: {}", e.getMessage());
             BaseResponseDto responseDto = BaseResponseDto.failure(e.getMessage());
             writeJsonResponse(httpResponse, responseDto, HttpStatus.UNAUTHORIZED);
             return;
         }
 
+        // ✅ 통과
         filterChain.doFilter(httpRequest, httpResponse);
     }
 
