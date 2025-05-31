@@ -71,7 +71,9 @@ jobs:
           chmod +x codedeploy/deploy/scripts/*.sh
 
           # ✅ 압축
-          zip -r codedeploy.zip codedeploy/
+          cd bundle
+          zip -r ../codedeploy.zip .
+          cd ..
 
       - name: ☁️ Upload codedeploy.zip to S3
         run: |
