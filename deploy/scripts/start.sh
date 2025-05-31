@@ -1,6 +1,10 @@
 #!/bin/bash
 echo "> [START] Spring Boot App 실행"
 
+# .env 복사 (처음 배포된 환경변수 템플릿을 실제로 적용)
+cp /home/ubuntu/app/application.env /home/ubuntu/.env
+
+# 환경변수 불러오기
 source /home/ubuntu/.env
 
 # 실행 중이면 종료
@@ -22,3 +26,5 @@ nohup java \
   -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
   -Dspring.web.resources.static-locations=file:/home/ubuntu/app/frontend/ \
   -jar /home/ubuntu/app/app.jar > /home/ubuntu/app.log 2>&1 &
+
+echo "> Spring Boot 실행 완료"
