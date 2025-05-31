@@ -116,4 +116,16 @@ public class JdbcIssueCommandRepository implements IssueCommandRepository {
         jdbc.update(sql, p);
     }
 
+    @Override
+    public void deleteById(long id) {
+        String sql = """
+                UPDATE issue
+                SET deleted_at = CURRENT_TIMESTAMP
+                WHERE id = :id
+                """;
+
+        var params = new MapSqlParameterSource().addValue("id", id);
+        jdbc.update(sql, params);
+    }
+
 }

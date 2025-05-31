@@ -10,4 +10,6 @@ public interface IssueCommandRepository {
 
     void updateState(long issueId, boolean isClosed);
 
+    void deleteById(long id);
+
 }

@@ -13,13 +13,16 @@ CREATE TABLE `user`
     `github_id`         BIGINT UNSIGNED NULL,
     `login`             VARCHAR(255) NULL,
     `password`          VARCHAR(255) NULL,
+    `salt`              VARCHAR(255) NULL,
     `nickname`          VARCHAR(255) NOT NULL,
     `profile_image_url` VARCHAR(1000) NULL,
     `uuid`              VARCHAR(255) NOT NULL,
     `created_at`        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`        DATETIME NULL,
-    UNIQUE KEY `user_uuid_unique` (`uuid`)
+    UNIQUE KEY `user_uuid_unique` (`uuid`),
+    UNIQUE KEY `login_unique` (`login`),
+    UNIQUE KEY `github_id_unique` (`github_id`)
 );
 
 CREATE TABLE `milestone`
@@ -42,7 +45,7 @@ CREATE TABLE `issue`
     `author_id`    BIGINT UNSIGNED NOT NULL,
     `milestone_id` BIGINT UNSIGNED NULL,
     `title`        VARCHAR(255) NOT NULL,
-    `contents`     TEXT         NULL,
+    `contents`     TEXT NULL,
     `is_closed`    BOOLEAN      NOT NULL,
     `created_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -77,18 +80,18 @@ CREATE TABLE `comment`
 
 CREATE TABLE `assignee`
 (
-    `id`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user_id`  BIGINT UNSIGNED NOT NULL,
     `issue_id` BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-    FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`)
+    `user_id`  BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (`issue_id`, `user_id`),
+    FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
 CREATE TABLE `issue_label`
 (
-    `id`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `issue_id` BIGINT UNSIGNED NOT NULL,
     `label_id` BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (`issue_id`, `label_id`),
     FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
     FOREIGN KEY (`label_id`) REFERENCES `label` (`id`)
 );

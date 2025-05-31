@@ -14,9 +14,9 @@ public class Issue extends BaseEntity {
     @Id
     private final Long id;
     private final long authorId;
-    private final String title;
-    private final String contents;
-    private final Long milestoneId;
+    private String title;
+    private String contents;
+    private Long milestoneId;
     private boolean isClosed;
 
     public static Issue of(long id, long authorId, String title, String contents, Long milestoneId) {
@@ -33,6 +33,30 @@ public class Issue extends BaseEntity {
         }
 
         this.isClosed = targetClosed;
+    }
+
+    public void changeTitle(String title) {
+        if (this.title.equals(title)) {
+            return;
+        }
+
+        this.title = title;
+    }
+
+    public void changeContents(String contents) {
+        if (this.contents.equals(contents)) {
+            return;
+        }
+
+        this.contents = contents;
+    }
+
+    public void changeMilestone(Long milestoneId) {
+        if (this.milestoneId != null && this.milestoneId.equals(milestoneId)) {
+            return;
+        }
+
+        this.milestoneId = milestoneId;
     }
 
 }

@@ -2,8 +2,6 @@ package elbin_bank.issue_tracker.issue.infrastructure.query;
 
 import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
 import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRepository;
-import elbin_bank.issue_tracker.issue.domain.IssueState;
-import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
@@ -14,7 +12,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -129,35 +126,6 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
                         Map.Entry::getKey,
                         Collectors.mapping(Map.Entry::getValue, Collectors.toList())
                 ));
-    }
-
-    @Override
-    public IssueCountProjection countIssueOpenAndClosed() {
-        String sql = """
-                    SELECT status_key, issue_count
-                    FROM issue_status_count
-                    WHERE status_key IN (:open, :closed)
-                """;
-
-        Map<String, Object> params = Map.of(
-                "open", IssueState.OPEN.name().toLowerCase(),
-                "closed", IssueState.CLOSED.name().toLowerCase()
-        );
-
-        List<Map<String, Object>> rows = jdbc.queryForList(sql, params);
-        EnumMap<IssueState, Long> counts = new EnumMap<>(IssueState.class);
-
-        for (Map<String, Object> row : rows) {
-            String key = (String) row.get("status_key");
-            long count = ((Number) row.get("issue_count")).longValue();
-
-            IssueState.from(key).ifPresent(state -> counts.put(state, count));
-        }
-
-        return new IssueCountProjection(
-                counts.getOrDefault(IssueState.OPEN, 0L),
-                counts.getOrDefault(IssueState.CLOSED, 0L)
-        );
     }
 
     @Override

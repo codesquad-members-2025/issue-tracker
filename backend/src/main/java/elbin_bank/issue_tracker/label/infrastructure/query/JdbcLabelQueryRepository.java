@@ -79,6 +79,20 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
     }
 
     @Override
+    public List<Long> findLabelIdsByIssueId(long issueId) {
+        String sql = """
+                SELECT l.id
+                FROM issue_label il
+                JOIN label l ON l.id = il.label_id
+                WHERE il.issue_id = :issueId
+                AND l.deleted_at IS NULL
+                """;
+
+        var params = new MapSqlParameterSource("issueId", issueId);
+        return jdbc.queryForList(sql, params, Long.class);
+    }
+
+    @Override
     public List<LabelProjection> findAll() {
         String sql = """
                 SELECT id,

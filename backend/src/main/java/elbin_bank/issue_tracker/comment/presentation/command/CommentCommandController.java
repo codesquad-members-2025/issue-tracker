@@ -16,15 +16,20 @@ public class CommentCommandController {
     private final CommentCommandService commentCommandService;
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Void> createComment(@RequestBody CommentCreateRequestDto commentCreateRequestDto, @PathVariable Long id) {
-        commentCommandService.createComment(commentCreateRequestDto, id);
+    public ResponseEntity<Void> createComment(@RequestBody CommentCreateRequestDto commentCreateRequestDto,
+                                              @PathVariable Long id,
+                                              @RequestAttribute("user") Long userId) {
+        commentCommandService.createComment(commentCreateRequestDto, id, userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{id}/comments/{commentId}")
-    public ResponseEntity<Void> updateComment(@RequestBody CommentUpdateRequestDto commentUpdateRequestDto, @PathVariable Long id, @PathVariable Long commentId) {
-        commentCommandService.updateComment(commentUpdateRequestDto, id, commentId);
+    public ResponseEntity<Void> updateComment(@RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
+                                              @PathVariable Long id,
+                                              @PathVariable Long commentId,
+                                              @RequestAttribute("user") Long userId) {
+        commentCommandService.updateComment(commentUpdateRequestDto, id, commentId, userId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

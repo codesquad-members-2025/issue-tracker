@@ -36,6 +36,21 @@ public class JdbcLabelCommandRepository implements LabelCommandRepository {
     }
 
     @Override
+    public void deleteLabelsFromIssue(Long issueId, List<Long> labelIds) {
+        if (labelIds == null || labelIds.isEmpty()) {
+            return;
+        }
+
+        String sql = """
+                    DELETE FROM issue_label
+                     WHERE issue_id = :issueId
+                       AND label_id IN (:labelIds)
+                """;
+
+        var params = new MapSqlParameterSource()
+                .addValue("issueId", issueId)
+                .addValue("labelIds", labelIds);
+
     public void save(Label label) {
         String sql = """
                     INSERT INTO label

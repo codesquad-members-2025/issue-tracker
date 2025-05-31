@@ -9,7 +9,10 @@ public interface LabelCommandRepository {
 
     void saveLabelsToIssue(Long issueId, List<Long> labelIds);
 
+    void deleteLabelsFromIssue(Long issueId, List<Long> labelIds);
+
     void save(Label label);
 
     void update(LabelProjection label, LabelUpdateRequestDto labelUpdateRequestDto);
+
 }
