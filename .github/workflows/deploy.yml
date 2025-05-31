@@ -52,26 +52,28 @@ jobs:
           ./gradlew clean build -x test
 
       # ---------------------------
-      # 📦 PACKAGE FOR CODEDEPLOY
+      # 📆 PACKAGE FOR CODEDEPLOY
       # ---------------------------
-      - name: 📦 Package for CodeDeploy
+      - name: 📆 Package for CodeDeploy
         run: |
-          mkdir -p fe
-          mkdir -p deploy/scripts
+          mkdir -p bundle/fe
+          mkdir -p bundle/deploy/scripts
 
           # ✅ 프론트 빌드 복사
-          cp -r fe/dist/* fe/
+          cp -r fe/dist/* bundle/fe/
 
-          # ✅ 백엔드 JAR 복사
-          cp be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar app.jar
+          # ✅ 백어드 JAR 복사
+          cp be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar bundle/app.jar
 
           # ✅ 배포 스크립트 복사
-          cp deploy/appspec.yml deploy/
-          cp deploy/scripts/*.sh deploy/scripts/
-          chmod +x deploy/scripts/*.sh
+          cp deploy/appspec.yml bundle/deploy/
+          cp deploy/scripts/*.sh bundle/deploy/scripts/
+          chmod +x bundle/deploy/scripts/*.sh
 
-          # ✅ 압축 (루트에 바로 포함)
-          zip -r codedeploy.zip fe/ deploy/ app.jar
+          # ✅ 압축 (bundle 내부만 zip)
+          cd bundle
+          zip -r ../codedeploy.zip .
+          cd ..
 
       - name: ☁️ Upload codedeploy.zip to S3
         run: |
@@ -95,7 +97,7 @@ jobs:
           echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> .env
           echo "S3_URL_NAME=https://${{ secrets.S3_BUCKET_NAME }}.s3.${{ secrets.AWS_REGION }}.amazonaws.com" >> .env
 
-      - name: 📤 Upload .env to EC2
+      - name: 📄 Upload .env to EC2
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
