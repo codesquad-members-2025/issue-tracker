@@ -22,7 +22,7 @@ jobs:
       - name: 🛠 Set Frontend Environment
         working-directory: fe
         run: |
-          echo "REACT_APP_API_BASE_URL=${{ secrets.FRONTEND_API_BASE_URL }}" > .env.production
+          echo "VITE_API_BASE_URL=${{ secrets.FRONTEND_API_BASE_URL }}" > .env.production
 
       - name: 🧱 Build Frontend
         working-directory: fe
@@ -35,25 +35,29 @@ jobs:
         run: |
           ./gradlew clean build -x test
 
-      - name: 📦 Zip Deployment Files
+      - name: 📦 Prepare Deployment Bundle
         run: |
-          mkdir -p deploy/app
+          mkdir -p deploy/app/frontend
+          mkdir -p deploy/scripts
 
-          # ✅ JAR 자동 탐색 및 복사
+          # ✅ jar 복사
           JAR_PATH=$(find be/build/libs -name "*.jar" | head -n 1)
           echo "JAR found: $JAR_PATH"
           cp "$JAR_PATH" deploy/app/app.jar
 
-          # ✅ React 빌드 결과 복사
-          cp -r fe/dist deploy/app/frontend
+          # ✅ frontend 빌드 결과물 복사
+          cp -r fe/dist/* deploy/app/frontend/
 
-          # ✅ 배포 스크립트 복사만 남기고 appspec.yml은 그대로 둠
-          cp deploy/scripts/start.sh deploy/
-          cp deploy/scripts/stop.sh deploy/
+          # ✅ 앱스펙, 스크립트 복사
+          cp deploy/appspec.yml deploy/
+          cp deploy/scripts/*.sh deploy/scripts/
+
+          # ✅ env 파일 (필요 시)
           touch deploy/application.env
 
-          zip -r deploy.zip deploy
-      
+          # ✅ zip 만들기 (deploy/ 내부만 압축)
+          cd deploy
+          zip -r ../deploy.zip .
 
       - name: ☁️ Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
