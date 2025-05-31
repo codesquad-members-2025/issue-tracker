@@ -56,25 +56,22 @@ jobs:
       # ---------------------------
       - name: 📦 Package for CodeDeploy
         run: |
-          mkdir -p bundle/fe
-          mkdir -p bundle/deploy/scripts
+          mkdir -p fe
+          mkdir -p deploy/scripts
 
           # ✅ 프론트 빌드 복사
-          cp -r fe/dist/* bundle/fe/
+          cp -r fe/dist/* fe/
 
           # ✅ 백엔드 JAR 복사
-          cp be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar bundle/app.jar
+          cp be/build/libs/IssueTracker-0.0.1-SNAPSHOT.jar app.jar
 
           # ✅ 배포 스크립트 복사
-          cp deploy/appspec.yml bundle/deploy/
-          cp deploy/scripts/*.sh bundle/deploy/scripts/
-          chmod +x bundle/deploy/scripts/*.sh
+          cp deploy/appspec.yml deploy/
+          cp deploy/scripts/*.sh deploy/scripts/
+          chmod +x deploy/scripts/*.sh
 
-          # ✅ 압축 (중요!)
-          cd bundle
-          zip -r ../codedeploy.zip .
-          cd ..
-      
+          # ✅ 압축 (루트에 바로 포함)
+          zip -r codedeploy.zip fe/ deploy/ app.jar
 
       - name: ☁️ Upload codedeploy.zip to S3
         run: |
