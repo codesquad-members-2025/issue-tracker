@@ -30,58 +30,66 @@ public class JwtAuthFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
         String requestURI = httpRequest.getRequestURI();
+        String contextPath = httpRequest.getContextPath();
         String method = httpRequest.getMethod();
 
-        log.info("[JWT Filter] Request URI: {}, Method: {}", requestURI, method);
+        log.info("[JWT Filter] 💣 진입 | URI=[{}] | Context=[{}] | Method=[{}]", requestURI, contextPath, method);
 
-        // ✅ OPTIONS 요청은 인증 필요 없음
+        // ✅ OPTIONS 요청 우회
         if ("OPTIONS".equalsIgnoreCase(method)) {
-            log.info("[JWT Filter] OPTIONS 요청 우회됨");
+            log.info("[JWT Filter] ✅ OPTIONS 요청 우회");
             httpResponse.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
-        // 정적 리소스 및 공개 API 우회
-        if (
-                requestURI.equals("/") ||
-                        requestURI.contains(".") ||
-                        requestURI.startsWith("/assets/") ||
-                        requestURI.startsWith("/static/") ||
-                        requestURI.equals("/login") ||
-                        requestURI.equals("/signup")
-        ) {
-            log.info("[JWT Filter] 인증 예외 경로 우회됨 ✅: {}", requestURI);
+        // ✅ 정적 리소스 및 공개 경로 우회
+        if (isPermitAllPath(requestURI)) {
+            log.info("[JWT Filter] ✅ 인증 예외 경로 우회: {}", requestURI);
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }
 
-
-
-        // ✅ Authorization 헤더 검증
+        // ✅ Authorization 헤더 검사
         String authHeader = httpRequest.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("[JWT Filter] Authorization 헤더 없음 또는 형식 오류");
+            log.warn("[JWT Filter] ❌ Authorization 헤더 없음 또는 형식 오류 | URI: {}", requestURI);
             writeJsonResponse(httpResponse,
                     BaseResponseDto.failure("Authorization 헤더가 없거나 형식이 잘못되었습니다."),
                     HttpStatus.UNAUTHORIZED);
             return;
         }
 
+        // ✅ 토큰 유효성 검사
         String accessToken = authHeader.substring(7);
-
         try {
             Claims claims = jwtUtil.validateAccessToken(accessToken);
             httpRequest.setAttribute("id", claims.get("loginId"));
             httpRequest.setAttribute("loginId", claims.get("loginUser"));
-            log.info("[JWT Filter] 유효한 토큰, 사용자 loginId: {}", claims.get("loginUser"));
+            log.info("[JWT Filter] ✅ 유효한 토큰 | loginUser: {}", claims.get("loginUser"));
         } catch (JwtValidationException e) {
-            log.warn("[JWT Filter] JWT 검증 실패: {}", e.getMessage());
-            writeJsonResponse(httpResponse, BaseResponseDto.failure(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            log.warn("[JWT Filter] ❌ JWT 검증 실패 | Reason: {}", e.getMessage());
+            writeJsonResponse(httpResponse,
+                    BaseResponseDto.failure(e.getMessage()),
+                    HttpStatus.UNAUTHORIZED);
             return;
         }
 
         // ✅ 통과
         filterChain.doFilter(httpRequest, httpResponse);
+    }
+
+    private boolean isPermitAllPath(String uri) {
+        return uri.equals("/") ||
+                uri.equals("/favicon.ico") ||
+                uri.equals("/login") ||
+                uri.equals("/signup") ||
+                uri.endsWith(".html") ||
+                uri.endsWith(".js") ||
+                uri.endsWith(".css") ||
+                uri.endsWith(".svg") ||
+                uri.endsWith(".ico") ||
+                uri.startsWith("/assets/") ||
+                uri.startsWith("/static/");
     }
 
     private void writeJsonResponse(HttpServletResponse response, BaseResponseDto dto, HttpStatus status) throws IOException {
