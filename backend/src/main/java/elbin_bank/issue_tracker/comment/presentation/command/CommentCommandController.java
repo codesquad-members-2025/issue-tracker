@@ -26,7 +26,7 @@ public class CommentCommandController {
     public ResponseEntity<Void> updateComment(@RequestBody CommentUpdateRequestDto commentUpdateRequestDto, @PathVariable Long id, @PathVariable Long commentId) {
         commentCommandService.updateComment(commentUpdateRequestDto, id, commentId);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

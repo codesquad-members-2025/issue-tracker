@@ -3,6 +3,7 @@ package elbin_bank.issue_tracker.label.infrastructure.query;
 import elbin_bank.issue_tracker.label.application.query.repository.LabelQueryRepository;
 import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,27 @@ import java.util.stream.Collectors;
 public class JdbcLabelQueryRepository implements LabelQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
+
+    @Override
+    public LabelProjection findById(Long id) {
+        String sql = """
+                SELECT id,
+                       name,
+                       color,
+                       description
+                  FROM label
+                 WHERE id = :id
+                """;
+
+        var params = new MapSqlParameterSource("id", id);
+
+        return jdbc.queryForObject(sql, params, (rs, rowNum) -> new LabelProjection(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("color"),
+                rs.getString("description")
+        ));
+    }
 
     @Override
     public Map<Long, List<LabelProjection>> findByIssueIds(List<Long> issueIds) {

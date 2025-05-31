@@ -7,7 +7,6 @@ import elbin_bank.issue_tracker.issue.application.query.mapper.IssueDtoMapper;
 import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRepository;
 import elbin_bank.issue_tracker.issue.exception.IssueDetailNotFoundException;
 import elbin_bank.issue_tracker.issue.exception.MilestoneForIssueNotFoundException;
-import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;

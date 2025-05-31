@@ -7,6 +7,8 @@ import java.util.Map;
 
 public interface LabelQueryRepository {
 
+    LabelProjection findById(Long id);
+
     Map<Long, List<LabelProjection>> findByIssueIds(List<Long> issueIds);
 
     List<LabelProjection> findAll();
