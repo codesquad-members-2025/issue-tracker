@@ -19,7 +19,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: 🛠 Set Frontend Environment
+      - name: 🪠 Set Frontend Environment
         working-directory: fe
         run: |
           echo "VITE_API_BASE_URL=${{ secrets.FRONTEND_API_BASE_URL }}" > .env.production
@@ -34,28 +34,24 @@ jobs:
         working-directory: be
         run: |
           ./gradlew clean bootJar -x test
-          echo "✅ 빌드 완료 JAR 목록:"
-          ls -lh build/libs/
-
-      - name: 🧹 Remove Old ZIP if Exists
-        run: |
-          rm -f deploy.zip
 
       - name: 📦 Prepare Deployment Bundle
         run: |
-          mkdir -p bundle/app/frontend
+          mkdir -p bundle/frontend
           mkdir -p bundle/scripts
 
-          echo "✅ 복사 대상 JAR:"
-          ls -lh be/build/libs/app.jar || (echo "❌ JAR 없음!" && exit 1)
-          cp be/build/libs/app.jar bundle/app/app.jar
+          # ✅ JAR 복사 (정확하게 app.jar로)
+          cp be/build/libs/app.jar bundle/app.jar
 
-          cp -r fe/dist/* bundle/app/frontend/
+          # ✅ 프론트엔드 복사
+          cp -r fe/dist/* bundle/frontend/
 
+          # ✅ 스크립트 복사
           cp deploy/scripts/start.sh bundle/scripts/
           cp deploy/scripts/stop.sh bundle/scripts/
 
-          cat <<EOF > bundle/app/application.env
+          # ✅ .env 파일 생성
+          cat <<EOF > bundle/application.env
           JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
           JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
           AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -66,34 +62,36 @@ jobs:
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           EOF
 
+          # ✅ zip 압축
           cd bundle
           zip -r ../deploy.zip .
 
-      - name: ☁️ Configure AWS Credentials (Optional if using AWS CLI)
+      - name: ☁️ Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: 🚀 Deploy zip directly to EC2
-        uses: appleboy/scp-action@v0.1.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "deploy.zip"
-          target: "/home/ubuntu/"
+      - name: ☁️ Upload to S3 (optional)
+        run: |
+          aws s3 cp deploy.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy.zip
 
-      - name: 🚀 Run Deployment Script on EC2
+      - name: 🚀 Deploy to EC2 and Run
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ubuntu
-            unzip -o deploy.zip -d app
-            chmod +x app/scripts/*.sh
-            bash app/scripts/stop.sh
-            bash app/scripts/start.sh
+            # 1. 기존 app 디렉토리 제거 후 압축 해제
+            rm -rf /home/ubuntu/app
+            unzip -o /home/ubuntu/deploy.zip -d /home/ubuntu/app
+
+            # 2. 스크립트 권한 설정 및 실행
+            chmod +x /home/ubuntu/app/scripts/*.sh
+            bash /home/ubuntu/app/scripts/stop.sh
+            bash /home/ubuntu/app/scripts/start.sh
+
+            # 3. 로그 출력
+            tail -n 100 /home/ubuntu/app.log
