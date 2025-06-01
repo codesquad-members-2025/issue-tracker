@@ -34,27 +34,27 @@ jobs:
         working-directory: be
         run: |
           ./gradlew clean bootJar -x test
-          echo "✅ 빌드 완료 - JAR 확인:"
-          ls -lh build/libs/*.jar
+          echo "✅ 빌드 완료 JAR 목록:"
+          ls -lh build/libs/
+
+      - name: 🧹 Remove Old ZIP if Exists
+        run: |
+          rm -f deploy.zip
 
       - name: 📦 Prepare Deployment Bundle
         run: |
           mkdir -p bundle/app/frontend
           mkdir -p bundle/scripts
 
-          # ✅ JAR 복사 (정확한 위치)
           echo "✅ 복사 대상 JAR:"
-          ls -lh be/build/libs/app.jar
+          ls -lh be/build/libs/app.jar || (echo "❌ JAR 없음!" && exit 1)
           cp be/build/libs/app.jar bundle/app/app.jar
 
-          # ✅ 프론트엔드 빌드 복사
           cp -r fe/dist/* bundle/app/frontend/
 
-          # ✅ 스크립트 복사
           cp deploy/scripts/start.sh bundle/scripts/
           cp deploy/scripts/stop.sh bundle/scripts/
 
-          # ✅ GitHub Secrets로 .env 파일 생성
           cat <<EOF > bundle/app/application.env
           JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
           JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
@@ -66,22 +66,26 @@ jobs:
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           EOF
 
-          # ✅ zip 압축
           cd bundle
           zip -r ../deploy.zip .
 
-      - name: ☁️ Configure AWS Credentials
+      - name: ☁️ Configure AWS Credentials (Optional if using AWS CLI)
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: ☁️ Upload to S3 (optional)
-        run: |
-          aws s3 cp deploy.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy.zip
+      - name: 🚀 Deploy zip directly to EC2
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "deploy.zip"
+          target: "/home/ubuntu/"
 
-      - name: 🚀 Deploy to EC2 and Run
+      - name: 🚀 Run Deployment Script on EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
