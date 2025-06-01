@@ -19,7 +19,11 @@ export default function NewIssueForm({
   return (
     <FormSection>
       <TitleInput value={title} onChange={onTitleChange} label="제목" />
-      <CommentInputSection value={content} onChange={onContentChange} />
+      <CommentInputSection
+        value={content}
+        onChange={onContentChange}
+        initialHeight={448}
+      />
     </FormSection>
   );
 }

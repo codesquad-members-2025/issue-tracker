@@ -4,19 +4,41 @@ import styled from '@emotion/styled';
 import uploadToS3 from '../apis/uploadToS3';
 import CommentMetaBar from './CommentMetaBar';
 
+const DEFAULT_HEIGTH = 80;
+
 interface CommentInputSectionProps {
   value: string;
   onChange: (value: string | ((prev: string) => string)) => void;
+  initialHeight?: number;
+  maxHeight?: number;
 }
 
 export default function CommentInputSection({
   value,
   onChange,
+  initialHeight = DEFAULT_HEIGTH,
+  maxHeight,
 }: CommentInputSectionProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [showCharCount, setShowCharCount] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const resizeTextarea = () => {
+    if (textareaRef.current) {
+      const minHeight = initialHeight;
+
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+
+      if (scrollHeight > minHeight) {
+        textareaRef.current.style.height = `${scrollHeight}px`;
+      } else {
+        textareaRef.current.style.height = `${minHeight}px`;
+      }
+    }
+  };
 
   const handleFileUpload = async () => {
     const files = fileInputRef.current?.files;
@@ -57,6 +79,7 @@ export default function CommentInputSection({
 
   useEffect(() => {
     handleCharCountVisibility(value);
+    resizeTextarea();
   }, [value]);
 
   return (
@@ -65,10 +88,13 @@ export default function CommentInputSection({
         코멘트를 입력하세요
       </LabelAbove>
       <ContentTextarea
+        ref={textareaRef}
         value={value}
         onChange={e => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        initialHeight={initialHeight}
+        maxHeight={maxHeight}
       />
 
       <CommentMetaBar
@@ -114,14 +140,20 @@ const LabelAbove = styled.label<{ isFloating: boolean }>`
   transition: all 0.2s ease;
 `;
 
-const ContentTextarea = styled.textarea`
+const ContentTextarea = styled.textarea<{
+  initialHeight?: number;
+  maxHeight?: number;
+}>`
   width: 100%;
-  height: 300px;
   padding: 28px 16px 16px;
   border: none;
   background-color: transparent;
   color: ${({ theme }) => theme.neutral.text.strong};
   resize: none;
+  overflow: hidden;
+  height: ${({ initialHeight }) =>
+    initialHeight ? `${initialHeight}px` : 'auto'};
+  max-height: ${({ maxHeight }) => (maxHeight ? `${maxHeight}px` : 'none')};
 
   ${({ theme }) => theme.typography.displayMedium16};
 

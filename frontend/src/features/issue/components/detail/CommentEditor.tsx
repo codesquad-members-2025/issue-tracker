@@ -31,6 +31,7 @@ export default function CommentEditor() {
       <CommentInputSection
         value={comment}
         onChange={value => setComment(value)}
+        initialHeight={80}
       />
 
       <NewCommentActionButton
@@ -46,5 +47,4 @@ const NewCommentWrapper = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   gap: 32px;
-  height: 248px;
 `;
