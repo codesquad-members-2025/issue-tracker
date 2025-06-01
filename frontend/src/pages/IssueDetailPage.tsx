@@ -10,7 +10,7 @@ import usePatchIssueState from '@/features/issue/hooks/usePatchIssueState';
 import Divider from '@/shared/components/Divider';
 import IssueHeader from '@/features/issue/components/detail/IssueHeader';
 import IssueMainSection from '@/features/issue/components/detail/IssueMainSection';
-import IssueSidebar from '@/features/issue/components/IssueSidebar';
+import IssueSidebar from '@/shared/components/sidebar';
 import VerticalStack from '@/layouts/VerticalStack';
 
 export default function IssueDetailPage() {

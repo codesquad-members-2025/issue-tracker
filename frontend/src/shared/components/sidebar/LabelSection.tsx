@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useLabels } from '@/features/label/hooks/useLabels';
-import { type Label } from '../../label/types';
+import { type Label } from '@/features/label/types';
 import LabelBadgeList from '@/shared/components/LabelBadgeList';
 import Dropdown from '@/shared/components/Dropdown';
 import DropdownPanel from '@/shared/components/DropdownPanel';

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Profile from '@/shared/components/Profile';
 import IssueForm from './NewIssueForm';
-import IssueSidebar from '@/features/issue/components/IssueSidebar';
+import IssueSidebar from '@/shared/components/sidebar';
 
 interface NewIssueFormSectionProps {
   title: string;
