@@ -34,6 +34,7 @@ const ContentWrapper = styled.ul<{ isFetching?: boolean }>`
   flex-direction: column;
   opacity: ${({ isFetching }) => (isFetching ? 0.5 : 1)};
   transition: opacity 0.5s ease-in-out;
+  min-height: 96px;
 `;
 
 const Message = ({
