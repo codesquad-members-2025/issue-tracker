@@ -7,6 +7,7 @@ import useIssueDetailStore from '@/stores/IssueDetailStore';
 import { shallow } from 'zustand/shallow';
 import CommentDisplayArea from '@/base-ui/IssuePage/CommentDisplayArea';
 import useValidation from '@/hooks/useValidation';
+import getFormData from '@/utils/common/getFormData';
 
 // 하단 부의 새로운 코멘트 입력은 제외한 컴포넌트 -> 새로운 코멘트는 다른 유닛 컴포넌트에서 다루기!
 export default function DisplayComment({ isMainComment, commentObj, commentPatchHandler }) {
@@ -81,10 +82,7 @@ export default function DisplayComment({ isMainComment, commentObj, commentPatch
   function completeEditHandler() {
     const PATCHoptions = {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content: editingContent, issueFileUrl: editingIssueFileUrl }),
+      body: getFormData(editingContent, editingIssueFileUrl),
     };
     if (isMainComment) {
       commentPatchHandler('PATCH', PATCHoptions);

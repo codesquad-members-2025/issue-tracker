@@ -468,10 +468,11 @@ app.get('/issues/:id', authMiddleware, async (req, res) => {
 });
 
 // 코멘트 수정
-app.patch('/issues/:issueId/comments/:commentId', async (req, res) => {
+app.patch('/issues/:issueId/comments/:commentId', upload.single('files'), async (req, res) => {
   try {
     const { issueId, commentId } = req.params;
-    const { content } = req.body;
+    // data: JSON 문자열
+    const data = req.body.data ? JSON.parse(req.body.data) : {};
 
     const filePath = path.join(__dirname, 'mainPage.json');
     const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
@@ -492,8 +493,17 @@ app.patch('/issues/:issueId/comments/:commentId', async (req, res) => {
       });
     }
 
-    // 코멘트 내용 업데이트
-    comment.content = content;
+    // 파일 URL 처리 (없으면 기존 URL 유지)
+    let fileUrl = comment.issueFileUrl || null;
+    if (req.file) {
+      fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+    }
+
+    // 코멘트 내용/파일 업데이트
+    if (data.content !== undefined) {
+      comment.content = data.content;
+    }
+    comment.issueFileUrl = fileUrl;
     comment.lastModifiedAt = new Date().toISOString();
 
     // 파일에 변경사항 저장
@@ -502,11 +512,15 @@ app.patch('/issues/:issueId/comments/:commentId', async (req, res) => {
     res.json({
       success: true,
       message: '코멘트가 성공적으로 수정되었습니다.',
+      data: {
+        comment: comment,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: '코멘트 수정 중 서버 오류 발생',
+      error: error.message,
     });
   }
 });
