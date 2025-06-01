@@ -36,7 +36,10 @@ jobs:
           mkdir -p bundle/scripts
 
           cp -r fe/dist/* bundle/frontend/
-          cp be/build/libs/*.jar bundle/app.jar
+          JAR_PATH=$(ls -t be/build/libs/*.jar | head -n 1)
+          echo "✅ 최신 JAR: $JAR_PATH"
+          cp "$JAR_PATH" bundle/app.jar
+  
           cp deploy/scripts/*.sh bundle/scripts/
 
           zip -r deploy.zip bundle
@@ -55,8 +58,17 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}   # ✅ 여기도 동일하게
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            echo "🧹 기존 배포 디렉토리 제거"
+            sudo rm -rf /home/ubuntu/app
+
+            echo "📦 배포 압축 해제"
+            unzip -o /home/ubuntu/deploy.zip -d /home/ubuntu/app
+            
+            # ✅ 프론트엔드 정적 리소스를 Spring이 인식할 위치로 이동
+            mv /home/ubuntu/app/bundle/frontend /home/ubuntu/app/frontend || true
+
             echo "🛑 기존 프로세스 종료 중..."
             PID=$(pgrep -f 'java -jar')
             if [ -n "$PID" ]; then
@@ -66,13 +78,10 @@ jobs:
               echo "ℹ️ 종료할 프로세스 없음"
             fi
 
-            echo "📦 새 배포 압축 해제..."
-            rm -rf /home/ubuntu/app
-            unzip -o /home/ubuntu/deploy.zip -d /home/ubuntu/app
-            chmod +x /home/ubuntu/app/scripts/*.sh
-
             echo "🚀 새 애플리케이션 실행..."
             cd /home/ubuntu/app
+            chmod +x scripts/*.sh
+
             nohup java \
               -Dspring.profiles.active=dev \
               -DJWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }} \
@@ -89,3 +98,4 @@ jobs:
             sleep 3
             echo "📄 서버 로그 출력 시작 (상위 100줄)"
             tail -n 100 /home/ubuntu/app/app.log || echo "⚠️ 로그가 아직 생성되지 않았을 수 있습니다."
+      
