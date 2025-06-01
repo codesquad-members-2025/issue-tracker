@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { type Issue } from '../../../types/issue';
-import { formatCreatedMessage } from '../../../utils';
 
 import StatusIcon from './StatusIcon';
 import TitleWithLabels from './TitleWithLabels';
@@ -35,7 +34,7 @@ const IssueItem = ({
             createdAt={createdAt}
             author={author}
             milestone={milestone}
-            formatCreatedMessage={formatCreatedMessage}
+            isClosed={isClosed}
           />
         </ContentWrapper>
       </LeftSection>

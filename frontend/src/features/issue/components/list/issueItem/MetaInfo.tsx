@@ -1,25 +1,20 @@
 import styled from '@emotion/styled';
 import MilestoneIcon from '@/assets/icons/milestone.svg?react';
+import { formatCreatedMessage } from '@/features/issue/utils';
 
 interface Props {
   id: number;
   createdAt: string;
   author: string;
   milestone: string | null;
-  formatCreatedMessage: (date: string, author: string) => string;
+  isClosed: boolean;
 }
 
-const MetaInfo = ({
-  id,
-  createdAt,
-  author,
-  milestone,
-  formatCreatedMessage,
-}: Props) => {
+const MetaInfo = ({ id, createdAt, author, milestone, isClosed }: Props) => {
   return (
     <Wrapper>
       <span>#{id}</span>
-      <span>{formatCreatedMessage(createdAt, author)}</span>
+      <span>{formatCreatedMessage({ createdAt, author, isClosed })}</span>
       {milestone && (
         <MilestoneWrapper>
           <MilestoneIcon />

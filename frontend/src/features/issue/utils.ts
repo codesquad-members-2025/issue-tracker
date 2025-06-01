@@ -1,21 +1,29 @@
 import { type IssueStatus } from './types/issue';
 
+interface CreatedMessageParams {
+  createdAt: string;
+  author: string;
+  isClosed: boolean;
+}
+
 /**
- * 이슈의 생성 시간과 작성자 이름을 받아
- * "몇 분/시간/일 전, 누가 작성했는지" 형태의 문자열을 반환합니다.
+ * 이슈의 생성 시간과 작성자 이름, 상태를 받아
+ * "몇 분/시간/일 전, 누가 열었는지/닫았는지" 형태의 문자열을 반환합니다.
  *
- * @param {string} createdAt - 이슈가 생성된 시간 (ISO 8601 형식의 문자열)
- * @param {string} author - 이슈 작성자 이름
- * @returns {string} 생성 시간 기반의 메시지 문자열
+ * @param {string} createdAt - 이슈 생성 시간 (ISO 8601 문자열)
+ * @param {string} author - 작성자 이름
+ * @param {boolean} isClosed - 이슈 상태 (true: 닫힘, false: 열림)
+ * @returns {string} 메시지 문자열
  *
  * @example
- * // '이 이슈가 3시간 전, 홍길동님에 의해 작성되었습니다.'
- * formatCreatedMessage('2025-05-13T11:00:00Z', '홍길동');
+ * // '3시간 전, 홍길동님에 의해 열렸습니다.'
+ * formatCreatedMessage('2025-05-13T11:00:00Z', '홍길동', false);
  */
-export function formatCreatedMessage(
-  createdAt: string,
-  author: string,
-): string {
+export function formatCreatedMessage({
+  createdAt,
+  author,
+  isClosed,
+}: CreatedMessageParams) {
   const now = new Date();
   const created = new Date(createdAt);
   const diffMs = now.getTime() - created.getTime();
@@ -35,7 +43,9 @@ export function formatCreatedMessage(
     timeString = `${diffDays}일 전`;
   }
 
-  return `이 이슈가 ${timeString}, ${author}님에 의해 작성되었습니다`;
+  const statusText = isClosed ? '닫혔습니다' : '열렸습니다';
+
+  return `이 이슈가 ${timeString}에 ${author}님에 의해 ${statusText}`;
 }
 
 //TODO 필터 상태에 따라 확장

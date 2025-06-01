@@ -41,7 +41,11 @@ export default function IssueHeader({
             <StateBadge>{isClosed ? '닫힌 이슈' : '열린 이슈'}</StateBadge>
           </IsClosedButton>
           <MetaInfo>
-            {formatCreatedMessage(createdAt, author.nickname)}
+            {formatCreatedMessage({
+              createdAt,
+              author: author.nickname,
+              isClosed,
+            })}
           </MetaInfo>
           <CommentCount>코멘트 {commentCount}개</CommentCount>
         </IssueMetaWrapper>
