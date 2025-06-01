@@ -19,11 +19,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: 🪠 Set Frontend Environment
-        working-directory: fe
-        run: |
-          echo "VITE_API_BASE_URL=${{ secrets.FRONTEND_API_BASE_URL }}" > .env.production
-
       - name: 🧱 Build Frontend
         working-directory: fe
         run: |
@@ -35,67 +30,62 @@ jobs:
         run: |
           ./gradlew clean bootJar -x test
 
-      # 📦 Prepare Deployment Bundle
-      - name: 📦 Prepare Deployment Bundle
+      - name: 📦 Bundle for Deployment
         run: |
           mkdir -p bundle/frontend
           mkdir -p bundle/scripts
 
-          # ✅ 가장 최근 jar 하나만 복사
-          JAR_PATH=$(find be/build/libs -name "*.jar" -print0 | xargs -0 ls -t | head -n 1)
-          cp "$JAR_PATH" bundle/app.jar
-      
-          # ✅ 프론트엔드 복사
           cp -r fe/dist/* bundle/frontend/
-      
-          # ✅ 스크립트 복사
-          cp deploy/scripts/start.sh bundle/scripts/
-          cp deploy/scripts/stop.sh bundle/scripts/
-      
-          # ✅ .env 파일 생성
-          cat <<EOF > bundle/application.env
-          JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
-          JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
-          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION=${{ secrets.AWS_REGION }}
-          S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
-          S3_URL_NAME=${{ secrets.S3_URL_NAME }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          EOF
-      
-          # ✅ zip 압축
-          cd bundle
-          zip -r ../deploy.zip .
+          cp be/build/libs/*.jar bundle/app.jar
+          cp deploy/scripts/*.sh bundle/scripts/
 
-      
+          zip -r deploy.zip bundle
 
-      - name: ☁️ Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: 🚀 Upload to EC2
+        uses: appleboy/scp-action@v0.1.7
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          source: "deploy.zip"
+          target: "/home/ubuntu"
 
-      - name: ☁️ Upload to S3 (optional)
-        run: |
-          aws s3 cp deploy.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy.zip
-
-      - name: 🚀 Deploy to EC2 and Run
+      - name: 💻 Deploy on EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.EC2_KEY }}
           script: |
-            # 1. 기존 app 디렉토리 제거 후 압축 해제
+            echo "🛑 기존 프로세스 종료 중..."
+            PID=$(pgrep -f 'java -jar')
+            if [ -n "$PID" ]; then
+              kill -9 $PID
+              echo "✅ 종료된 PID: $PID"
+            else
+              echo "ℹ️ 종료할 프로세스 없음"
+            fi
+
+            echo "📦 새 배포 압축 해제..."
             rm -rf /home/ubuntu/app
             unzip -o /home/ubuntu/deploy.zip -d /home/ubuntu/app
-
-            # 2. 스크립트 권한 설정 및 실행
             chmod +x /home/ubuntu/app/scripts/*.sh
-            bash /home/ubuntu/app/scripts/stop.sh
-            bash /home/ubuntu/app/scripts/start.sh
 
-            # 3. 로그 출력
-            tail -n 100 /home/ubuntu/app.log
+            echo "🚀 새 애플리케이션 실행..."
+            cd /home/ubuntu/app
+            nohup java \
+              -Dspring.profiles.active=dev \
+              -DJWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }} \
+              -DJWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }} \
+              -DAWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+              -DAWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+              -DAWS_REGION=${{ secrets.AWS_REGION }} \
+              -Dcloud.aws.region.static=${{ secrets.AWS_REGION }} \
+              -Dcloud.aws.s3.bucket=${{ secrets.S3_BUCKET_NAME }} \
+              -Dcloud.aws.s3.url=${{ secrets.S3_URL_NAME }} \
+              -Dspring.datasource.password=${{ secrets.DB_PASSWORD }} \
+              -jar app.jar > app.log 2>&1 &
+
+            sleep 3
+            echo "📄 서버 로그 출력 시작 (상위 100줄)"
+            tail -n 100 /home/ubuntu/app/app.log || echo "⚠️ 로그 파일이 아직 생성되지 않았을 수 있습니다."
