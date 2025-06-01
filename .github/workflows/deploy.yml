@@ -33,15 +33,15 @@ jobs:
       - name: 🧱 Build Backend
         working-directory: be
         run: |
-          ./gradlew clean build -x test
+          ./gradlew clean bootJar -x test
 
       - name: 📦 Prepare Deployment Bundle
         run: |
           mkdir -p bundle/app/frontend
           mkdir -p bundle/scripts
 
-          # ✅ JAR 복사
-          JAR_PATH=$(find be/build/libs -name "*.jar" | head -n 1)
+          # ✅ 최신 JAR 선택 (가장 최근 빌드된 JAR)
+          JAR_PATH=$(find be/build/libs -name "*.jar" -print0 | xargs -0 ls -t | head -n 1)
           cp "$JAR_PATH" bundle/app/app.jar
 
           # ✅ 프론트엔드 빌드 복사
@@ -51,8 +51,17 @@ jobs:
           cp deploy/scripts/start.sh bundle/scripts/
           cp deploy/scripts/stop.sh bundle/scripts/
 
-          # ✅ 환경 변수 템플릿 복사
-          cp deploy/application.env bundle/app/application.env
+          # ✅ GitHub Secrets로 .env 파일 생성
+          cat <<EOF > bundle/app/application.env
+          JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
+          JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION=${{ secrets.AWS_REGION }}
+          S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
+          S3_URL_NAME=${{ secrets.S3_URL_NAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          EOF
 
           # ✅ zip 압축
           cd bundle
