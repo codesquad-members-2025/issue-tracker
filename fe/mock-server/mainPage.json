@@ -1237,6 +1237,13 @@
           "issueFileUrl": null,
           "authorNickname": "홍길동",
           "lastModifiedAt": "2025-05-31T13:44:21.629Z"
+        },
+        {
+          "commentId": 305,
+          "content": "파일 업로드 테스트",
+          "issueFileUrl": "http://localhost:8080/uploads/1748766162258-스크린샷 2025-04-25 오전 11.40.04.png",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-01T08:22:42.261Z"
         }
       ]
     },

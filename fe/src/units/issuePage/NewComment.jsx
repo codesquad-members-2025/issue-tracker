@@ -4,6 +4,7 @@ import useIssueDetailStore from '@/stores/IssueDetailStore';
 import { SmallContainerButton } from '@/base-ui/components/ContainerButtons';
 import useValidation from '@/hooks/useValidation';
 import { useParams } from 'react-router-dom';
+import getFormData from '@/utils/common/getFormData';
 
 const Container = styled.div`
   display: flex;
@@ -23,10 +24,7 @@ export default function NewComment({ commentFetchHandler }) {
   function PostHandler() {
     const postOption = {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ issueId: id, content: newComment.content }),
+      body: getFormData({ issueId: id, content: newComment.content }, newComment.issueFileUrl),
     };
     commentFetchHandler('POST', null, postOption);
   }

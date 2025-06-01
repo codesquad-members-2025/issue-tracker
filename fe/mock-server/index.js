@@ -511,11 +511,12 @@ app.patch('/issues/:issueId/comments/:commentId', async (req, res) => {
   }
 });
 
-// 코멘트 생성
-app.post('/issues/:issueId/comments', async (req, res) => {
+// 코멘트 생성 (FormData: data(JSON), files)
+app.post('/issues/:issueId/comments', upload.single('files'), async (req, res) => {
   try {
+    // data: JSON 문자열
+    const data = JSON.parse(req.body.data);
     const { issueId } = req.params;
-    const { content, issueFileUrl } = req.body;
 
     const filePath = path.join(__dirname, 'mainPage.json');
     const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
@@ -536,11 +537,17 @@ app.post('/issues/:issueId/comments', async (req, res) => {
         ),
       ) + 1;
 
+    // 파일 URL 처리
+    let fileUrl = null;
+    if (req.file) {
+      fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+    }
+
     // 새 코멘트 객체 생성
     const newComment = {
       commentId: newCommentId,
-      content,
-      issueFileUrl: issueFileUrl || null,
+      content: data.content,
+      issueFileUrl: fileUrl,
       authorNickname: 'devchan', // 현재는 고정값 사용
       lastModifiedAt: new Date().toISOString(),
     };
@@ -559,11 +566,15 @@ app.post('/issues/:issueId/comments', async (req, res) => {
     res.status(201).json({
       success: true,
       message: '코멘트가 성공적으로 생성되었습니다.',
+      data: {
+        comment: newComment,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: '코멘트 생성 중 서버 오류 발생',
+      error: error.message,
     });
   }
 });
