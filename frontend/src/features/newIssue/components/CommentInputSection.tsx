@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import uploadToS3 from '../apis/uploadToS3';
+import LabelAbove from '@/shared/components/LabelAbove';
 import CommentMetaBar from './CommentMetaBar';
 
 const DEFAULT_HEIGTH = 80;
@@ -123,21 +124,6 @@ const EditorContainer = styled.section<{ isFocused: boolean }>`
 
   box-shadow: ${({ isFocused, theme }) =>
     isFocused ? `0 0 0 1px ${theme.neutral.border.active}` : 'none'};
-`;
-
-//TODO 공통 컴포넌트 추출
-const LabelAbove = styled.label<{ isFloating: boolean }>`
-  position: absolute;
-  left: 16px;
-  top: ${({ isFloating }) => (isFloating ? '8px' : '19px')};
-  ${({ theme, isFloating }) =>
-    isFloating
-      ? theme.typography.displayMedium12
-      : theme.typography.displayMedium16};
-  transform: none;
-  color: ${({ theme }) => theme.neutral.text.weak};
-  pointer-events: none;
-  transition: all 0.2s ease;
 `;
 
 const ContentTextarea = styled.textarea<{

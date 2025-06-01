@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import LabelAbove from '@/shared/components/LabelAbove';
 import { useState } from 'react';
 
 interface TitleInputProps {
@@ -33,19 +34,6 @@ const Wrapper = styled.div`
   height: 56px;
   border-radius: ${({ theme }) => theme.radius.medium};
   background-color: ${({ theme }) => theme.neutral.surface.bold};
-`;
-
-const LabelAbove = styled.label<{ isFloating: boolean }>`
-  position: absolute;
-  left: 16px;
-  top: ${({ isFloating }) => (isFloating ? '8px' : '50%')};
-  transform: ${({ isFloating }) => (isFloating ? 'none' : 'translateY(-50%)')};
-  ${({ theme, isFloating }) =>
-    isFloating
-      ? theme.typography.displayMedium12
-      : theme.typography.displayMedium16};
-  color: ${({ theme }) => theme.neutral.text.weak};
-  transition: all 0.2s ease;
 `;
 
 const StyledInput = styled.input`
