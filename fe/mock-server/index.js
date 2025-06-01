@@ -320,153 +320,6 @@ app.patch('/toggleStatus', async (req, res) => {
   }
 });
 
-// PATCH /issues/:id - 이슈 수정
-app.patch('/issues/:id', authMiddleware, async (req, res) => {
-  try {
-    const issueId = parseInt(req.params.id);
-    const filePath = path.join(__dirname, 'mainPage.json');
-    const data = await fs.readFile(filePath, 'utf-8');
-    const json = JSON.parse(data);
-
-    const issueIndex = json.issues.findIndex((issue) => issue.id === issueId);
-    if (issueIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        message: '이슈를 찾을 수 없습니다.',
-      });
-    }
-
-    const updateKeys = Object.keys(req.body);
-    let issue = json.issues[issueIndex];
-
-    updateKeys.forEach((key) => {
-      if (key === 'assigneeId' && Array.isArray(req.body.assigneeId)) {
-        issue.assignees = req.body.assigneeId
-          .map((id) => json.users.find((user) => user.id === id))
-          .filter(Boolean);
-      } else if (key === 'labelId' && Array.isArray(req.body.labelId)) {
-        issue.labels = req.body.labelId
-          .map((id) => {
-            const label = json.labels.find((l) => l.labelId === id);
-            return label
-              ? {
-                  labelId: label.labelId,
-                  name: label.name,
-                  color: label.color,
-                  description: label.description || '',
-                }
-              : null;
-          })
-          .filter(Boolean);
-      } else if (key === 'milestoneId') {
-        const milestone = json.milestones.find((m) => m.milestoneId === req.body.milestoneId);
-        issue.milestone = milestone || null;
-      } else if (key in issue) {
-        issue[key] = req.body[key];
-      }
-    });
-
-    // 갱신된 이슈 저장
-    json.issues[issueIndex] = issue;
-    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
-
-    return res.json({
-      success: true,
-      message: '이슈가 성공적으로 수정되었습니다.',
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: '이슈 수정 중 서버 오류 발생',
-      error: error.message,
-    });
-  }
-});
-
-app.get('/issues/:id', authMiddleware, async (req, res) => {
-  try {
-    const issueId = parseInt(req.params.id);
-    const filePath = path.join(__dirname, 'mainPage.json');
-    const data = await fs.readFile(filePath, 'utf-8');
-    const json = JSON.parse(data);
-
-    const issue = json.issues.find((issue) => issue.id === issueId);
-
-    if (!issue) {
-      return res.status(404).json({
-        success: false,
-        message: '이슈를 찾을 수 없습니다.',
-        data: null,
-      });
-    }
-
-    const responseData = {
-      success: true,
-      message: '이슈를 성공적으로 조회했습니다.',
-      data: {
-        issue: {
-          issueId: issue.id,
-          title: issue.title,
-          content: issue.content,
-          authorId: issue.author.id,
-          authorNickname: issue.author.nickname,
-          milestoneId: issue.milestone?.milestoneId ?? null,
-          isOpen: issue.isOpen,
-          lastModifiedAt: issue.lastModifiedAt || issue.createdAt,
-          issueFileUrl: issue.issueFileUrl || null,
-          authorProfileUrl:
-            issue.author.profileImageUrl ||
-            `https://dummy.local/profile/${issue.author.nickname}.png`,
-        },
-        assignees: (issue.assignees || []).map((assignee) => ({
-          id: assignee.id,
-          nickname: assignee.nickname,
-          profileImageUrl:
-            assignee.profileImageUrl || `https://dummy.local/profile/${assignee.nickname}.png`,
-        })),
-        labels: (issue.labels || []).map((label) => ({
-          labelId: label.labelId,
-          name: label.name,
-          color: label.color,
-          description: label.description || '',
-        })),
-        milestone: issue.milestone
-          ? {
-              milestoneId: issue.milestone.milestoneId,
-              name: issue.milestone.name,
-              description: issue.milestone.description,
-              endDate: issue.milestone.endDate,
-              processingRate: issue.milestone.processingRate || 0,
-              isOpen: issue.milestone.isOpen,
-            }
-          : null,
-        comments: (issue.comments || []).map((comment) => {
-          const user = json.users.find((u) => u.nickname === comment.authorNickname);
-          return {
-            commentId: comment.commentId,
-            content: comment.content,
-            issueFileUrl: comment.issueFileUrl || null,
-            authorId: user?.id || 1,
-            authorNickname: comment.authorNickname,
-            lastModifiedAt: comment.lastModifiedAt || comment.createdAt,
-            authorProfileUrl:
-              comment.authorProfileUrl ||
-              `https://dummy.local/profile/${comment.authorNickname}.png`,
-          };
-        }),
-      },
-    };
-
-    res.json(responseData);
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: '이슈 조회 중 서버 오류 발생',
-      error: error.message,
-    });
-  }
-});
-
 // 코멘트 수정
 app.patch('/issues/:issueId/comments/:commentId', upload.single('files'), async (req, res) => {
   try {
@@ -588,6 +441,172 @@ app.post('/issues/:issueId/comments', upload.single('files'), async (req, res) =
     res.status(500).json({
       success: false,
       message: '코멘트 생성 중 서버 오류 발생',
+      error: error.message,
+    });
+  }
+});
+
+// PATCH /issues/:id - 이슈 수정
+app.patch('/issues/:id', upload.single('files'), authMiddleware, async (req, res) => {
+  try {
+    const issueId = parseInt(req.params.id);
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const data = await fs.readFile(filePath, 'utf-8');
+    const json = JSON.parse(data);
+
+    const issueIndex = json.issues.findIndex((issue) => issue.id === issueId);
+    if (issueIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: '이슈를 찾을 수 없습니다.',
+      });
+    }
+
+    // 멀티파트/폼데이터로 온 경우 data 필드에서 파싱
+    let updateData = {};
+    if (req.body.data) {
+      // FormData: data(JSON) + files
+      updateData = JSON.parse(req.body.data);
+    } else {
+      // application/json
+      updateData = req.body;
+    }
+
+    let issue = json.issues[issueIndex];
+
+    // 파일 처리: 있으면 덮어씀
+    if (req.file) {
+      const fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+      issue.issueFileUrl = fileUrl;
+    }
+
+    // 업데이트 할 필드들 반영
+    Object.keys(updateData).forEach((key) => {
+      if (key === 'assigneeId' && Array.isArray(updateData.assigneeId)) {
+        issue.assignees = updateData.assigneeId
+          .map((id) => json.users.find((user) => user.id === id))
+          .filter(Boolean);
+      } else if (key === 'labelId' && Array.isArray(updateData.labelId)) {
+        issue.labels = updateData.labelId
+          .map((id) => {
+            const label = json.labels.find((l) => l.labelId === id);
+            return label
+              ? {
+                  labelId: label.labelId,
+                  name: label.name,
+                  color: label.color,
+                  description: label.description || '',
+                }
+              : null;
+          })
+          .filter(Boolean);
+      } else if (key === 'milestoneId') {
+        const milestone = json.milestones.find((m) => m.milestoneId === updateData.milestoneId);
+        issue.milestone = milestone || null;
+      } else if (key in issue) {
+        issue[key] = updateData[key];
+      }
+    });
+
+    // 갱신된 이슈 저장
+    json.issues[issueIndex] = issue;
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+
+    return res.json({
+      success: true,
+      message: '이슈가 성공적으로 수정되었습니다.',
+      data: {
+        issue,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '이슈 수정 중 서버 오류 발생',
+      error: error.message,
+    });
+  }
+});
+
+app.get('/issues/:id', authMiddleware, async (req, res) => {
+  try {
+    const issueId = parseInt(req.params.id);
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const data = await fs.readFile(filePath, 'utf-8');
+    const json = JSON.parse(data);
+
+    const issue = json.issues.find((issue) => issue.id === issueId);
+
+    if (!issue) {
+      return res.status(404).json({
+        success: false,
+        message: '이슈를 찾을 수 없습니다.',
+        data: null,
+      });
+    }
+
+    const responseData = {
+      success: true,
+      message: '이슈를 성공적으로 조회했습니다.',
+      data: {
+        issue: {
+          issueId: issue.id,
+          title: issue.title,
+          content: issue.content,
+          authorId: issue.author.id,
+          authorNickname: issue.author.nickname,
+          milestoneId: issue.milestone?.milestoneId ?? null,
+          isOpen: issue.isOpen,
+          lastModifiedAt: issue.lastModifiedAt || issue.createdAt,
+          issueFileUrl: issue.issueFileUrl || null,
+          authorProfileUrl:
+            issue.author.profileImageUrl ||
+            `https://dummy.local/profile/${issue.author.nickname}.png`,
+        },
+        assignees: (issue.assignees || []).map((assignee) => ({
+          id: assignee.id,
+          nickname: assignee.nickname,
+          profileImageUrl:
+            assignee.profileImageUrl || `https://dummy.local/profile/${assignee.nickname}.png`,
+        })),
+        labels: (issue.labels || []).map((label) => ({
+          labelId: label.labelId,
+          name: label.name,
+          color: label.color,
+          description: label.description || '',
+        })),
+        milestone: issue.milestone
+          ? {
+              milestoneId: issue.milestone.milestoneId,
+              name: issue.milestone.name,
+              description: issue.milestone.description,
+              endDate: issue.milestone.endDate,
+              processingRate: issue.milestone.processingRate || 0,
+              isOpen: issue.milestone.isOpen,
+            }
+          : null,
+        comments: (issue.comments || []).map((comment) => {
+          const user = json.users.find((u) => u.nickname === comment.authorNickname);
+          return {
+            commentId: comment.commentId,
+            content: comment.content,
+            issueFileUrl: comment.issueFileUrl || null,
+            authorId: user?.id || 1,
+            authorNickname: comment.authorNickname,
+            lastModifiedAt: comment.lastModifiedAt || comment.createdAt,
+            authorProfileUrl:
+              comment.authorProfileUrl ||
+              `https://dummy.local/profile/${comment.authorNickname}.png`,
+          };
+        }),
+      },
+    };
+
+    res.json(responseData);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '이슈 조회 중 서버 오류 발생',
       error: error.message,
     });
   }

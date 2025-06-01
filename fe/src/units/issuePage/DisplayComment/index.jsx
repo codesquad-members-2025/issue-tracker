@@ -70,8 +70,9 @@ export default function DisplayComment({ isMainComment, commentObj, commentPatch
   const setFile = useIssueDetailStore((s) =>
     isMainComment ? s.setFileForEdittingMainComment : s.setFileForEditComment,
   );
+
   function commentFileHandler(file) {
-    setFile(commentId, file);
+    isMainComment ? setFile(file) : setFile(commentId, file);
   }
 
   function cancleEditHandler() {
@@ -82,7 +83,7 @@ export default function DisplayComment({ isMainComment, commentObj, commentPatch
   function completeEditHandler() {
     const PATCHoptions = {
       method: 'PATCH',
-      body: getFormData(editingContent, editingIssueFileUrl),
+      body: getFormData({ content: editingContent }, editingIssueFileUrl),
     };
     if (isMainComment) {
       commentPatchHandler('PATCH', PATCHoptions);
