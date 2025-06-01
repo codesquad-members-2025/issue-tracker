@@ -1,5 +1,5 @@
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { getIssues } from '../api/getIssues';
+import { getIssues } from '@/features/issue/api/getIssues';
 
 export default function useIssues(filterQuery: string) {
   const { data, ...rest } = useQuery({

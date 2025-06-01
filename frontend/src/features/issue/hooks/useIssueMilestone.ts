@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getIssueMilestone } from '../api/getIssueMilestone';
+import { getIssueMilestone } from '@/features/issue/api/getIssueMilestone';
 import { type MilestoneDetail } from '@/features/milestone/types';
 
 export default function useIssueMilestone(issueId: number) {

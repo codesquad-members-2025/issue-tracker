@@ -1,5 +1,5 @@
-import { grayscale, accent } from './color';
-import commonTheme from './theme.common';
+import { grayscale, accent } from '@/shared/styles/color';
+import commonTheme from '@/shared/styles/theme.common';
 
 export const lightTheme = {
   neutral: {

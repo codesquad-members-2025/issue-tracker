@@ -1,5 +1,5 @@
 import { API } from '@/shared/constants/api';
-import { type IssueDetailResponse } from '../types/issue';
+import { type IssueDetailResponse } from '@/features/issue/types/issue';
 
 export default async function getIssueDetail(
   issueId: number,

@@ -1,5 +1,5 @@
 import { API } from '@/shared/constants/api';
-import { type GetUsersResponse } from '../types';
+import { type GetUsersResponse } from '@/features/user/types';
 
 export default async function getUsers(): Promise<GetUsersResponse> {
   const res = await fetch(`${API.USERS}`);

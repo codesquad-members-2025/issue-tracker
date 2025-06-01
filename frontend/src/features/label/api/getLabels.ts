@@ -1,5 +1,5 @@
 import { API } from '@/shared/constants/api';
-import { type GetLabelsResponse } from '../types';
+import { type GetLabelsResponse } from '@/features/label/types';
 
 export default async function getLabels(): Promise<GetLabelsResponse> {
   const res = await fetch(`${API.LABELS}`);

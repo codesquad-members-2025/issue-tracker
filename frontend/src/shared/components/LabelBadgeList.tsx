@@ -1,4 +1,4 @@
-import LabelBadge from './LabelBadge';
+import LabelBadge from '@/shared/components/LabelBadge';
 import { getAccessibleLabelStyle } from '@/shared/utils/color';
 import { type Label } from '@/features/label/types';
 

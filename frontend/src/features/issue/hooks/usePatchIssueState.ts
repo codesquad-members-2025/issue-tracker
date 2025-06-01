@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import patchIssueState from '@/features/issue/api/patchIssueState';
-import { type IssueDetailResponse } from '../types/issue';
+import { type IssueDetailResponse } from '@/features/issue/types/issue';
 
 export default function usePatchIssueState(issueId: number) {
   const queryClient = useQueryClient();

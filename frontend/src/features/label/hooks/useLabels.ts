@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import getLabels from '../api/getLabels';
-import { type GetLabelsResponse } from '../types';
+import getLabels from '@/features/label/api/getLabels';
+import { type GetLabelsResponse } from '@/features/label/types';
 
 export function useLabels() {
   const { data, isLoading, isError, refetch } = useQuery<GetLabelsResponse>({

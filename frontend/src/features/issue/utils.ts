@@ -1,4 +1,4 @@
-import { type IssueStatus } from './types/issue';
+import { type IssueStatus } from '@/features/issue/types/issue';
 
 interface CreatedMessageParams {
   createdAt: string;

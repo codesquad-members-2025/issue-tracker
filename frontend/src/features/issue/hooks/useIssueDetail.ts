@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import getIssueDetail from '../api/getIssueDetail';
+import getIssueDetail from '@/features/issue/api/getIssueDetail';
 
 export default function useIssueDetail(issueId: number) {
   const { data, ...rest } = useQuery({

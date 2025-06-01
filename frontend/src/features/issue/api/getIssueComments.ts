@@ -1,5 +1,5 @@
 import { API } from '@/shared/constants/api';
-import { type CommentsResponse } from '../types/issue';
+import { type CommentsResponse } from '@/features/issue/types/issue';
 
 export default async function getIssueComments(
   issueId: number,

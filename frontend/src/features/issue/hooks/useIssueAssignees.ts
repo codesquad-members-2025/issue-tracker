@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getIssueAssignees } from '../api/getIssueAssignees';
+import { getIssueAssignees } from '@/features/issue/api/getIssueAssignees';
 import { type User } from '@/features/user/types';
 
 export default function useIssueAssignees(issueId: number) {

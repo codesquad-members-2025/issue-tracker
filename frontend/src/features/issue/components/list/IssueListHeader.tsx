@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import IssueTabFilter from './IssueTabFilter';
+import IssueTabFilter from '@/features/issue/components/list/IssueTabFilter';
 import ChevronDownIcon from '@/assets/icons/chevronDown.svg?react';
 
 interface ListHeaderProps {

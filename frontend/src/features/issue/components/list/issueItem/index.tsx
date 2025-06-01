@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
-import { type Issue } from '../../../types/issue';
-
-import StatusIcon from './StatusIcon';
-import TitleWithLabels from './TitleWithLabels';
-import MetaInfo from './MetaInfo';
-import Assignees from './Assignees';
+import { type Issue } from '@/features/issue/types/issue';
+import StatusIcon from '@/features/issue/components/list/issueItem/StatusIcon';
+import TitleWithLabels from '@/features/issue/components/list/issueItem/TitleWithLabels';
+import MetaInfo from '@/features/issue/components/list/issueItem/MetaInfo';
+import Assignees from '@/features/issue/components/list/issueItem/Assignees';
 
 type IssueItemProps = Omit<Issue, 'updatedAt'>;
 

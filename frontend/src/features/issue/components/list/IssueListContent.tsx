@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { type Issue } from '../../types/issue';
-import IssueItem from './issueItem';
+import { type Issue } from '@/features/issue/types/issue';
+import IssueItem from '@/features/issue/components/list/issueItem';
 
 interface ListContentProps {
   issues: Issue[];

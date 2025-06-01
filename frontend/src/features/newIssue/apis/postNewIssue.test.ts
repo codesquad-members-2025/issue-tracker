@@ -1,4 +1,4 @@
-import { postNewIssue } from './postNewIssue';
+import { postNewIssue } from '@/features/newIssue/apis/postNewIssue';
 import { fetchMocker } from '@/setupTests';
 
 describe('postNewIssue', () => {

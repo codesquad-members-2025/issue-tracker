@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { type Comment, type CommentAuthor } from '../../types/issue';
-import IssueDescription from './IssueDescription';
-import CommentList from './CommentList';
-import CommentEditor from './CommentEditor';
+import { type Comment, type CommentAuthor } from '@/features/issue/types/issue';
+import IssueDescription from '@/features/issue/components/detail/IssueDescription';
+import CommentList from '@/features/issue/components/detail/CommentList';
+import CommentEditor from '@/features/issue/components/detail//CommentEditor';
 
 interface IssueMainSectionProps {
   comments: Comment[];

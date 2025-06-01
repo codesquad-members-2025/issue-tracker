@@ -2,7 +2,7 @@
 import { type ButtonHTMLAttributes, type ReactNode } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import type { ThemeType } from '../styles/theme';
+import type { ThemeType } from '@/shared/styles/theme';
 
 // ✅ 타입 정의
 type ButtonVariant = 'contained' | 'outline' | 'ghost';

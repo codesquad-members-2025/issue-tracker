@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { type IssueStatus } from '../../types/issue';
-import useIssues from '../../hooks/useIssues';
-import { buildIssueQuery } from '../../utils';
-import IssueListHeader from './IssueListHeader';
-import IssueListContent from './IssueListContent';
+import { type IssueStatus } from '@/features/issue/types/issue';
+import useIssues from '@/features/issue/hooks/useIssues';
+import { buildIssueQuery } from '@/features/issue/utils';
+import IssueListHeader from '@/features/issue/components/list/IssueListHeader';
+import IssueListContent from '@/features/issue/components/list/IssueListContent';
 
 interface IssueListContainerProps {
   selected: IssueStatus;

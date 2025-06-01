@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import TabButton from './TabButton';
-import TabItem from './TabItem';
+import TabButton from '@/shared/components/TabButton';
+import TabItem from '@/shared/components/TabItem';
 import MilestoneIcon from '@/assets/icons/milestone.svg?react';
 import LabelIcon from '@/assets/icons/label.svg?react';
 

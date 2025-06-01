@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import DropdownIndicator from './DropdownIndicator';
-import DropdownPortal from './DropdownPortal';
+import DropdownIndicator from '@/shared/components/DropdownIndicator';
+import DropdownPortal from '@/shared/components/DropdownPortal';
 
 interface DropdownProps {
   label: string;

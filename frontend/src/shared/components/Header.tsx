@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
-import Profile from './Profile';
+import Profile from '@/shared/components/Profile';
 import Logo from '@/assets/logoMedium.svg?react';
-import DarkModeToggle from './DarkModeToggle';
+import DarkModeToggle from '@/shared/components/DarkModeToggle';
 
 export default function Header() {
   return (

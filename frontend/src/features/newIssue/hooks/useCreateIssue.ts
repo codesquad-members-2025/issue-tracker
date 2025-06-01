@@ -1,7 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { postNewIssue } from '../apis/postNewIssue';
-import type { NewIssuePayload, PostNewIssueResponse } from '../types';
+import { postNewIssue } from '@/features/newIssue/apis/postNewIssue';
+import type {
+  NewIssuePayload,
+  PostNewIssueResponse,
+} from '@/features/newIssue/types';
 
 export const useCreateIssue = () => {
   const navigate = useNavigate();

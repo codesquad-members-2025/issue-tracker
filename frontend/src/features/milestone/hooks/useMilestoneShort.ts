@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import getMilestonesShort from '../api/getMilestonesShort';
-import { type GetMilestonesShortResponse } from '../types';
+import getMilestonesShort from '@/features/milestone/api/getMilestonesShort';
+import { type GetMilestonesShortResponse } from '@/features/milestone/types';
 
 export default function useMilestonesShort() {
   const { data, isLoading, isError, refetch } =

@@ -1,5 +1,5 @@
 import { API } from '@/shared/constants/api';
-import { type GetMilestonesShortResponse } from '../types';
+import { type GetMilestonesShortResponse } from '@/features/milestone/types';
 
 export default async function getMilestonesShort(): Promise<GetMilestonesShortResponse> {
   const res = await fetch(`${API.MILESTONES_SHORT}`);

@@ -1,6 +1,6 @@
 // src/features/issue/hooks/useIssueLabels.ts
 import { useQuery } from '@tanstack/react-query';
-import { getIssueLabels } from '../api/getIssueLabels';
+import { getIssueLabels } from '@/features/issue/api/getIssueLabels';
 import { type Label } from '@/features/label/types';
 
 export default function useIssueLabels(issueId: number) {

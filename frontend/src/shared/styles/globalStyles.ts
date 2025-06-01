@@ -1,5 +1,5 @@
 import { css, type Theme } from '@emotion/react';
-import resetStyles from './reset.ts';
+import resetStyles from '@/shared/styles/reset.ts';
 
 const globalStyle = (theme: Theme) => css`
   @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');

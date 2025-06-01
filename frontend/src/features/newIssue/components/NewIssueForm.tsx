@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import CommentInputSection from './CommentInputSection';
-import TitleInput from './TitleInput';
+import CommentInputSection from '@/features/newIssue/components/CommentInputSection';
+import TitleInput from '@/features/newIssue/components/TitleInput';
 
 interface NewIssueFormProps {
   title: string;

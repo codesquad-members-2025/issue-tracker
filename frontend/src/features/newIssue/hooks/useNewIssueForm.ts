@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
-import { newIssueFormReducer } from '../reducers/newIssueFormReducer';
-import { type NewIssueState } from '../types';
+import { newIssueFormReducer } from '@/features/newIssue/reducers/newIssueFormReducer';
+import { type NewIssueState } from '@/features/newIssue/types';
 
 export const initialNewIssueFormState: NewIssueState = {
   title: '',

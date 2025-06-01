@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { ThemeProvider } from '@emotion/react';
 import userEvent from '@testing-library/user-event';
 import { lightTheme } from '@/shared/styles/theme';
-import Button from './Button';
+import Button from '@/shared/components/Button';
 
 const OUTLINE_BORDER_COLOR = lightTheme.brand.border.default;
 

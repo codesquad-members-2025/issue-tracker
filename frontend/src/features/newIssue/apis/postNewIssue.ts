@@ -1,5 +1,8 @@
 import { API } from '@/shared/constants/api';
-import type { NewIssuePayload, PostNewIssueResponse } from '../types';
+import type {
+  NewIssuePayload,
+  PostNewIssueResponse,
+} from '@/features/newIssue/types';
 
 export const postNewIssue = async (
   payload: NewIssuePayload,

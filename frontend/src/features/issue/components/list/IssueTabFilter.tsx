@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import ClosedIcon from '@/assets/icons/archive.svg?react';
 import OpenIcon from '@/assets/icons/alertCircle.svg?react';
-import IssueTabButton from './IssueTabButton';
+import IssueTabButton from '@/features/issue/components/list/IssueTabButton';
 
 interface IssueTabFilterProps {
   openCount: number;

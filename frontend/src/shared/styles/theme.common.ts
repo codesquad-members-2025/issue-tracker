@@ -1,5 +1,5 @@
-import typography from './typography';
-import { accent } from './color';
+import typography from '@/shared/styles/typography';
+import { accent } from '@/shared/styles/color';
 
 const commonTheme = {
   typography,

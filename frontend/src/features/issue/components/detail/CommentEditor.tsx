@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import styled from '@emotion/styled';
-import useCreateComment from '../../hooks/useCreateComment';
+import useCreateComment from '@/features/issue/hooks/useCreateComment';
 import CommentInputSection from '@/features/newIssue/components/CommentInputSection';
-import NewCommentActionButton from './NewCommentActionButton';
+import NewCommentActionButton from '@/features/issue/components/detail/NewCommentActionButton';
 
 export default function CommentEditor() {
   const { id } = useParams();

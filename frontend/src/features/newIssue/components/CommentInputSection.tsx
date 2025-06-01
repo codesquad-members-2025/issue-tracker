@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import uploadToS3 from '../apis/uploadToS3';
+import uploadToS3 from '@/features/newIssue/apis/uploadToS3';
 import LabelAbove from '@/shared/components/LabelAbove';
-import CommentMetaBar from './CommentMetaBar';
+import CommentMetaBar from '@/features/newIssue/components/CommentMetaBar';
 
 const DEFAULT_HEIGTH = 80;
 

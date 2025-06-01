@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import Profile from '@/shared/components/Profile';
-import IssueForm from './NewIssueForm';
+import IssueForm from '@/features/newIssue/components/NewIssueForm';
 import IssueSidebar from '@/shared/components/sidebar';
 
 interface NewIssueFormSectionProps {

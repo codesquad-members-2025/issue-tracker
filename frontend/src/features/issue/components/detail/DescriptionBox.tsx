@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { type CommentAuthor } from '../../types/issue';
-import DescriptionHeader from './DescriptionHeader';
-import DescriptionBody from './DescriptionBody';
+import { type CommentAuthor } from '@/features/issue/types/issue';
+import DescriptionHeader from '@/features/issue/components/detail/DescriptionHeader';
+import DescriptionBody from '@/features/issue/components/detail/DescriptionBody';
 
 export interface DescriptionBoxProps {
   content: string | null;

@@ -1,4 +1,4 @@
-import getIssueDetail from './getIssueDetail';
+import getIssueDetail from '@/features/issue/api/getIssueDetail';
 import { fetchMocker } from '@/setupTests';
 
 describe('getIssueDetail', () => {

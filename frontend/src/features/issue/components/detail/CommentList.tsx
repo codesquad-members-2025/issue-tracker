@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { type Comment } from '../../types/issue';
-import CommentDescription from './CommentDescription';
+import { type Comment } from '@/features/issue/types/issue';
+import CommentDescription from '@/features/issue/components/detail/CommentDescription';
 
 interface CommentListProps {
   comments: Comment[];

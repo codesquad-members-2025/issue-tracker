@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { ThemeProvider as EmotionThemeProvider, Global } from '@emotion/react';
-import { lightTheme, darkTheme } from './theme';
-import globalStyle from './globalStyles';
 import { useThemeContext } from '@/shared/context/ThemeContext';
+import { lightTheme, darkTheme } from '@/shared/styles/theme';
+import globalStyle from '@/shared/styles/globalStyles';
 
 interface Props {
   children: ReactNode;

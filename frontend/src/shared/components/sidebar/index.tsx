@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import AssigneeSection from './AssigneeSection';
-import LabelSection from './LabelSection';
-import MilestoneSection from './MilestoneSection';
+import AssigneeSection from '@/shared/components/sidebar/AssigneeSection';
+import LabelSection from '@/shared/components/sidebar/LabelSection';
+import MilestoneSection from '@/shared/components/sidebar/MilestoneSection';
 
 interface IssueSidebarProps {
   selectedAssigneeIds: number[];

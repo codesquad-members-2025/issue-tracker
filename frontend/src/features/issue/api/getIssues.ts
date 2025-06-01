@@ -1,5 +1,5 @@
 import { API } from '@/shared/constants/api';
-import { type IssuesResponse } from '../types/issue';
+import { type IssuesResponse } from '@/features/issue/types/issue';
 
 export async function getIssues(filterQuery: string): Promise<IssuesResponse> {
   const url = new URL(API.ISSUES, window.location.origin);

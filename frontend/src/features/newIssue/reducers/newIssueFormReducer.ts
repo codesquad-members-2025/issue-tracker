@@ -1,5 +1,5 @@
-import { initialNewIssueFormState } from '../hooks/useNewIssueForm';
-import { type NewIssueState } from '../types';
+import { initialNewIssueFormState } from '@/features/newIssue/hooks/useNewIssueForm';
+import { type NewIssueState } from '@/features/newIssue/types';
 
 export type Action =
   | { type: 'SET_TITLE'; payload: string }

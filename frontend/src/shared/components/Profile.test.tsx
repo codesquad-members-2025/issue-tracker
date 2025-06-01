@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider } from '@emotion/react';
-import Profile from './Profile';
+import Profile from '@/shared/components/Profile';
 import { lightTheme } from '@/shared/styles/theme';
 
 describe('Profile 컴포넌트', () => {

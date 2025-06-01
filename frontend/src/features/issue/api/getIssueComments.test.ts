@@ -1,5 +1,5 @@
 import { fetchMocker } from '@/setupTests';
-import getIssueComments from './getIssueComments';
+import getIssueComments from '@/features/issue/api/getIssueComments';
 
 describe('getIssueComments', () => {
   beforeEach(() => {
