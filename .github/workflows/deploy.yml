@@ -35,13 +35,15 @@ jobs:
         run: |
           ./gradlew clean bootJar -x test
 
+      # 📦 Prepare Deployment Bundle
       - name: 📦 Prepare Deployment Bundle
         run: |
           mkdir -p bundle/frontend
           mkdir -p bundle/scripts
 
-          # ✅ JAR 복사 (정확하게 app.jar로)
-          cp be/build/libs/app.jar bundle/app.jar
+          # ✅ 가장 최근 jar 하나만 복사
+          JAR_PATH=$(find be/build/libs -name "*.jar" -print0 | xargs -0 ls -t | head -n 1)
+          cp "$JAR_PATH" bundle/app.jar
 
           # ✅ 프론트엔드 복사
           cp -r fe/dist/* bundle/frontend/
@@ -65,6 +67,7 @@ jobs:
           # ✅ zip 압축
           cd bundle
           zip -r ../deploy.zip .
+      
 
       - name: ☁️ Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
