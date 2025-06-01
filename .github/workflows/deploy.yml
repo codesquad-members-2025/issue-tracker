@@ -34,13 +34,17 @@ jobs:
         working-directory: be
         run: |
           ./gradlew clean bootJar -x test
+          echo "✅ 빌드 완료 - JAR 확인:"
+          ls -lh build/libs/*.jar
 
       - name: 📦 Prepare Deployment Bundle
         run: |
           mkdir -p bundle/app/frontend
           mkdir -p bundle/scripts
 
-          # ✅ 정확하게 bootJar 결과만 복사
+          # ✅ JAR 복사 (정확한 위치)
+          echo "✅ 복사 대상 JAR:"
+          ls -lh be/build/libs/app.jar
           cp be/build/libs/app.jar bundle/app/app.jar
 
           # ✅ 프론트엔드 빌드 복사
