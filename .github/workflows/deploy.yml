@@ -44,14 +44,14 @@ jobs:
           # ✅ 가장 최근 jar 하나만 복사
           JAR_PATH=$(find be/build/libs -name "*.jar" -print0 | xargs -0 ls -t | head -n 1)
           cp "$JAR_PATH" bundle/app.jar
-
+      
           # ✅ 프론트엔드 복사
           cp -r fe/dist/* bundle/frontend/
-
+      
           # ✅ 스크립트 복사
           cp deploy/scripts/start.sh bundle/scripts/
           cp deploy/scripts/stop.sh bundle/scripts/
-
+      
           # ✅ .env 파일 생성
           cat <<EOF > bundle/application.env
           JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}
@@ -63,10 +63,11 @@ jobs:
           S3_URL_NAME=${{ secrets.S3_URL_NAME }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           EOF
-
+      
           # ✅ zip 압축
           cd bundle
           zip -r ../deploy.zip .
+
       
 
       - name: ☁️ Configure AWS Credentials
