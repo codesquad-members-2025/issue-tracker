@@ -119,9 +119,6 @@ public class LabelQueryRepository {
   }
 
   public List<Long> getLabelIdsByNames(Collection<String> issueNames) {
-    if (issueNames.isEmpty()) {
-      return List.of();
-    }
     String sql = "SELECT id FROM label WHERE name IN (:issueNames)";
     MapSqlParameterSource params = new MapSqlParameterSource("issueNames", issueNames);
     List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);

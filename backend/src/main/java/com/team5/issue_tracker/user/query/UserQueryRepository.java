@@ -79,7 +79,7 @@ public class UserQueryRepository {
     }
 
     String authorSql = """
-        SELECT DISTINCT 
+        SELECT
             i.id AS issue_id,
             u.id AS user_id, 
             u.username AS user_username

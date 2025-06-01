@@ -169,11 +169,11 @@ public class IssueQueryRepository {
       params.addValue("authorId", searchCondition.getAuthorId());
     }
 
-    String where = "";
+    StringBuilder sql = new StringBuilder();
     for (String clause : whereClauses) {
-      where += " AND " + clause;
+      sql.append(" AND ").append(clause);
     }
-    return new FilterSql(where, params);
+    return new FilterSql(sql.toString(), params);
   }
 
   public List<Issue> findAllByIds(Collection<Long> issueIds) {

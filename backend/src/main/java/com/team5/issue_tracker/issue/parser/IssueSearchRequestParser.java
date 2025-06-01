@@ -66,10 +66,8 @@ public class IssueSearchRequestParser {
       String key = entry.getKey();
       String value = entry.getValue();
 
-      QueryKey.from(key).ifPresentOrElse(
-          qk -> qk.apply(value, issueSearchRequest),
-          () -> {
-          }
+      QueryKey.from(key).ifPresent(
+          qk -> qk.apply(value, issueSearchRequest)
       );
     }
     log.debug("assigneeName: {}, labelNames: {}, milestoneName: {}, authorName: {}",

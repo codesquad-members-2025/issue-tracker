@@ -165,12 +165,6 @@ public class IssueService {
     issueAssigneeRepository.saveAll(issueAssignees);
   }
 
-  private void saveIssueAssignees(Long issueId, List<Long> assigneeIds) {
-    for (Long assigneeId : assigneeIds) {
-      issueAssigneeRepository.save(new IssueAssignee(issueId, assigneeId));
-    }
-  }
-
   private void validateIssueExists(Long issueId) {
     if (!issueRepository.existsById(issueId)) {
       throw new NotFoundException(ErrorCode.ISSUE_NOT_FOUND);
