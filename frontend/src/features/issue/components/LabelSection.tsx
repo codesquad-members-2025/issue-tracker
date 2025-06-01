@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useLabels } from '@/features/label/hooks/useLabels';
 import { type Label } from '../../label/types';
-import { getAccessibleLabelStyle } from '@/shared/utils/color';
+import LabelBadgeList from '@/shared/components/LabelBadgeList';
 import Dropdown from '@/shared/components/Dropdown';
 import DropdownPanel from '@/shared/components/DropdownPanel';
 
@@ -42,7 +42,9 @@ export default function LabelSection({
         />
       </Dropdown>
       {selectedLabelIds.length > 0 && (
-        <LabelList>{renderLabelList(selectedLabels)}</LabelList>
+        <LabelList>
+          <LabelBadgeList labels={selectedLabels} />
+        </LabelList>
       )}
     </Section>
   );
@@ -54,22 +56,6 @@ const Section = styled.div<{ noDivider?: boolean }>`
   flex-direction: column;
   gap: 16px;
   padding: 32px;
-`;
-
-//TODO 공용 라벨 컴포넌트 분리
-interface LabelTagProps {
-  backgroundColor: string;
-  borderColor: string;
-  color: string;
-}
-
-const LabelTag = styled.span<LabelTagProps>`
-  padding: 4px 9px;
-  border-radius: ${({ theme }) => theme.radius.medium};
-  color: ${({ color }) => color};
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  border: 1px solid ${({ borderColor }) => borderColor};
-  ${({ theme }) => theme.typography.displayMedium12};
 `;
 
 const LabelInfo = styled.div`
@@ -94,20 +80,3 @@ const LabelList = styled.div`
   ${({ theme }) => theme.typography.availableMedium12};
   color: ${({ theme }) => theme.neutral.text.strong};
 `;
-
-//TODO 공용 분리
-function renderLabelList(labels: Label[]) {
-  return labels.map(label => {
-    const { textColor, borderColor } = getAccessibleLabelStyle(label.color);
-    return (
-      <LabelTag
-        key={label.id}
-        backgroundColor={label.color}
-        borderColor={borderColor}
-        color={textColor}
-      >
-        {label.name}
-      </LabelTag>
-    );
-  });
-}

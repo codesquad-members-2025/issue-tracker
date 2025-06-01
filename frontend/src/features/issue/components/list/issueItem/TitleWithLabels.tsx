@@ -1,18 +1,12 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
-import { getAccessibleLabelStyle } from '@/shared/utils/color';
 import { type Label } from '@/features/label/types';
+import LabelBadgeList from '@/shared/components/LabelBadgeList';
 
 interface Props {
   issueId: number;
   title: string;
   labels: Label[];
-}
-
-interface LabelTagProps {
-  backgroundColor: string;
-  borderColor: string;
-  color: string;
 }
 
 const TitleWithLabels = ({ issueId, title, labels }: Props) => {
@@ -25,20 +19,7 @@ const TitleWithLabels = ({ issueId, title, labels }: Props) => {
   return (
     <TitleRow>
       <IssueTitle onClick={handleClickTitle}>{title}</IssueTitle>
-      {labels.map(label => {
-        const { textColor, borderColor } = getAccessibleLabelStyle(label.color);
-
-        return (
-          <LabelTag
-            key={label.id}
-            backgroundColor={label.color}
-            borderColor={borderColor}
-            color={textColor}
-          >
-            {label.name}
-          </LabelTag>
-        );
-      })}
+      <LabelBadgeList labels={labels} />
     </TitleRow>
   );
 };
@@ -60,13 +41,4 @@ const IssueTitle = styled.span`
   &:hover {
     text-decoration: underline;
   }
-`;
-
-const LabelTag = styled.span<LabelTagProps>`
-  padding: 4px 9px;
-  border-radius: ${({ theme }) => theme.radius.medium};
-  color: ${({ color }) => color};
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  border: 1px solid ${({ borderColor }) => borderColor};
-  ${({ theme }) => theme.typography.displayMedium12};
 `;
