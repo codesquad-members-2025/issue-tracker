@@ -48,9 +48,6 @@ export default function NewIssueFooter({ isValid }) {
   };
   const POSToption = {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: getFormData(dataObj, issue.issueFileUrl),
   };
 

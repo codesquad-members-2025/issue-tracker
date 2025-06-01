@@ -2742,6 +2742,40 @@
       "labels": [],
       "milestone": null,
       "createdAt": "2025-05-30T09:43:30.160Z"
+    },
+    {
+      "id": 69,
+      "title": "ㅁ",
+      "content": "ㅁ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-06-01T06:25:46.231Z",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 70,
+      "title": "ㅁㅁㅁ",
+      "content": "ㅁㅁㅁㅁ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-06-01T06:26:27.741Z",
+      "issueFileUrl": "http://localhost:8080/uploads/1748759187735-스크린샷 2025-04-25 오전 11.40.04.png",
+      "comments": []
     }
   ],
   "users": [
