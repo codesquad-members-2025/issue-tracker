@@ -37,18 +37,32 @@ public class MilestoneDto {
 	) {
 	}
 
-	// 마일스톤 목록 조회용 응답 DTO
+	// 목록의 구성요소 DTO
+	@Builder
 	public record MilestoneListItem(
+		int id,
 		String title,
 		String description,
+		LocalDate dueDate,
+		MilestoneState state
+	) {
+		public static MilestoneListItem from(MilestoneRow row) {
+			return new MilestoneListItem(
+				row.id(),
+				row.title(),
+				row.description(),
+				row.dueDate(),
+				row.state()
+			);
+		}
+	}
 
-	)
-
-	// 목록의 구성요소 DTO
+	// 마일스톤 목록 조회시 응답 DTO
 	public record ListResponse(
 		int totalCount,
-		List<>
-	)
+		List<MilestoneListItem> milestones
+	) {
+	}
 
 	// DB 조회용 DTO
 	public record MilestoneRow(
