@@ -46,7 +46,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}   # ✅ GitHub Secret 이름 반영
           source: "deploy.zip"
           target: "/home/ubuntu"
 
@@ -55,7 +55,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}   # ✅ 여기도 동일하게
           script: |
             echo "🛑 기존 프로세스 종료 중..."
             PID=$(pgrep -f 'java -jar')
@@ -88,4 +88,4 @@ jobs:
 
             sleep 3
             echo "📄 서버 로그 출력 시작 (상위 100줄)"
-            tail -n 100 /home/ubuntu/app/app.log || echo "⚠️ 로그 파일이 아직 생성되지 않았을 수 있습니다."
+            tail -n 100 /home/ubuntu/app/app.log || echo "⚠️ 로그가 아직 생성되지 않았을 수 있습니다."
