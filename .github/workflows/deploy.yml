@@ -40,9 +40,8 @@ jobs:
           mkdir -p bundle/app/frontend
           mkdir -p bundle/scripts
 
-          # ✅ 최신 JAR 선택 (가장 최근 빌드된 JAR)
-          JAR_PATH=$(find be/build/libs -name "*.jar" -print0 | xargs -0 ls -t | head -n 1)
-          cp "$JAR_PATH" bundle/app/app.jar
+          # ✅ 정확하게 bootJar 결과만 복사
+          cp be/build/libs/app.jar bundle/app/app.jar
 
           # ✅ 프론트엔드 빌드 복사
           cp -r fe/dist/* bundle/app/frontend/
