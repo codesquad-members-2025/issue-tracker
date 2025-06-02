@@ -47,7 +47,7 @@ public class IssueController {
     @PatchMapping("/{issueId}")
     public IssueDetailResponse updateIssue(@PathVariable Long issueId,
                                            @RequestPart("data") IssueUpdateDto updateParam,
-                                           @RequestPart(value = "files",required = false) List<MultipartFile> files) {
+                                           @RequestPart(value = "files",required = false) List<MultipartFile> files) throws IOException {
         return issueService.update(issueId, updateParam ,files);
     }
 
