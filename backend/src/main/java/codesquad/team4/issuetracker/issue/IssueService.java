@@ -12,7 +12,6 @@ import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
-import codesquad.team4.issuetracker.count.dto.IssueCountDto;
 import codesquad.team4.issuetracker.exception.unauthorized.NotAuthorException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
