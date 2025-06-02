@@ -16,6 +16,3 @@ nohup java \
   -Dspring.datasource.password=$DB_PASSWORD \
   -jar app.jar > /home/ubuntu/app/app.log 2>&1 &
 
-sleep 3
-echo "📄 서버 로그 출력 "
-tail -f /home/ubuntu/app/app.log || echo "⚠️ 로그 파일이 아직 생성되지 않았습니다."
