@@ -49,9 +49,7 @@ public class AuthController {
 
 	// Redirect(Callback) endpoint
 	@GetMapping("/v1/oauth/callback")
-	public AuthDto.LoginResponse githubCallback(
-		@RequestParam("code") String code,
-		@RequestParam("state") String state,
+	public AuthDto.LoginResponse githubCallback(@RequestParam("code") String code, @RequestParam("state") String state,
 		HttpSession session) {
 		String savedState = (String)session.getAttribute("oauth_state");
 		if (savedState == null || !savedState.equals(state)) {
@@ -71,10 +69,7 @@ public class AuthController {
 	@PostMapping("/v1/auth/login")
 	public ApiResponse<AuthDto.LoginResponse> login(@RequestBody @Valid AuthDto.LoginRequest request) {
 
-		User user = authService.authenticateUser(
-			request.loginId(),
-			request.password()
-		);
+		User user = authService.authenticateUser(request.loginId(), request.password());
 
 		AuthDto.LoginResponse tokens = tokenService.createTokens(user.getId(), user.getProfileImageUrl(),
 			user.getUsername());
@@ -88,10 +83,22 @@ public class AuthController {
 		String username = (String)request.getAttribute("username");
 		String profileImage = (String)request.getAttribute("profileImageUrl");
 
-		return ApiResponse.success(Map.of(
-			"username", username,
-			"profileImage", profileImage
-		));
+		return ApiResponse.success(Map.of("username", username, "profileImage", profileImage));
 	}
+
+	//로그아웃
+	@PostMapping("/v1/auth/logout")
+	public String logout(@RequestBody AuthDto.LogoutRequest request) {
+		authService.logout(request.refreshToken());
+		return "redirect:/login";
+	}
+
+	/*
+	@PostMapping("/v1/auth/logout")
+	public ApiResponse<?> logout(@RequestBody AuthDto.LogoutRequest request) {
+		authService.logout(request.refreshToken());
+		return ApiResponse.success("로그아웃이 성공적으로 처리되었습니다.");
+	}
+	*/
 
 }
