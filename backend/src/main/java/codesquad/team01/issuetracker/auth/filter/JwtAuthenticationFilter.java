@@ -34,17 +34,18 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
 		String path = request.getRequestURI();
 		//필터를 거치지 않을 경로
-		if (path.equals("/api/v1/auth/login") || path.startsWith("/api/v1/oauth")) {
+		if (path.equals("/api/v1/auth/login") || path.startsWith("/api/v1/oauth")
+			|| path.equals("/api/v1/auth/signup")) {
 			chain.doFilter(request, response);
 			return;
 		}
 		log.info("JWT 필터 동작: {}", path);
 
 		// OPTIONS 요청 시(CORS에 관련) 다음 필터로 넘김
-		//if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-		//	chain.doFilter(request, response);
-		//	return;
-		//}
+		if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+			chain.doFilter(request, response);
+			return;
+		}
 
 		String token = JwtExtractor.extractJwt(request);
 		log.info("Access Token:{}", token);
