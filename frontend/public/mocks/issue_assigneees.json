@@ -1,0 +1,19 @@
+{
+  "assignees": [
+    {
+      "id": 1,
+      "nickname": "jjinbbangS2",
+      "profileImageUrl": "https://picsum.photos/id/1011/200/300"
+    },
+    {
+      "id": 2,
+      "nickname": "htmlH3AD",
+      "profileImageUrl": "https://picsum.photos/id/1012/200/300"
+    },
+    {
+      "id": 3,
+      "nickname": "samsamis9",
+      "profileImageUrl": "https://picsum.photos/id/1013/200/300"
+    }
+  ]
+}
