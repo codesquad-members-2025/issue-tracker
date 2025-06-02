@@ -4,8 +4,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import codesquad.team01.issuetracker.auth.client.GitHubClient;
+import codesquad.team01.issuetracker.auth.domain.RefreshToken;
 import codesquad.team01.issuetracker.auth.dto.AuthDto;
+import codesquad.team01.issuetracker.auth.repository.RefreshTokenRepository;
 import codesquad.team01.issuetracker.common.exception.InvalidPasswordException;
+import codesquad.team01.issuetracker.common.exception.TokenNotFoundException;
 import codesquad.team01.issuetracker.common.exception.UserNotFoundException;
 import codesquad.team01.issuetracker.user.domain.User;
 import codesquad.team01.issuetracker.user.repository.UserRepository;
@@ -19,6 +22,7 @@ public class AuthService {
 
 	private final GitHubClient gitHubClient;
 	private final UserRepository userRepository;
+	private final RefreshTokenRepository refreshTokenRepository;
 
 	private final String GITHUB = "github";
 	private final PasswordEncoder passwordEncoder;
@@ -58,4 +62,10 @@ public class AuthService {
 		return user;
 	}
 
+	//로그아웃
+	public void logout(String refreshToken) {
+		RefreshToken tokenEntity = refreshTokenRepository.findByToken(refreshToken)
+			.orElseThrow(TokenNotFoundException::new);
+		refreshTokenRepository.delete(tokenEntity);
+	}
 }
