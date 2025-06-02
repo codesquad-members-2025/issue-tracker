@@ -19,6 +19,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: 🪠 Set Frontend Environment
+        working-directory: fe
+        run: |
+          echo "VITE_API_BASE_URL=${{ secrets.FRONTEND_API_BASE_URL }}" > .env.production
+
       - name: 🧱 Build Frontend
         working-directory: fe
         run: |
@@ -35,7 +40,7 @@ jobs:
           mkdir -p bundle/frontend
           mkdir -p bundle/scripts
 
-          # ✅ .env 파일 생성
+          # ✅ .env 생성 (백엔드 환경변수)
           echo "JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}" > bundle/.env
           echo "JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}" >> bundle/.env
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> bundle/.env
@@ -45,18 +50,44 @@ jobs:
           echo "S3_URL_NAME=${{ secrets.S3_URL_NAME }}" >> bundle/.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> bundle/.env
 
-          # 정적 파일 복사
+          # ✅ start.sh 생성
+          echo '#!/bin/bash' > bundle/scripts/start.sh
+          echo 'cd /home/ubuntu/app/bundle' >> bundle/scripts/start.sh
+          echo 'source .env' >> bundle/scripts/start.sh
+          echo 'nohup java \\' >> bundle/scripts/start.sh
+          echo '  -Dspring.profiles.active=dev \\' >> bundle/scripts/start.sh
+          echo '  -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \\' >> bundle/scripts/start.sh
+          echo '  -DJWT_REFRESH_KEY=$JWT_REFRESH_KEY \\' >> bundle/scripts/start.sh
+          echo '  -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \\' >> bundle/scripts/start.sh
+          echo '  -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \\' >> bundle/scripts/start.sh
+          echo '  -DAWS_REGION=$AWS_REGION \\' >> bundle/scripts/start.sh
+          echo '  -Dcloud.aws.region.static=$AWS_REGION \\' >> bundle/scripts/start.sh
+          echo '  -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \\' >> bundle/scripts/start.sh
+          echo '  -Dcloud.aws.s3.url=$S3_URL_NAME \\' >> bundle/scripts/start.sh
+          echo '  -Dspring.datasource.password=$DB_PASSWORD \\' >> bundle/scripts/start.sh
+          echo '  -jar app.jar > /home/ubuntu/app/app.log 2>&1 &' >> bundle/scripts/start.sh
+
+          # ✅ stop.sh 생성
+          echo '#!/bin/bash' > bundle/scripts/stop.sh
+          echo 'PID=$(pgrep -f "java -jar")' >> bundle/scripts/stop.sh
+          echo 'if [ -n "$PID" ]; then' >> bundle/scripts/stop.sh
+          echo '  kill -9 $PID' >> bundle/scripts/stop.sh
+          echo '  echo "✅ Java 프로세스 종료됨: $PID"' >> bundle/scripts/stop.sh
+          echo 'else' >> bundle/scripts/stop.sh
+          echo '  echo "ℹ️ 종료할 프로세스 없음"' >> bundle/scripts/stop.sh
+          echo 'fi' >> bundle/scripts/stop.sh
+
+          chmod +x bundle/scripts/*.sh
+
+          # ✅ 프론트엔드 정적 파일 복사
           cp -r fe/dist/* bundle/frontend/
 
-          # 최신 JAR 복사
+          # ✅ 최신 JAR 복사
           JAR_PATH=$(ls -t be/build/libs/*.jar | head -n 1)
           echo "✅ 최신 JAR: $JAR_PATH"
           cp "$JAR_PATH" bundle/app.jar
 
-          # 배포 스크립트 복사
-          cp deploy/scripts/*.sh bundle/scripts/
-
-          # 압축
+          # ✅ 압축
           zip -r deploy.zip bundle
 
       - name: 🚀 Upload to EC2
@@ -81,35 +112,15 @@ jobs:
             echo "📦 배포 압축 해제"
             unzip -o /home/ubuntu/deploy.zip -d /home/ubuntu/app
 
-            echo "📁 프론트엔드 정적 리소스를 Spring 인식 위치로 이동"
+            echo "📁 프론트 정적 리소스 이동"
             mv /home/ubuntu/app/bundle/frontend /home/ubuntu/app/frontend || true
 
-            echo "🛑 기존 프로세스 종료 중..."
-            PID=$(pgrep -f 'java -jar')
-            if [ -n "$PID" ]; then
-              kill -9 $PID
-              echo "✅ 종료된 PID: $PID"
-            else
-              echo "ℹ️ 종료할 프로세스 없음"
-            fi
+            echo "🛑 기존 앱 종료 중..."
+            bash /home/ubuntu/app/bundle/scripts/stop.sh
 
             echo "🚀 새 애플리케이션 실행..."
-            cd /home/ubuntu/app/bundle
-            source .env
-
-            nohup java \
-              -Dspring.profiles.active=dev \
-              -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
-              -DJWT_REFRESH_KEY=$JWT_REFRESH_KEY \
-              -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-              -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-              -DAWS_REGION=$AWS_REGION \
-              -Dcloud.aws.region.static=$AWS_REGION \
-              -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
-              -Dcloud.aws.s3.url=$S3_URL_NAME \
-              -Dspring.datasource.password=$DB_PASSWORD \
-              -jar app.jar > /home/ubuntu/app/app.log 2>&1 &
+            bash /home/ubuntu/app/bundle/scripts/start.sh
 
             sleep 3
-            echo "📄 서버 로그 출력 시작 (상위 100줄)"
+            echo "📄 서버 로그 출력 (상위 100줄)"
             tail -n 100 /home/ubuntu/app/app.log || echo "⚠️ 로그가 아직 생성되지 않았을 수 있습니다."
