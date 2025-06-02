@@ -38,9 +38,9 @@ public class UserDto {
 	}
 
 	@Builder
-	public record IssueDetailAssigneeResponse(
+	public record IssueDetailUserResponse(
 		int id,
-		String name,
+		String username,
 		String profileImageUrl
 	) {
 		public String profileImageUrl() {
@@ -78,7 +78,14 @@ public class UserDto {
 	public record IssueAssigneeRow(
 		int issueId,
 		int assigneeId,
+		String assigneeProfileImageUrl
+	) {
+	}
 
+	@Builder
+	public record IssueDetailAssigneeRow(
+		int assigneeId,
+		String assigneeUsername,
 		String assigneeProfileImageUrl
 	) {
 	}
@@ -87,7 +94,6 @@ public class UserDto {
 	@Builder
 	public record UserFilterRow(
 		int id,
-
 		String username,
 		String profileImageUrl
 	) {

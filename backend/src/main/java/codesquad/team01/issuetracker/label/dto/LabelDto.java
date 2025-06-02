@@ -26,6 +26,15 @@ public class LabelDto {
 	) {
 	}
 
+	@Builder
+	public record IssueDetailLabelResponse(
+		int id,
+		String name,
+		String color,
+		String textColor
+	) {
+	}
+
 	// 레이블 리스트를 구성하는 레이블
 	@Builder
 	public record ListItemResponse(
@@ -61,6 +70,15 @@ public class LabelDto {
 		String labelName,
 		String labelColor,
 		LabelTextColor labelTextColor
+	) {
+	}
+
+	@Builder
+	public record IssueDetailLabelRow(
+		int id,
+		String name,
+		String color,
+		String textColor
 	) {
 	}
 
