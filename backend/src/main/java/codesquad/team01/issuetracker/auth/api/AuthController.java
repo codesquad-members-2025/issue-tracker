@@ -90,6 +90,7 @@ public class AuthController {
 	@PostMapping("/v1/auth/logout")
 	public String logout(@RequestBody AuthDto.LogoutRequest request) {
 		authService.logout(request.refreshToken());
+		//로그아웃 후 로그인페이지로 리다이렉트
 		return "redirect:/login";
 	}
 
@@ -100,5 +101,9 @@ public class AuthController {
 		return ApiResponse.success("로그아웃이 성공적으로 처리되었습니다.");
 	}
 	*/
-
+	@PostMapping("/v1/auth/signup")
+	public ApiResponse<?> signup(@RequestBody AuthDto.SignUpRequest request) throws Exception {
+		authService.signUp(request);
+		return ApiResponse.success("회원가입이 완료되었습니다.");
+	}
 }
