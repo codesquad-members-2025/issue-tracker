@@ -6,10 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
+import codesquad.team4.issuetracker.exception.unauthorized.NotAuthorException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.label.IssueLabelRepository;
@@ -52,6 +54,9 @@ class IssueServiceUpdateTest {
     private static final String OLD_IMAGE = "http://s3.com/old.png";
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private User author;
+
     @BeforeEach
     void setUp() {
         TestDataHelper.insertUser(jdbcTemplate, 1L, "사용자1");
@@ -64,6 +69,12 @@ class IssueServiceUpdateTest {
         TestDataHelper.insertLabel(jdbcTemplate, 1L, "bug", "#ff0000");
         TestDataHelper.insertLabel(jdbcTemplate, 2L, "feature", "#00ff00");
         TestDataHelper.insertLabel(jdbcTemplate, 3L, "urgent", "#0000ff");
+
+        author = User.builder()
+            .id(1L)
+            .email("user1@test.com")
+            .nickname("사용자1")
+            .build();
     }
 
     @Test
@@ -79,7 +90,7 @@ class IssueServiceUpdateTest {
                 .build();
 
         //when
-        ApiMessageDto result = issueService.updateIssue(1L, request, "");
+        ApiMessageDto result = issueService.updateIssue(1L, request, "", author);
 
         Issue updated = issueRepository.findById(1L).get();
 
@@ -98,7 +109,7 @@ class IssueServiceUpdateTest {
         IssueRequestDto.IssueUpdateDto request = IssueRequestDto.IssueUpdateDto.builder().build();
 
         //when & then
-        assertThatThrownBy(() -> issueService.updateIssue(999L, request, ""))
+        assertThatThrownBy(() -> issueService.updateIssue(999L, request, "", author))
                 .isInstanceOf(IssueNotFoundException.class);
     }
 
@@ -109,7 +120,7 @@ class IssueServiceUpdateTest {
                 .milestoneId(999L)
                 .build();
 
-        assertThatThrownBy(() -> issueService.updateIssue(1L, request, ""))
+        assertThatThrownBy(() -> issueService.updateIssue(1L, request, "", author))
                 .isInstanceOf(MilestoneNotFoundException.class);
     }
 
@@ -120,7 +131,7 @@ class IssueServiceUpdateTest {
                 .removeImage(true)
                 .build();
 
-        issueService.updateIssue(1L, request, "");
+        issueService.updateIssue(1L, request, "", author);
 
         assertThat(issueRepository.findById(1L).get().getFileUrl()).isEmpty();
     }
@@ -132,7 +143,7 @@ class IssueServiceUpdateTest {
                 .removeImage(false)
                 .build();
 
-        issueService.updateIssue(1L, request, "");
+        issueService.updateIssue(1L, request, "", author);
 
         assertThat(issueRepository.findById(1L).get().getFileUrl()).isEqualTo(OLD_IMAGE);
     }
@@ -144,7 +155,7 @@ class IssueServiceUpdateTest {
                 .removeImage(true)
                 .build();
 
-        issueService.updateIssue(1L, request, "");
+        issueService.updateIssue(1L, request, "", author);
 
         assertThat(issueRepository.findById(1L).get().getFileUrl()).isEmpty();
     }
@@ -250,5 +261,39 @@ class IssueServiceUpdateTest {
         // then
         List<IssueAssignee> mappings = issueAssigneeRepository.findAllByIssueId(1L);
         assertThat(mappings).isEmpty();
+    }
+
+    @Test
+    @DisplayName("작성자가 아닌 사용자가 이슈를 수정하려 하면 예외가 발생한다")
+    void updateIssueByNonAuthor_shouldThrowException() {
+        // given
+        IssueRequestDto.IssueUpdateDto request = IssueRequestDto.IssueUpdateDto.builder()
+            .title("수정되면 안되는딩")
+            .build();
+
+        User nonAuthor = User.builder()
+            .id(999L) // 작성자(1L)와 다른 사용자
+            .email("not-author@test.com")
+            .nickname("누고")
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> issueService.updateIssue(1L, request, "", nonAuthor))
+            .isInstanceOf(NotAuthorException.class);
+    }
+
+    @Test
+    @DisplayName("작성자가 아닌 사용자가 이슈를 삭제하려 하면 예외가 발생한다")
+    void deleteIssueByNonAuthor_shouldThrowException() {
+        // given
+        User nonAuthor = User.builder()
+            .id(999L)
+            .email("not-author@test.com")
+            .nickname("너누구야")
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> issueService.deleteIssue(1L, nonAuthor))
+            .isInstanceOf(NotAuthorException.class);
     }
 }

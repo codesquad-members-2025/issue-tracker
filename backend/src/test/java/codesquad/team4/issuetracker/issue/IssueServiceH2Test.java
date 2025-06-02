@@ -4,6 +4,8 @@ import static codesquad.team4.issuetracker.util.IssueFilteringParser.parseFilter
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import codesquad.team4.issuetracker.entity.User;
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.count.dto.IssueCountDto;
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
@@ -44,6 +46,8 @@ class IssueServiceH2Test {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private User author;
+
     @BeforeEach
     void setUp() {
         //유저 생성
@@ -81,6 +85,12 @@ class IssueServiceH2Test {
         TestDataHelper.insertComment(jdbcTemplate, 3L, "댓글3", 2L, 3L, null);
         TestDataHelper.insertComment(jdbcTemplate, 4L, "댓글4", 3L, 3L, null);
         TestDataHelper.insertComment(jdbcTemplate, 5L, "댓글5", 3L, 6L, null);
+
+        author = User.builder()
+            .id(1L)
+            .email("user1@test.com")
+            .nickname("사용자1")
+            .build();
     }
 
 
@@ -172,7 +182,7 @@ class IssueServiceH2Test {
         Long issueId = 999L;
 
         //when & then
-        assertThatThrownBy(() -> issueService.deleteIssue(issueId))
+        assertThatThrownBy(() -> issueService.deleteIssue(issueId, author))
             .isInstanceOf(IssueNotFoundException.class);
     }
 
