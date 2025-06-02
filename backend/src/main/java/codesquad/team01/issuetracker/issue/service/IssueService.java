@@ -14,7 +14,8 @@ import codesquad.team01.issuetracker.common.util.CursorEncoder;
 import codesquad.team01.issuetracker.issue.constants.IssueConstants;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
-import codesquad.team01.issuetracker.issue.exception.IssueNotFoundException;
+import codesquad.team01.issuetracker.issue.exception.ClosedIssueModificationException;
+import codesquad.team01.issuetracker.issue.exception.IssueAccessForbiddenException;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
@@ -234,9 +235,23 @@ public class IssueService {
 			throw new InvalidParameterException("한 번에 하나의 필드만 수정할 수 있습니다.");
 		}
 
-		// 이슈 존재 확인
-		if (!issueRepository.existsById(issueId)) {
-			throw new IssueNotFoundException("존재하지 않는 이슈입니다: " + issueId);
+		// 이슈 존재 확인 + 해당 issue의 state, writerId 가져오기
+		IssueDto.IssueStateAndWriterIdRow stateAndWriterIdRow = issueRepository.findIssueStateAndWriterIdByIssueId(
+			issueId);
+
+		// 작성자가 로그인된 사용자인지 확인
+		if (stateAndWriterIdRow.writerId() != userId) {
+			throw new IssueAccessForbiddenException(issueId, userId);
+		}
+
+		// 기존 상태가 CLOSED인 경우 제목, 내용 수정 불가
+		if (stateAndWriterIdRow.state() == IssueState.CLOSED) {
+			if (request.isUpdatingTitle()) {
+				throw new ClosedIssueModificationException("제목");
+			}
+			if (request.isUpdatingContent()) {
+				throw new ClosedIssueModificationException("내용");
+			}
 		}
 
 		LocalDateTime now = LocalDateTime.now();
@@ -246,11 +261,10 @@ public class IssueService {
 		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findCreatedIssueById(issueId);
 		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
-		// int commentCount = commentRepository.findCommentsByIssueId(issueId); // 댓글 구현 시
+		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); // 댓글 구현 시
 
-		IssueDto.CreateResponse response = issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows,
+		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows,
 			assigneeRows, 0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
-		return response;
 	}
 
 	private void validateMilestoneExists(Integer milestoneId) {
