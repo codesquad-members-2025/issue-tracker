@@ -4,7 +4,7 @@
       "id": 1,
       "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴsss",
       "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음\n\n-> 테스트",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -1176,7 +1176,7 @@
       "id": 29,
       "title": "ㅣㅣ이슈 관련 문서 연동",
       "content": "이슈와 관련된 기술 문서나 회의록을 연결할 수 있는 기능이 필요합니다.ㅁs",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickname": "devchan",
@@ -1629,7 +1629,7 @@
       "id": 38,
       "title": "이슈 태그 시스템 개선",
       "content": "현재의 라벨 시스템을 확장하여 계층적 태그 구조를 지원해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
         "nickname": "홍길동",
@@ -2837,6 +2837,73 @@
           "issueFileUrl": "http://localhost:8080/uploads/1748770278072-스크린샷 2025-05-03 오후 12.57.07.png",
           "authorNickname": "devchan",
           "lastModifiedAt": "2025-06-01T09:31:23.126Z"
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "title": "asd",
+      "content": "sasd",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-06-02T03:09:05.027Z",
+      "issueFileUrl": null,
+      "comments": []
+    },
+    {
+      "id": 73,
+      "title": "a",
+      "content": "a",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-06-02T03:13:02.947Z",
+      "issueFileUrl": "http://localhost:8080/uploads/1748833982944-스크린샷 2025-04-25 오전 11.40.04.png",
+      "comments": [
+        {
+          "commentId": 311,
+          "content": "s",
+          "issueFileUrl": "http://localhost:8080/uploads/1748834024703-스크린샷 2025-03-23 오후 9.22.01.png",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-02T03:13:44.709Z"
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "title": "ㅂ",
+      "content": "ㅂㅂㅂㄴ",
+      "isOpen": true,
+      "author": {
+        "id": 1,
+        "nickname": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-06-02T04:21:26.107Z",
+      "issueFileUrl": "http://localhost:8080/uploads/1748838396882-스크린샷 2025-03-23 오후 9.22.01.png",
+      "comments": [
+        {
+          "commentId": 312,
+          "content": "ㅁㄴ",
+          "issueFileUrl": "http://localhost:8080/uploads/1748838265033-스크린샷 2025-04-25 오전 11.40.04.png",
+          "authorNickname": "devchan",
+          "lastModifiedAt": "2025-06-02T04:24:25.036Z"
         }
       ]
     }

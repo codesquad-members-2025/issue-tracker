@@ -195,6 +195,11 @@ app.get('/', authMiddleware, async (req, res) => {
     const totalPages = Math.ceil(totalCount / limitNum);
     const startIndex = (pageNum - 1) * limitNum;
     const paginatedIssues = issues.slice(startIndex, startIndex + limitNum);
+    // id → issueId 변환 (응답 전용)
+    const formattedIssues = paginatedIssues.map(({ id, ...rest }) => ({
+      issueId: id,
+      ...rest,
+    }));
 
     // Create a filtered list of issues that ignore isOpen filter
     const baseFilteredIssues = json.issues.filter((i) => {
@@ -208,7 +213,7 @@ app.get('/', authMiddleware, async (req, res) => {
     // Then use that to compute open/close issue numbers
     res.json(
       createResponse(true, '요청에 성공했습니다.', {
-        issues: paginatedIssues,
+        issues: formattedIssues,
         users: json.users,
         labels: json.labels,
         milestones: json.milestones,
