@@ -40,7 +40,7 @@ jobs:
           mkdir -p bundle/frontend
           mkdir -p bundle/scripts
 
-          # ✅ .env 생성 (백엔드 환경변수)
+          # ✅ .env 생성 (백엔드용)
           echo "JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}" > bundle/.env
           echo "JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}" >> bundle/.env
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> bundle/.env
@@ -50,21 +50,21 @@ jobs:
           echo "S3_URL_NAME=${{ secrets.S3_URL_NAME }}" >> bundle/.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> bundle/.env
 
-          # ✅ start.sh 생성
+          # ✅ start.sh 생성 (따옴표로 인자 감싸기)
           echo '#!/bin/bash' > bundle/scripts/start.sh
           echo 'cd /home/ubuntu/app/bundle' >> bundle/scripts/start.sh
           echo 'source .env' >> bundle/scripts/start.sh
           echo 'nohup java \\' >> bundle/scripts/start.sh
-          echo '  -Dspring.profiles.active=dev \\' >> bundle/scripts/start.sh
-          echo '  -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \\' >> bundle/scripts/start.sh
-          echo '  -DJWT_REFRESH_KEY=$JWT_REFRESH_KEY \\' >> bundle/scripts/start.sh
-          echo '  -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \\' >> bundle/scripts/start.sh
-          echo '  -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \\' >> bundle/scripts/start.sh
-          echo '  -DAWS_REGION=$AWS_REGION \\' >> bundle/scripts/start.sh
-          echo '  -Dcloud.aws.region.static=$AWS_REGION \\' >> bundle/scripts/start.sh
-          echo '  -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \\' >> bundle/scripts/start.sh
-          echo '  -Dcloud.aws.s3.url=$S3_URL_NAME \\' >> bundle/scripts/start.sh
-          echo '  -Dspring.datasource.password=$DB_PASSWORD \\' >> bundle/scripts/start.sh
+          echo '  "-Dspring.profiles.active=dev" \\' >> bundle/scripts/start.sh
+          echo '  "-DJWT_ACCESS_KEY=$JWT_ACCESS_KEY" \\' >> bundle/scripts/start.sh
+          echo '  "-DJWT_REFRESH_KEY=$JWT_REFRESH_KEY" \\' >> bundle/scripts/start.sh
+          echo '  "-DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \\' >> bundle/scripts/start.sh
+          echo '  "-DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \\' >> bundle/scripts/start.sh
+          echo '  "-DAWS_REGION=$AWS_REGION" \\' >> bundle/scripts/start.sh
+          echo '  "-Dcloud.aws.region.static=$AWS_REGION" \\' >> bundle/scripts/start.sh
+          echo '  "-Dcloud.aws.s3.bucket=$S3_BUCKET_NAME" \\' >> bundle/scripts/start.sh
+          echo '  "-Dcloud.aws.s3.url=$S3_URL_NAME" \\' >> bundle/scripts/start.sh
+          echo '  "-Dspring.datasource.password=$DB_PASSWORD" \\' >> bundle/scripts/start.sh
           echo '  -jar app.jar > /home/ubuntu/app/app.log 2>&1 &' >> bundle/scripts/start.sh
 
           # ✅ stop.sh 생성
@@ -79,7 +79,7 @@ jobs:
 
           chmod +x bundle/scripts/*.sh
 
-          # ✅ 프론트엔드 정적 파일 복사
+          # ✅ 프론트 빌드 결과 복사
           cp -r fe/dist/* bundle/frontend/
 
           # ✅ 최신 JAR 복사
