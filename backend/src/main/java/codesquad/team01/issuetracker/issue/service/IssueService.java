@@ -179,7 +179,7 @@ public class IssueService {
 	}
 
 	@Transactional
-	public IssueDto.CreateResponse createIssue(IssueDto.CreateRequest request, Integer firstUserId) {
+	public IssueDto.IssueDetailsResponse createIssue(IssueDto.CreateRequest request, Integer firstUserId) {
 		LocalDateTime now = LocalDateTime.now();
 
 		log.info("사용자 {}가 이슈 생성 요청", firstUserId);
@@ -228,7 +228,7 @@ public class IssueService {
 	}
 
 	@Transactional
-	public IssueDto.CreateResponse updateIssue(Integer issueId, IssueDto.UpdateRequest request, Integer userId) {
+	public IssueDto.IssueDetailsResponse updateIssue(Integer issueId, IssueDto.UpdateRequest request, Integer userId) {
 
 		// 단일 필드 수정 검증
 		if (!request.hasExactlyOneField()) {

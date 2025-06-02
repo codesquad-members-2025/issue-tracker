@@ -41,7 +41,7 @@ public class IssueAssembler {
 			.toList();
 	}
 
-	public IssueDto.CreateResponse assembleSingleIssueDetails(
+	public IssueDto.IssueDetailsResponse assembleSingleIssueDetails(
 		IssueDto.DetailBaseRow issue,
 		List<LabelDto.IssueDetailLabelRow> labelRows,
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows
@@ -73,7 +73,7 @@ public class IssueAssembler {
 			.build().toCreateResponse();
 	}
 
-	public IssueDto.CreateResponse assembleSingleIssueDetails(
+	public IssueDto.IssueDetailsResponse assembleSingleIssueDetails(
 		IssueDto.DetailBaseRow issue,
 		List<LabelDto.IssueDetailLabelRow> labelRows,
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows,

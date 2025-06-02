@@ -288,7 +288,7 @@ public class IssueDto {
 	}
 
 	@Builder
-	public record CreateResponse(
+	public record IssueDetailsResponse(
 		int id,
 		String title,
 		String content,
@@ -438,8 +438,8 @@ public class IssueDto {
 		List<UserDto.IssueDetailUserResponse> assignees,
 		int commentCount
 	) {
-		public CreateResponse toCreateResponse() {
-			return CreateResponse.builder()
+		public IssueDetailsResponse toCreateResponse() {
+			return IssueDetailsResponse.builder()
 				.id(issue.issueId())
 				.title(issue.issueTitle())
 				.content(issue.issueContent())

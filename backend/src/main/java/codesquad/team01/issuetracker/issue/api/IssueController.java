@@ -72,12 +72,12 @@ public class IssueController {
 	}
 
 	@PostMapping("/v1/issues")
-	public ResponseEntity<ApiResponse<IssueDto.CreateResponse>> createIssue(
+	public ResponseEntity<ApiResponse<IssueDto.IssueDetailsResponse>> createIssue(
 		@Valid @RequestBody IssueDto.CreateRequest request/*, Integer userId*/) { // filter 구현 시 적용
 
 		log.info(request.toString());
 
-		IssueDto.CreateResponse response = issueService.createIssue(request, FIRST_USER_ID);
+		IssueDto.IssueDetailsResponse response = issueService.createIssue(request, FIRST_USER_ID);
 		URI location = URI.create("/api/v1/issues" + response.id());
 
 		log.info("새로운 이슈 생성 id: {}", response.id());
@@ -87,13 +87,13 @@ public class IssueController {
 	}
 
 	@PatchMapping("/v1/issues/{id}")
-	public ResponseEntity<ApiResponse<IssueDto.CreateResponse>> updateIssue(
+	public ResponseEntity<ApiResponse<IssueDto.IssueDetailsResponse>> updateIssue(
 		@PathVariable Integer id,
 		@RequestBody @Valid IssueDto.UpdateRequest request) {
 
 		log.info("이슈 수정 요청: issueId={}, request={}", id, request);
 
-		IssueDto.CreateResponse response = issueService.updateIssue(id, request, FIRST_USER_ID);
+		IssueDto.IssueDetailsResponse response = issueService.updateIssue(id, request, FIRST_USER_ID);
 
 		log.info("이슈 수정 완료: issueId={}", id);
 		return ResponseEntity.ok(ApiResponse.success(response));
