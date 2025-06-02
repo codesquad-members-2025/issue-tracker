@@ -34,4 +34,14 @@ public interface IssueQueryRepository {
 	void removeLabelsFromIssue(Integer issueId);
 
 	void removeAssigneesFromIssue(Integer issueId);
+
+	void updateIssueTitle(Integer issueId, String title, LocalDateTime now);
+
+	void updateIssueContent(Integer issueId, String content, LocalDateTime now);
+
+	void updateIssueMilestone(Integer issueId, Integer integer, LocalDateTime now);
+
+	void updateIssueState(Integer issueId, IssueState targetState, LocalDateTime now);
+
+	IssueDto.IssueStateAndWriterIdRow findIssueStateAndWriterIdByIssueId(Integer issueId);
 }
