@@ -7,10 +7,12 @@ import codesquad.team4.issuetracker.count.dto.IssueCountDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
+import codesquad.team4.issuetracker.exception.unauthorized.NotAuthorException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
@@ -263,9 +265,12 @@ public class IssueService {
     }
 
     @Transactional
-    public ApiMessageDto updateIssue(Long id, IssueRequestDto.IssueUpdateDto request, String uploadUrl) {
+    public ApiMessageDto updateIssue(Long id, IssueRequestDto.IssueUpdateDto request, String uploadUrl, User user) {
         Issue oldIssue = issueRepository.findById(id)
                 .orElseThrow(() -> new IssueNotFoundException(id));
+
+        //작성자 검증
+        validateAuthor(oldIssue.getAuthorId(), user);
 
         if (request.getMilestoneId() != null) {
             milestoneRepository.findById(request.getMilestoneId())
@@ -400,12 +405,20 @@ public class IssueService {
     }
 
     @Transactional
-    public void deleteIssue(Long issueId) {
+    public void deleteIssue(Long issueId, User user) {
         Issue issue = issueRepository.findById(issueId)
                 .orElseThrow(() -> new IssueNotFoundException(issueId));
+
+        validateAuthor(issue.getAuthorId(), user);
 
         boolean wasOpen = issue.isOpen();
         issueRepository.deleteById(issueId);
         eventPublisher.publishEvent(new IssueEvent.Deleted(wasOpen));
+    }
+
+    private void validateAuthor (Long authorId, User user) {
+        if (!authorId.equals(user.getId())) {
+            throw new NotAuthorException();
+        }
     }
 }

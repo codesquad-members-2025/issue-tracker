@@ -3,7 +3,9 @@ package codesquad.team4.issuetracker.comment;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
+import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.exception.notfound.CommentNotFoundException;
+import codesquad.team4.issuetracker.exception.unauthorized.NotAuthorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,7 @@ public class CommentServiceTest {
     private CommentService commentService;
 
     private CommentRequestDto.CreateCommentDto.CreateCommentDtoBuilder requestDtoBuilder;
+    private User author;
 
     @BeforeEach
     public void setUp() {
@@ -38,6 +41,12 @@ public class CommentServiceTest {
                 .content("Test Content")
                 .issueId(1L)
                 .authorId(1L);
+
+        author = User.builder()
+            .id(1L)
+            .email("author@test.com")
+            .nickname("작성자")
+            .build();
     }
 
     @Test
@@ -108,7 +117,7 @@ public class CommentServiceTest {
         Comment existingComment = Comment.builder()
                 .id(commentId)
                 .issueId(10L)
-                .authorId(5L)
+                .authorId(1L)
                 .content("이전 댓글")
                 .fileUrl("old.png")
                 .createdAt(LocalDateTime.now())
@@ -123,7 +132,7 @@ public class CommentServiceTest {
         String uploadUrl = "https://s3.com/new.png";
 
         // when
-        CommentResponseDto.UpdateCommentDto result = commentService.updateComment(commentId, request, uploadUrl);
+        CommentResponseDto.UpdateCommentDto result = commentService.updateComment(commentId, request, uploadUrl, author);
 
         // then
         assertThat(result.getId()).isEqualTo(commentId);
@@ -145,7 +154,7 @@ public class CommentServiceTest {
 
         // when + then
         assertThatThrownBy(() ->
-                commentService.updateComment(commentId, request, "dummy.png")
+                commentService.updateComment(commentId, request, "dummy.png", author)
         ).isInstanceOf(CommentNotFoundException.class)
                 .hasMessageContaining("댓글을 찾을 수 없습니다.");
     }
@@ -168,7 +177,7 @@ public class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
         // when
-        commentService.deleteComment(issueId, commentId);
+        commentService.deleteComment(issueId, commentId, author);
 
         // then
         verify(commentRepository, times(1)).findById(commentId);
@@ -183,8 +192,70 @@ public class CommentServiceTest {
         Long commentId = 999L;
 
         //when & then
-        assertThatThrownBy(() -> commentService.deleteComment(issueId, commentId))
+        assertThatThrownBy(() -> commentService.deleteComment(issueId, commentId, author))
                 .isInstanceOf(CommentNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("댓글 수정 실패 - 작성자가 아닌 사용자가 수정 시도할 경우 예외 발생")
+    void updateComment_notAuthor_shouldThrowException() {
+        // given
+        Long commentId = 1L;
+
+        Comment existingComment = Comment.builder()
+            .id(commentId)
+            .issueId(10L)
+            .authorId(1L)
+            .content("이전 댓글")
+            .fileUrl("old.png")
+            .createdAt(LocalDateTime.now())
+            .build();
+
+        User otherUser = User.builder()
+            .id(999L)
+            .email("not-author@test.com")
+            .nickname("너누구야")
+            .build();
+
+        given(commentRepository.findById(commentId)).willReturn(Optional.of(existingComment));
+
+        CommentRequestDto.UpdateCommentDto request = CommentRequestDto.UpdateCommentDto.builder()
+            .content("수정되면안된다잉")
+            .build();
+
+        // when & then
+        assertThatThrownBy(() ->
+            commentService.updateComment(commentId, request, "new.png", otherUser)
+        ).isInstanceOf(NotAuthorException.class);
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 실패 - 작성자가 아닌 사용자가 삭제 시도할 경우 예외 발생")
+    void deleteComment_notAuthor_shouldThrowException() {
+        // given
+        Long issueId = 1L;
+        Long commentId = 1L;
+
+        Comment comment = Comment.builder()
+            .id(commentId)
+            .issueId(issueId)
+            .authorId(1L)
+            .content("삭제할 댓글")
+            .createdAt(LocalDateTime.now())
+            .build();
+
+        User otherUser = User.builder()
+            .id(999L)
+            .email("not-author@test.com")
+            .nickname("니누고")
+            .build();
+
+        given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+        // when & then
+        assertThatThrownBy(() ->
+            commentService.deleteComment(issueId, commentId, otherUser)
+        ).isInstanceOf(NotAuthorException.class);
     }
 
 }
