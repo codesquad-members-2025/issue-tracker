@@ -25,6 +25,13 @@ public interface IssueQueryRepository {
 
 	Integer createIssue(String title, String content, Integer writerId, Integer milestoneId, LocalDateTime now);
 
-	IssueDto.BaseRow findCreatedIssueById(Integer issueId);
+	IssueDto.DetailBaseRow findCreatedIssueById(Integer issueId);
 
+	void addLabelsToIssue(Integer issueId, List<Integer> labelIds);
+
+	void addAssigneesToIssue(Integer issueId, List<Integer> assigneeIds);
+
+	void removeLabelsFromIssue(Integer issueId);
+
+	void removeAssigneesFromIssue(Integer issueId);
 }
