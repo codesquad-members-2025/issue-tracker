@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public record IssueDetailResponseDto(Long id,
                                      UserInfoProjection author,
                                      String title,
-                                     String contents,
+                                     String content,
                                      boolean isClosed,
                                      LocalDateTime createdAt,
                                      LocalDateTime updatedAt
