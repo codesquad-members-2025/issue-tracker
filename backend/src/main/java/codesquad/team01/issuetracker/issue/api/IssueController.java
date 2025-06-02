@@ -87,13 +87,13 @@ public class IssueController {
 	}
 
 	@PatchMapping("/v1/issues/{id}")
-	public ResponseEntity<ApiResponse<IssueDto.UpdateResponse>> updateIssue(
+	public ResponseEntity<ApiResponse<IssueDto.CreateResponse>> updateIssue(
 		@PathVariable Integer id,
 		@RequestBody @Valid IssueDto.UpdateRequest request) {
 
 		log.info("이슈 수정 요청: issueId={}, request={}", id, request);
 
-		IssueDto.UpdateResponse response = issueService.updateIssue(id, request, FIRST_USER_ID);
+		IssueDto.CreateResponse response = issueService.updateIssue(id, request, FIRST_USER_ID);
 
 		log.info("이슈 수정 완료: issueId={}", id);
 		return ResponseEntity.ok(ApiResponse.success(response));

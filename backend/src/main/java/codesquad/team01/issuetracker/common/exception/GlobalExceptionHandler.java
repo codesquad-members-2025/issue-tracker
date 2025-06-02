@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import codesquad.team01.issuetracker.common.dto.ApiResponse;
+import codesquad.team01.issuetracker.issue.exception.IssueAccessForbiddenException;
 import codesquad.team01.issuetracker.issue.exception.IssueCreationException;
 import codesquad.team01.issuetracker.issue.exception.IssueNotFoundException;
+import codesquad.team01.issuetracker.issue.exception.IssueStateException;
+import codesquad.team01.issuetracker.issue.exception.IssueUpdateException;
 import codesquad.team01.issuetracker.milestone.exception.MilestoneNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -101,6 +104,27 @@ public class GlobalExceptionHandler {
 		return ResponseEntity
 			.status(HttpStatus.INTERNAL_SERVER_ERROR)
 			.body(ApiResponse.error("데이터베이스 오류가 발생했습니다."));
+	}
+
+	@ExceptionHandler(IssueStateException.class)
+	public ResponseEntity<ApiResponse<?>> handleIssueStateException(IssueStateException e) {
+		log.error("IssueStateException: {}", e.getMessage());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
+	@ExceptionHandler(IssueUpdateException.class)
+	public ResponseEntity<ApiResponse<?>> handleDatabaseAccessException(IssueUpdateException e) {
+		log.error("DatabaseAccessException: {}", e.getMessage(), e);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			.body(ApiResponse.error("일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."));
+	}
+
+	@ExceptionHandler(IssueAccessForbiddenException.class)
+	public ResponseEntity<ApiResponse<?>> handleIssueAccessForbiddenException(IssueAccessForbiddenException e) {
+		log.warn("IssueAccessForbiddenException: {}", e.getMessage()); // error가 아닌 warn
+		return ResponseEntity.status(HttpStatus.FORBIDDEN)
+			.body(ApiResponse.error("해당 이슈를 수정할 권한이 없습니다."));
 	}
 
 	@ExceptionHandler(Exception.class)

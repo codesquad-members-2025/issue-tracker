@@ -1,4 +1,4 @@
-package codesquad.team01.issuetracker.common.exception;
+package codesquad.team01.issuetracker.issue.exception;
 
 public class IssueUpdateException extends RuntimeException {
 	public IssueUpdateException(String message) {
