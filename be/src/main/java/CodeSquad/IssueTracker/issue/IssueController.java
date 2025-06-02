@@ -1,6 +1,7 @@
 package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
+import CodeSquad.IssueTracker.global.exception.NotFoundException;
 import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueDetailResponse;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 
 import static CodeSquad.IssueTracker.global.message.SuccessMessage.ISSUE_DETAIL_FETCH_SUCCESS;
 
@@ -40,8 +42,8 @@ public class IssueController {
 
     @GetMapping("/{issueId}")
     public BaseResponseDto<IssueDetailResponse> getIssueDetailInfo(@PathVariable Long issueId) {
-        Issue byIdIssue = issueService.findById(issueId).get();
-        return BaseResponseDto.success(ISSUE_DETAIL_FETCH_SUCCESS.getMessage(), issueService.toDetailResponse(byIdIssue));
+        Issue issue = issueService.findById(issueId);
+        return BaseResponseDto.success(ISSUE_DETAIL_FETCH_SUCCESS.getMessage(), issueService.toDetailResponse(issue));
     }
 
     @PatchMapping("/{issueId}")

@@ -2,6 +2,7 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.comment.CommentService;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
+import CodeSquad.IssueTracker.global.exception.NotFoundException;
 import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.*;
 import CodeSquad.IssueTracker.issueAssignee.IssueAssigneeRepository;
@@ -22,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,11 +59,12 @@ public class IssueService {
             issueLabelService.assignLabels(issueId, updateParam.getLabelIds());
         }
 
-        return toDetailResponse(findById(issueId).get());
+        return toDetailResponse(findById(issueId));
     }
 
-    public Optional<Issue> findById(Long issueId){
-        return issueRepository.findById(issueId);
+    public Issue findById(Long id) {
+        return issueRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 이슈입니다"));
     }
 
     public Iterable<Issue> findAll(){
@@ -71,8 +72,7 @@ public class IssueService {
     }
 
     public IssueDetailResponse createIssue(IssueCreateRequest request, List<MultipartFile> files, String loginId) throws IOException {
-        User author = userService.findByLoginId(loginId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + loginId));
+        User author = userService.findByLoginId(loginId);
 
         Issue issue = new Issue();
         issue.setTitle(request.getTitle());
