@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.team01.issuetracker.common.exception.DuplicateMilestoneTitleException;
 import codesquad.team01.issuetracker.common.exception.InvalidDateException;
@@ -41,8 +42,14 @@ public class MilestoneService {
 		return new MilestoneDto.ListResponse(items.size(), items);
 	}
 
+	@Transactional
 	public MilestoneDto.MilestoneCreateResponse createMilestone(MilestoneDto.MilestoneCreateRequest request) {
 		LocalDate dueDate = parseDueDate(request.dueDate());
+		String milestoneTitle = request.title();
+
+		if (milestoneRepository.existsByTitle(milestoneTitle)) {
+			throw new DuplicateMilestoneTitleException(milestoneTitle);
+		}
 
 		Milestone entity = Milestone.builder()
 			.title(request.title())
@@ -67,6 +74,7 @@ public class MilestoneService {
 		}
 	}
 
+	@Transactional
 	public MilestoneDto.MilestoneUpdateResponse updateMilestone(int id, MilestoneDto.MilestoneUpdateRequest request) {
 		String newTitle = request.title();
 		LocalDate newDueDate = parseDueDate(request.dueDate());
@@ -83,5 +91,14 @@ public class MilestoneService {
 		Milestone saved = milestoneRepository.save(updateTarget);
 
 		return MilestoneDto.MilestoneUpdateResponse.from(saved);
+	}
+
+	@Transactional
+	public void deleteMilestone(int id) {
+		Milestone targetMilestone = milestoneRepository.findById(id)
+			.orElseThrow(() -> new MilestoneNotFoundException(id));
+
+		targetMilestone.delete();
+		milestoneRepository.save(targetMilestone);
 	}
 }
