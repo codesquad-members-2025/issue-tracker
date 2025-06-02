@@ -2,14 +2,18 @@ package codesquad.team01.issuetracker.milestone.repository.impl;
 
 import java.util.List;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.milestone.repository.MilestoneQueryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Repository
 public class MilestoneQueryRepositoryImpl implements MilestoneQueryRepository {
@@ -25,6 +29,12 @@ public class MilestoneQueryRepositoryImpl implements MilestoneQueryRepository {
 		ORDER BY m.title ASC
 		""";
 
+	private static final String CHECK_MILESTONE_EXISTS_QUERY = """
+		SELECT COUNT(*) > 0 FROM milestone 
+		WHERE id = :milestoneId 
+		AND deleted_at IS NULL
+		""";
+
 	private final RowMapper<MilestoneDto.MilestoneFilterResponse> filterMilestoneListItemResponseRowMapper =
 		(rs, rowNum) -> MilestoneDto.MilestoneFilterResponse.builder()
 			.id(rs.getInt("milestone_id"))
@@ -34,5 +44,22 @@ public class MilestoneQueryRepositoryImpl implements MilestoneQueryRepository {
 	@Override
 	public List<MilestoneDto.MilestoneFilterResponse> findMilestonesForFilter() {
 		return jdbcTemplate.query(FILTER_MILESTONE_LIST_QUERY, filterMilestoneListItemResponseRowMapper);
+	}
+
+	@Override
+	public boolean existsMilestone(Integer milestoneId) {
+		if (milestoneId == null) {
+			return true;
+		}
+
+		MapSqlParameterSource params = new MapSqlParameterSource("milestoneId", milestoneId);
+
+		try {
+			Boolean result = jdbcTemplate.queryForObject(CHECK_MILESTONE_EXISTS_QUERY, params, Boolean.class);
+			return result != null && result;
+		} catch (DataAccessException e) {
+			log.warn("마일스톤 존재 여부 확인 중 오류 발생: milestoneId={}, error={}", milestoneId, e.getMessage());
+			return false;
+		}
 	}
 }
