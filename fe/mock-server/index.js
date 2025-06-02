@@ -617,6 +617,40 @@ app.get('/issues/:id', authMiddleware, async (req, res) => {
   }
 });
 
+app.get('/milestones', authMiddleware, async (req, res) => {
+  try {
+    const { isOpen } = req.query;
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+    let milestones = json.milestones;
+
+    // 마일스톤 개수 카운트 (isOpen 필터링 전, 전체)
+    const openCount = milestones.filter((m) => m.isOpen === true).length;
+    const closedCount = milestones.filter((m) => m.isOpen === false).length;
+
+    // isOpen 필터링 (응답의 milestones만)
+    if (typeof isOpen !== 'undefined') {
+      milestones = milestones.filter((m) => String(m.isOpen) === String(isOpen));
+    }
+
+    res.json({
+      success: true,
+      message: '마일스톤 목록 조회 성공',
+      data: {
+        milestones,
+        openCount,
+        closedCount,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '마일스톤 목록 조회 중 서버 오류 발생',
+      data: { error: error.message },
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🟢 Mock server running at http://localhost:${PORT}`);
 });

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { LabelButton, MilestoneButton } from '@/base-ui/issueListPage/mainPageHeaderTap/taps';
 import { SmallContainerButton } from '@/base-ui/components/ContainerButtons';
 import useFilterModalStore from '@/stores/detailFilterModalStore';
+import { radius } from '@/styles/foundation';
 
 const Container = styled.div`
   width: 100%;

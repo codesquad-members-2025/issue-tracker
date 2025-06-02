@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 // 마일스톤 하나의 타입

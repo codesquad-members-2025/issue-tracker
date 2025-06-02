@@ -30,21 +30,32 @@ export default function MilestonePage() {
     if (!searchParam.has('isOpen')) {
       setSearchParam({ isOpen: 'true' }); // selectedFilters 초기값이 디폴트 필터임
     }
-    fetchData(GET_MILESTONE, getOptionWithToken(GEToptions));
+    //항상 현재의 쿼리파람을 기준으로 GET 요청
+    // 현재의 마일스톤 페이지에서 마일스톤 조작 액션이 일어나면 항상 GET 요청으로 새로운 데이터를 이 스코프에서 받아온다.
+    fetchData(`${GET_MILESTONE}?${searchParam.toString()}`, getOptionWithToken(GEToptions));
   }, [searchParam]);
 
   useEffect(() => {
+    //데이터 GET 으로 받아오면 스토어 초기화 하는 로직
     if (!response?.data) return;
     initMilestones(response.data);
   }, [response]);
   return (
     <Container>
-      <MilestoneLabelHeader isLabel={false} isValid={s} addHandler={s} />;
+      {/* <MilestoneLabelHeader isLabel={false} isValid={s} addHandler={s} />; */}
       <Kanban>
         <KanbanHeader>
           <HeaderLeft>
-            <OpenMilestoneButton />
-            <CloseMilestoneButton />
+            <OpenMilestoneButton
+              isOpen={searchParam.get('isOpen') === 'true'}
+              number={milestone.openCount}
+              onClick={() => setSearchParam({ isOpen: 'true' })}
+            />
+            <CloseMilestoneButton
+              isOpen={searchParam.get('isOpen') === 'true'}
+              number={milestone.closedCount}
+              onClick={() => setSearchParam({ isOpen: 'false' })}
+            />
           </HeaderLeft>
         </KanbanHeader>
       </Kanban>
