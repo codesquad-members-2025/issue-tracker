@@ -5,6 +5,7 @@ import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,7 +84,19 @@ public class IssueController {
 
 		return ResponseEntity.created(location)
 			.body(ApiResponse.success(response));
+	}
 
+	@PatchMapping("/v1/issues/{id}")
+	public ResponseEntity<ApiResponse<IssueDto.UpdateResponse>> updateIssue(
+		@PathVariable Integer id,
+		@RequestBody @Valid UpdateRequest request) {
+
+		log.info("이슈 수정 요청: issueId={}, request={}", id, request);
+
+		IssueDto.UpdateResponse response = issueService.updateIssue(id, request, FIRST_USER_ID);
+
+		log.info("이슈 수정 완료: issueId={}", id);
+		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }
 
