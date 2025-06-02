@@ -3,6 +3,8 @@ package codesquad.team01.issuetracker.milestone.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.team01.issuetracker.common.exception.DuplicateMilestoneTitleException;
 import codesquad.team01.issuetracker.common.exception.InvalidDateException;
 import codesquad.team01.issuetracker.common.exception.MilestoneNotFoundException;
+import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.milestone.domain.Milestone;
 import codesquad.team01.issuetracker.milestone.domain.MilestoneState;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class MilestoneService {
 
 	private final MilestoneRepository milestoneRepository;
+	private final IssueRepository issueRepository;
 
 	public MilestoneDto.MilestoneFilterListResponse findMilestonesForFilter() {
 
@@ -35,10 +39,33 @@ public class MilestoneService {
 	}
 
 	public MilestoneDto.ListResponse getMilestones(MilestoneState state) {
-		List<MilestoneDto.MilestoneListItem> items = milestoneRepository.findByState(state)
-			.stream()
-			.map(MilestoneDto.MilestoneListItem::from)
-			.collect(Collectors.toList());
+		List<MilestoneDto.MilestoneRow> rows = milestoneRepository.findByState(state);
+
+		List<Integer> milestoneIds = rows.stream()
+			.map(MilestoneDto.MilestoneRow::id)
+			.toList();
+
+		if (milestoneIds.isEmpty()) {
+			return new MilestoneDto.ListResponse(0, List.of());
+		}
+
+		List<MilestoneDto.MilestoneIssueCount> issueCounts = issueRepository.countByMilestoneIds(milestoneIds);
+
+		Map<Integer, MilestoneDto.MilestoneIssueCount> countMap = issueCounts.stream()
+			.collect(Collectors.toMap(
+				MilestoneDto.MilestoneIssueCount::milestoneId,
+				Function.identity()
+			));
+
+		List<MilestoneDto.MilestoneListItem> items = rows.stream()
+			.map(row -> {
+				MilestoneDto.MilestoneIssueCount count = countMap.getOrDefault(row.id(),
+					new MilestoneDto.MilestoneIssueCount(
+						row.id(), 0, 0));
+				return MilestoneDto.MilestoneListItem.from(row, count);
+			})
+			.toList();
+
 		return new MilestoneDto.ListResponse(items.size(), items);
 	}
 
