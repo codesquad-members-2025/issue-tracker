@@ -1,5 +1,6 @@
 package codesquad.team01.issuetracker.issue.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -232,6 +233,29 @@ public class IssueDto {
 	) {
 	}
 
+	@Builder
+	public record DetailBaseRow(
+		// issue
+		int issueId,
+		String issueTitle,
+		String issueContent,
+		IssueState issueState,
+		LocalDateTime issueCreatedAt,
+		LocalDateTime issueUpdatedAt,
+		LocalDateTime issueClosedAt,
+
+		// writerId
+		int writerId,
+		String writerUsername,
+		String writerProfileImageUrl,
+
+		// milestoneId - nullable
+		Integer milestoneId,
+		String milestoneTitle,
+		LocalDate milestoneDueDate
+	) {
+	}
+
 	// 상태별 이슈 개수 행 DTO
 	@Builder
 	public record StateCountRow(
@@ -283,6 +307,42 @@ public class IssueDto {
 		}
 	}
 
+	@Builder
+	public record SingleDetails(
+		DetailBaseRow issue,
+		List<LabelDto.IssueDetailLabelResponse> labels,
+		List<UserDto.IssueDetailUserResponse> assignees
+	) {
+		public CreateResponse toCreateResponse() {
+			return CreateResponse.builder()
+				.id(issue.issueId())
+				.title(issue.issueTitle())
+				.content(issue.issueContent())
+				.state(issue.issueState().getValue())
+				.createdAt(issue.issueCreatedAt())
+				.updatedAt(issue.issueUpdatedAt())
+				.closedAt(issue.issueClosedAt())
+				.writer(UserDto.IssueDetailUserResponse.builder()
+					.id(issue.writerId())
+					.username(issue.writerUsername())
+					.profileImageUrl(issue.writerProfileImageUrl())
+					.build()
+				)
+				.milestone(issue.milestoneId() != null
+					? MilestoneDto.IssueDetailMilestoneResponse.builder()
+					.id(issue.milestoneId())
+					.title(issue.milestoneTitle())
+					.dueDate(issue.milestoneDueDate())
+					.build()
+					: null)
+				.assignees(assignees)
+				.labels(labels)
+				.commentCount(0)
+				.build();
+		}
+	}
+
+	@Builder
 	public record CreateResponse(
 		int id,
 		String title,
@@ -291,10 +351,10 @@ public class IssueDto {
 		LocalDateTime createdAt,
 		LocalDateTime updatedAt,
 		LocalDateTime closedAt,
-		UserDto.WriterResponse writer,
+		UserDto.IssueDetailUserResponse writer,
 		MilestoneDto.IssueDetailMilestoneResponse milestone,
-		List<LabelDto.FilterListItemResponse> labels,
-		List<UserDto.IssueDetailAssigneeResponse> assignees,
+		List<LabelDto.IssueDetailLabelResponse> labels,
+		List<UserDto.IssueDetailUserResponse> assignees,
 		int commentCount
 	) {
 	}
