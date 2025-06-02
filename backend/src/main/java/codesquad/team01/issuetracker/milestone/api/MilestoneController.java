@@ -3,6 +3,7 @@ package codesquad.team01.issuetracker.milestone.api;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,4 +61,10 @@ public class MilestoneController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
+	@DeleteMapping("/v1/labels/{id}")
+	public ResponseEntity<ApiResponse<Void>> deleteMilestone(@PathVariable("id") int id) {
+		milestoneService.deleteMilestone(id);
+		log.info("마일스톤 삭제 완료: id={}", id);
+		return ResponseEntity.ok(ApiResponse.success(null));
+	}
 }
