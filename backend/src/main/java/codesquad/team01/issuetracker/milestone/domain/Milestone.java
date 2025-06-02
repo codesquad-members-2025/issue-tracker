@@ -34,4 +34,11 @@ public class Milestone extends BaseEntity {
 		this.dueDate = dueDate;
 		this.state = state;
 	}
+
+	public void update(String title, String description, LocalDate dueDate, MilestoneState state) {
+		this.title = title;
+		this.description = description;
+		this.dueDate = dueDate;
+		this.state = state;
+	}
 }

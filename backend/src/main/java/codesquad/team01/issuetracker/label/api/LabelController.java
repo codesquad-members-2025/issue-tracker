@@ -51,7 +51,8 @@ public class LabelController {
 	}
 
 	@PutMapping("/v1/labels/{id}")
-	public ResponseEntity<ApiResponse<LabelDto.LabelUpdateResponse>> updateLabel(@PathVariable("id") int id,
+	public ResponseEntity<ApiResponse<LabelDto.LabelUpdateResponse>> updateLabel(
+		@PathVariable("id") int id,
 		@Valid @RequestBody LabelDto.LabelUpdateRequest request) {
 		LabelDto.LabelUpdateResponse response = labelService.updateLabel(id, request);
 		log.info("레이블 수정 완료: name={}", response.name());

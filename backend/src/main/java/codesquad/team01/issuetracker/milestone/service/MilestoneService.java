@@ -1,10 +1,16 @@
 package codesquad.team01.issuetracker.milestone.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import codesquad.team01.issuetracker.common.exception.DuplicateMilestoneTitleException;
+import codesquad.team01.issuetracker.common.exception.InvalidDateException;
+import codesquad.team01.issuetracker.common.exception.MilestoneNotFoundException;
+import codesquad.team01.issuetracker.milestone.domain.Milestone;
 import codesquad.team01.issuetracker.milestone.domain.MilestoneState;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.milestone.repository.MilestoneRepository;
@@ -33,5 +39,49 @@ public class MilestoneService {
 			.map(MilestoneDto.MilestoneListItem::from)
 			.collect(Collectors.toList());
 		return new MilestoneDto.ListResponse(items.size(), items);
+	}
+
+	public MilestoneDto.MilestoneCreateResponse createMilestone(MilestoneDto.MilestoneCreateRequest request) {
+		LocalDate dueDate = parseDueDate(request.dueDate());
+
+		Milestone entity = Milestone.builder()
+			.title(request.title())
+			.description(request.description())
+			.dueDate(dueDate)
+			.state(MilestoneState.OPEN)
+			.build();
+
+		Milestone savedMilestone = milestoneRepository.save(entity);
+
+		return MilestoneDto.MilestoneCreateResponse.from(savedMilestone);
+	}
+
+	private LocalDate parseDueDate(String inputDueDate) {
+		if (inputDueDate == null || inputDueDate.isBlank()) {
+			return null;
+		}
+		try {
+			return LocalDate.parse(inputDueDate);
+		} catch (DateTimeParseException e) {
+			throw new InvalidDateException("잘못된 마감일 형식입니다. 연월일을 확인하세요.");
+		}
+	}
+
+	public MilestoneDto.MilestoneUpdateResponse updateMilestone(int id, MilestoneDto.MilestoneUpdateRequest request) {
+		String newTitle = request.title();
+		LocalDate newDueDate = parseDueDate(request.dueDate());
+		MilestoneState newState = MilestoneState.fromStateStr(request.state());
+
+		Milestone updateTarget = milestoneRepository.findById(id)
+			.orElseThrow(() -> new MilestoneNotFoundException(id));
+
+		if (milestoneRepository.existsByTitleAndIdNot(newTitle, id)) {
+			throw new DuplicateMilestoneTitleException(newTitle);
+		}
+
+		updateTarget.update(newTitle, request.description(), newDueDate, newState);
+		Milestone saved = milestoneRepository.save(updateTarget);
+
+		return MilestoneDto.MilestoneUpdateResponse.from(saved);
 	}
 }
