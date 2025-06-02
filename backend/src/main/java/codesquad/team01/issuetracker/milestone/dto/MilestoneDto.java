@@ -56,16 +56,28 @@ public class MilestoneDto {
 		String title,
 		String description,
 		LocalDate dueDate,
-		MilestoneState state
-		// + 열린 이슈와 닫힌 이슈 갯수, 작업률(퍼센트값)
+		MilestoneState state,
+		int openCount,
+		int closeCount,
+		double progress
 	) {
-		public static MilestoneListItem from(MilestoneRow row) {
+		public static MilestoneListItem from(MilestoneRow row, MilestoneIssueCount count) {
+			int openCount = count.openCount;
+			int closedCount = count.closedCount;
+			double progress = 0.0;
+			int total = openCount + closedCount;
+			if (total > 0) {
+				progress = (double)closedCount / total;
+			}
 			return new MilestoneListItem(
 				row.id(),
 				row.title(),
 				row.description(),
 				row.dueDate(),
-				row.state()
+				row.state(),
+				openCount,
+				closedCount,
+				progress
 			);
 		}
 	}
@@ -74,6 +86,14 @@ public class MilestoneDto {
 	public record ListResponse(
 		int totalCount,
 		List<MilestoneListItem> milestones
+	) {
+	}
+
+	// DB 에서 조회해오는 마일스톤의 열린 issue, 닫힌 issue 갯수
+	public record MilestoneIssueCount(
+		int milestoneId,
+		int openCount,
+		int closedCount
 	) {
 	}
 
