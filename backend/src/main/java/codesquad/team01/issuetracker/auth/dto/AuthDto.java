@@ -37,4 +37,9 @@ public class AuthDto {
 	) {
 	}
 
+	public record LogoutRequest(
+		String refreshToken
+	) {
+
+	}
 }
