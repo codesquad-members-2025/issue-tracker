@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import codesquad.team01.issuetracker.common.exception.InvalidParameterException;
+import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.milestone.exception.MilestoneNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -58,6 +59,15 @@ public enum IssueUpdateCommand {
 			if (!validAssigneeIds.isEmpty()) {
 				factory.getIssueRepository().addAssigneesToIssue(issueId, validAssigneeIds);
 			}
+		}
+	},
+
+	STATE(UpdateRequest::isUpdatingState) {
+		@Override
+		public void execute(
+			IssueUpdateCommandFactory factory, Integer issueId, UpdateRequest request, LocalDateTime now) {
+			IssueState targetState = request.getAction();
+			factory.getIssueRepository().updateIssueState(issueId, targetState, now);
 		}
 	};
 
