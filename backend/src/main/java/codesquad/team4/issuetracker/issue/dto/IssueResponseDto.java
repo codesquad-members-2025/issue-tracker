@@ -18,6 +18,8 @@ public class IssueResponseDto {
     @Builder
     public static class IssueListDto {
         private List<IssueInfo> issues;
+        private Integer openCount;
+        private Integer closeCount;
         private Integer page;
         private Integer size;
         private Integer totalPages;

@@ -3,6 +3,7 @@ package codesquad.team4.issuetracker.issue;
 import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
 
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
+import codesquad.team4.issuetracker.count.dto.IssueCountDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
@@ -10,7 +11,6 @@ import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
-import codesquad.team4.issuetracker.count.dto.IssueCountDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
@@ -36,15 +36,17 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class IssueService {
     private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
@@ -79,16 +81,30 @@ public class IssueService {
             addIssueToMap(row, issueMap, issueId, assigneeMap, labelMap);
         }
 
-        int totalElements = issueDao.countIssuesByOpenStatus(params.getStatus().getState());
+        Map<String, Integer> countMap = issueDao.countFilteredIssues(params);
+        int openCount = countMap.get("open");
+        int closeCount = countMap.get("close");
+
+        int totalElements = openCount + closeCount;
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
         return IssueResponseDto.IssueListDto.builder()
-                .issues(new ArrayList<>(issueMap.values()))
-                .page(page)
-                .size(size)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
-                .build();
+            .issues(new ArrayList<>(issueMap.values()))
+            .openCount(openCount)
+            .closeCount(closeCount)
+            .page(page)
+            .size(size)
+            .totalElements(totalElements)
+            .totalPages(totalPages)
+            .build();
+    }
+
+    private Optional<Integer> getIssueCountByStatus(List<Map<String, Object>> rows, String columnName) {
+        Map<String, Object> row = rows.stream()
+            .findFirst()
+            .orElse(Map.of());
+
+        return Optional.ofNullable((Long) row.get(columnName)).map(Long::intValue);
     }
 
     private void addIssueToMap(Map<String, Object> row, Map<Long, IssueInfo> issueMap, Long issueId,
