@@ -71,6 +71,6 @@ public class IssueRequestDto {
         private Long commentAuthorId;
         private Long milestoneId;
         private OpenStatus status;
-        private List<Long> labelIds;
+        private Set<Long> labelIds;
     }
 }
