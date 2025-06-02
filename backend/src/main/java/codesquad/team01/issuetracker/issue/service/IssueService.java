@@ -16,6 +16,8 @@ import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
+import codesquad.team01.issuetracker.milestone.exception.MilestoneNotFoundException;
+import codesquad.team01.issuetracker.milestone.repository.MilestoneRepository;
 import codesquad.team01.issuetracker.user.dto.UserDto;
 import codesquad.team01.issuetracker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class IssueService {
 	private final IssueRepository issueRepository;
 	private final UserRepository userRepository;
 	private final LabelRepository labelRepository;
+	private final MilestoneRepository milestoneRepository;
 
 	private final IssueAssembler issueAssembler;
 	private final CursorEncoder cursorEncoder;
@@ -171,7 +174,62 @@ public class IssueService {
 			.build();
 	}
 
+	@Transactional
 	public IssueDto.CreateResponse createIssue(IssueDto.CreateRequest request, Integer firstUserId) {
-		return null;
+		LocalDateTime now = LocalDateTime.now();
+
+		log.info("사용자 {}가 이슈 생성 요청", firstUserId);
+
+		if (request.milestoneId() != null) {
+			validateMilestoneExists(request.milestoneId());
+		}
+
+		List<Integer> validLabelIds = labelRepository.findValidLabelIds(request.labelIds());
+		if (validLabelIds.size() != request.labelIds().size()) {
+			List<Integer> invalidLabelIds = request.labelIds().stream()
+				.filter(li -> !validLabelIds.contains(li))
+				.toList();
+			log.warn("유효하지 않은 레이블 ID 제외: {}", invalidLabelIds);
+		}
+
+		List<Integer> validAssigneeIds = userRepository.findValidUserIds(request.assigneeIds());
+		if (validAssigneeIds.size() != request.assigneeIds().size()) {
+			List<Integer> invalidAssigneeIds = request.assigneeIds().stream()
+				.filter(ai -> !validAssigneeIds.contains(ai))
+				.toList();
+			log.warn("유효하지 않은 담당자 ID 제외: {}", invalidAssigneeIds);
+		}
+
+		Integer issueId = issueRepository.createIssue(
+			request.title(),
+			request.content(),
+			firstUserId,
+			request.milestoneId(),
+			now
+		);
+
+		if (!validLabelIds.isEmpty()) {
+			issueRepository.addLabelsToIssue(issueId, validLabelIds);
+		}
+
+		if (!validAssigneeIds.isEmpty()) {
+			issueRepository.addAssigneesToIssue(issueId, validAssigneeIds);
+		}
+
+		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findCreatedIssueById(issueId);
+		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
+		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
+
+		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows);
+	}
+
+	private void validateMilestoneExists(Integer milestoneId) {
+		if (milestoneId == null) { // 마일스톤이 없는 이슈
+			return;
+		}
+
+		if (!milestoneRepository.existsMilestone(milestoneId)) {
+			throw new MilestoneNotFoundException("존재하지 않는 마일스톤: " + milestoneId);
+		}
 	}
 }
