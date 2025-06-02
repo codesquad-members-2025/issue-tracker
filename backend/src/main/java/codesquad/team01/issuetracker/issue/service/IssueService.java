@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
+import codesquad.team01.issuetracker.common.exception.InvalidParameterException;
 import codesquad.team01.issuetracker.common.util.CursorEncoder;
 import codesquad.team01.issuetracker.issue.constants.IssueConstants;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
+import codesquad.team01.issuetracker.issue.exception.IssueNotFoundException;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
@@ -33,6 +35,7 @@ public class IssueService {
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
 
+	private final IssueUpdateCommandFactory issueUpdateCommandFactory;
 	private final IssueAssembler issueAssembler;
 	private final CursorEncoder cursorEncoder;
 
@@ -223,6 +226,33 @@ public class IssueService {
 		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows);
 	}
 
+	@Transactional
+	public IssueDto.CreateResponse updateIssue(Integer issueId, IssueDto.UpdateRequest request, Integer userId) {
+
+		// 단일 필드 수정 검증
+		if (!request.hasExactlyOneField()) {
+			throw new InvalidParameterException("한 번에 하나의 필드만 수정할 수 있습니다.");
+		}
+
+		// 이슈 존재 확인
+		if (!issueRepository.existsById(issueId)) {
+			throw new IssueNotFoundException("존재하지 않는 이슈입니다: " + issueId);
+		}
+
+		LocalDateTime now = LocalDateTime.now();
+		IssueUpdateCommand command = issueUpdateCommandFactory.getCommand(request);
+		command.execute(issueUpdateCommandFactory, issueId, request, now);
+
+		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findCreatedIssueById(issueId);
+		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
+		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
+		// int commentCount = commentRepository.findCommentsByIssueId(issueId); // 댓글 구현 시
+
+		IssueDto.CreateResponse response = issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows,
+			assigneeRows, 0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
+		return response;
+	}
+
 	private void validateMilestoneExists(Integer milestoneId) {
 		if (milestoneId == null) { // 마일스톤이 없는 이슈
 			return;
@@ -232,4 +262,5 @@ public class IssueService {
 			throw new MilestoneNotFoundException("존재하지 않는 마일스톤: " + milestoneId);
 		}
 	}
+
 }
