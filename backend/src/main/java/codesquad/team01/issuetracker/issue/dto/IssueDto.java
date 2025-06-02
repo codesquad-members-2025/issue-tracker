@@ -205,6 +205,10 @@ public class IssueDto {
 			return assigneeIds != null ? assigneeIds : List.of();
 		}
 
+		public IssueState getAction() {
+			return IssueState.fromActionStr(action);
+		}
+
 		@Override
 		public String toString() {
 			return "UpdateRequest{" +
@@ -380,6 +384,18 @@ public class IssueDto {
 	) {
 	}
 
+	public record IssueStateRow(
+		IssueState state
+	) {
+	}
+
+	@Builder
+	public record IssueStateAndWriterIdRow(
+		IssueState state,
+		int writerId
+	) {
+	}
+
 	/**
 	 * 서비스 계층 DTO
 	 */
@@ -419,7 +435,8 @@ public class IssueDto {
 	public record SingleDetails(
 		DetailBaseRow issue,
 		List<LabelDto.IssueDetailLabelResponse> labels,
-		List<UserDto.IssueDetailUserResponse> assignees
+		List<UserDto.IssueDetailUserResponse> assignees,
+		int commentCount
 	) {
 		public CreateResponse toCreateResponse() {
 			return CreateResponse.builder()
@@ -445,7 +462,7 @@ public class IssueDto {
 					: null)
 				.assignees(assignees)
 				.labels(labels)
-				.commentCount(0)
+				.commentCount(commentCount)
 				.build();
 		}
 	}
