@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
 
-export default function MilstoneController({ isOpen, statusHandler, editHandler, deleteHandler }) {
+export default function MilestoneController({ isOpen, statusHandler, editHandler, deleteHandler }) {
   return (
     <Container>
       <StyledButton onClick={statusHandler}>
