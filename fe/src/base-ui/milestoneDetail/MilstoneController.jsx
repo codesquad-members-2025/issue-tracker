@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
-import { Container } from 'postcss';
 
 export default function MilstoneController({ isOpen, statusHandler, editHandler, deleteHandler }) {
   return (
