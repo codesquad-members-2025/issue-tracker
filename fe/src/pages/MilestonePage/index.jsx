@@ -8,14 +8,17 @@ import {
 import styled from 'styled-components';
 import MilestoneLabelHeader from '@/units/common/MilestoneLabelHeader';
 import useDataFetch from '@/hooks/useDataFetch';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { GET_MILESTONE } from '@/api/milestones';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import useMilestoneStore from '@/stores/milestoneStore';
+import MilestoneCreateForm from '@/base-ui/milestoneDetail/MilestoneCreateForm';
+import { getPatchUrl, POST_MILESTONE } from '@/api/milestones';
 
 export default function MilestonePage() {
   const { response, fetchData } = useDataFetch({ fetchType: 'Milestone' });
+  const [isAddTableOpen, setIsAddTableOpen] = useState(false);
   const [searchParam, setSearchParam] = useSearchParams();
   const milestone = useMilestoneStore((s) => s.milestone);
   const initMilestones = useMilestoneStore((s) => s.initMilestones);
@@ -26,6 +29,35 @@ export default function MilestonePage() {
     },
   };
 
+  function submitHandler({
+    fetchMethod,
+    name,
+    milestoneId = null,
+    description = null,
+    endDate = null,
+    isOpen = null,
+  }) {
+    const isPatch = fetchMethod === 'PATCH';
+    const API = isPatch ? getPatchUrl(milestoneId) : POST_MILESTONE;
+    const body = isPatch ? { name, description, endDate, isOpen } : { name, description, endDate };
+    const fetchOption = {
+      method: fetchMethod,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    };
+    fetchData(API, getOptionWithToken(fetchOption));
+    setIsAddTableOpen(false);
+  }
+
+  function statusHandler({ isOpen, milestoneId }) {
+    const API = getPatchUrl(milestoneId);
+    const fetchOption = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isOpen: !isOpen }),
+    };
+    fetchData(API, getOptionWithToken(fetchOption));
+  }
   useEffect(() => {
     if (!searchParam.has('isOpen')) {
       setSearchParam({ isOpen: 'true' }); // selectedFilters 초기값이 디폴트 필터임
@@ -40,9 +72,21 @@ export default function MilestonePage() {
     if (!response?.data) return;
     initMilestones(response.data);
   }, [response]);
+
   return (
     <Container>
-      {/* <MilestoneLabelHeader isLabel={false} isValid={s} addHandler={s} />; */}
+      <MilestoneLabelHeader
+        isLabel={false}
+        isValid={!isAddTableOpen}
+        addHandler={() => setIsAddTableOpen(true)}
+      />
+      {isAddTableOpen && (
+        <MilestoneCreateForm
+          isAdd={true}
+          onCancel={() => setIsAddTableOpen(false)}
+          onSubmit={(data) => submitHandler({ ...data, fetchMethod: 'POST' })}
+        />
+      )}
       <Kanban>
         <KanbanHeader>
           <HeaderLeft>
@@ -58,6 +102,25 @@ export default function MilestonePage() {
             />
           </HeaderLeft>
         </KanbanHeader>
+        {milestone.milestones.map((m) => {
+          return (
+            <Item key={m.milestoneId}>
+              <MilestoneInfo
+                milestoneName={m.name}
+                endDate={m.endDate}
+                description={m.description}
+              />
+              <ItemRightWrapper>
+                <MilestoneController isOpen={m.isOpen} statusHandler={statusHandler} />
+                <ProgressIndicator
+                  processingRate={m.processingRate}
+                  openIssueCount={m.openIssue}
+                  closeIssueCount={m.closeIssue}
+                />
+              </ItemRightWrapper>
+            </Item>
+          );
+        })}
       </Kanban>
     </Container>
   );
@@ -92,4 +155,17 @@ const HeaderLeft = styled.div`
   display: flex;
   gap: 24px;
   align-items: center;
+`;
+
+const Item = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+`;
+const ItemRightWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
 `;

@@ -18,7 +18,7 @@ export default function MilestoneCreateForm({
   const [nameValue, setNameValue] = useState('');
   const [dateValue, setDateValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
-  const { isValid, setCurrentInput } = useValidation({ existedString: nameValue });
+  const { isValid, setCurrentInput } = useValidation({ existedString: '' });
 
   const handleNameChange = (e) => {
     setNameValue(e.target.value);
@@ -38,25 +38,28 @@ export default function MilestoneCreateForm({
     setNameValue(name);
     setDateValue(endDate);
     setDescriptionValue(description);
+    setCurrentInput(name);
   }, []);
 
   return (
     <Wrapper $isAdd={isAdd}>
       <Title>새로운 마일스톤 추가</Title>
       <InputContainer>
-        <InputWrapper>
-          <Label>이름</Label>
-          <Input
-            placeholder="마일스톤의 이름을 입력하세요."
-            value={nameValue}
-            onChange={handleNameChange}
-          />
-        </InputWrapper>
+        <InputTop>
+          <InputWrapper>
+            <Label>이름</Label>
+            <Input
+              placeholder="마일스톤의 이름을 입력하세요."
+              value={nameValue}
+              onChange={handleNameChange}
+            />
+          </InputWrapper>
 
-        <InputWrapper>
-          <Label>{`완료일(선택)`}</Label>
-          <Input placeholder="YYYY.MM.DD" value={dateValue} onChange={handleDateChange} />
-        </InputWrapper>
+          <InputWrapper>
+            <Label>{`완료일(선택)`}</Label>
+            <Input placeholder="YYYY.MM.DD" value={dateValue} onChange={handleDateChange} />
+          </InputWrapper>
+        </InputTop>
 
         <InputWrapper>
           <Label>{`설명(선택)`}</Label>
@@ -86,37 +89,38 @@ export default function MilestoneCreateForm({
           </svg>
           <span>취소</span>
         </SmallOutlineButton>
-      </Buttonwrapper>
-      <SmallContainerButton
-        onClick={() =>
-          onSubmit({ name: nameValue, endDate: dateValue, description: descriptionValue })
-        }
-        disabled={!isValid}
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 17 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+
+        <SmallContainerButton
+          onClick={() =>
+            onSubmit({ name: nameValue, endDate: dateValue, description: descriptionValue })
+          }
+          disabled={!isValid}
         >
-          <path
-            d="M8.5 3.3335V12.6668"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M3.8335 8H13.1668"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <span>완료</span>
-      </SmallContainerButton>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 17 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8.5 3.3335V12.6668"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M3.8335 8H13.1668"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>완료</span>
+        </SmallContainerButton>
+      </Buttonwrapper>
     </Wrapper>
   );
 }
@@ -137,7 +141,7 @@ const Title = styled.h2`
   color:${({ theme }) => theme.text.strong};
 `;
 
-const Label = styled.label`
+const Label = styled.div`
   ${typography.display.medium12};
   width: 64px;
   color: ${({ theme }) => theme.text.weak};
@@ -145,20 +149,29 @@ const Label = styled.label`
 
 const Input = styled.input`
   ${typography.display.medium16};
+  /* width: 100%; */
   color: ${({ theme }) => theme.text.default};
   background: transparent;
   outline: none;
+  flex: 1;
 `;
 
 const InputContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 16px;
+`;
+const InputTop = styled.div`
+  display: flex;
+  gap: 16px;
 `;
 
 const InputWrapper = styled.div`
+  background-color: ${({ theme }) => theme.surface.bold};
+  border-radius: ${radius.medium};
   display: flex;
+  width: 100%;
   gap: 8px;
   align-items: center;
   padding: 8px 16px;
@@ -166,6 +179,7 @@ const InputWrapper = styled.div`
 
 const Buttonwrapper = styled.div`
   display: flex;
+  flex-direction: row-reverse;
   align-items: center;
   gap: 16px;
 `;
