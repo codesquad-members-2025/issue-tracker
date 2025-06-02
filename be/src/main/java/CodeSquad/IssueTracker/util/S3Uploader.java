@@ -38,7 +38,6 @@ public class S3Uploader implements Uploader {
         CreateMultipartUploadRequest createRequest = CreateMultipartUploadRequest.builder()
                 .bucket(bucket)
                 .key(key)
-                .acl(ObjectCannedACL.PUBLIC_READ)
                 .contentType(file.getContentType())
                 .build();
 
@@ -84,7 +83,7 @@ public class S3Uploader implements Uploader {
 
             s3Client.completeMultipartUpload(completeRequest);
 
-            return "https://" + bucket + ".s3.amazonaws.com/" + key;
+            return s3BaseUrl + "/" + key;
 
         } catch (Exception e) {
             // 4. abort upload on error
