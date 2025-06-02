@@ -138,7 +138,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		""";
 	private static final String UPDATE_ISSUE_CONTENT_QUERY = """
 				UPDATE issue
-				SET content = :content, updated_at :now
+				SET content = :content, updated_at = :now
 				WHERE id = :issueId AND deleted_at IS NULL
 		""";
 	private static final String UPDATE_ISSUE_MILESTONE_QUERY = """
