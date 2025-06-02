@@ -41,6 +41,37 @@ public class IssueAssembler {
 			.toList();
 	}
 
+	public IssueDto.CreateResponse assembleSingleIssueDetails(
+		IssueDto.DetailBaseRow issue,
+		List<LabelDto.IssueDetailLabelRow> labelRows,
+		List<UserDto.IssueDetailAssigneeRow> assigneeRows
+	) {
+		log.debug("단일 이슈 상세 정보 조합: issueId={}", issue.issueId());
+
+		List<LabelDto.IssueDetailLabelResponse> labels = labelRows.stream()
+			.map(row -> LabelDto.IssueDetailLabelResponse.builder()
+				.id(row.id())
+				.name(row.name())
+				.color(row.color())
+				.textColor(row.textColor())
+				.build())
+			.toList();
+
+		List<UserDto.IssueDetailUserResponse> assignees = assigneeRows.stream()
+			.map(row -> UserDto.IssueDetailUserResponse.builder()
+				.id(row.assigneeId())
+				.username(row.assigneeUsername())
+				.profileImageUrl(row.assigneeProfileImageUrl())
+				.build()
+			).toList();
+
+		return IssueDto.SingleDetails.builder()
+			.issue(issue)
+			.labels(labels)
+			.assignees(assignees)
+			.build().toCreateResponse();
+	}
+
 	// 담당자 정보 이슈 id로 그룹화
 	private Map<Integer, List<UserDto.AssigneeResponse>> groupAssigneesByIssueId(
 
