@@ -144,6 +144,80 @@ public class IssueDto {
 		}
 	}
 
+	@Builder
+	public record UpdateRequest(
+		String title,
+		String content,
+		@Positive(message = "마일스톤 ID는 양수여야 합니다")
+		Integer milestoneId,
+		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
+		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds,
+		@Pattern(regexp = "^(open|close)$", message = "action은 'open' 또는 'close'만 가능합니다")
+		String action
+	) {
+
+		public boolean isUpdatingTitle() {
+			return title != null;
+		}
+
+		public boolean isUpdatingContent() {
+			return content != null;
+		}
+
+		public boolean isUpdatingMilestone() {
+			return milestoneId != null;
+		}
+
+		public boolean isUpdatingLabels() {
+			return labelIds != null;
+		}
+
+		public boolean isUpdatingAssignees() {
+			return assigneeIds != null;
+		}
+
+		public boolean isUpdatingState() {
+			return action != null;
+		}
+
+		public boolean hasExactlyOneField() {
+			int count = 0;
+			if (isUpdatingTitle())
+				count++;
+			if (isUpdatingContent())
+				count++;
+			if (isUpdatingMilestone())
+				count++;
+			if (isUpdatingLabels())
+				count++;
+			if (isUpdatingAssignees())
+				count++;
+			if (isUpdatingState())
+				count++;
+			return count == 1;
+		}
+
+		public List<Integer> getLabelIds() {
+			return labelIds != null ? labelIds : List.of();
+		}
+
+		public List<Integer> getAssigneeIds() {
+			return assigneeIds != null ? assigneeIds : List.of();
+		}
+
+		@Override
+		public String toString() {
+			return "UpdateRequest{" +
+				"title='" + title + '\'' +
+				", content='" + content + '\'' +
+				", milestoneId=" + milestoneId +
+				", labelIds=" + labelIds +
+				", assigneeIds=" + assigneeIds +
+				", action='" + action + '\'' +
+				'}';
+		}
+	}
+
 	/**
 	 * 응답 DTO
 	 */
@@ -207,6 +281,40 @@ public class IssueDto {
 				", failedIssueIds=" + failedIssueIds +
 				'}';
 		}
+	}
+
+	@Builder
+	public record CreateResponse(
+		int id,
+		String title,
+		String content,
+		String state,
+		LocalDateTime createdAt,
+		LocalDateTime updatedAt,
+		LocalDateTime closedAt,
+		UserDto.IssueDetailUserResponse writer,
+		MilestoneDto.IssueDetailMilestoneResponse milestone,
+		List<LabelDto.IssueDetailLabelResponse> labels,
+		List<UserDto.IssueDetailUserResponse> assignees,
+		int commentCount
+	) {
+	}
+
+	@Builder
+	public record UpdateResponse(
+		int id,
+		String title,
+		String content,
+		String state,
+		LocalDateTime createdAt,
+		LocalDateTime updatedAt,
+		LocalDateTime closedAt,
+		UserDto.IssueDetailUserResponse writer,
+		MilestoneDto.IssueDetailMilestoneResponse milestone,
+		List<LabelDto.IssueDetailLabelResponse> labels,
+		List<UserDto.IssueDetailUserResponse> assignees,
+		int commentCount
+	) {
 	}
 
 	/**
@@ -342,20 +450,4 @@ public class IssueDto {
 		}
 	}
 
-	@Builder
-	public record CreateResponse(
-		int id,
-		String title,
-		String content,
-		String state,
-		LocalDateTime createdAt,
-		LocalDateTime updatedAt,
-		LocalDateTime closedAt,
-		UserDto.IssueDetailUserResponse writer,
-		MilestoneDto.IssueDetailMilestoneResponse milestone,
-		List<LabelDto.IssueDetailLabelResponse> labels,
-		List<UserDto.IssueDetailUserResponse> assignees,
-		int commentCount
-	) {
-	}
 }

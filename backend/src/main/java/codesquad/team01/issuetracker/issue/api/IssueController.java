@@ -89,7 +89,7 @@ public class IssueController {
 	@PatchMapping("/v1/issues/{id}")
 	public ResponseEntity<ApiResponse<IssueDto.UpdateResponse>> updateIssue(
 		@PathVariable Integer id,
-		@RequestBody @Valid UpdateRequest request) {
+		@RequestBody @Valid IssueDto.UpdateRequest request) {
 
 		log.info("이슈 수정 요청: issueId={}, request={}", id, request);
 
