@@ -34,10 +34,6 @@ public class AuthCommandService {
             throw new UserAlreadyExistsException("이미 존재하는 사용자입니다.");
         }
 
-        if (user.get().getNickname().equals(dto.nickname())) {
-            throw new UserAlreadyExistsException("이미 존재하는 닉네임입니다.");
-        }
-
         String uuid = UUID.randomUUID().toString();
         String salt = PasswordEncoderUtil.generateSalt();
         String hash = PasswordEncoderUtil.hashPassword(dto.password(), salt);

@@ -9,9 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
@@ -19,6 +22,9 @@ import java.util.UUID;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
+    @Value("${app.frontend-url}")
+    private String frontendTokenRedirectUri;
 
     private final AuthCommandService authCommandService;
     private final OAuthLoginService oAuthLoginService;
@@ -70,7 +76,15 @@ public class AuthController {
 
         TokenResponseDto tokenResponseDto = oAuthLoginService.handleGithubLogin(code);
 
-        return ResponseEntity.ok(tokenResponseDto);
+        String redirectUrl = UriComponentsBuilder
+                .fromUriString(frontendTokenRedirectUri)
+                .fragment("access_token=" + tokenResponseDto.accessToken() + "&token_type=" + tokenResponseDto.tokenType())
+                .build()
+                .toUriString();
+
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, redirectUrl)
+                .build();
     }
 
 }
