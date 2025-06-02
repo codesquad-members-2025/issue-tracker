@@ -65,7 +65,10 @@ public class UserAuthorizationJwtManager {
 
 	public Claims parseClaims(String token) {
 		try {
-			Jwt<?, Claims> jwt = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+			Jwt<?, Claims> jwt = Jwts.parser()
+				.verifyWith(key)
+				.build()
+				.parseSignedClaims(token);
 			return jwt.getPayload();
 		} catch (JwtException e) {
 			throw new IllegalArgumentException("허용되지 않거나 만료된 토큰입니다");
