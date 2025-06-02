@@ -45,17 +45,46 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
     }
 
     @Override
-    public void update(Long issueId, IssueUpdateDto updateParam) {
-        String sql = "UPDATE issues SET title = :title, content = :content, is_Open = :isOpen, last_modified_at = :lastModifiedAt, milestone_Id = :milestoneId WHERE issue_Id = :id";
-        SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("title", updateParam.getTitle())
-                .addValue("content", updateParam.getContent())
-                .addValue("isOpen", updateParam.getIsOpen())
-                .addValue("lastModifiedAt", LocalDateTime.now())
-                .addValue("milestoneId", updateParam.getMilestoneId())
-                .addValue("id", issueId);
-        template.update(sql, param);
+    public void update(Long issueId, IssueUpdateDto updateParam, String issueFileUrl) {
+        StringBuilder sql = new StringBuilder("UPDATE issues SET ");
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        boolean first = true;
+
+        if (updateParam.getTitle() != null) {
+            sql.append(first ? "" : ", ").append("title = :title");
+            param.addValue("title", updateParam.getTitle());
+            first = false;
+        }
+        if (updateParam.getContent() != null) {
+            sql.append(first ? "" : ", ").append("content = :content");
+            param.addValue("content", updateParam.getContent());
+            first = false;
+        }
+        if (updateParam.getIsOpen() != null) {
+            sql.append(first ? "" : ", ").append("is_open = :isOpen");
+            param.addValue("isOpen", updateParam.getIsOpen());
+            first = false;
+        }
+        if (updateParam.getMilestoneId() != null) {
+            sql.append(first ? "" : ", ").append("milestone_id = :milestoneId");
+            param.addValue("milestoneId", updateParam.getMilestoneId());
+            first = false;
+        }
+        if (issueFileUrl != null) {
+            sql.append(first ? "" : ", ").append("issue_file_url = :issueFileUrl");
+            param.addValue("issueFileUrl", issueFileUrl);
+            first = false;
+        }
+
+        sql.append(first ? "" : ", ").append("last_modified_at = :lastModifiedAt");
+        param.addValue("lastModifiedAt", LocalDateTime.now());
+
+        sql.append(" WHERE issue_id = :id");
+        param.addValue("id", issueId);
+
+        template.update(sql.toString(), param);
     }
+
 
     @Override
     public Optional<Issue> findById(Long issueId) {

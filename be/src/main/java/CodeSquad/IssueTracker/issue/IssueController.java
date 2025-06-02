@@ -27,14 +27,14 @@ public class IssueController {
     private final IssueService issueService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public IssueDetailResponse createIssue(
+    public BaseResponseDto createIssue(
             @RequestPart("data") @Validated IssueCreateRequest request,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
             HttpServletRequest httpRequest
     ) throws IOException {
         String loginId = httpRequest.getAttribute("loginId").toString();
         log.info("Creating new issue with login id {}", loginId);
-        return issueService.createIssue(request, files, loginId);
+        return new BaseResponseDto(true,"이슈생성에 성공했습니다",issueService.createIssue(request,files,loginId));
     }
 
 
@@ -45,8 +45,10 @@ public class IssueController {
     }
 
     @PatchMapping("/{issueId}")
-    public IssueDetailResponse updateIssue(@PathVariable Long issueId, @RequestBody IssueUpdateDto updateParam) {
-        return issueService.update(issueId, updateParam);
+    public IssueDetailResponse updateIssue(@PathVariable Long issueId,
+                                           @RequestPart("data") IssueUpdateDto updateParam,
+                                           @RequestPart(value = "files",required = false) List<MultipartFile> files) {
+        return issueService.update(issueId, updateParam ,files);
     }
 
 

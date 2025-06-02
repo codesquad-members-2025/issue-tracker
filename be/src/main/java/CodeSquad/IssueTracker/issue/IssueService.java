@@ -40,8 +40,16 @@ public class IssueService {
     private final CommentService commentService;
     private final Uploader s3Uploader;
 
-    public IssueDetailResponse update(Long issueId, IssueUpdateDto updateParam) {
-        issueRepository.update(issueId, updateParam);
+    public IssueDetailResponse update(Long issueId, IssueUpdateDto updateParam, List<MultipartFile> files) throws IOException {
+
+        String updateIssueFileUrl=null;
+
+        if(files != null && !files.isEmpty()) {
+            MultipartFile file = files.getFirst();
+            updateIssueFileUrl = s3Uploader.upload(file);
+        }
+
+        issueRepository.update(issueId,updateParam,updateIssueFileUrl);
 
         if(updateParam.getAssigneeIds() != null && !updateParam.getAssigneeIds().isEmpty()) {
             issueAssigneeService.assignAssignees(issueId, updateParam.getAssigneeIds());
