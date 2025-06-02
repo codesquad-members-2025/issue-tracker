@@ -1,12 +1,16 @@
 package codesquad.team4.issuetracker.issue;
 
+import codesquad.team4.issuetracker.auth.AuthInterceptor;
 import codesquad.team4.issuetracker.aws.S3FileService;
+import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.ApiMessageDto;
 import codesquad.team4.issuetracker.response.ApiResponse;
 import codesquad.team4.issuetracker.util.IssueFilteringParser;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,11 +83,13 @@ public class IssueController {
     public ApiResponse<ApiMessageDto> updateIssue(
             @PathVariable("issue-id") Long issueId,
             @RequestPart("issue") @Valid IssueRequestDto.IssueUpdateDto request,
-            @RequestPart(value = "file", required = false) MultipartFile file) {
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            HttpServletRequest servletRequest) {
 
         String uploadUrl = s3FileService.uploadFile(file, ISSUE_DIRECTORY);
-        ApiMessageDto result = issueService.updateIssue(issueId, request, uploadUrl);
+        User user = (User) servletRequest.getAttribute(AuthInterceptor.USER_ATTRIBUTE);
 
+        ApiMessageDto result = issueService.updateIssue(issueId, request, uploadUrl, user);
         return ApiResponse.success(result);
     }
 
@@ -105,7 +111,8 @@ public class IssueController {
 
     @DeleteMapping("/{issue-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteIssue(@PathVariable("issue-id") Long issueId) {
-        issueService.deleteIssue(issueId);
+    public void deleteIssue(@PathVariable("issue-id") Long issueId, HttpServletRequest servletRequest) {
+        User user = (User) servletRequest.getAttribute(AuthInterceptor.USER_ATTRIBUTE);
+        issueService.deleteIssue(issueId, user);
     }
 }
