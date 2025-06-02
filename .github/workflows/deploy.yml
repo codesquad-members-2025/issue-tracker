@@ -40,7 +40,7 @@ jobs:
           mkdir -p bundle/frontend
           mkdir -p bundle/scripts
 
-          # ✅ .env 생성 (백엔드용)
+          # ✅ 환경변수 .env 생성
           echo "JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }}" > bundle/.env
           echo "JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }}" >> bundle/.env
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> bundle/.env
@@ -50,77 +50,17 @@ jobs:
           echo "S3_URL_NAME=${{ secrets.S3_URL_NAME }}" >> bundle/.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> bundle/.env
 
-          # ✅ start.sh 생성 (따옴표로 인자 감싸기)
-          echo '#!/bin/bash' > bundle/scripts/start.sh
-          echo 'cd /home/ubuntu/app/bundle' >> bundle/scripts/start.sh
-          echo 'source .env' >> bundle/scripts/start.sh
-          echo 'nohup java \\' >> bundle/scripts/start.sh
-          echo '  "-Dspring.profiles.active=dev" \\' >> bundle/scripts/start.sh
-          echo '  "-DJWT_ACCESS_KEY=$JWT_ACCESS_KEY" \\' >> bundle/scripts/start.sh
-          echo '  "-DJWT_REFRESH_KEY=$JWT_REFRESH_KEY" \\' >> bundle/scripts/start.sh
-          echo '  "-DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \\' >> bundle/scripts/start.sh
-          echo '  "-DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \\' >> bundle/scripts/start.sh
-          echo '  "-DAWS_REGION=$AWS_REGION" \\' >> bundle/scripts/start.sh
-          echo '  "-Dcloud.aws.region.static=$AWS_REGION" \\' >> bundle/scripts/start.sh
-          echo '  "-Dcloud.aws.s3.bucket=$S3_BUCKET_NAME" \\' >> bundle/scripts/start.sh
-          echo '  "-Dcloud.aws.s3.url=$S3_URL_NAME" \\' >> bundle/scripts/start.sh
-          echo '  "-Dspring.datasource.password=$DB_PASSWORD" \\' >> bundle/scripts/start.sh
-          echo '  -jar app.jar > /home/ubuntu/app/app.log 2>&1 &' >> bundle/scripts/start.sh
-
-          # ✅ stop.sh 생성
-          echo '#!/bin/bash' > bundle/scripts/stop.sh
-          echo 'PID=$(pgrep -f "java -jar")' >> bundle/scripts/stop.sh
-          echo 'if [ -n "$PID" ]; then' >> bundle/scripts/stop.sh
-          echo '  kill -9 $PID' >> bundle/scripts/stop.sh
-          echo '  echo "✅ Java 프로세스 종료됨: $PID"' >> bundle/scripts/stop.sh
-          echo 'else' >> bundle/scripts/stop.sh
-          echo '  echo "ℹ️ 종료할 프로세스 없음"' >> bundle/scripts/stop.sh
-          echo 'fi' >> bundle/scripts/stop.sh
-
+          # ✅ start.sh, stop.sh 복사 (Git에 있는 파일)
+          cp deploy-scripts/start.sh bundle/scripts/start.sh
+          cp deploy-scripts/stop.sh bundle/scripts/stop.sh
           chmod +x bundle/scripts/*.sh
 
-          # ✅ 프론트 빌드 결과 복사
+          # ✅ 프론트 복사
           cp -r fe/dist/* bundle/frontend/
 
-          # ✅ 최신 JAR 복사
+          # ✅ JAR 복사
           JAR_PATH=$(ls -t be/build/libs/*.jar | head -n 1)
-          echo "✅ 최신 JAR: $JAR_PATH"
           cp "$JAR_PATH" bundle/app.jar
 
           # ✅ 압축
           zip -r deploy.zip bundle
-
-      - name: 🚀 Upload to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "deploy.zip"
-          target: "/home/ubuntu"
-
-      - name: 💻 Deploy on EC2
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "🧹 기존 배포 디렉토리 제거"
-            sudo rm -rf /home/ubuntu/app
-
-            echo "📦 배포 압축 해제"
-            unzip -o /home/ubuntu/deploy.zip -d /home/ubuntu/app
-
-            echo "📁 프론트 정적 리소스 이동"
-            mv /home/ubuntu/app/bundle/frontend /home/ubuntu/app/frontend || true
-
-            echo "🛑 기존 앱 종료 중..."
-            bash /home/ubuntu/app/bundle/scripts/stop.sh
-
-            echo "🚀 새 애플리케이션 실행..."
-            bash /home/ubuntu/app/bundle/scripts/start.sh
-
-            sleep 3
-            echo "📄 서버 로그 출력 (상위 100줄)"
-            tail -n 100 /home/ubuntu/app/app.log || echo "⚠️ 로그가 아직 생성되지 않았을 수 있습니다."
