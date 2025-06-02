@@ -2,8 +2,8 @@ package codesquad.team4.issuetracker.util;
 
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class IssueFilteringParser {
     public static IssueRequestDto.IssueFilterParamDto parseFilterCondition(String query) {
@@ -14,7 +14,7 @@ public class IssueFilteringParser {
         Long assigneeId = null;
         Long milestoneId = null;
         Long commentAuthorId = null;
-        List<Long> labelIds = new ArrayList<>();
+        Set<Long> labelIds = new HashSet<>();
 
         for (String condition : conditions) {
             if (!condition.contains(":")) continue;
