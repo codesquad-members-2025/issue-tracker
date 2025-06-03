@@ -18,37 +18,35 @@ public class Comment {
     private String content;
     private Long authorId;
     private LocalDateTime lastModifiedAt;
-    private String imageUrl;
+    private String issueFileUrl;
 
     public Comment() {
     }
 
-    public Comment(Long commentId, Long issueId, String content, Long authorId, LocalDateTime lastModifiedAt, String imageUrl) {
+    public Comment(Long commentId, Long issueId, String content, Long authorId, LocalDateTime lastModifiedAt) {
         this.commentId = commentId;
         this.issueId = issueId;
         this.content = content;
         this.authorId = authorId;
         this.lastModifiedAt = lastModifiedAt;
-        this.imageUrl = imageUrl;
     }
 
-    public static Comment createComment(Long issueId, String content, Long authorId, String imageUrl) {
+    public static Comment createComment(Long issueId, String content, Long authorId) {
         if (content == null || content.isBlank()) {
-            throw new NoParametersException("댓글 내용은 필수입니다.", HttpStatus.BAD_REQUEST);
+            throw new NoParametersException("댓글");
         }
-        return new Comment(null, issueId, content, authorId, LocalDateTime.now(), imageUrl);
+        return new Comment(null, issueId, content, authorId, LocalDateTime.now());
     }
 
     private void verifyAuthor(Long requesterId) {
         if (!this.authorId.equals(requesterId)) {
-            throw new NoAuthorityException("작성자만 댓글을 수정할 수 있습니다.", HttpStatus.valueOf(401));
+            throw new NoAuthorityException();
         }
     }
 
-    public void update(String content, String imageUrl, Long requesterId) {
+    public void update(String content, Long requesterId) {
         verifyAuthor(requesterId);
         this.content = content;
-        this.imageUrl = imageUrl;
         this.lastModifiedAt = LocalDateTime.now();
     }
 

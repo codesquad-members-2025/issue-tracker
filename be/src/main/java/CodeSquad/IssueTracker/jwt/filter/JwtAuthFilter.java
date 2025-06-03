@@ -29,7 +29,7 @@ public class JwtAuthFilter implements Filter {
         String requestURI =  httpRequest.getRequestURI();
 
         // 특정 URL 경로는 필터를 적용하지 않도록 처리
-        if (requestURI.equals("/login") || requestURI.equals("/signup")) {
+        if (requestURI.equals("/login") || requestURI.equals("/signup") || requestURI.equals("/oauth/callback/github")) {
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }
@@ -51,9 +51,9 @@ public class JwtAuthFilter implements Filter {
 
         try {
             Claims claims = jwtUtil.validateAccessToken(accessToken);
-            Object loginId = claims.get("loginId");
-            log.info("[JWT Filter] loginId from claims: {}", loginId);
-            httpRequest.setAttribute("loginId", claims.get("loginId"));
+            httpRequest.setAttribute("id", claims.get("loginId")); // 사용자의 식별자 id
+            httpRequest.setAttribute("loginId", claims.get("loginUser")); // 로그인 시 사용되는 id
+            log.info("[JWT Filter] loginId: {}", claims.get("loginUser"));
         } catch (JwtValidationException e) {
             BaseResponseDto responseDto = BaseResponseDto.failure(e.getMessage());
             String json = new ObjectMapper().writeValueAsString(responseDto);

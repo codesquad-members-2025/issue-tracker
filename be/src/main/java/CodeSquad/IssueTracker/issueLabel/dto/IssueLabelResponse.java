@@ -4,13 +4,15 @@ import lombok.Data;
 
 @Data
 public class IssueLabelResponse {
-    private Long id;
+    private Long labelId;
     private String name;
     private String color;
+    private String description;
 
-    public IssueLabelResponse(Long id, String name, String color) {
-        this.id = id;
+    public IssueLabelResponse(Long labelId, String name, String color, String description) {
+        this.labelId = labelId;
         this.name = name;
         this.color = color;
+        this.description = description;
     }
 }

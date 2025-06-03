@@ -14,4 +14,7 @@ public interface MilestoneRepository {
     void deleteById(Long milestoneId);
     void update(Long id, MilestoneUpdateDto updateDto);
     MilestoneResponse findMilestoneResponsesByIssueId(Long issueId);
+    List<Milestone> findByStatus(boolean isOpen);
+    Long calculateProcessingRate(Milestone milestone);
+    Integer countByStatus(boolean isOpen);
 }
