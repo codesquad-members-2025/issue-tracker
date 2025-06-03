@@ -1,10 +1,4 @@
-import {
-  MilestoneInfo,
-  MilestoneController,
-  ProgressIndicator,
-  OpenMilestoneButton,
-  CloseMilestoneButton,
-} from '@/base-ui/milestoneDetail';
+import { OpenMilestoneButton, CloseMilestoneButton } from '@/base-ui/milestoneDetail';
 import styled from 'styled-components';
 import MilestoneLabelHeader from '@/units/common/MilestoneLabelHeader';
 import useDataFetch from '@/hooks/useDataFetch';
@@ -15,8 +9,8 @@ import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import useMilestoneStore from '@/stores/milestoneStore';
 import MilestoneCreateForm from '@/base-ui/milestoneDetail/MilestoneCreateForm';
 import { getPatchUrl, POST_MILESTONE } from '@/api/milestones';
-import MileStoneTitle from '@/base-ui/utils/MileStoneTitle';
 import MilestoneItem from '@/units/milestone/MilestoneItem';
+import parseDateString from '@/utils/common/parseDateString';
 
 export default function MilestonePage() {
   const { response, fetchData } = useDataFetch({ fetchType: 'Milestone' });
@@ -47,7 +41,7 @@ export default function MilestonePage() {
   }) {
     const isPatch = fetchMethod === 'PATCH';
     const API = isPatch ? getPatchUrl(milestoneId) : POST_MILESTONE;
-    const body = { name, description, endDate };
+    const body = { name, description, endDate: parseDateString(endDate) };
     const fetchOption = {
       method: fetchMethod,
       headers: { 'Content-Type': 'application/json' },
@@ -55,7 +49,7 @@ export default function MilestonePage() {
     };
     fetchData(API, getOptionWithToken(fetchOption));
     reFetchHandler(true);
-    setIsAddTableOpen(true);
+    setIsAddTableOpen(false);
   }
 
   function statusHandler({ isOpen, milestoneId }) {
@@ -71,6 +65,7 @@ export default function MilestonePage() {
   useEffect(() => {
     if (!searchParam.has('isOpen')) {
       setSearchParam({ isOpen: 'true' }); // selectedFilters 초기값이 디폴트 필터임
+      return;
     }
     //항상 현재의 쿼리파람을 기준으로 GET 요청
     // 현재의 마일스톤 페이지에서 마일스톤 조작 액션이 일어나면 항상 GET 요청으로 새로운 데이터를 이 스코프에서 받아온다.

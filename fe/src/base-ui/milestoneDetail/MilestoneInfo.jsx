@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
+import formatDateToDotYMD from '@/utils/common/formatDateToDotYMD';
 
 export default function MilestoneInfo({ milestoneName, endDate, description }) {
   return (
@@ -67,13 +68,6 @@ export default function MilestoneInfo({ milestoneName, endDate, description }) {
   );
 }
 
-export function formatDateToDotYMD(str) {
-  if (!str) return '';
-  const datePart = str.split('T')[0]; // "2025-09-30"
-  const [year, month, day] = datePart.split('-');
-  return `${year}.${month}.${day}`;
-}
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -100,7 +94,10 @@ const Title = styled.div`
 
 const EndDate = styled.div`
   ${typography.display.medium12}
-  color:${({ theme }) => theme.text.weak};
+  display:flex;
+  align-items: center;
+  gap: 8px;
+  color: ${({ theme }) => theme.text.weak};
 `;
 
 const Description = styled.div`

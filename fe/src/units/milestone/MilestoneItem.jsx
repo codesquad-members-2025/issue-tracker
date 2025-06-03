@@ -2,12 +2,16 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { MilestoneInfo, MilestoneController, ProgressIndicator } from '@/base-ui/milestoneDetail';
 import MilestoneCreateForm from '@/base-ui/milestoneDetail/MilestoneCreateForm';
+import parseDateString from '@/utils/common/parseDateString';
 
 const Item = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 24px 32px;
+  &:hover {
+    background-color: ${({ theme }) => theme.surface.bold};
+  }
 `;
 
 const ItemRightWrapper = styled.div`

@@ -159,7 +159,7 @@ app.post('/issues', upload.single('files'), authMiddleware, async (req, res) => 
 });
 app.use('/uploads', express.static(uploadDir));
 
-app.get('/', authMiddleware, async (req, res) => {
+app.get('/home', authMiddleware, async (req, res) => {
   try {
     const { author, label, milestone, assignee, page = 1, limit = 10 } = req.query;
 
