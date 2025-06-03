@@ -3,6 +3,7 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
+import CodeSquad.IssueTracker.issue.dto.IssueStatusUpdateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
 import CodeSquad.IssueTracker.milestone.dto.SummaryMilestoneDto;
 import CodeSquad.IssueTracker.user.dto.SummaryUserDto;
@@ -120,6 +121,23 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         String finalSql = countSql + whereClause;
 
         return template.queryForObject(finalSql, queryBuilder.getParams(), Integer.class);
+    }
+
+    @Override
+    public void updateIsOpen(IssueStatusUpdateRequest condition) {
+        String sql = """
+                UPDATE issues SET is_open = :isOpen 
+                WHERE issue_id IN (:issueIds)
+                """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        List<Long> issueIds = condition.getIssueIds();
+        params.addValue("issueIds", issueIds);
+
+        boolean isOpen = condition.isOpen();
+        params.addValue("isOpen", isOpen);
+
+        template.update(sql, params);
     }
 
     private RowMapper<Issue> issueRowMapper() {
