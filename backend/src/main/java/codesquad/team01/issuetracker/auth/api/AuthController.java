@@ -24,7 +24,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/api")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
