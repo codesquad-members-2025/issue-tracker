@@ -39,24 +39,31 @@ public class MilestoneService {
 	}
 
 	public MilestoneDto.ListResponse getMilestones(MilestoneState state) {
+		// state(open, close) 에 해당하는 마일스톤 목록 불러와서
 		List<MilestoneDto.MilestoneRow> rows = milestoneRepository.findByState(state);
 
+		// id 의 리스트만 뽑아낸다
 		List<Integer> milestoneIds = rows.stream()
 			.map(MilestoneDto.MilestoneRow::id)
 			.toList();
 
+		// id 리스트가 비었으면 빈 ListResponse 반환
 		if (milestoneIds.isEmpty()) {
 			return new MilestoneDto.ListResponse(0, List.of());
 		}
 
+		// id 의 리스트로 issueCounts 리스트 불러와서
 		List<MilestoneDto.MilestoneIssueCount> issueCounts = issueRepository.countByMilestoneIds(milestoneIds);
 
+		// <마일스톤 id, IssueCount> 맵 만든다
 		Map<Integer, MilestoneDto.MilestoneIssueCount> countMap = issueCounts.stream()
 			.collect(Collectors.toMap(
 				MilestoneDto.MilestoneIssueCount::milestoneId,
 				Function.identity()
 			));
 
+		// 맨위에서 불러온 rows 의 id 를 키 값으로 해서 countMap 에서 해당하는 issueCount 를 불러온다.
+		// row 와 issueCount 로 MilestoneListItem 를 만들고 리스트로 합친다
 		List<MilestoneDto.MilestoneListItem> items = rows.stream()
 			.map(row -> {
 				MilestoneDto.MilestoneIssueCount count = countMap.getOrDefault(row.id(),
