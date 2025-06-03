@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
+import codesquad.team01.issuetracker.common.exception.InvalidParameterException;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
@@ -148,10 +149,15 @@ public class IssueDto {
 	public record UpdateRequest(
 		String title,
 		String content,
+		Boolean clearContent,
+
 		@Positive(message = "마일스톤 ID는 양수여야 합니다")
 		Integer milestoneId,
+		Boolean clearMilestone,
 		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
+		Boolean clearLabels,
 		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds,
+		Boolean clearAssignees,
 		@Pattern(regexp = "^(open|close)$", message = "action은 'open' 또는 'close'만 가능합니다")
 		String action
 	) {
@@ -161,47 +167,55 @@ public class IssueDto {
 		}
 
 		public boolean isUpdatingContent() {
-			return content != null;
+			return content != null || Boolean.TRUE.equals(clearContent);
 		}
 
 		public boolean isUpdatingMilestone() {
-			return milestoneId != null;
+			return milestoneId != null || Boolean.TRUE.equals(clearMilestone);
 		}
 
 		public boolean isUpdatingLabels() {
-			return labelIds != null;
+			return labelIds != null || Boolean.TRUE.equals(clearLabels);
 		}
 
 		public boolean isUpdatingAssignees() {
-			return assigneeIds != null;
+			return assigneeIds != null || Boolean.TRUE.equals(clearAssignees);
 		}
 
 		public boolean isUpdatingState() {
 			return action != null;
 		}
 
-		public boolean hasExactlyOneField() {
-			int count = 0;
-			if (isUpdatingTitle())
-				count++;
-			if (isUpdatingContent())
-				count++;
-			if (isUpdatingMilestone())
-				count++;
-			if (isUpdatingLabels())
-				count++;
-			if (isUpdatingAssignees())
-				count++;
-			if (isUpdatingState())
-				count++;
-			return count == 1;
+		public boolean hasAnyFiled() {
+			return isUpdatingTitle() || isUpdatingContent() || isUpdatingMilestone() ||
+				isUpdatingLabels() || isUpdatingAssignees() || isUpdatingState();
+		}
+
+		public String getContent() {
+			if (Boolean.TRUE.equals(clearContent)) {
+				return null;
+			}
+			return content;
+		}
+
+		public Integer getMilestoneId() {
+			if (Boolean.TRUE.equals(clearMilestone)) {
+				return null;
+			}
+			return milestoneId;
 		}
 
 		public List<Integer> getLabelIds() {
+			if (Boolean.TRUE.equals(clearLabels)) {
+				return List.of();
+			}
 			return labelIds != null ? labelIds : List.of();
 		}
 
 		public List<Integer> getAssigneeIds() {
+			if (Boolean.TRUE.equals(clearAssignees)) {
+				return List.of();
+			}
 			return assigneeIds != null ? assigneeIds : List.of();
 		}
 
@@ -209,14 +223,41 @@ public class IssueDto {
 			return IssueState.fromActionStr(action);
 		}
 
+		public void validateRequest() {
+
+			if (title != null && title.trim().isEmpty()) {
+				throw new InvalidParameterException("제목이 제공된 경우 공백일 수 없습니다.");
+			}
+
+			if (content != null && Boolean.TRUE.equals(clearContent)) {
+				throw new InvalidParameterException("content와 clearContent를 동시 설정 불가합니다.");
+			}
+
+			if (milestoneId != null && Boolean.TRUE.equals(clearMilestone)) {
+				throw new InvalidParameterException("milestoneId와 clearMilestone을 동시 설정 불가합니다.");
+			}
+
+			if (labelIds != null && Boolean.TRUE.equals(clearLabels)) {
+				throw new InvalidParameterException("labelIds와 clearLabels를 동시 설정 불가합니다.");
+			}
+
+			if (assigneeIds != null && Boolean.TRUE.equals(clearAssignees)) {
+				throw new InvalidParameterException("assigneeIds와 clearAssignees를 동시 설정 불가합니다.");
+			}
+		}
+
 		@Override
 		public String toString() {
 			return "UpdateRequest{" +
 				"title='" + title + '\'' +
 				", content='" + content + '\'' +
+				", clearContent=" + clearContent +
 				", milestoneId=" + milestoneId +
+				", clearMilestone=" + clearMilestone +
 				", labelIds=" + labelIds +
+				", clearLabels=" + clearLabels +
 				", assigneeIds=" + assigneeIds +
+				", clearAssignees=" + clearAssignees +
 				", action='" + action + '\'' +
 				'}';
 		}
@@ -467,4 +508,75 @@ public class IssueDto {
 		}
 	}
 
+	/**
+	 * 쿼리 DTO
+	 */
+	// 이슈 목록 조회용 DTO
+	public record ListQueryParams(
+		IssueState state,
+		Integer writerId,
+		Integer milestoneId,
+		List<Integer> labelIds,
+		List<Integer> assigneeIds
+	) {
+		public static ListQueryParams from(ListQueryRequest request) {
+			return new ListQueryParams(
+				request.getIssueState(),
+				request.writerId(),
+				request.milestoneId(),
+				request.labelIds() != null ? request.labelIds() : List.of(),
+				request.assigneeIds() != null ? request.assigneeIds() : List.of()
+			);
+		}
+	}
+
+	// 이슈 개수 조회용 DTO
+	public record CountQueryParams(
+		Integer writerId,
+		Integer milestoneId,
+		List<Integer> labelIds,
+		List<Integer> assigneeIds
+	) {
+		public static CountQueryParams from(CountQueryRequest request) {
+			return new CountQueryParams(
+				request.writerId(),
+				request.milestoneId(),
+				request.labelIds() != null ? request.labelIds() : List.of(),
+				request.assigneeIds() != null ? request.assigneeIds() : List.of()
+			);
+		}
+	}
+
+	// 이슈 수정용 DTO
+	public record UpdateQueryParams(
+		String title,
+		String content,
+		Integer milestoneId,
+		List<Integer> labelIds,
+		List<Integer> assigneeIds,
+		IssueState action,
+		boolean isUpdatingTitle,
+		boolean isUpdatingContent,
+		boolean isUpdatingMilestone,
+		boolean isUpdatingLabels,
+		boolean isUpdatingAssignees,
+		boolean isUpdatingState
+	) {
+		public static UpdateQueryParams from(UpdateRequest request) {
+			return new UpdateQueryParams(
+				request.title(),
+				request.getContent(),
+				request.getMilestoneId(),
+				request.getLabelIds(),
+				request.getAssigneeIds(),
+				request.isUpdatingState() ? request.getAction() : null,
+				request.isUpdatingTitle(),
+				request.isUpdatingContent(),
+				request.isUpdatingMilestone(),
+				request.isUpdatingLabels(),
+				request.isUpdatingAssignees(),
+				request.isUpdatingState()
+			);
+		}
+	}
 }

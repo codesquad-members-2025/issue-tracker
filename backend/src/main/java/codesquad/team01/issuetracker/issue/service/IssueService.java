@@ -36,16 +36,14 @@ public class IssueService {
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
 
-	private final IssueUpdateCommandFactory issueUpdateCommandFactory;
 	private final IssueAssembler issueAssembler;
 	private final CursorEncoder cursorEncoder;
 
 	public IssueDto.ListResponse findIssues(IssueDto.ListQueryRequest request, CursorDto.CursorData cursor) {
 
+		IssueDto.ListQueryParams queryParams = IssueDto.ListQueryParams.from(request);
 		// 이슈 기본 정보 조회 - (담당자, 레이블 제외)
-		List<IssueDto.BaseRow> issues = issueRepository.findIssuesWithFilters(
-			request.getIssueState(), request.writerId(), request.milestoneId(),
-			request.labelIds(), request.assigneeIds(), cursor);
+		List<IssueDto.BaseRow> issues = issueRepository.findIssuesWithFilters(queryParams, cursor);
 
 		boolean hasNext = issues.size() > IssueConstants.PAGE_SIZE; // 다음 페이지 존재 여부
 
@@ -112,9 +110,10 @@ public class IssueService {
 
 		log.debug(request.toString());
 
+		IssueDto.CountQueryParams queryParams = IssueDto.CountQueryParams.from(request);
+
 		IssueDto.CountResponse response =
-			issueRepository.countIssuesWithFilters(request.writerId(), request.milestoneId(),
-				request.labelIds(), request.assigneeIds());
+			issueRepository.countIssuesWithFilters(queryParams);
 
 		log.debug(response.toString());
 
@@ -220,7 +219,7 @@ public class IssueService {
 			issueRepository.addAssigneesToIssue(issueId, validAssigneeIds);
 		}
 
-		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findCreatedIssueById(issueId);
+		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findIssueById(issueId);
 		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
 
@@ -230,14 +229,17 @@ public class IssueService {
 	@Transactional
 	public IssueDto.IssueDetailsResponse updateIssue(Integer issueId, IssueDto.UpdateRequest request, Integer userId) {
 
-		// 단일 필드 수정 검증
-		if (!request.hasExactlyOneField()) {
-			throw new InvalidParameterException("한 번에 하나의 필드만 수정할 수 있습니다.");
+		// 필드 수정 검증
+		if (!request.hasAnyFiled()) {
+			throw new InvalidParameterException("수정할 필드가 지정되지 않았습니다.");
 		}
 
+		// 요청 충돌 검증
+		request.validateRequest();
+
 		// 이슈 존재 확인 + 해당 issue의 state, writerId 가져오기
-		IssueDto.IssueStateAndWriterIdRow stateAndWriterIdRow = issueRepository.findIssueStateAndWriterIdByIssueId(
-			issueId);
+		IssueDto.IssueStateAndWriterIdRow stateAndWriterIdRow =
+			issueRepository.findIssueStateAndWriterIdByIssueId(issueId);
 
 		// 작성자가 로그인된 사용자인지 확인
 		if (stateAndWriterIdRow.writerId() != userId) {
@@ -246,19 +248,54 @@ public class IssueService {
 
 		// 기존 상태가 CLOSED인 경우 제목, 내용 수정 불가
 		if (stateAndWriterIdRow.state() == IssueState.CLOSED) {
-			if (request.isUpdatingTitle()) {
-				throw new ClosedIssueModificationException("제목");
+			if (request.isUpdatingTitle() || request.isUpdatingContent()) {
+				throw new ClosedIssueModificationException("제목, 내용");
 			}
-			if (request.isUpdatingContent()) {
-				throw new ClosedIssueModificationException("내용");
+		}
+
+		// 마일스톤 검증
+		if (request.isUpdatingMilestone() && request.getMilestoneId() != null) {
+			if (!milestoneRepository.existsMilestone(request.getMilestoneId())) {
+				throw new MilestoneNotFoundException("존재하지 않는 마일스톤: " + request.getMilestoneId());
 			}
 		}
 
 		LocalDateTime now = LocalDateTime.now();
-		IssueUpdateCommand command = issueUpdateCommandFactory.getCommand(request);
-		command.execute(issueUpdateCommandFactory, issueId, request, now);
 
-		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findCreatedIssueById(issueId);
+		IssueDto.UpdateQueryParams queryParams = IssueDto.UpdateQueryParams.from(request);
+
+		// 업데이트 실행
+		issueRepository.updateIssue(issueId, queryParams, now);
+
+		if (request.isUpdatingLabels()) {
+			issueRepository.removeLabelsFromIssue(issueId);
+			List<Integer> labelIds = request.labelIds();
+			if (!labelIds.isEmpty()) {
+				List<Integer> validLabelIds = labelRepository.findValidLabelIds(labelIds);
+				if (!validLabelIds.isEmpty()) {
+					issueRepository.addLabelsToIssue(issueId, validLabelIds);
+				}
+				if (validLabelIds.size() != labelIds.size()) {
+					log.warn("일부 유효하지 않은 레이블 ID 제외: issueId={}", issueId);
+				}
+			}
+		}
+
+		if (request.isUpdatingAssignees()) {
+			issueRepository.removeAssigneesFromIssue(issueId);
+			List<Integer> assigneeIds = request.assigneeIds();
+			if (!assigneeIds.isEmpty()) {
+				List<Integer> validAssigneeIds = userRepository.findValidUserIds(assigneeIds);
+				if (!validAssigneeIds.isEmpty()) {
+					issueRepository.addAssigneesToIssue(issueId, validAssigneeIds);
+				}
+				if (validAssigneeIds.size() != assigneeIds.size()) {
+					log.warn("일부 유효하지 않은 담당자 ID 제외: issueId={}", issueId);
+				}
+			}
+		}
+
+		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findIssueById(issueId);
 		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
 		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); // 댓글 구현 시

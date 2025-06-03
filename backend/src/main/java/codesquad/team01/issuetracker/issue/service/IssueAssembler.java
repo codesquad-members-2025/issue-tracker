@@ -81,6 +81,7 @@ public class IssueAssembler {
 	) {
 		log.debug("단일 이슈 상세 정보 조합: issueId={}", issue.issueId());
 
+		// 아래의 toCreateResponse처럼 메서드로 처리할지? - 추후 고민
 		List<LabelDto.IssueDetailLabelResponse> labels = labelRows.stream()
 			.map(row -> LabelDto.IssueDetailLabelResponse.builder()
 				.id(row.id())

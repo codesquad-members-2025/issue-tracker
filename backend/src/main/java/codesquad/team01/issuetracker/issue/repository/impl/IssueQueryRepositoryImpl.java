@@ -21,12 +21,12 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
-import codesquad.team01.issuetracker.issue.constants.IssueConstants;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.exception.IssueCreationException;
 import codesquad.team01.issuetracker.issue.exception.IssueNotFoundException;
 import codesquad.team01.issuetracker.issue.exception.IssueUpdateException;
+import codesquad.team01.issuetracker.issue.repository.IssueQueryBuilder;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,33 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
-
-	private static final String BASE_ISSUE_QUERY = """
-		SELECT
-		    i.id as issue_id,
-		    i.title as issue_title,
-		    i.state as issue_state,
-		    i.created_at as issue_created_at,
-		    i.updated_at as issue_updated_at,
-		    u.id as writer_id,
-		    u.username as writer_username,
-		    u.profile_image_url as writer_profile_image_url,
-		    m.id as milestone_id,
-		    m.title as milestone_title
-		FROM issue i
-		JOIN users u ON i.writer_id = u.id
-		LEFT JOIN milestone m ON i.milestone_id = m.id
-		WHERE i.deleted_at IS NULL
-		    AND i.state = :state 
-		""";
-
-	private static final String BASE_COUNT_ISSUES_QUERY = """
-		SELECT 
-			i.state,
-			COUNT(*) as count
-		FROM issue i
-		WHERE i.deleted_at IS NULL 
-		""";
+	private final IssueQueryBuilder queryBuilder;
 
 	private static final String UPDATE_ISSUE_STATES_BATCH_QUERY = """
 		UPDATE issue
@@ -129,32 +103,6 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 
 	private static final String DELETE_ISSUE_ASSIGNEES_QUERY = """
 		DELETE FROM issue_assignee WHERE issue_id = :issueId
-		""";
-
-	private static final String UPDATE_ISSUE_TITLE_QUERY = """
-		UPDATE issue
-		SET title = :title, updated_at = :now
-		WHERE id = :issueId AND deleted_at IS NULL
-		""";
-	private static final String UPDATE_ISSUE_CONTENT_QUERY = """
-				UPDATE issue
-				SET content = :content, updated_at = :now
-				WHERE id = :issueId AND deleted_at IS NULL
-		""";
-	private static final String UPDATE_ISSUE_MILESTONE_QUERY = """
-				UPDATE issue
-				SET milestone_id = :milestoneId, updated_at = :now
-				WHERE id = :issueId AND deleted_at IS NULL
-		""";
-	private static final String UPDATE_ISSUE_STATE_QUERY = """
-				UPDATE issue
-				SET state = :state,
-					closed_at = CASE
-						WHEN :state = 'CLOSED' THEN :now
-						ELSE NULL
-					END,
-					updated_at = :now
-				WHERE id = :issueId AND deleted_at IS NULL
 		""";
 
 	private static final String FIND_ISSUE_STATE_AND_WRITER_ID_QUERY = """
@@ -233,49 +181,22 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			.build();
 
 	@Override
-	public List<IssueDto.BaseRow> findIssuesWithFilters(
-		IssueState state, Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds, CursorDto.CursorData cursor) {
+	public List<IssueDto.BaseRow> findIssuesWithFilters(IssueDto.ListQueryParams queryParams,
+		CursorDto.CursorData cursor) {
+		IssueQueryBuilder.IssueListQueryInfo queryInfo =
+			queryBuilder.buildListQuery(queryParams, cursor);
 
-		StringBuilder sql = new StringBuilder(BASE_ISSUE_QUERY);
-		MapSqlParameterSource params = new MapSqlParameterSource();
-
-		// state
-		params.addValue("state", state.name());
-
-		appendFilterConditions(sql, params, writerId, milestoneId, labelIds, assigneeIds);
-
-		// 무한스크롤 커서
-		if (cursor != null) {
-			sql.append("""
-				AND (i.created_at < :cursorCreatedAt 
-				     OR (i.created_at = :cursorCreatedAt AND i.id < :cursorId))
-				""");
-			params.addValue("cursorCreatedAt", cursor.getCreatedAt());
-			params.addValue("cursorId", cursor.getId());
-		}
-
-		// 정렬: 생성일자 내림차순 (최신순)
-		sql.append(" ORDER BY i.created_at DESC, i.id DESC");
-
-		sql.append(" LIMIT :pageSize");
-		params.addValue("pageSize", IssueConstants.PAGE_SIZE + 1); // 다음 페이지 존재 여부 확인을 위해 +1
-
-		return jdbcTemplate.query(sql.toString(), params, issueRowMapper);
+		return jdbcTemplate.query(queryInfo.query(), queryInfo.params(), issueRowMapper);
 	}
 
 	@Override
-	public IssueDto.CountResponse countIssuesWithFilters(Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds) {
+	public IssueDto.CountResponse countIssuesWithFilters(IssueDto.CountQueryParams queryParams) {
 
-		StringBuilder sql = new StringBuilder(BASE_COUNT_ISSUES_QUERY);
-		MapSqlParameterSource params = new MapSqlParameterSource();
+		IssueQueryBuilder.IssueCountQueryInfo queryInfo =
+			queryBuilder.buildCountQuery(queryParams);
 
-		appendFilterConditions(sql, params, writerId, milestoneId, labelIds, assigneeIds);
-
-		sql.append(" GROUP BY i.state");
-
-		List<IssueDto.StateCountRow> results = jdbcTemplate.query(sql.toString(), params, stateCountRowMapper);
+		List<IssueDto.StateCountRow> results = jdbcTemplate.query(
+			queryInfo.query(), queryInfo.params(), stateCountRowMapper);
 
 		Map<IssueState, Integer> countByState = results.stream()
 			.collect(Collectors.toMap(
@@ -347,7 +268,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 	}
 
 	@Override
-	public IssueDto.DetailBaseRow findCreatedIssueById(Integer issueId) {
+	public IssueDto.DetailBaseRow findIssueById(Integer issueId) {
 		MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
 
 		try {
@@ -457,58 +378,6 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 	}
 
 	@Override
-	public void updateIssueTitle(Integer issueId, String title, LocalDateTime now) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("issueId", issueId);
-		params.addValue("title", title);
-		params.addValue("now", now);
-
-		int updatedRows = jdbcTemplate.update(UPDATE_ISSUE_TITLE_QUERY, params);
-		if (updatedRows == 0) {
-			throw new IssueNotFoundException("조회할 수 없거나 삭제된 이슈: " + issueId);
-		}
-	}
-
-	@Override
-	public void updateIssueContent(Integer issueId, String content, LocalDateTime now) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("issueId", issueId);
-		params.addValue("content", content);
-		params.addValue("now", now);
-
-		int updatedRows = jdbcTemplate.update(UPDATE_ISSUE_CONTENT_QUERY, params);
-		if (updatedRows == 0) {
-			throw new IssueNotFoundException("조회할 수 없거나 삭제된 이슈: " + issueId);
-		}
-	}
-
-	@Override
-	public void updateIssueMilestone(Integer issueId, Integer milestoneId, LocalDateTime now) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("issueId", issueId);
-		params.addValue("milestoneId", milestoneId);
-		params.addValue("now", now);
-
-		int updatedRows = jdbcTemplate.update(UPDATE_ISSUE_MILESTONE_QUERY, params);
-		if (updatedRows == 0) {
-			throw new IssueNotFoundException("조회할 수 없거나 삭제된 이슈: " + issueId);
-		}
-	}
-
-	@Override
-	public void updateIssueState(Integer issueId, IssueState targetState, LocalDateTime now) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("issueId", issueId);
-		params.addValue("state", targetState.name());
-		params.addValue("now", now);
-
-		int updatedRows = jdbcTemplate.update(UPDATE_ISSUE_STATE_QUERY, params);
-		if (updatedRows == 0) {
-			throw new IssueNotFoundException("조회할 수 없거나 삭제된 이슈: " + issueId);
-		}
-	}
-
-	@Override
 	public IssueDto.IssueStateAndWriterIdRow findIssueStateAndWriterIdByIssueId(Integer issueId) {
 		MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
 
@@ -523,44 +392,21 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		}
 	}
 
-	private void appendFilterConditions(StringBuilder sql, MapSqlParameterSource params,
-		Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds) {
+	@Override
+	public void updateIssue(Integer issueId, IssueDto.UpdateQueryParams queryParams, LocalDateTime now) {
+		IssueQueryBuilder.IssueUpdateInfo updateInfo = queryBuilder.buildUpdateInfo(issueId, queryParams, now);
 
-		// 작성자
-		if (writerId != null) {
-			sql.append(" AND i.writer_id = :writerId");
-			params.addValue("writerId", writerId);
-		}
-
-		// 마일스톤
-		if (milestoneId != null) {
-			sql.append(" AND i.milestone_id = :milestoneId");
-			params.addValue("milestoneId", milestoneId);
-		}
-
-		// 레이블
-		if (labelIds != null && !labelIds.isEmpty()) {
-			for (int i = 0; i < labelIds.size(); i++) {
-				sql.append("""
-					AND EXISTS (
-					   SELECT 1 FROM issue_label il2 
-					   WHERE il2.issue_id = i.id 
-					   AND il2.label_id = :labelId""").append(i).append(")\n");
-				params.addValue("labelId" + i, labelIds.get(i));
+		try {
+			if (updateInfo.baseQuery() != null) {
+				int updatedRows = jdbcTemplate.update(updateInfo.baseQuery(), updateInfo.params());
+				if (updatedRows == 0) {
+					throw new IssueNotFoundException("이슈를 찾을 수 없거나 삭제된 이슈: " + issueId);
+				}
+				log.info("이슈 기본 필드 업데이트 완료: issueId={}", issueId);
 			}
-		}
-
-		// 담당자
-		if (assigneeIds != null && !assigneeIds.isEmpty()) {
-			for (int i = 0; i < assigneeIds.size(); i++) {
-				sql.append("""
-					AND EXISTS (
-					   SELECT 1 FROM issue_assignee ia2 
-					   WHERE ia2.issue_id = i.id 
-					   AND ia2.user_id = :assigneeId""").append(i).append(")\n");
-				params.addValue("assigneeId" + i, assigneeIds.get(i));
-			}
+		} catch (DataAccessException e) {
+			log.error("이슈 수정 중 데이터베이스 오류 발생: issueId={}, error={}", issueId, e.getMessage());
+			throw new IssueUpdateException("이슈 수정 중 오류 발생", e);
 		}
 	}
 	

@@ -3,21 +3,15 @@ package codesquad.team01.issuetracker.issue.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
 import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 
-@Repository
 public interface IssueQueryRepository {
 
-	List<IssueDto.BaseRow> findIssuesWithFilters(
-		IssueState state, Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds, CursorDto.CursorData cursor);
+	List<IssueDto.BaseRow> findIssuesWithFilters(IssueDto.ListQueryParams queryParams, CursorDto.CursorData cursor);
 
-	IssueDto.CountResponse countIssuesWithFilters(Integer writerId, Integer milestoneId,
-		List<Integer> labelIds, List<Integer> assigneeIds);
+	IssueDto.CountResponse countIssuesWithFilters(IssueDto.CountQueryParams queryParams);
 
 	int batchUpdateIssueStates(List<Integer> issueIds, IssueState action, LocalDateTime now);
 
@@ -25,7 +19,7 @@ public interface IssueQueryRepository {
 
 	Integer createIssue(String title, String content, Integer writerId, Integer milestoneId, LocalDateTime now);
 
-	IssueDto.DetailBaseRow findCreatedIssueById(Integer issueId);
+	IssueDto.DetailBaseRow findIssueById(Integer issueId);
 
 	void addLabelsToIssue(Integer issueId, List<Integer> labelIds);
 
@@ -35,13 +29,7 @@ public interface IssueQueryRepository {
 
 	void removeAssigneesFromIssue(Integer issueId);
 
-	void updateIssueTitle(Integer issueId, String title, LocalDateTime now);
-
-	void updateIssueContent(Integer issueId, String content, LocalDateTime now);
-
-	void updateIssueMilestone(Integer issueId, Integer integer, LocalDateTime now);
-
-	void updateIssueState(Integer issueId, IssueState targetState, LocalDateTime now);
+	void updateIssue(Integer issueId, IssueDto.UpdateQueryParams queryParams, LocalDateTime now);
 
 	IssueDto.IssueStateAndWriterIdRow findIssueStateAndWriterIdByIssueId(Integer issueId);
 }
