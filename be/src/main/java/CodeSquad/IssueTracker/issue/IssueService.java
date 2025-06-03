@@ -18,6 +18,7 @@ import CodeSquad.IssueTracker.user.UserService;
 import CodeSquad.IssueTracker.util.Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -154,6 +155,14 @@ public class IssueService {
 
     public void updateIssueOpenState(IssueStatusUpdateRequest condition) {
         issueRepository.updateIsOpen(condition);
+    }
+
+    @Transactional
+    public void deleteIssue(Long issueId) {
+        commentService.deleteAllByIssueId(issueId);
+        issueAssigneeService.unassignAssignee(issueId);
+        issueLabelService.unassignLabel(issueId);
+        issueRepository.deleteById(issueId);
     }
 }
 

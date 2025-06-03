@@ -169,6 +169,13 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         template.update(sql, params);
     }
 
+    @Override
+    public void deleteById(Long issueId) {
+        String sql = "DELETE FROM issues WHERE issue_id = :issueId";
+        Map<String, Object> param = Map.of("issueId", issueId);
+        template.update(sql, param);
+    }
+
     private RowMapper<Issue> issueRowMapper() {
         return BeanPropertyRowMapper.newInstance(Issue.class);
     }
