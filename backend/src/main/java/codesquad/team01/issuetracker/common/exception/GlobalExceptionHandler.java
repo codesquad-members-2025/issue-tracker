@@ -2,6 +2,7 @@ package codesquad.team01.issuetracker.common.exception;
 
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import codesquad.team01.issuetracker.common.dto.ApiResponse;
+import codesquad.team01.issuetracker.issue.exception.IssueCreationException;
+import codesquad.team01.issuetracker.issue.exception.IssueNotFoundException;
+import codesquad.team01.issuetracker.milestone.exception.MilestoneNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -50,12 +54,6 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error("레이블 이름 '" + labelName + "'은(는) 이미 존재합니다."));
 	}
 
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ApiResponse<?>> handleExceptions(Exception e) {
-		log.error("Unhandled exception", e);
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("서버 내부 오류가 발생했습니다."));
-	}
-
 	//아이디가 존재하지 않는 경우
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<ApiResponse<?>> handleUserNotFound(UserNotFoundException e) {
@@ -69,4 +67,46 @@ public class GlobalExceptionHandler {
 		log.info("InvalidPasswordException : {}", e.getMessage());
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("비밀번호가 일치하지 않습니다"));
 	}
+
+	// 이슈 생성 실패 에러
+	@ExceptionHandler(IssueCreationException.class)
+	public ResponseEntity<ApiResponse<?>> handleIssueCreationException(IssueCreationException e) {
+		log.error("IssueCreationException: {}", e.getMessage());
+		return ResponseEntity
+			.status(HttpStatus.BAD_REQUEST)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
+	// 마일스톤 없음 에러
+	@ExceptionHandler(MilestoneNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleMilestoneNotFoundException(MilestoneNotFoundException e) {
+		log.error("MilestoneNotFoundException: {}", e.getMessage());
+		return ResponseEntity
+			.status(HttpStatus.NOT_FOUND)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
+	// 이슈 없음 에러
+	@ExceptionHandler(IssueNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleIssueNotFoundException(IssueNotFoundException e) {
+		log.error("IssueNotFoundException: {}", e.getMessage());
+		return ResponseEntity
+			.status(HttpStatus.NOT_FOUND)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
+	@ExceptionHandler(DataAccessException.class)
+	public ResponseEntity<ApiResponse<?>> handleDataAccessException(DataAccessException e) {
+		log.error("Database error occurred", e);
+		return ResponseEntity
+			.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			.body(ApiResponse.error("데이터베이스 오류가 발생했습니다."));
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ApiResponse<?>> handleExceptions(Exception e) {
+		log.error("Unhandled exception", e);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("서버 내부 오류가 발생했습니다."));
+	}
+
 }
