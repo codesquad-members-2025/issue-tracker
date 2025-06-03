@@ -26,8 +26,8 @@ const ButtonWrapper = styled.div`
 `;
 
 export default function MilestoneLabelHeader({ isLabel, isValid, addHandler }) {
-  const milestoneNumber = useFilterModalStore((s) => s.filterEntry.milestone).length;
-  const labelNumber = useFilterModalStore((s) => s.filterEntry.label).length;
+  const milestoneNumber = useFilterModalStore((s) => s.filterEntry.milestone)?.length;
+  const labelNumber = useFilterModalStore((s) => s.filterEntry.label)?.length;
   const buttonLabel = isLabel ? '레이블 추가' : '이슈작성';
   return (
     <Container>

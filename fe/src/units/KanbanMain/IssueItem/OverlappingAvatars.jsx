@@ -31,7 +31,7 @@ const OverflowBadge = styled.div`
 
 export default function OverlappingAvatars({ avatars, maxVisible = 3 }) {
   const visibleAvatars = avatars.slice(0, maxVisible);
-  const overflowCount = avatars.length - maxVisible;
+  const overflowCount = avatars?.length - maxVisible;
 
   return (
     <>

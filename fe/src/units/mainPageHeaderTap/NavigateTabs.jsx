@@ -27,8 +27,8 @@ const ButtonWrapper = styled.div`
 
 export function NavigateTabs() {
   const resetStore = useIssueDetailStore((s) => s.resetStore);
-  const milestoneNumber = useFilterModalStore((s) => s.filterEntry.milestone).length;
-  const labelNumber = useFilterModalStore((s) => s.filterEntry.label).length;
+  const milestoneNumber = useFilterModalStore((s) => s.filterEntry.milestone)?.length;
+  const labelNumber = useFilterModalStore((s) => s.filterEntry.label)?.length;
   const navigate = useNavigate();
   const buttonLabel = '이슈작성';
   return (

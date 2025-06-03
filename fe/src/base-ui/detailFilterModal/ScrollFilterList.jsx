@@ -155,7 +155,7 @@ export default function ScrollFilterList({ title, itemsArr }) {
         return (
           <React.Fragment key={item.id}>
             {getDropdownItem(title, item, selectedFilters, clickHandler)}
-            {idx !== arr.length - 1 && <Separator />}
+            {idx !== arr?.length - 1 && <Separator />}
           </React.Fragment>
         );
       })}

@@ -5,7 +5,7 @@ export const mockServer = {
     if (url.includes('/issues')) {
       const newIssue = {
         issue: {
-          issueId: mockData.issues.length + 1,
+          issueId: mockData.issues?.length + 1,
           title: data.title,
           content: data.content,
           authorId: 1, // 임시 authorId
