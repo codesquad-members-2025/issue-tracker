@@ -61,7 +61,7 @@ public class MilestoneController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	@DeleteMapping("/v1/labels/{id}")
+	@DeleteMapping("/v1/milestones/{id}")
 	public ResponseEntity<ApiResponse<Void>> deleteMilestone(@PathVariable("id") int id) {
 		milestoneService.deleteMilestone(id);
 		log.info("마일스톤 삭제 완료: id={}", id);

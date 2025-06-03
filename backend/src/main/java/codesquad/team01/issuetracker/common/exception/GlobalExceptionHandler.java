@@ -67,6 +67,14 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error("마일스톤 '" + id + "' 을(를) 찾을 수 없습니다."));
 	}
 
+	@ExceptionHandler(DuplicateMilestoneTitleException.class)
+	public ResponseEntity<ApiResponse<?>> handleDuplicateMilestone(DuplicateMilestoneTitleException e) {
+		String title = e.getMilestoneTitle();
+		return ResponseEntity
+			.badRequest().
+			body(ApiResponse.error("마일스톤 이름 '" + title + "'은(는) 이미 존재합니다."));
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<?>> handleExceptions(Exception e) {
 		log.error("Unhandled exception", e);
