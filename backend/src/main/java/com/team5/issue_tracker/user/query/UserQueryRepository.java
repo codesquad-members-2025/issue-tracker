@@ -79,7 +79,7 @@ public class UserQueryRepository {
     }
 
     String authorSql = """
-        SELECT DISTINCT 
+        SELECT
             i.id AS issue_id,
             u.id AS user_id, 
             u.username AS user_username
@@ -142,6 +142,6 @@ public class UserQueryRepository {
     MapSqlParameterSource params = new MapSqlParameterSource("username", username);
     List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);
 
-    return result.isEmpty() ? null : result.get(0);
+    return result.isEmpty() ? -1L : result.get(0);
   }
 }

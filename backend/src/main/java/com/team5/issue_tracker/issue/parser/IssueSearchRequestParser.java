@@ -66,10 +66,8 @@ public class IssueSearchRequestParser {
       String key = entry.getKey();
       String value = entry.getValue();
 
-      QueryKey.from(key).ifPresentOrElse(
-          qk -> qk.apply(value, issueSearchRequest),
-          () -> {
-          }
+      QueryKey.from(key).ifPresent(
+          qk -> qk.apply(value, issueSearchRequest)
       );
     }
     log.debug("assigneeName: {}, labelNames: {}, milestoneName: {}, authorName: {}",
@@ -96,6 +94,11 @@ public class IssueSearchRequestParser {
     }
     String key = pair[0].trim();
     String value = pair[1].trim();
+
+    if (value.length() >= 2 && value.startsWith("\"") && value.endsWith("\"")) {
+      value = value.substring(1, value.length() - 1).trim(); // 따옴표 안쪽 공백도 제거
+    }
+
     if (value.isEmpty()) {
       return Optional.empty(); // value가 비어있으면 무시
     }

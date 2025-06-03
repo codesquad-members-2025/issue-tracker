@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter // TODO: Setter 를 나중에 빌더 패턴으로 변경할 것
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class IssueSearchRequest {

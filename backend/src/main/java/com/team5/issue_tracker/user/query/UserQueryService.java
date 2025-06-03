@@ -21,7 +21,7 @@ public class UserQueryService {
     log.debug("유저 스크롤 조회 요청");
     List<UserSummaryResponse> usersPlusOne = userQueryRepository.getScrolledUsers(cursor, limit);
 
-    Boolean hasNext = usersPlusOne.size() > limit;
+    boolean hasNext = usersPlusOne.size() > limit;
     List<UserSummaryResponse> users = hasNext ? usersPlusOne.subList(0, limit) : usersPlusOne;
     String nextCursor = hasNext ? users.getLast().getUsername() : null;
 

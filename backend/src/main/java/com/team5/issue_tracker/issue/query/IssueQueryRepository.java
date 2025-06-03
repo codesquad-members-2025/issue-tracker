@@ -1,5 +1,6 @@
 package com.team5.issue_tracker.issue.query;
 
+import com.team5.issue_tracker.issue.domain.Issue;
 import com.team5.issue_tracker.issue.dto.FilterSql;
 import com.team5.issue_tracker.issue.dto.IssueQueryDto;
 import com.team5.issue_tracker.issue.dto.IssueSearchCondition;
@@ -168,10 +169,27 @@ public class IssueQueryRepository {
       params.addValue("authorId", searchCondition.getAuthorId());
     }
 
-    String where = "";
+    StringBuilder sql = new StringBuilder();
     for (String clause : whereClauses) {
-      where += " AND " + clause;
+      sql.append(" AND ").append(clause);
     }
-    return new FilterSql(where, params);
+    return new FilterSql(sql.toString(), params);
+  }
+
+  public List<Issue> findAllByIds(Collection<Long> issueIds) {
+    String sql = "SELECT id, title, milestone_id, is_open, user_id, created_at, updated_at " +
+        "FROM issue WHERE id IN (:issueIds)";
+
+    MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
+
+    return jdbcTemplate.query(sql, params, (rs, rowNum) -> new Issue(
+        rs.getLong("id"),
+        rs.getString("title"),
+        rs.getLong("milestone_id"),
+        rs.getBoolean("is_open"),
+        rs.getLong("user_id"),
+        rs.getTimestamp("created_at").toInstant(),
+        rs.getTimestamp("updated_at").toInstant()
+    ));
   }
 }

@@ -1,5 +1,6 @@
 package com.team5.issue_tracker.milestone.query;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,7 @@ public class MilestoneQueryRepository {
             SUM(CASE WHEN is_open = true THEN 1 ELSE 0 END) AS open_count,
             SUM(CASE WHEN is_open = false THEN 1 ELSE 0 END) AS closed_count
           FROM issue
+          WHERE milestone_id = :milestoneId
           GROUP BY milestone_id
         )
         SELECT
@@ -61,7 +63,7 @@ public class MilestoneQueryRepository {
             ELSE ROUND((ic.closed_count) * 100.0 / ic.total)
           END AS progress
         FROM milestone m
-        INNER JOIN issue_counts ic ON m.id = ic.milestone_id
+        LEFT JOIN issue_counts ic ON m.id = ic.milestone_id
         WHERE m.id = :milestoneId
         LIMIT 1
         """;
@@ -73,7 +75,7 @@ public class MilestoneQueryRepository {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getString("description"),
-            rs.getDate("deadline") != null ? rs.getDate("deadline").toLocalDate() : null,
+            rs.getObject("deadline", LocalDate.class),
             rs.getBoolean("is_open"),
             rs.getLong("open_issue_count"),
             rs.getLong("closed_issue_count"),
@@ -86,20 +88,27 @@ public class MilestoneQueryRepository {
 
   public List<MilestoneResponse> findMilestones(Integer page, Integer perPage) {
     String sql = """
-          WITH issue_counts AS (
+          WITH paged_milestones AS (
+            SELECT id, name, description, deadline, is_open
+            FROM milestone
+            ORDER BY name
+            LIMIT :limit OFFSET :offset
+          ),
+          issue_counts AS (
             SELECT
               milestone_id,
               COUNT(id) AS total,
               SUM(CASE WHEN is_open = true THEN 1 ELSE 0 END) AS open_count,
               SUM(CASE WHEN is_open = false THEN 1 ELSE 0 END) AS closed_count
             FROM issue
+            WHERE milestone_id IN (SELECT id FROM paged_milestones)
             GROUP BY milestone_id
           )
           SELECT
             m.id,
             m.name,
             m.description,
-            m.deadline,
+            m.deadline, 
             m.is_open,
             COALESCE(ic.open_count, 0) AS open_issue_count,
             COALESCE(ic.closed_count, 0) AS closed_issue_count,
@@ -107,10 +116,9 @@ public class MilestoneQueryRepository {
               WHEN COALESCE(ic.total, 0) = 0 THEN 0
               ELSE ROUND((ic.closed_count) * 100.0 / ic.total)
             END AS progress
-          FROM milestone m
+          FROM paged_milestones m
           LEFT JOIN issue_counts ic ON m.id = ic.milestone_id
-          ORDER BY m.id
-          LIMIT :limit OFFSET :offset;
+          ORDER BY m.name
         """;
     MapSqlParameterSource params = new MapSqlParameterSource();
 
@@ -174,13 +182,15 @@ public class MilestoneQueryRepository {
   }
 
   public Long getMilestoneIdByName(String milestoneName) {
-    if (milestoneName == null) {
-      return null;
-    }
     String sql = "SELECT id FROM milestone WHERE name = :milestoneName";
     MapSqlParameterSource params = new MapSqlParameterSource("milestoneName", milestoneName);
     List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);
 
-    return result.isEmpty() ? null : result.get(0);
+    return result.isEmpty() ? -1L : result.get(0);
+  }
+
+  public Long getMilestoneCount() {
+    String sql = "SELECT COUNT(id) FROM milestone";
+    return jdbcTemplate.queryForObject(sql, Collections.emptyMap(), Long.class);
   }
 }

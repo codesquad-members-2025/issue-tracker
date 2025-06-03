@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.team5.issue_tracker.common.comment.dto.CommentRequest;
-import com.team5.issue_tracker.common.comment.service.CommentService;
+import com.team5.issue_tracker.comment.dto.CommentRequest;
+import com.team5.issue_tracker.comment.service.CommentService;
 import com.team5.issue_tracker.common.dto.ApiResponse;
 import com.team5.issue_tracker.issue.dto.request.IssueDeleteRequest;
 import com.team5.issue_tracker.issue.dto.request.IssueSearchRequest;
 import com.team5.issue_tracker.issue.dto.request.IssueCreateRequest;
+import com.team5.issue_tracker.issue.dto.request.UpdateBulkIssueStatusRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueAssigneesRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueLabelsRequest;
 import com.team5.issue_tracker.issue.dto.request.UpdateIssueMilestoneRequest;
@@ -165,6 +166,14 @@ public class IssueController {
       @Valid @RequestBody UpdateIssueAssigneesRequest request
   ) {
     issueService.updateIssueAssignees(issueId, request);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/bulk-status")
+  public ResponseEntity<Void> updateBulkIssueStatus(
+      @Valid @RequestBody UpdateBulkIssueStatusRequest request
+  ){
+    issueService.updateBulkIssuesStatus(request);
     return ResponseEntity.noContent().build();
   }
 }

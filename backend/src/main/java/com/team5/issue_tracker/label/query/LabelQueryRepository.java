@@ -119,11 +119,15 @@ public class LabelQueryRepository {
   }
 
   public List<Long> getLabelIdsByNames(Collection<String> issueNames) {
-    if (issueNames.isEmpty()) {
-      return List.of();
-    }
     String sql = "SELECT id FROM label WHERE name IN (:issueNames)";
     MapSqlParameterSource params = new MapSqlParameterSource("issueNames", issueNames);
-    return jdbcTemplate.queryForList(sql, params, Long.class);
+    List<Long> result = jdbcTemplate.queryForList(sql, params, Long.class);
+
+    return result.isEmpty() ? List.of(-1L) : result;
+  }
+
+  public Long getLabelCount() {
+    String sql = "SELECT COUNT(id) FROM label";
+    return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
   }
 }

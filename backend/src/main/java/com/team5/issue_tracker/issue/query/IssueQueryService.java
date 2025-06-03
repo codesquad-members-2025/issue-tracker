@@ -5,12 +5,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.team5.issue_tracker.common.comment.query.CommentQueryRepository;
+import com.team5.issue_tracker.comment.query.CommentQueryRepository;
 import com.team5.issue_tracker.issue.dto.IssueQueryDto;
 import com.team5.issue_tracker.issue.dto.IssueSearchCondition;
 import com.team5.issue_tracker.issue.dto.request.IssueSearchRequest;
 import com.team5.issue_tracker.issue.dto.response.IssueBaseResponse;
-import com.team5.issue_tracker.common.comment.dto.CommentResponse;
+import com.team5.issue_tracker.comment.dto.CommentResponse;
 import com.team5.issue_tracker.issue.dto.response.IssueCountResponse;
 import com.team5.issue_tracker.issue.dto.response.IssueDetailResponse;
 import com.team5.issue_tracker.issue.dto.response.IssuePageResponse;
@@ -84,12 +84,17 @@ public class IssueQueryService {
 
   private IssueSearchCondition getCondition(IssueSearchRequest searchRequest) {
     Long assigneeId =
-        userQueryRepository.getUserIdByUsername(searchRequest.getAssigneeName());
-    List<Long> labelIds = labelQueryRepository.getLabelIdsByNames(searchRequest.getLabelNames());
+        searchRequest.getAssigneeName() == null ? null :
+            userQueryRepository.getUserIdByUsername(searchRequest.getAssigneeName());
+    List<Long> labelIds =
+        searchRequest.getLabelNames().isEmpty() ? List.of() :
+            labelQueryRepository.getLabelIdsByNames(searchRequest.getLabelNames());
     Long milestoneId =
-        milestoneQueryRepository.getMilestoneIdByName(searchRequest.getMilestoneName());
+        searchRequest.getMilestoneName() == null ? null :
+            milestoneQueryRepository.getMilestoneIdByName(searchRequest.getMilestoneName());
     Long authorId =
-        userQueryRepository.getUserIdByUsername(searchRequest.getAuthorName());
+        searchRequest.getAuthorName() == null ? null :
+            userQueryRepository.getUserIdByUsername(searchRequest.getAuthorName());
     log.info("assigneeId: {}, labelIds: {}, milestoneId: {}, authorId: {}",
         assigneeId, labelIds, milestoneId, authorId);
 
