@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "@components/header/Header";
+import LoginProviders from "@components/login/LoginProviders";
 
 export default function RootLayout({
   children,
@@ -10,8 +10,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body suppressHydrationWarning>
-        {/* <Header /> */}
-        {children}
+        <LoginProviders>
+          {/* <Header /> */}
+          {children}
+        </LoginProviders>
       </body>
     </html>
   );
