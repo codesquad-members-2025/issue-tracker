@@ -11,10 +11,12 @@ import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
 import CodeSquad.IssueTracker.issueLabel.IssueLabelRepository;
 import CodeSquad.IssueTracker.issueLabel.IssueLabelService;
 import CodeSquad.IssueTracker.issueLabel.dto.IssueLabelResponse;
+import CodeSquad.IssueTracker.issueLabel.dto.SummaryLabelDto;
 import CodeSquad.IssueTracker.milestone.MilestoneService;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.user.User;
 import CodeSquad.IssueTracker.user.UserService;
+import CodeSquad.IssueTracker.user.dto.SummaryUserDto;
 import CodeSquad.IssueTracker.util.Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -134,14 +137,19 @@ public class IssueService {
 
     public Iterable<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterCondition condition) {
         List<FilteredIssueDto> issues = issueRepository.findIssuesByFilter(page, condition);
+        List<Long> issueIds = issues.stream().map(FilteredIssueDto::getIssueId).toList();
+
+        Map<Long, List<SummaryUserDto>> assigneesMap = issueAssigneeRepository.findSummaryAssigneesByIssueIds(issueIds);
+        Map<Long, List<SummaryLabelDto>> labelsMap = issueLabelRepository.findSummaryLabelsByIssueIds(issueIds);
 
         for (FilteredIssueDto issue : issues) {
-            issue.setAssignees(issueAssigneeRepository.findSummaryAssigneeByIssueId(issue.getIssueId()));
-            issue.setLabels(issueLabelRepository.findSummaryLabelByIssueId(issue.getIssueId()));
+            issue.setAssignees(assigneesMap.getOrDefault(issue.getIssueId(), List.of()));
+            issue.setLabels(labelsMap.getOrDefault(issue.getIssueId(), List.of()));
         }
 
         return issues;
     }
+
 
     public int getIssueMaxPage(IssueFilterCondition condition) {
         int totalCount =  issueRepository.countFilteredIssuesByIsOpen(condition.getIsOpen(), condition);
