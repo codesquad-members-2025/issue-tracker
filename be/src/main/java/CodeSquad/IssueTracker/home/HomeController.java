@@ -15,8 +15,8 @@ public class HomeController {
     private final HomeService homeService;
     private final IssueService issueService;
 
-    @GetMapping("/")
-    public BaseResponseDto<HomeResponseDto> home(@RequestParam int page, @ModelAttribute IssueFilterCondition condition) {
+    @GetMapping("/home")
+    public BaseResponseDto<HomeResponseDto> home(@RequestParam(defaultValue = "1") int page, @ModelAttribute IssueFilterCondition condition) {
         return BaseResponseDto.success("이슈목록을 성공적으로 불러왔습니다.",
                 homeService.getHomeData(page, condition));
     }

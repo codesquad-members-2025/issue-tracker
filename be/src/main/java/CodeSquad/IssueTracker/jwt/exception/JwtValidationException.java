@@ -1,8 +1,11 @@
 package CodeSquad.IssueTracker.jwt.exception;
 
-public class JwtValidationException extends RuntimeException {
+import CodeSquad.IssueTracker.global.exception.message.Error;
+import CodeSquad.IssueTracker.global.exception.model.CustomException;
+
+public class JwtValidationException extends CustomException {
 
     public JwtValidationException(String message) {
-        super(message);
+        super(Error.CUSTOM_MESSAGE_EXCEPTION, message);
     }
 }

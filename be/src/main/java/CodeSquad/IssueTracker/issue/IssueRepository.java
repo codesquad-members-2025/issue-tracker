@@ -12,7 +12,7 @@ public interface IssueRepository {
 
     Issue save(Issue issue);
 
-    void update(Long issueId, IssueUpdateDto updateParam);
+    void update(Long issueId, IssueUpdateDto updateParam ,String issueFileUrl);
 
     Optional<Issue> findById(Long issueId);
 

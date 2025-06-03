@@ -3,12 +3,13 @@ package CodeSquad.IssueTracker.comment;
 import CodeSquad.IssueTracker.comment.dto.CommentRequestDto;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
 import CodeSquad.IssueTracker.comment.dto.CommentUpdateDto;
+import CodeSquad.IssueTracker.global.exception.NotFoundException;
 import CodeSquad.IssueTracker.global.exception.UserNotFoundException;
 import CodeSquad.IssueTracker.user.User;
 import CodeSquad.IssueTracker.user.UserRepository;
+import CodeSquad.IssueTracker.user.UserService;
 import CodeSquad.IssueTracker.util.Uploader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +22,7 @@ import java.util.Optional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final Uploader s3Uploader;
 
     public CommentResponseDto createComment(CommentRequestDto dto, List<MultipartFile> files,Long authorId) throws IOException {
@@ -48,11 +49,12 @@ public class CommentService {
     }
 
     public Comment findById(Long id) {
-        return commentRepository.findById(id).orElse(null);
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글항목입니다"));
     }
 
     public CommentResponseDto update(Long commentId, CommentUpdateDto dto,  List<MultipartFile> files,Long requesterId) throws IOException {
-        Comment comment = commentRepository.findById(commentId).get(); //To do 이중으로 null 체크를 해야할까?
+        Comment comment = findById(commentId);
 
         if(files != null && !files.isEmpty()){
             MultipartFile file = files.getFirst();
