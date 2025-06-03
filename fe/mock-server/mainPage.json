@@ -48,11 +48,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-05-21T18:13:27",
+      "lastModifiedAt": "2024-05-21T18:13:27",
       "issueFileUrl": "https://dummy.local/files/login-button-error.gif",
       "comments": [
         {
@@ -60,35 +60,35 @@
           "content": "이 문제는 곧 해결될 예정입니다. 현재 원인 파악 중입니다.-> 테스트 sss",
           "issueFileUrl": null,
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-05-30T03:40:41.884Z"
+          "lastModifiedAt": "2024-05-30T03:40:41.884Z"
         },
         {
           "commentId": 2,
           "content": "asdonClick 이벤트 핸들러가 제대로 등록되지 않은 것 같습니다. 코드 첨부합니다. ------> 이것도 테스트\n\n개행 테스트",
           "issueFileUrl": "https://dummy.local/files/code-snippet.png",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-30T03:40:45.039Z"
+          "lastModifiedAt": "2024-05-30T03:40:45.039Z"
         },
         {
           "commentId": 3,
           "content": "PR #123에서 수정되었습니다. 리뷰 부탁드립니다. -> 테스트 22ㅁㄴㅇ",
           "issueFileUrl": null,
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-05-30T04:12:47.030Z"
+          "lastModifiedAt": "2024-05-30T04:12:47.030Z"
         },
         {
           "commentId": 303,
           "content": "ddddddd",
           "issueFileUrl": null,
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-31T14:05:53.816Z"
+          "lastModifiedAt": "2024-05-31T14:05:53.816Z"
         },
         {
           "commentId": 304,
           "content": "aaaaaaasdsd",
           "issueFileUrl": null,
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-31T14:06:00.024Z"
+          "lastModifiedAt": "2024-05-31T14:06:00.024Z"
         }
       ]
     },
@@ -184,11 +184,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-05-20T14:30:00",
+      "lastModifiedAt": "2024-05-20T14:30:00",
       "issueFileUrl": null,
       "comments": [
         {
@@ -196,14 +196,14 @@
           "content": "이미지 최적화 작업을 진행했습니다.",
           "issueFileUrl": null,
           "authorNickname": "김철수",
-          "lastModifiedAt": "2025-05-20T15:45:00"
+          "lastModifiedAt": "2024-05-20T15:45:00"
         },
         {
           "commentId": 5,
           "content": "성능이 50% 개선되었습니다. 클로징하겠습니다.ㅏㅣㅓ--------->ㄴㄴㄴ",
           "issueFileUrl": "https://dummy.local/files/performance-improvement.png",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-31T10:47:00.387Z"
+          "lastModifiedAt": "2024-05-31T10:47:00.387Z"
         }
       ]
     },
@@ -245,11 +245,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-05-23T09:00:00",
+      "lastModifiedAt": "2024-05-23T09:00:00",
       "issueFileUrl": "https://dummy.local/files/feature-mockup.png",
       "comments": [
         {
@@ -257,7 +257,7 @@
           "content": "좋은 제안이네요. 기술적 검토를 진행해보겠습니다.",
           "issueFileUrl": null,
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-05-23T10:30:00"
+          "lastModifiedAt": "2024-05-23T10:30:00"
         }
       ]
     },
@@ -937,11 +937,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-06T16:40:00",
+      "lastModifiedAt": "2024-06-06T16:40:00",
       "issueFileUrl": "https://dummy.local/files/issue-template-mockup.png",
       "comments": [
         {
@@ -949,7 +949,7 @@
           "content": "템플릿 관리 UI 초안입니다.",
           "issueFileUrl": "https://dummy.local/files/template-ui-draft.png",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-06-06T17:30:00"
+          "lastModifiedAt": "2024-06-06T17:30:00"
         }
       ]
     },
@@ -985,7 +985,7 @@
         "processingRate": 0,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-07T09:10:00",
+      "lastModifiedAt": "2024-06-07T09:10:00",
       "issueFileUrl": "https://dummy.local/files/markdown-bug.gif",
       "comments": []
     },
@@ -1022,11 +1022,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-08T11:25:00",
+      "lastModifiedAt": "2024-06-08T11:25:00",
       "issueFileUrl": null,
       "comments": [
         {
@@ -1034,7 +1034,7 @@
           "content": "OpenAI API를 활용한 프로토타입을 만들어보겠습니다.",
           "issueFileUrl": null,
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-06-08T14:30:00"
+          "lastModifiedAt": "2024-06-08T14:30:00"
         }
       ]
     },
@@ -1112,11 +1112,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-10T15:20:00",
+      "lastModifiedAt": "2024-06-10T15:20:00",
       "issueFileUrl": "https://dummy.local/files/dashboard-mockup.png",
       "comments": [
         {
@@ -1124,7 +1124,7 @@
           "content": "Chart.js를 사용한 프로토타입입니다.",
           "issueFileUrl": "https://dummy.local/files/dashboard-prototype.png",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-06-10T16:45:00"
+          "lastModifiedAt": "2024-06-10T16:45:00"
         }
       ]
     },
@@ -1213,11 +1213,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-12T14:30:00",
+      "lastModifiedAt": "2024-06-12T14:30:00",
       "issueFileUrl": "http://localhost:8080/uploads/1748775328942-스크린샷 2025-05-03 오후 12.57.07.png",
       "comments": [
         {
@@ -1341,11 +1341,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-14T09:15:00",
+      "lastModifiedAt": "2024-06-14T09:15:00",
       "issueFileUrl": null,
       "comments": []
     },
@@ -1431,11 +1431,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-16T14:20:00",
+      "lastModifiedAt": "2024-06-15T19:59:00",
       "issueFileUrl": null,
       "comments": [
         {
@@ -1443,7 +1443,7 @@
           "content": "우선순위 계산 알고리즘 초안입니다.",
           "issueFileUrl": "https://dummy.local/files/priority-algorithm.md",
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-06-16T16:30:00"
+          "lastModifiedAt": "2024-06-15T20:00:00"
         }
       ]
     },
@@ -1475,11 +1475,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-17T09:40:00",
+      "lastModifiedAt": "2024-06-15T18:32:00",
       "issueFileUrl": "https://dummy.local/files/code-review-integration.png",
       "comments": []
     },
@@ -1516,11 +1516,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-18T11:25:00",
+      "lastModifiedAt": "2024-06-15T18:28:00",
       "issueFileUrl": null,
       "comments": [
         {
@@ -1528,7 +1528,7 @@
           "content": "머신러닝 모델을 활용한 예측 시스템을 구상 중입니다.",
           "issueFileUrl": null,
           "authorNickname": "이영희",
-          "lastModifiedAt": "2025-06-18T14:30:00"
+          "lastModifiedAt": "2024-06-15T14:14:00"
         }
       ]
     },
@@ -1569,7 +1569,7 @@
         "processingRate": 0,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-19T15:50:00",
+      "lastModifiedAt": "2025-06-15T17:50:00",
       "issueFileUrl": "https://dummy.local/files/test-case-management.png",
       "comments": [
         {
@@ -1577,7 +1577,7 @@
           "content": "Jest를 활용한 테스트 자동화 방안을 제안합니다.",
           "issueFileUrl": "https://dummy.local/files/test-automation.md",
           "authorNickname": "김철수",
-          "lastModifiedAt": "2025-06-19T16:45:00"
+          "lastModifiedAt": "2025-06-15T18:10:00"
         }
       ]
     },
@@ -1613,7 +1613,7 @@
         "processingRate": 30,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-20T10:15:00",
+      "lastModifiedAt": "2025-06-15T15:15:00",
       "issueFileUrl": "https://dummy.local/files/dependency-graph.png",
       "comments": [
         {
@@ -1621,7 +1621,7 @@
           "content": "D3.js를 활용한 의존성 그래프 구현 방안입니다.",
           "issueFileUrl": "https://dummy.local/files/d3-implementation.md",
           "authorNickname": "김철수",
-          "lastModifiedAt": "2025-06-20T11:30:00"
+          "lastModifiedAt": "2025-06-15T16:11:00"
         }
       ]
     },
@@ -1657,7 +1657,7 @@
         "processingRate": 30,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-21T13:40:00",
+      "lastModifiedAt": "2025-06-15T14:40:00",
       "issueFileUrl": null,
       "comments": [
         {
@@ -1721,11 +1721,11 @@
         "milestoneId": 3,
         "name": "v2.0",
         "description": "메이저 업데이트",
-        "endDate": "2025-12-31",
+        "endDate": "2024-12-31",
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-22T16:20:00",
+      "lastModifiedAt": "2024-06-15T13:20:00",
       "issueFileUrl": "https://dummy.local/files/board-customization.png",
       "comments": [
         {
@@ -1733,7 +1733,7 @@
           "content": "드래그 앤 드롭으로 컬럼을 재배치하는 기능을 구현했습니다.",
           "issueFileUrl": "https://dummy.local/files/column-dnd.gif",
           "authorNickname": "devchan",
-          "lastModifiedAt": "2025-06-22T17:45:00"
+          "lastModifiedAt": "2024-06-15T12:45:00"
         }
       ]
     },
@@ -1769,7 +1769,7 @@
         "processingRate": 30,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-23T09:30:00",
+      "lastModifiedAt": "2025-06-15T15:30:00",
       "issueFileUrl": null,
       "comments": []
     },
@@ -1810,7 +1810,7 @@
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-06-24T11:45:00",
+      "lastModifiedAt": "2025-06-15T17:45:00",
       "issueFileUrl": "https://dummy.local/files/custom-fields.png",
       "comments": [
         {
@@ -2117,7 +2117,7 @@
         "processingRate": 10,
         "isOpen": true
       },
-      "lastModifiedAt": "2025-07-01T14:20:00",
+      "lastModifiedAt": "2025-04-01T14:20:00",
       "issueFileUrl": "https://dummy.local/files/i18n-structure.png",
       "comments": [
         {
@@ -2125,7 +2125,7 @@
           "content": "react-i18next 설정과 번역 파일 구조를 정리했습니다.",
           "issueFileUrl": "https://dummy.local/files/i18n-setup.md",
           "authorNickname": "홍길동",
-          "lastModifiedAt": "2025-07-01T15:45:00"
+          "lastModifiedAt": "2024-07-01T15:45:00"
         }
       ]
     },
@@ -3013,7 +3013,7 @@
   "milestones": [
     {
       "milestoneId": 5,
-      "name": "ㅁ",
+      "name": "테스트",
       "description": "111",
       "endDate": "1111-11-11T00:00:00.000Z",
       "isOpen": false,
@@ -3024,7 +3024,7 @@
       "name": "테스트",
       "description": "1",
       "endDate": "2026-11-15T00:00:00.000Z",
-      "isOpen": true,
+      "isOpen": false,
       "processingRate": 0
     },
     {
