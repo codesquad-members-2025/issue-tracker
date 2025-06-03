@@ -34,8 +34,8 @@ public class GlobalExceptionHandler {
 	}
 
 	// 레이블 생성 시 이미 존재하는 레이블과 이름 중복
-	@ExceptionHandler(DuplicateLabelName.class)
-	public ResponseEntity<ApiResponse<?>> handleDuplicateLabel(DuplicateLabelName e) {
+	@ExceptionHandler(DuplicateLabelNameException.class)
+	public ResponseEntity<ApiResponse<?>> handleDuplicateLabel(DuplicateLabelNameException e) {
 		String labelName = e.getLabelName();
 		return ResponseEntity
 			.badRequest()
@@ -51,20 +51,44 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error("레이블 '" + id + "' 을(를) 찾을 수 없습니다."));
 	}
 
+	@ExceptionHandler(InvalidDateException.class)
+	public ResponseEntity<ApiResponse<?>> handleInvalidDate(InvalidDateException e) {
+		log.error("InvalidDateException: {}", e.getMessage());
+		return ResponseEntity
+			.badRequest()
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
+	@ExceptionHandler(MilestoneNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleMilestoneNotFound(MilestoneNotFoundException e) {
+		int id = e.getId();
+		return ResponseEntity
+			.badRequest()
+			.body(ApiResponse.error("마일스톤 '" + id + "' 을(를) 찾을 수 없습니다."));
+	}
+
+	@ExceptionHandler(DuplicateMilestoneTitleException.class)
+	public ResponseEntity<ApiResponse<?>> handleDuplicateMilestone(DuplicateMilestoneTitleException e) {
+		String title = e.getMilestoneTitle();
+		return ResponseEntity
+			.badRequest().
+			body(ApiResponse.error("마일스톤 이름 '" + title + "'은(는) 이미 존재합니다."));
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<?>> handleExceptions(Exception e) {
 		log.error("Unhandled exception", e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("서버 내부 오류가 발생했습니다."));
 	}
 
-	//아이디가 존재하지 않는 경우
+	// 아이디가 존재하지 않는 경우
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<ApiResponse<?>> handleUserNotFound(UserNotFoundException e) {
 		log.info("UserNotFoundException : {}", e.getMessage());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("존재하지 않는 ID 입니다"));
 	}
 
-	//패스워드가 틀린 경우
+	// 패스워드가 틀린 경우
 	@ExceptionHandler(InvalidPasswordException.class)
 	public ResponseEntity<ApiResponse<?>> handleInvalidPassword(InvalidPasswordException e) {
 		log.info("InvalidPasswordException : {}", e.getMessage());

@@ -5,6 +5,7 @@ import java.util.List;
 import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
+import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 
 public interface IssueQueryRepository {
 
@@ -14,4 +15,6 @@ public interface IssueQueryRepository {
 
 	IssueDto.CountResponse countIssuesWithFilters(Integer writerId, Integer milestoneId,
 		List<Integer> labelIds, List<Integer> assigneeIds);
+
+	List<MilestoneDto.MilestoneIssueCountRow> countByMilestoneIds(List<Integer> milestoneIds);
 }

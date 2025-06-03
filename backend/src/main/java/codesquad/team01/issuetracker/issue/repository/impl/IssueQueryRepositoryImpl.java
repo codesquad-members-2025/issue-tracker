@@ -14,6 +14,7 @@ import codesquad.team01.issuetracker.issue.constants.IssueConstants;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
+import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
+
+	private static final String FIND_SPECIFIC_MILESTONE_ISSUE_COUNT = """
+		SELECT
+			i.milestone_id											AS milestoneId,
+			SUM(CASE WHEN i.state = 'OPEN' THEN 1 ELSE 0 END)		AS openCount,
+			SUM(CASE WHEN i.state = 'CLOSED' THEN 1 ELSE 0 END)		AS closedCount
+		FROM issue i
+		WHERE i.milestone_id IN (:milestoneIds)
+		GROUP BY i.milestone_id
+		""";
 
 	private static final String BASE_ISSUE_QUERY = """
 		SELECT
@@ -68,6 +79,20 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		.milestoneId(rs.getInt("milestone_id"))
 		.milestoneTitle(rs.getString("milestone_title"))
 		.build();
+
+	public List<MilestoneDto.MilestoneIssueCountRow> countByMilestoneIds(List<Integer> milestoneIds) {
+		StringBuilder sql = new StringBuilder(FIND_SPECIFIC_MILESTONE_ISSUE_COUNT);
+		MapSqlParameterSource params = new MapSqlParameterSource("milestoneIds", milestoneIds);
+
+		return jdbcTemplate.query(sql.toString(), params, milestoneIssueCountRowMapper);
+	}
+
+	private final RowMapper<MilestoneDto.MilestoneIssueCountRow> milestoneIssueCountRowMapper =
+		(rs, rowNum) -> MilestoneDto.MilestoneIssueCountRow.builder()
+			.milestoneId(rs.getInt("milestoneId"))
+			.openCount(rs.getLong("openCount"))
+			.closedCount(rs.getLong("closedCount"))
+			.build();
 
 	@Override
 	public List<IssueDto.BaseRow> findIssuesWithFilters(
