@@ -14,26 +14,26 @@ public class IssueCountListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onCreated(IssueEvent.Created e) {
-        countDao.incrementIssueOpen();
+        countDao.increment(CountDao.ISSUE_OPEN);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onStatusChanged(IssueEvent.StatusChanged e) {
-        if (e.isOldIsOpen() && !e.isNewIsOpen()) {
-            countDao.decrementIssueOpen();
-            countDao.incrementIssueClosed();
-        } else if (!e.isOldIsOpen() && e.isNewIsOpen()) {
-            countDao.incrementIssueOpen();
-            countDao.decrementIssueClosed();
+        if (e.isClosing()) {
+            countDao.decrement(CountDao.ISSUE_OPEN);
+            countDao.increment(CountDao.ISSUE_CLOSED);
+        } else if (e.isOpening()) {
+            countDao.increment(CountDao.ISSUE_OPEN);
+            countDao.decrement(CountDao.ISSUE_CLOSED);
         }
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onDeleted(IssueEvent.Deleted e) {
         if (e.isWasOpen()) {
-            countDao.decrementIssueOpen();
+            countDao.decrement(CountDao.ISSUE_OPEN);
         } else {
-            countDao.decrementIssueClosed();
+            countDao.decrement(CountDao.ISSUE_CLOSED);
         }
     }
 

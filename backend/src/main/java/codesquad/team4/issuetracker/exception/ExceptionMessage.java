@@ -12,4 +12,12 @@ public class ExceptionMessage {
     public static final String NOT_FOUND_COMMENT = "댓글을 찾을 수 없습니다. commentId = ";
     public static final String INVALID_COMMENT_ACCESS = "댓글이 이슈에 속하지 않습니다.";
     public static final String INVALID_FILTERING_CONDITION = "authorId, assigneeId, commentAuthorId 중 하나만 사용할 수 있습니다.";
+    public static final String EMAIL_ALREADY_EXIST = "이미 존재하는 이메일입니다";
+    public static final String NICKNAME_ALREADY_EXIST = "이미 존재하는 닉네임입니다";
+    public static final String USER_BY_EMAIL_NOT_EXIST = "이메일이 일치하는 회원이 없습니다";
+    public static final String USER_PASSWORD_NOT_EQUAL = "비밀번호가 일치하지 않습니다";
+    public static final String INVALID_OAUTH_STATE = "잘못된 OAuth state 값입니다.";
+    public static final String NOT_FOUND_EMAIL = "이메일을 공개로 전환해주세요.";
+    public static final String INVALID_LOGINTYPE_GITHUB = "이메일로 로그인해 주세요.";
+    public static final String INVALID_LOGINTYPE_LOCAL = "깃허브로 로그인해 주세요.";
 }

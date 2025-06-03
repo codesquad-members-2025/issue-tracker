@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -51,7 +52,13 @@ public class MilestoneServiceTest {
         TestDataHelper.insertUser(jdbcTemplate, 1L, "user1");
         TestDataHelper.insertIssueAllParams(jdbcTemplate, 1L, "issue1", true, 1L, "1111", null, 1L);
         TestDataHelper.insertIssueAllParams(jdbcTemplate, 2L, "issue2", false, 1L, "2222", null, 1L);
-        TestDataHelper.insertSummaryCount(jdbcTemplate, 1, 1, 1, 1, 1,0, 0);
+        Map<String, Integer> summaryMap = Map.of(
+                "issue_open", 1,
+                "issue_closed", 1,
+                "milestone_open", 1,
+                "milestone_closed", 1
+        );
+        TestDataHelper.insertSummaryCount(jdbcTemplate, summaryMap);
     }
     @Test
     @DisplayName("마일스톤 필터링 정보 조회")
@@ -108,9 +115,12 @@ public class MilestoneServiceTest {
     @Test
     @DisplayName("마일스톤 수정 성공")
     void updateMilestone_success() {
-        MilestoneRequestDto.CreateMilestoneDto request = new MilestoneRequestDto.CreateMilestoneDto(
-            "week2-수정", "2222", LocalDate.of(2025, 7, 20)
-        );
+        MilestoneRequestDto.UpdateMilestoneDto request = MilestoneRequestDto.UpdateMilestoneDto.builder()
+                .name("week2-수정")
+                .description("2222")
+                .endDate(LocalDate.of(2025, 7, 20))
+                .isOpen(true)
+                .build();
 
         milestoneService.updateMilestone(1L, request);
 
@@ -122,9 +132,12 @@ public class MilestoneServiceTest {
     @Test
     @DisplayName("마일스톤 수정 실패 - 존재하지 않음")
     void updateMilestone_fail_notFound() {
-        MilestoneRequestDto.CreateMilestoneDto request = new MilestoneRequestDto.CreateMilestoneDto(
-            "week2-수정", "2222", LocalDate.of(2025, 7, 20)
-        );
+        MilestoneRequestDto.UpdateMilestoneDto request = MilestoneRequestDto.UpdateMilestoneDto.builder()
+                .name("week2-수정")
+                .description("2222")
+                .endDate(LocalDate.of(2025, 7, 20))
+                .isOpen(true)
+                .build();
 
         assertThatThrownBy(() -> milestoneService.updateMilestone(999L, request))
             .isInstanceOf(MilestoneNotFoundException.class);
