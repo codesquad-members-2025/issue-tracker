@@ -25,10 +25,11 @@ public class OAuthController {
     private final JwtProvider jwtProvider;
 
     @GetMapping("/login")
-    public ResponseEntity<OAuthResponseDto.OAuthLoginUrl> githubLogin(HttpSession session) {
+    public ResponseEntity<OAuthResponseDto.OAuthLoginUrl> githubLogin(HttpSession session, HttpServletResponse response) {
         //session에 state 저장
         String state = oAuthService.createGithubAuthorizeState();
         session.setAttribute("oauth_state", state);
+
         //Github 인증 URL 구성
         OAuthResponseDto.OAuthLoginUrl githubUrl = oAuthService.buildGithubAuthorizeUrl(state);
         return ResponseEntity.ok(githubUrl);
@@ -52,7 +53,7 @@ public class OAuthController {
 
     //state 인증 + session 만료
     private void validateState(String state, HttpSession session) {
-        String savedState = (String) session.getAttribute("oauth_sate");
+        String savedState = (String) session.getAttribute("oauth_state");
         if (!state.equals(savedState)) {
             throw new InvalidOAuthStateException();
         }
