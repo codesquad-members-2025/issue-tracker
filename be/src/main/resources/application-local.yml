@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul
+    username: JOHNNIE
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jwt:
+    access-key: 3Three-Squad-AccessKey-1234567890-abcdefg
+    refresh-key: 3Three-Squad-RefreshKey-1234567890-hijklmn
+
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      s3:
+        bucket: my-issue-image-bucket
+      credentials:
+        access-key: dummy
+        secret-key: dummy
+
+  github:
+    client-id: dummy
+    client-secret: dummy
+    redirect-uri: dummy
+

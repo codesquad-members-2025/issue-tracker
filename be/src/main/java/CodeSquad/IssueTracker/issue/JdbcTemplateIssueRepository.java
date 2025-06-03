@@ -3,6 +3,7 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
+import CodeSquad.IssueTracker.issue.dto.IssueStatusUpdateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
 import CodeSquad.IssueTracker.milestone.dto.SummaryMilestoneDto;
 import CodeSquad.IssueTracker.user.dto.SummaryUserDto;
@@ -16,6 +17,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,14 +47,13 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
 
     @Override
     public void update(Long issueId, IssueUpdateDto updateParam) {
-        String sql = "UPDATE issues SET title = :title, content = :content, is_Open = :isOpen, timestamp = :timestamp, assignee_Id = :assigneeId, milestone_Id = :milestoneId WHERE id = :id";
+        String sql = "UPDATE issues SET title = :title, content = :content, is_Open = :isOpen, last_modified_at = :lastModifiedAt, milestone_Id = :milestoneId WHERE issue_Id = :id";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("title", updateParam.getTitle())
                 .addValue("content", updateParam.getContent())
                 .addValue("isOpen", updateParam.getIsOpen())
-                .addValue("timestamp", updateParam.getTimestamp())
+                .addValue("lastModifiedAt", LocalDateTime.now())
                 .addValue("milestoneId", updateParam.getMilestoneId())
-                .addValue("assigneeId", updateParam.getAssigneeId())
                 .addValue("id", issueId);
         template.update(sql, param);
     }
@@ -120,6 +121,23 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         String finalSql = countSql + whereClause;
 
         return template.queryForObject(finalSql, queryBuilder.getParams(), Integer.class);
+    }
+
+    @Override
+    public void updateIsOpen(IssueStatusUpdateRequest condition) {
+        String sql = """
+                UPDATE issues SET is_open = :isOpen 
+                WHERE issue_id IN (:issueIds)
+                """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        List<Long> issueIds = condition.getIssueIds();
+        params.addValue("issueIds", issueIds);
+
+        boolean isOpen = condition.isOpen();
+        params.addValue("isOpen", isOpen);
+
+        template.update(sql, params);
     }
 
     private RowMapper<Issue> issueRowMapper() {
