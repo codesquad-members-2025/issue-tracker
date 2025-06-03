@@ -131,7 +131,7 @@ const Wrapper = styled.div`
   border-radius: ${radius.large};
   border: ${({ $isAdd, theme }) => ($isAdd ? `1px solid ${theme.border.default}` : null)};
   background: ${({ theme }) => theme.surface.strong};
-  padding: 36px 32px 32px 32px;
+  padding: ${({ $isAdd }) => ($isAdd ? '36px 32px 32px 32px' : '0px')};
   display: flex;
   flex-direction: column;
   gap: 24px;

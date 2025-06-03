@@ -751,6 +751,105 @@ app.post('/milestones', authMiddleware, async (req, res) => {
   }
 });
 
+// ----- LABELS API -----
+
+// GET /labels - 전체 레이블 목록 조회
+app.get('/labels', authMiddleware, async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+    // mainPage.json의 labels 배열 사용
+    res.json(
+      createResponse(true, '성공메세지', {
+        labels: json.labels || [],
+        count: (json.labels || []).length,
+      }),
+    );
+  } catch (error) {
+    res.status(500).json(createResponse(false, '레이블 조회 오류', { error: error.message }));
+  }
+});
+
+// POST /labels - 레이블 생성
+app.post('/labels', authMiddleware, async (req, res) => {
+  try {
+    const { name, description = '', color = '#CCCCCC' } = req.body;
+    if (!name || !color) {
+      return res.status(400).json(createResponse(false, 'name, color는 필수입니다.', null));
+    }
+
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+
+    // 새 레이블 id 부여 (labelId)
+    const newLabelId = Math.max(0, ...(json.labels || []).map((l) => l.labelId || l.id)) + 1;
+    const newLabel = {
+      labelId: newLabelId,
+      name,
+      description,
+      color,
+    };
+    json.labels = [newLabel, ...(json.labels || [])];
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+    res.status(201).json(
+      createResponse(true, '성공적으로 생성되었습니다.', {
+        label: newLabel,
+      }),
+    );
+  } catch (error) {
+    res.status(500).json(createResponse(false, '레이블 생성 오류', { error: error.message }));
+  }
+});
+
+// PATCH /labels/:id - 레이블 수정
+app.patch('/labels/:id', authMiddleware, async (req, res) => {
+  try {
+    const labelId = parseInt(req.params.id);
+    const { name, description = '', color } = req.body;
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+    const idx = (json.labels || []).findIndex((l) => Number(l.labelId) === labelId);
+    if (idx === -1) {
+      return res.status(404).json(createResponse(false, '해당 레이블 없음', null));
+    }
+    // 변경 사항만 반영
+    if (name) json.labels[idx].name = name;
+    if (description !== undefined) json.labels[idx].description = description;
+    if (color) json.labels[idx].color = color;
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+    res.json(
+      createResponse(true, '성공적으로 수정되었습니다.', {
+        label: json.labels[idx],
+      }),
+    );
+  } catch (error) {
+    res.status(500).json(createResponse(false, '레이블 수정 오류', { error: error.message }));
+  }
+});
+
+// DELETE /labels/:id - 레이블 삭제
+app.delete('/labels/:id', authMiddleware, async (req, res) => {
+  try {
+    const labelId = parseInt(req.params.id);
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+    const beforeLen = (json.labels || []).length;
+    json.labels = (json.labels || []).filter((l) => Number(l.labelId) !== labelId);
+    // 이슈에서 해당 레이블도 제거
+    json.issues = (json.issues || []).map((issue) => ({
+      ...issue,
+      labels: (issue.labels || []).filter((l) => Number(l.labelId) !== labelId),
+    }));
+    if (json.labels.length === beforeLen) {
+      return res.status(404).json(createResponse(false, '해당 레이블 없음', null));
+    }
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+    res.json(createResponse(true, '레이블이 삭제되었습니다.', null));
+  } catch (error) {
+    res.status(500).json(createResponse(false, '레이블 삭제 오류', { error: error.message }));
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🟢 Mock server running at http://localhost:${PORT}`);
 });
