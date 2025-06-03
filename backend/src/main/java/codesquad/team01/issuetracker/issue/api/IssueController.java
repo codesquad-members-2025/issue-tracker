@@ -98,6 +98,17 @@ public class IssueController {
 		log.info("이슈 수정 완료: issueId={}", id);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
+
+	@GetMapping("/v1/issues/{id}")
+	public ResponseEntity<ApiResponse<IssueDto.IssueDetailsResponse>> findIssue(@PathVariable Integer id) {
+		// aop.. 다음엔 꼭 aop 공부해서 도입하자
+		log.info("이슈 상세 조회 요청: issueId={}", id);
+
+		IssueDto.IssueDetailsResponse response = issueService.findIssue(id);
+		log.info("이슈 상세 조회 완료: issueId={}", id);
+		return ResponseEntity.ok(ApiResponse.success(response));
+
+	}
 }
 
 

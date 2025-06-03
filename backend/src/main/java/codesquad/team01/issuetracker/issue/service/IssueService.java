@@ -1,5 +1,7 @@
 package codesquad.team01.issuetracker.issue.service;
 
+import static codesquad.team01.issuetracker.issue.constants.IssueConstants.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -223,7 +225,8 @@ public class IssueService {
 		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
 
-		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows);
+		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows,
+			CREATE_ISSUE_COMMENT_COUNT_ZERO);
 	}
 
 	@Transactional
@@ -295,13 +298,11 @@ public class IssueService {
 			}
 		}
 
-		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findIssueById(issueId);
-		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
-		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
-		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); // 댓글 구현 시
+		return findAndAssembleIssueDetails(issueId);
+	}
 
-		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows,
-			0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
+	public IssueDto.IssueDetailsResponse findIssue(Integer issueId) {
+		return findAndAssembleIssueDetails(issueId);
 	}
 
 	private void validateMilestoneExists(Integer milestoneId) {
@@ -312,5 +313,15 @@ public class IssueService {
 		if (!milestoneRepository.existsMilestone(milestoneId)) {
 			throw new MilestoneNotFoundException("존재하지 않는 마일스톤: " + milestoneId);
 		}
+	}
+
+	private IssueDto.IssueDetailsResponse findAndAssembleIssueDetails(Integer issueId) {
+		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findIssueById(issueId);
+		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
+		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
+		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); // 댓글 구현 시
+
+		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows,
+			0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
 	}
 }
