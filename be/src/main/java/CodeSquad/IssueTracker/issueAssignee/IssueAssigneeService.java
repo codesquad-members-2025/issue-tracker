@@ -36,5 +36,8 @@ public class IssueAssigneeService {
         return issueAssigneeRepository.findAssigneeResponsesByIssueId(issueId);
     }
 
-
+    @Transactional
+    public void unassignAssignee(Long issueId) {
+        issueAssigneeRepository.deleteByIssueId(issueId);
+    }
 }
