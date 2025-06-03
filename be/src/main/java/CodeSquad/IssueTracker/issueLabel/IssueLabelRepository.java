@@ -14,4 +14,6 @@ public interface IssueLabelRepository {
     List<IssueLabelResponse> returnedIssueLabelResponsesByIssueId(Long issueId);
 
     List<SummaryLabelDto> findSummaryLabelByIssueId(Long issueId);
+
+    void deleteByLabelId(Long labelId);
 }
