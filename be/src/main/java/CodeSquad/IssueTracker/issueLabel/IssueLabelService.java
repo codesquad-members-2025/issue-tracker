@@ -35,4 +35,9 @@ public class IssueLabelService {
     public void unassignLabel(Long issueId) {
         issueLabelRepository.deleteByIssueId(issueId);
     }
+
+    @Transactional
+    public void deleteByLabelId(Long labelId) {
+        issueLabelRepository.deleteByLabelId(labelId);
+    }
 }

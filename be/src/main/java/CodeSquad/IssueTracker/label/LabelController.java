@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.label;
 
+import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
 import CodeSquad.IssueTracker.label.dto.CreateLabelRequest;
 import CodeSquad.IssueTracker.label.dto.LabelListResponse;
 import CodeSquad.IssueTracker.label.dto.LabelResponse;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static CodeSquad.IssueTracker.global.message.SuccessMessage.LABEL_DELETE_SUCCESS;
 
 @Slf4j
 @RestController
@@ -41,5 +44,9 @@ public class LabelController {
         return "redirect:/milestones";
     }
 
-
+    @DeleteMapping("/{labelId}")
+    public BaseResponseDto<String> deleteLabel(@PathVariable Long labelId) {
+        labelService.deleteById(labelId);
+        return BaseResponseDto.success(LABEL_DELETE_SUCCESS.getMessage(), null);
+    }
 }
