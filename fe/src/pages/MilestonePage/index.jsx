@@ -8,13 +8,15 @@ import {
 import styled from 'styled-components';
 import MilestoneLabelHeader from '@/units/common/MilestoneLabelHeader';
 import useDataFetch from '@/hooks/useDataFetch';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { GET_MILESTONE } from '@/api/milestones';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import useMilestoneStore from '@/stores/milestoneStore';
 import MilestoneCreateForm from '@/base-ui/milestoneDetail/MilestoneCreateForm';
 import { getPatchUrl, POST_MILESTONE } from '@/api/milestones';
+import MileStoneTitle from '@/base-ui/utils/MileStoneTitle';
+import MilestoneItem from '@/units/milestone/MilestoneItem';
 
 export default function MilestonePage() {
   const { response, fetchData } = useDataFetch({ fetchType: 'Milestone' });
@@ -22,6 +24,12 @@ export default function MilestonePage() {
   const [searchParam, setSearchParam] = useSearchParams();
   const milestone = useMilestoneStore((s) => s.milestone);
   const initMilestones = useMilestoneStore((s) => s.initMilestones);
+  const reFetch = useRef(true);
+
+  function reFetchHandler(boolean) {
+    reFetch.current = boolean;
+  }
+
   const GEToptions = {
     method: 'GET',
     headers: {
@@ -39,14 +47,15 @@ export default function MilestonePage() {
   }) {
     const isPatch = fetchMethod === 'PATCH';
     const API = isPatch ? getPatchUrl(milestoneId) : POST_MILESTONE;
-    const body = isPatch ? { name, description, endDate, isOpen } : { name, description, endDate };
+    const body = { name, description, endDate };
     const fetchOption = {
       method: fetchMethod,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
     fetchData(API, getOptionWithToken(fetchOption));
-    setIsAddTableOpen(false);
+    reFetchHandler(true);
+    setIsAddTableOpen(true);
   }
 
   function statusHandler({ isOpen, milestoneId }) {
@@ -57,6 +66,7 @@ export default function MilestonePage() {
       body: JSON.stringify({ isOpen: !isOpen }),
     };
     fetchData(API, getOptionWithToken(fetchOption));
+    reFetchHandler(true);
   }
   useEffect(() => {
     if (!searchParam.has('isOpen')) {
@@ -64,8 +74,10 @@ export default function MilestonePage() {
     }
     //항상 현재의 쿼리파람을 기준으로 GET 요청
     // 현재의 마일스톤 페이지에서 마일스톤 조작 액션이 일어나면 항상 GET 요청으로 새로운 데이터를 이 스코프에서 받아온다.
+    if (!reFetch.current) return;
     fetchData(`${GET_MILESTONE}?${searchParam.toString()}`, getOptionWithToken(GEToptions));
-  }, [searchParam]);
+    reFetchHandler(false);
+  }, [searchParam, response]);
 
   useEffect(() => {
     //데이터 GET 으로 받아오면 스토어 초기화 하는 로직
@@ -93,32 +105,28 @@ export default function MilestonePage() {
             <OpenMilestoneButton
               isOpen={searchParam.get('isOpen') === 'true'}
               number={milestone.openCount}
-              onClick={() => setSearchParam({ isOpen: 'true' })}
+              onClick={() => {
+                setSearchParam({ isOpen: 'true' });
+                reFetchHandler(true);
+              }}
             />
             <CloseMilestoneButton
               isOpen={searchParam.get('isOpen') === 'true'}
               number={milestone.closedCount}
-              onClick={() => setSearchParam({ isOpen: 'false' })}
+              onClick={() => {
+                setSearchParam({ isOpen: 'false' });
+                reFetchHandler(true);
+              }}
             />
           </HeaderLeft>
         </KanbanHeader>
-        {milestone.milestones.map((m) => {
+        {milestone.milestones?.map((m) => {
           return (
-            <Item key={m.milestoneId}>
-              <MilestoneInfo
-                milestoneName={m.name}
-                endDate={m.endDate}
-                description={m.description}
-              />
-              <ItemRightWrapper>
-                <MilestoneController isOpen={m.isOpen} statusHandler={statusHandler} />
-                <ProgressIndicator
-                  processingRate={m.processingRate}
-                  openIssueCount={m.openIssue}
-                  closeIssueCount={m.closeIssue}
-                />
-              </ItemRightWrapper>
-            </Item>
+            <MilestoneItem
+              milestoneObj={m}
+              submitHandler={submitHandler}
+              statusHandler={statusHandler}
+            />
           );
         })}
       </Kanban>

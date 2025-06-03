@@ -617,6 +617,48 @@ app.get('/issues/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// PATCH /milestones/:id - 마일스톤 수정
+app.patch('/milestones/:id', authMiddleware, async (req, res) => {
+  try {
+    const milestoneId = parseInt(req.params.id);
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const data = await fs.readFile(filePath, 'utf-8');
+    const json = JSON.parse(data);
+
+    const milestoneIndex = json.milestones.findIndex((m) => m.milestoneId === milestoneId);
+    if (milestoneIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: '마일스톤을 찾을 수 없습니다.',
+        data: null,
+      });
+    }
+
+    const allowedFields = ['name', 'description', 'endDate', 'isOpen'];
+    Object.keys(req.body).forEach((key) => {
+      if (allowedFields.includes(key)) {
+        json.milestones[milestoneIndex][key] = req.body[key];
+      }
+    });
+
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+
+    res.json({
+      success: true,
+      message: '마일스톤이 성공적으로 수정되었습니다.',
+      data: {
+        milestone: json.milestones[milestoneIndex],
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '마일스톤 수정 중 서버 오류 발생',
+      data: { error: error.message },
+    });
+  }
+});
+
 app.get('/milestones', authMiddleware, async (req, res) => {
   try {
     const { isOpen } = req.query;
@@ -624,20 +666,33 @@ app.get('/milestones', authMiddleware, async (req, res) => {
     const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
     let milestones = json.milestones;
 
-    // 마일스톤 개수 카운트 (isOpen 필터링 전, 전체)
-    const openCount = milestones.filter((m) => m.isOpen === true).length;
-    const closedCount = milestones.filter((m) => m.isOpen === false).length;
-
     // isOpen 필터링 (응답의 milestones만)
     if (typeof isOpen !== 'undefined') {
       milestones = milestones.filter((m) => String(m.isOpen) === String(isOpen));
     }
 
+    // 각 마일스톤의 open/close 이슈 개수 계산
+    const issues = json.issues;
+    const milestonesWithIssueCounts = milestones.map((m) => {
+      const openIssue = issues.filter(
+        (issue) => issue.milestone?.milestoneId === m.milestoneId && issue.isOpen === true,
+      ).length;
+      const closeIssue = issues.filter(
+        (issue) => issue.milestone?.milestoneId === m.milestoneId && issue.isOpen === false,
+      ).length;
+      return { ...m, openIssue, closeIssue };
+    });
+
+    // 마일스톤 개수 카운트 (isOpen 필터링 전, 전체)
+    const allMilestones = json.milestones;
+    const openCount = allMilestones.filter((m) => m.isOpen === true).length;
+    const closedCount = allMilestones.filter((m) => m.isOpen === false).length;
+
     res.json({
       success: true,
       message: '마일스톤 목록 조회 성공',
       data: {
-        milestones,
+        milestones: milestonesWithIssueCounts,
         openCount,
         closedCount,
       },
@@ -646,6 +701,51 @@ app.get('/milestones', authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: '마일스톤 목록 조회 중 서버 오류 발생',
+      data: { error: error.message },
+    });
+  }
+});
+
+// POST /milestones - 마일스톤 생성
+app.post('/milestones', authMiddleware, async (req, res) => {
+  try {
+    const { name, description = '', endDate = '', isOpen = true } = req.body;
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        message: '마일스톤 이름은 필수입니다.',
+        data: null,
+      });
+    }
+
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const data = await fs.readFile(filePath, 'utf-8');
+    const json = JSON.parse(data);
+
+    // 새 마일스톤 ID 생성
+    const newMilestoneId = Math.max(0, ...json.milestones.map((m) => m.milestoneId || m.id)) + 1;
+
+    const newMilestone = {
+      milestoneId: newMilestoneId,
+      name,
+      description,
+      endDate,
+      isOpen,
+      processingRate: 0,
+    };
+
+    json.milestones.unshift(newMilestone);
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+
+    res.status(201).json({
+      success: true,
+      message: '새 마일스톤이 성공적으로 생성되었습니다.',
+      data: { milestone: newMilestone },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '마일스톤 생성 중 서버 오류 발생',
       data: { error: error.message },
     });
   }
