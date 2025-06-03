@@ -3,6 +3,7 @@ package codesquad.team01.issuetracker.issue.api;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.service.IssueService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -88,7 +90,7 @@ public class IssueController {
 
 	@PatchMapping("/v1/issues/{id}")
 	public ResponseEntity<ApiResponse<IssueDto.IssueDetailsResponse>> updateIssue(
-		@PathVariable Integer id,
+		@PathVariable @Positive(message = "이슈 ID는 양수여야 합니다") Integer id,
 		@RequestBody @Valid IssueDto.UpdateRequest request) {
 
 		log.info("이슈 수정 요청: issueId={}, request={}", id, request);
@@ -100,14 +102,23 @@ public class IssueController {
 	}
 
 	@GetMapping("/v1/issues/{id}")
-	public ResponseEntity<ApiResponse<IssueDto.IssueDetailsResponse>> findIssue(@PathVariable Integer id) {
+	public ResponseEntity<ApiResponse<IssueDto.IssueDetailsResponse>> findIssue(
+		@PathVariable @Positive(message = "이슈 ID는 양수여야 합니다") Integer id) {
 		// aop.. 다음엔 꼭 aop 공부해서 도입하자
 		log.info("이슈 상세 조회 요청: issueId={}", id);
 
 		IssueDto.IssueDetailsResponse response = issueService.findIssue(id);
 		log.info("이슈 상세 조회 완료: issueId={}", id);
 		return ResponseEntity.ok(ApiResponse.success(response));
+	}
 
+	@DeleteMapping("/v1/issues/{id}")
+	public ResponseEntity<Void> deleteIssue(
+		@PathVariable @Positive(message = "이슈 ID는 양수여야 합니다") Integer id/*, Integer userId*/) {
+		log.info("이슈 삭제 요청: issueId={}", id);
+		issueService.deleteIssue(id, FIRST_USER_ID);
+		log.info("이슈 삭제 완료: issueId={}", id);
+		return ResponseEntity.noContent().build();
 	}
 }
 

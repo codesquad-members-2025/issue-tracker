@@ -127,6 +127,13 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error("해당 이슈를 수정할 권한이 없습니다."));
 	}
 
+	@ExceptionHandler(IssueDeletionException.class)
+	public ResponseEntity<ApiResponse<?>> handleIssueAccessForbiddenException(IssueDeletionException e) {
+		log.warn("IssueDeletionException: {}", e.getMessage()); // error가 아닌 warn
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<?>> handleExceptions(Exception e) {
 		log.error("Unhandled exception", e);

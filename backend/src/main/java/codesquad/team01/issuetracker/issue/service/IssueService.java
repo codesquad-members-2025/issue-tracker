@@ -305,6 +305,26 @@ public class IssueService {
 		return findAndAssembleIssueDetails(issueId);
 	}
 
+	@Transactional
+	public void deleteIssue(Integer issueId, Integer userId) {
+
+		IssueDto.IssueStateAndWriterIdRow stateAndWriterIdByIssueId =
+			issueRepository.findIssueStateAndWriterIdByIssueId(issueId);
+
+		// 권한 확인
+		if (stateAndWriterIdByIssueId.writerId() != userId) {
+			throw new IssueAccessForbiddenException(issueId, userId);
+		}
+
+		// 중간 테이블은 hard delete
+		issueRepository.removeLabelsFromIssue(issueId);
+		issueRepository.removeAssigneesFromIssue(issueId);
+		// commentRepository.deleteCommentByIssueId(issueId); // 댓글 구현 후
+
+		// issue는 soft delete
+		issueRepository.deleteIssue(issueId, LocalDateTime.now());
+	}
+
 	private void validateMilestoneExists(Integer milestoneId) {
 		if (milestoneId == null) { // 마일스톤이 없는 이슈
 			return;

@@ -21,6 +21,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
+import codesquad.team01.issuetracker.common.exception.IssueDeletionException;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.exception.IssueCreationException;
@@ -103,6 +104,13 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 
 	private static final String DELETE_ISSUE_ASSIGNEES_QUERY = """
 		DELETE FROM issue_assignee WHERE issue_id = :issueId
+		""";
+
+	private static final String SOFT_DELETE_ISSUE_QUERY = """
+		UPDATE issue
+		SET deleted_at = :now, updated_at = :now
+		WHERE id = :issueId
+		AND deleted_at IS NULL
 		""";
 
 	private static final String FIND_ISSUE_STATE_AND_WRITER_ID_QUERY = """
@@ -389,6 +397,24 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		} catch (DataAccessException e) {
 			log.error("이슈 상태 및 작성자 조회 중 데이터베이스 오류 발생: issueId={}, error={}", issueId, e.getMessage());
 			throw new IssueUpdateException("이슈 정보 조회 중 오류가 발생했습니다.", e);
+		}
+	}
+
+	@Override
+	public void deleteIssue(Integer issueId, LocalDateTime now) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("issueId", issueId);
+		params.addValue("now", now);
+
+		try {
+			int updatedRows = jdbcTemplate.update(SOFT_DELETE_ISSUE_QUERY, params);
+			if (updatedRows == 0) {
+				throw new IssueNotFoundException("이슈를 찾을 수 없거나 이미 삭제된 이슈: " + issueId);
+			}
+			log.info("이슈 삭제 완료: issueId={}", issueId);
+		} catch (DataAccessException e) {
+			log.error("이슈 삭제 중 데이터베이스 오류 발생: issueId, error={}", issueId, e.getMessage());
+			throw new IssueDeletionException("이슈 삭제 중 오류 발생", e);
 		}
 	}
 

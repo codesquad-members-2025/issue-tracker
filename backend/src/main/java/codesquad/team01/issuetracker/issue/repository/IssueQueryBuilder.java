@@ -86,12 +86,14 @@ public class IssueQueryBuilder {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		List<String> conditions = new ArrayList<>();
 
-		// 이슈 상태
-		params.addValue("state", queryParams.state());
-
+		// 공통 필터 조건 추가
 		addCommonFilterConditions(queryParams.writerId(), queryParams.milestoneId(), queryParams.labelIds(),
 			queryParams.assigneeIds(), conditions, params);
 
+		// 이슈 상태
+		params.addValue("state", queryParams.state().name());
+
+		// 커서 기반 페이징 조건
 		if (cursor != null) {
 			conditions.add("""
 				(i.created_at < :cursorCreatedAt
@@ -101,15 +103,13 @@ public class IssueQueryBuilder {
 			params.addValue("cursorId", cursor.getId());
 		}
 
-		// AND 추가
+		// AND 조건 연결
 		if (!conditions.isEmpty()) {
 			baseQuery.append(" AND ").append(String.join(" AND ", conditions));
 		}
 
-		// 정렬
+		// 정렬 및 제한
 		baseQuery.append(" ORDER BY i.created_at DESC, i.id DESC");
-
-		// limit
 		baseQuery.append(" LIMIT :pageSize");
 		params.addValue("pageSize", IssueConstants.PAGE_SIZE + 1);
 
