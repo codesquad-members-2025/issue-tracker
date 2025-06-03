@@ -81,14 +81,6 @@ public class MilestoneDto {
 	) {
 	}
 
-	// DB 에서 조회해오는 마일스톤의 열린 issue, 닫힌 issue 갯수
-	public record MilestoneIssueCount(
-		int milestoneId,
-		int openCount,
-		int closedCount
-	) {
-	}
-
 	// DB 조회용 DTO
 	public record MilestoneRow(
 		int id,
@@ -168,5 +160,13 @@ public class MilestoneDto {
 				milestone.getState()
 			);
 		}
+	}
+
+	@Builder
+	public record MilestoneIssueCountRow(
+		Integer milestoneId,
+		Long openCount,
+		Long closedCount
+	) {
 	}
 }
