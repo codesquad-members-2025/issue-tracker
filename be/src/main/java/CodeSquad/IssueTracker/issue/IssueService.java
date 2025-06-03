@@ -151,4 +151,9 @@ public class IssueService {
     public int countIssuesByOpenStatus(boolean isOpen, IssueFilterCondition condition) {
         return issueRepository.countFilteredIssuesByIsOpen(isOpen, condition);
     }
+
+    public void updateIssueOpenState(IssueStatusUpdateRequest condition) {
+        issueRepository.updateIsOpen(condition);
+    }
 }
+

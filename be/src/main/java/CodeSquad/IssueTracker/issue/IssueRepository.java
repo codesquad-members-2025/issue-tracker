@@ -2,6 +2,7 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
+import CodeSquad.IssueTracker.issue.dto.IssueStatusUpdateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface IssueRepository {
     List<FilteredIssueDto> findIssuesByFilter(int page, IssueFilterCondition condition);
 
     int countFilteredIssuesByIsOpen(boolean isOpen, IssueFilterCondition condition);
+
+    void updateIsOpen(IssueStatusUpdateRequest condition);
 }

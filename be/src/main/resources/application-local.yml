@@ -18,3 +18,9 @@ spring:
       credentials:
         access-key: dummy
         secret-key: dummy
+
+  github:
+    client-id: dummy
+    client-secret: dummy
+    redirect-uri: dummy
+
