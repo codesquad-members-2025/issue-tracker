@@ -223,4 +223,5 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			}
 		}
 	}
+	
 }

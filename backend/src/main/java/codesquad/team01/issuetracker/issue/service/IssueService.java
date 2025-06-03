@@ -170,4 +170,8 @@ public class IssueService {
 			.failedIssueIds(failedIssueIds)
 			.build();
 	}
+
+	public IssueDto.CreateResponse createIssue(IssueDto.CreateRequest request, Integer firstUserId) {
+		return null;
+	}
 }

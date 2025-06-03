@@ -22,4 +22,9 @@ public interface IssueQueryRepository {
 	int batchUpdateIssueStates(List<Integer> issueIds, IssueState action, LocalDateTime now);
 
 	List<IssueDto.BatchIssueRow> findExistingIssuesByIds(List<Integer> issueIds);
+
+	Integer createIssue(String title, String content, Integer writerId, Integer milestoneId, LocalDateTime now);
+
+	IssueDto.BaseRow findCreatedIssueById(Integer issueId);
+
 }
