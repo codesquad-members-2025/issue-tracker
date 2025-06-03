@@ -25,7 +25,11 @@ public class OAuthController {
 
     @GetMapping("/login")
     public ResponseEntity<OAuthResponseDto.OAuthLoginUrl> githubLogin(HttpSession session) {
-        OAuthResponseDto.OAuthLoginUrl githubUrl = oAuthService.createGithubAuthorizeUrl(session);
+        //session에 state 저장
+        String state = oAuthService.createGithubAuthorizeState();
+        session.setAttribute("oauth_state", state);
+        //Github 인증 URL 구성
+        OAuthResponseDto.OAuthLoginUrl githubUrl = oAuthService.buildGithubAuthorizeUrl(state);
         return ResponseEntity.ok(githubUrl);
     }
 
