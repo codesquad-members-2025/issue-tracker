@@ -33,15 +33,6 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(errorMessage));
 	}
 
-	// 레이블 생성 시 이미 존재하는 레이블과 이름 중복
-	@ExceptionHandler(DuplicateLabelName.class)
-	public ResponseEntity<ApiResponse<?>> handleDuplicateLabel(DuplicateLabelName e) {
-		String labelName = e.getLabelName();
-		return ResponseEntity
-			.badRequest()
-			.body(ApiResponse.error("레이블 이름 '" + labelName + "'은(는) 이미 존재합니다."));
-	}
-
 	// 레이블을 찾을 수 없을 때
 	@ExceptionHandler(LabelNotFoundException.class)
 	public ResponseEntity<ApiResponse<?>> handleLabelNotFound(LabelNotFoundException e) {
@@ -49,6 +40,14 @@ public class GlobalExceptionHandler {
 		return ResponseEntity
 			.badRequest()
 			.body(ApiResponse.error("레이블 '" + id + "' 을(를) 찾을 수 없습니다."));
+	}
+
+	@ExceptionHandler(DuplicateLabelName.class)    // 레이블 생성 시 이미 생성된 레이블과 이름 중복
+	public ResponseEntity<ApiResponse<?>> handleDuplicateLabel(DuplicateLabelName e) {
+		String labelName = e.getLabelName();
+		return ResponseEntity
+			.badRequest()
+			.body(ApiResponse.error("레이블 이름 '" + labelName + "'은(는) 이미 존재합니다."));
 	}
 
 	@ExceptionHandler(Exception.class)

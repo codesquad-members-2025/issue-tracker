@@ -40,7 +40,7 @@ public class LabelService {
 
 	@Transactional
 	public LabelDto.LabelCreateResponse saveLabel(LabelDto.LabelCreateRequest request) {
-		String labelName = request.name();
+		String labelName = request.name().trim();
 		if (labelRepository.existsByName(labelName)) {
 			throw new DuplicateLabelName(labelName);
 		}
