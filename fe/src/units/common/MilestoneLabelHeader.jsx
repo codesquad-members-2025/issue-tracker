@@ -23,6 +23,7 @@ const ButtonWrapper = styled.div`
   border-radius: ${radius.medium};
   display: inline-flex;
   width: fit-content;
+  overflow: hidden;
 `;
 
 export default function MilestoneLabelHeader({ isLabel, isValid, addHandler }) {

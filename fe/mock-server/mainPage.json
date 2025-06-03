@@ -30,20 +30,7 @@
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF",
-          "description": "논의 필요"
-        },
-        {
-          "labelId": 7,
-          "name": "test",
-          "color": "#CCCCCC",
-          "description": "테스트 관련"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "name": "v2.0",
@@ -234,11 +221,6 @@
           "labelId": 5,
           "name": "feature",
           "color": "#00FF00"
-        },
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
         }
       ],
       "milestone": {
@@ -402,11 +384,6 @@
       ],
       "labels": [
         {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        },
-        {
           "labelId": 2,
           "name": "urgent",
           "color": "#ffcc00"
@@ -494,13 +471,7 @@
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 7,
         "name": "v0.9 릴리즈"
@@ -550,18 +521,7 @@
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        },
-        {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 5,
         "name": "v1.0 릴리즈"
@@ -700,13 +660,7 @@
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 5,
         "name": "v1.0 릴리즈"
@@ -730,13 +684,7 @@
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#FF0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 1,
         "name": "v1.0",
@@ -970,13 +918,7 @@
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#FF0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 1,
         "name": "v1.0",
@@ -1011,11 +953,6 @@
           "labelId": 5,
           "name": "feature",
           "color": "#00FF00"
-        },
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
         }
       ],
       "milestone": {
@@ -1844,13 +1781,7 @@
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 5,
-          "name": "feature",
-          "color": "#00FF00"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "name": "v2.0",
@@ -2411,11 +2342,6 @@
       ],
       "labels": [
         {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        },
-        {
           "labelId": 2,
           "name": "high-priority",
           "color": "#FF9900"
@@ -2716,13 +2642,7 @@
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "processingRate": 0
@@ -2968,10 +2888,16 @@
   ],
   "labels": [
     {
-      "labelId": 1,
-      "name": "bug",
-      "color": "#FF0000",
-      "description": "버그 관련 이슈"
+      "labelId": 9,
+      "name": "review-FE",
+      "description": "프론트엔드 리뷰용",
+      "color": "#3b49e4"
+    },
+    {
+      "labelId": 8,
+      "name": "테스트",
+      "description": "테스트 입니다",
+      "color": "#ed6b39"
     },
     {
       "labelId": 2,
@@ -2998,12 +2924,6 @@
       "description": "새로운 기능"
     },
     {
-      "labelId": 6,
-      "name": "discussion",
-      "color": "#FF00FF",
-      "description": "논의 필요"
-    },
-    {
       "labelId": 7,
       "name": "test",
       "color": "#CCCCCC",
@@ -3016,7 +2936,7 @@
       "name": "테스트",
       "description": "111",
       "endDate": "1111-11-11T00:00:00.000Z",
-      "isOpen": false,
+      "isOpen": true,
       "processingRate": 0
     },
     {
@@ -3024,7 +2944,7 @@
       "name": "테스트",
       "description": "1",
       "endDate": "2026-11-15T00:00:00.000Z",
-      "isOpen": false,
+      "isOpen": true,
       "processingRate": 0
     },
     {
@@ -3041,7 +2961,7 @@
       "description": "UI/UX 개선-> 편집 테스트",
       "endDate": "2025-07-31",
       "processingRate": 30,
-      "isOpen": false
+      "isOpen": true
     },
     {
       "milestoneId": 3,

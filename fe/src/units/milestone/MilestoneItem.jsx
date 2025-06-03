@@ -9,8 +9,10 @@ const Item = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 24px 32px;
-  &:hover {
-    background-color: ${({ theme }) => theme.surface.bold};
+  background-color: ${({ theme }) => theme.surface.strong};
+  border-bottom: 1px solid ${({ theme }) => theme.border.default};
+  &:last-child {
+    border-bottom: none;
   }
 `;
 
