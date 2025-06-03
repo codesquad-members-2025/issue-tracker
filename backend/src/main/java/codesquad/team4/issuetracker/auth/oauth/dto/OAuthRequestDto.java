@@ -11,6 +11,5 @@ public class OAuthRequestDto {
     @Builder
     public static class GitHubCallback {
         private String code;
-        private String state;
     }
 }

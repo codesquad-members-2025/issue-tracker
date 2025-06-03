@@ -46,13 +46,17 @@ public class OAuthController {
 
     //GitHub 인증 처리 + 로그인/회원가입
     private User processOAuthCallback(String code, String state, HttpSession session) {
-        //state 값 비교
-        String savedState = (String) session.getAttribute("oauth_state");
+        validateState(state, session);
+        return oAuthService.handleCallback(new OAuthRequestDto.GitHubCallback(code));
+    }
+
+    //state 인증 + session 만료
+    private void validateState(String state, HttpSession session) {
+        String savedState = (String) session.getAttribute("oauth_sate");
         if (!state.equals(savedState)) {
             throw new InvalidOAuthStateException();
         }
-
-        return oAuthService.handleCallback(new OAuthRequestDto.GitHubCallback(code, state));
+        session.invalidate();
     }
 
     //JWT 발급 및 쿠키 설정

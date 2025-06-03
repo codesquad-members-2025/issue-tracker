@@ -69,7 +69,6 @@ public class OAuthService {
         OAuthResponseDto.GitHubUserResponse userInfo = fetchGitHubUser(accessToken);
         //회원가입/로그인 처리
         Optional<User> optionalUser = userRepository.findByEmail(userInfo.getEmail());
-
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             validateLoginType(user);
