@@ -176,6 +176,12 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         template.update(sql, param);
     }
 
+    @Override
+    public void clearMilestoneFromIssues(Long milestoneId) {
+        String sql = "UPDATE issues SET milestone_id = null WHERE milestone_id = :milestoneId";
+        template.update(sql, Map.of("milestoneId", milestoneId));
+    }
+
     private RowMapper<Issue> issueRowMapper() {
         return BeanPropertyRowMapper.newInstance(Issue.class);
     }

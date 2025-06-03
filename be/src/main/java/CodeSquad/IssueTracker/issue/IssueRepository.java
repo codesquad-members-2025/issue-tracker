@@ -25,4 +25,6 @@ public interface IssueRepository {
     void updateIsOpen(IssueStatusUpdateRequest condition);
 
     void deleteById(Long issueId);
+
+    void clearMilestoneFromIssues(Long milestoneId);
 }
