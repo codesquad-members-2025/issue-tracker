@@ -36,8 +36,8 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        Optional<User> author = userRepository.findById(authorId);
-        return new CommentResponseDto(comment,author.get()); //이중으로 null 체크를 해야할까?
+        User author = userService.findById(authorId);
+        return new CommentResponseDto(comment,author); //이중으로 null 체크를 해야할까?
     }
 
     public Iterable<Comment> findAll() {
@@ -63,7 +63,7 @@ public class CommentService {
         }
 
         comment.update(dto.getContent(), requesterId );
-        return new CommentResponseDto(comment,userRepository.findById(requesterId).get());
+        return new CommentResponseDto(comment,userService.findById(requesterId));
     }
 
     public List<Comment> findByIssueId(Long issueId) {
@@ -75,8 +75,7 @@ public class CommentService {
 
         return comments.stream()
                 .map(comment -> {
-                    User author = userRepository.findById(comment.getAuthorId())
-                            .orElseThrow(UserNotFoundException::new);
+                    User author = userService.findById(comment.getAuthorId());
                     return new CommentResponseDto(comment, author);
                 })
                 .toList();
