@@ -1,20 +1,21 @@
 package CodeSquad.IssueTracker.milestone;
 
+import CodeSquad.IssueTracker.issue.IssueRepository;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneListResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class MilestoneService {
 
     private final MilestoneRepository milestoneRepository;
+    private final IssueRepository issueRepository;
 
     public Milestone save(Milestone milestone) {
         return milestoneRepository.save(milestone);
@@ -28,7 +29,9 @@ public class MilestoneService {
         milestoneRepository.update(id, updateDto);
     }
 
+    @Transactional
     public void deleteById(Long id) {
+        issueRepository.clearMilestoneFromIssues(id);
         milestoneRepository.deleteById(id);
     }
 
