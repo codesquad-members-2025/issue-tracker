@@ -74,7 +74,7 @@ public class CommentService {
         return comments.stream()
                 .map(comment -> {
                     User author = userRepository.findById(comment.getAuthorId())
-                            .orElseThrow(() -> new UserNotFoundException("작성자를 찾을 수 없습니다: " + comment.getAuthorId(), HttpStatus.BAD_REQUEST));
+                            .orElseThrow(UserNotFoundException::new);
                     return new CommentResponseDto(comment, author);
                 })
                 .toList();

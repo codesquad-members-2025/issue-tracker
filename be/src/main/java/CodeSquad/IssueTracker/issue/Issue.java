@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Table("issues")
-public class
-Issue {
+public class Issue {
     @Id
     private Long issueId;
     private String title;
@@ -18,7 +17,7 @@ Issue {
     private Long milestoneId;
     private Boolean isOpen;
     private LocalDateTime lastModifiedAt;
-    private String imageUrl;
+    private String issueFileUrl;
 }
 
 

@@ -1,9 +1,20 @@
 #!/bin/bash
 
 echo "🚀 Starting Spring Boot app..."
-cd /home/ubuntu/deploy
 
-# 환경변수는 ~/.bashrc에 등록되어 있음
+# .env 파일 로드
+if [ -f /home/ubuntu/.env ]; then
+  echo "📦 Loading environment variables from .env"
+  source /home/ubuntu/.env
+else
+  echo "❌ .env file not found!"
+  exit 1
+fi
+
+# 애플리케이션 실행
+cd /home/ubuntu
+JAR_NAME=app.jar
+
 nohup java \
   -Dspring.profiles.active=dev \
   -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
@@ -13,5 +24,6 @@ nohup java \
   -DAWS_REGION=$AWS_REGION \
   -Dcloud.aws.region.static=$AWS_REGION \
   -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
+  -Dcloud.aws.s3.url=$S3_URL_NAME \
   -Dspring.datasource.password=$DB_PASSWORD \
-  -jar IssueTracker-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+  -jar "$JAR_NAME" > app.log 2>&1 &
