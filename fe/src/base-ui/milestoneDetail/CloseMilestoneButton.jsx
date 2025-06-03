@@ -1,16 +1,15 @@
 import { GhostButton } from '@/base-ui/components/Button';
 import styled from 'styled-components';
 
-const CloseButton = styled(GhostButton)`
-  color: ${({ theme }) => theme.text.default};
+const OpenButton = styled(GhostButton)`
   gap: 4px;
 `;
 
-export default function CloseIssueButton({ isOpen, number, onClick }) {
-  const textLabel = `닫힌 이슈(${number})`;
+export default function CloseMilestoneButton({ isOpen, number, onClick }) {
+  const textLabel = `닫힌 마일스톤(${number})`;
 
   return (
-    <CloseButton className={isOpen ? '' : 'active'} onClick={onClick}>
+    <OpenButton className={isOpen ? '' : 'active'} onClick={onClick}>
       <svg
         width="16"
         height="16"
@@ -18,7 +17,7 @@ export default function CloseIssueButton({ isOpen, number, onClick }) {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <g clipPath="url(#clip0_29943_39391)">
+        <g clip-path="url(#clip0_14852_5722)">
           <path
             d="M14 5.33337V14H2V5.33337"
             stroke="currentColor"
@@ -27,14 +26,14 @@ export default function CloseIssueButton({ isOpen, number, onClick }) {
             strokeLinejoin="round"
           />
           <path
-            d="M15.3333 2H0.666656V5.33333H15.3333V2Z"
+            d="M15.3332 2H0.666504V5.33333H15.3332V2Z"
             stroke="currentColor"
             strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <path
-            d="M6.66666 8H9.33332"
+            d="M6.6665 8H9.33317"
             stroke="currentColor"
             strokeWidth="1.6"
             strokeLinecap="round"
@@ -42,13 +41,13 @@ export default function CloseIssueButton({ isOpen, number, onClick }) {
           />
         </g>
         <defs>
-          <clipPath id="clip0_29943_39391">
+          <clipPath id="clip0_14852_5722">
             <rect width="16" height="16" fill="white" />
           </clipPath>
         </defs>
       </svg>
 
       <span>{textLabel}</span>
-    </CloseButton>
+    </OpenButton>
   );
 }

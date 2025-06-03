@@ -1,0 +1,64 @@
+import styled from 'styled-components';
+import { useState } from 'react';
+import { MilestoneInfo, MilestoneController, ProgressIndicator } from '@/base-ui/milestoneDetail';
+import MilestoneCreateForm from '@/base-ui/milestoneDetail/MilestoneCreateForm';
+
+const Item = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+`;
+
+const ItemRightWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+`;
+
+export default function MilestoneItem({ milestoneObj, submitHandler, statusHandler }) {
+  const [isAddTableOpen, setIsAddTableOpen] = useState(false);
+
+  return (
+    <Item key={milestoneObj.milestoneId}>
+      {isAddTableOpen ? (
+        <MilestoneCreateForm
+          name={milestoneObj.name}
+          endDate={milestoneObj.endDate}
+          description={milestoneObj.description}
+          isAdd={false}
+          onCancel={() => setIsAddTableOpen(false)}
+          onSubmit={(data) =>
+            submitHandler({ ...data, milestoneId: milestoneObj.milestoneId, fetchMethod: 'PATCH' })
+          }
+        />
+      ) : (
+        <>
+          <MilestoneInfo
+            milestoneName={milestoneObj.name}
+            endDate={milestoneObj.endDate}
+            description={milestoneObj.description}
+          />
+          <ItemRightWrapper>
+            <MilestoneController
+              isOpen={milestoneObj.isOpen}
+              statusHandler={() =>
+                statusHandler({
+                  isOpen: milestoneObj.isOpen,
+                  milestoneId: milestoneObj.milestoneId,
+                })
+              }
+              editHandler={() => setIsAddTableOpen(true)}
+            />
+            <ProgressIndicator
+              processingRate={milestoneObj.processingRate}
+              openIssueCount={milestoneObj.openIssue}
+              closeIssueCount={milestoneObj.closeIssue}
+            />
+          </ItemRightWrapper>
+        </>
+      )}
+    </Item>
+  );
+}

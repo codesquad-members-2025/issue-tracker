@@ -1,14 +1,14 @@
 import styled from 'styled-components';
-import { MilestoneButton, LabelButton } from '@/base-ui/issueListPage/mainPageHeaderTap/taps';
-import { radius } from '@/styles/foundation';
+import { LabelButton, MilestoneButton } from '@/base-ui/issueListPage/mainPageHeaderTap/taps';
 import { SmallContainerButton } from '@/base-ui/components/ContainerButtons';
-import { useNavigate } from 'react-router-dom';
-import useIssueDetailStore from '@/stores/IssueDetailStore';
 import useFilterModalStore from '@/stores/detailFilterModalStore';
+import { radius } from '@/styles/foundation';
 
 const Container = styled.div`
+  width: 100%;
   display: flex;
-  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const NewIssueButton = styled(SmallContainerButton)`
@@ -25,24 +25,17 @@ const ButtonWrapper = styled.div`
   width: fit-content;
 `;
 
-export function NavigateTabs() {
-  const resetStore = useIssueDetailStore((s) => s.resetStore);
+export default function MilestoneLabelHeader({ isLabel, isValid, addHandler }) {
   const milestoneNumber = useFilterModalStore((s) => s.filterEntry.milestone).length;
   const labelNumber = useFilterModalStore((s) => s.filterEntry.label).length;
-  const navigate = useNavigate();
-  const buttonLabel = '이슈작성';
+  const buttonLabel = isLabel ? '레이블 추가' : '이슈작성';
   return (
     <Container>
       <ButtonWrapper>
         <LabelButton number={labelNumber} />
         <MilestoneButton number={milestoneNumber} />
       </ButtonWrapper>
-      <NewIssueButton
-        onClick={() => {
-          navigate('new');
-          resetStore();
-        }}
-      >
+      <NewIssueButton disabled={!isValid} onClick={addHandler}>
         <svg
           width="17"
           height="16"

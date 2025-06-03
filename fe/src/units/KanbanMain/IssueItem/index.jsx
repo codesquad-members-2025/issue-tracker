@@ -64,7 +64,16 @@ const ClickableTitle = styled.span`
   }
 `;
 export default function IssueItem({ issue }) {
-  const { id, isOpen, title, labels, lastModifiedAt, author, milestone, assignees } = issue;
+  const {
+    issueId: id,
+    isOpen,
+    title,
+    labels,
+    lastModifiedAt,
+    author,
+    milestone,
+    assignees,
+  } = issue;
   const toggleCheckBox = useCheckBoxStore((state) => state.toggleCheckBox);
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const navigate = useNavigate();
