@@ -14,10 +14,10 @@ import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.common.exception.InvalidParameterException;
 import codesquad.team01.issuetracker.common.util.CursorEncoder;
 import codesquad.team01.issuetracker.issue.constants.IssueConstants;
+import codesquad.team01.issuetracker.issue.domain.IssueFilter;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.exception.ClosedIssueModificationException;
-import codesquad.team01.issuetracker.issue.exception.IssueAccessForbiddenException;
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
@@ -41,9 +41,13 @@ public class IssueService {
 	private final IssueAssembler issueAssembler;
 	private final CursorEncoder cursorEncoder;
 
-	public IssueDto.ListResponse findIssues(IssueDto.ListQueryRequest request, CursorDto.CursorData cursor) {
+	public IssueDto.ListResponse findIssues(IssueDto.ListQueryRequest request, CursorDto.CursorData cursor,
+		Integer currentUserId) {
 
-		IssueDto.ListQueryParams queryParams = IssueDto.ListQueryParams.from(request);
+		// 필터값 적용
+		IssueDto.ListQueryRequest filteredRequest = applyFilter(request, currentUserId);
+
+		IssueDto.ListQueryParams queryParams = IssueDto.ListQueryParams.from(filteredRequest);
 		// 이슈 기본 정보 조회 - (담당자, 레이블 제외)
 		List<IssueDto.BaseRow> issues = issueRepository.findIssuesWithFilters(queryParams, cursor);
 
@@ -180,10 +184,10 @@ public class IssueService {
 	}
 
 	@Transactional
-	public IssueDto.IssueDetailsResponse createIssue(IssueDto.CreateRequest request, Integer firstUserId) {
+	public IssueDto.IssueDetailsResponse createIssue(IssueDto.CreateRequest request, Integer currentUserId) {
 		LocalDateTime now = LocalDateTime.now();
 
-		log.info("사용자 {}가 이슈 생성 요청", firstUserId);
+		log.info("사용자 {}가 이슈 생성 요청", currentUserId);
 
 		if (request.milestoneId() != null) {
 			validateMilestoneExists(request.milestoneId());
@@ -208,7 +212,7 @@ public class IssueService {
 		Integer issueId = issueRepository.createIssue(
 			request.title(),
 			request.content(),
-			firstUserId,
+			currentUserId,
 			request.milestoneId(),
 			now
 		);
@@ -230,7 +234,7 @@ public class IssueService {
 	}
 
 	@Transactional
-	public IssueDto.IssueDetailsResponse updateIssue(Integer issueId, IssueDto.UpdateRequest request, Integer userId) {
+	public IssueDto.IssueDetailsResponse updateIssue(Integer issueId, IssueDto.UpdateRequest request) {
 
 		// 필드 수정 검증
 		if (!request.hasAnyFiled()) {
@@ -244,10 +248,10 @@ public class IssueService {
 		IssueDto.IssueStateAndWriterIdRow stateAndWriterIdRow =
 			issueRepository.findIssueStateAndWriterIdByIssueId(issueId);
 
-		// 작성자가 로그인된 사용자인지 확인 // git projects는 팀원들 모두 수정 가능
-		if (stateAndWriterIdRow.writerId() != userId) {
-			throw new IssueAccessForbiddenException(issueId, userId);
-		}
+		// // 작성자가 로그인된 사용자인지 확인 // git projects는 팀원들 모두 수정 가능
+		// if (stateAndWriterIdRow.writerId() != userId) {
+		// 	throw new IssueAccessForbiddenException(issueId, userId);
+		// }
 
 		// 기존 상태가 CLOSED인 경우 제목, 내용 수정 불가
 		if (stateAndWriterIdRow.state() == IssueState.CLOSED) {
@@ -306,15 +310,15 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void deleteIssue(Integer issueId, Integer userId) {
+	public void deleteIssue(Integer issueId) {
 
-		IssueDto.IssueStateAndWriterIdRow stateAndWriterIdByIssueId =
-			issueRepository.findIssueStateAndWriterIdByIssueId(issueId);
+		// IssueDto.IssueStateAndWriterIdRow stateAndWriterIdByIssueId =
+		// 	issueRepository.findIssueStateAndWriterIdByIssueId(issueId);
 
-		// 권한 확인
-		if (stateAndWriterIdByIssueId.writerId() != userId) {
-			throw new IssueAccessForbiddenException(issueId, userId);
-		}
+		// // 권한 확인
+		// if (stateAndWriterIdByIssueId.writerId() != userId) {
+		// 	throw new IssueAccessForbiddenException(issueId, userId);
+		// }
 
 		// 중간 테이블은 hard delete
 		issueRepository.removeLabelsFromIssue(issueId);
@@ -341,8 +345,14 @@ public class IssueService {
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
 		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); // 댓글 구현 시
 
-		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows,
-			0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
+		return issueAssembler.assembleSingleIssueDetails(
+			detailBaseRow, labelRows, assigneeRows, 0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
+	}
+
+	private IssueDto.ListQueryRequest applyFilter(IssueDto.ListQueryRequest request, Integer currentUserId) {
+		IssueFilter filter = IssueFilter.fromFilterStr(request.filter());
+
+		return filter == null ? request : filter.applyFilter(request, currentUserId);
 	}
 
 }

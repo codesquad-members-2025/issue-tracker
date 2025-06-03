@@ -59,6 +59,9 @@ public class IssueDto {
 		@Pattern(regexp = "^(open|closed)$", message = "state는 'open' 또는 'closed'만 가능합니다")
 		String state,
 
+		@Pattern(regexp = "^(created|assigned|commented)$", message = "filter는 'created', 'assigned', 'commented'만 가능합니다")
+		String filter,
+
 		@Positive(message = "작성자 ID는 양수여야 합니다")
 		Integer writerId,
 
@@ -74,6 +77,7 @@ public class IssueDto {
 		public String toString() {
 			return "ListQueryRequest{" +
 				"state='" + state + '\'' +
+				", filter='" + filter + '\'' +
 				", writerId=" + writerId +
 				", milestoneId=" + milestoneId +
 				", labelIds=" + labelIds +
@@ -515,6 +519,7 @@ public class IssueDto {
 	// 이슈 목록 조회용 DTO
 	public record ListQueryParams(
 		IssueState state,
+		String filter,
 		Integer writerId,
 		Integer milestoneId,
 		List<Integer> labelIds,
@@ -523,6 +528,7 @@ public class IssueDto {
 		public static ListQueryParams from(ListQueryRequest request) {
 			return new ListQueryParams(
 				request.getIssueState(),
+				request.filter(),
 				request.writerId(),
 				request.milestoneId(),
 				request.labelIds() != null ? request.labelIds() : List.of(),
