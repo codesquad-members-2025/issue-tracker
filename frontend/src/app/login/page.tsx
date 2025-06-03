@@ -12,6 +12,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { apiFetch } from "@/hooks/useApiLoginFetch";
+import { LogoutButton } from "@components/login/LogoutButton";
 
 const Container = styled.div`
   display: flex;
@@ -212,7 +213,7 @@ export default function LoginPage() {
         />
         <LoginButton disabled={loading}>
           {loading ? "로그인 중…" : "아이디로 로그인"}
-        </LoginButton>
+        </LoginButton>        
       </Form>
 
       <SignupLink href="/signup">회원가입</SignupLink>
