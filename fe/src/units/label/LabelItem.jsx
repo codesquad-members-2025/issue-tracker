@@ -125,7 +125,7 @@ const Item = styled.div`
 
 const LabelContent = styled.div`
   ${typography.display.medium16}
-  position:relative;
+  position:absolute;
   left: 240px;
   color: ${({ theme }) => theme.text.weak};
   width: 870px;

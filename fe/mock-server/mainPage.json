@@ -221,11 +221,6 @@
           "labelId": 5,
           "name": "feature",
           "color": "#00FF00"
-        },
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
         }
       ],
       "milestone": {
@@ -389,11 +384,6 @@
       ],
       "labels": [
         {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        },
-        {
           "labelId": 2,
           "name": "urgent",
           "color": "#ffcc00"
@@ -531,13 +521,7 @@
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
-      "labels": [
-        {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 5,
         "name": "v1.0 릴리즈"
@@ -969,11 +953,6 @@
           "labelId": 5,
           "name": "feature",
           "color": "#00FF00"
-        },
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
         }
       ],
       "milestone": {
@@ -2363,11 +2342,6 @@
       ],
       "labels": [
         {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        },
-        {
           "labelId": 2,
           "name": "high-priority",
           "color": "#FF9900"
@@ -2668,13 +2642,7 @@
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "processingRate": 0
@@ -2920,6 +2888,12 @@
   ],
   "labels": [
     {
+      "labelId": 9,
+      "name": "review-FE",
+      "description": "프론트엔드 리뷰용",
+      "color": "#3b49e4"
+    },
+    {
       "labelId": 8,
       "name": "테스트",
       "description": "테스트 입니다",
@@ -2948,12 +2922,6 @@
       "name": "feature",
       "color": "#00FF00",
       "description": "새로운 기능"
-    },
-    {
-      "labelId": 6,
-      "name": "discussion",
-      "color": "#FF00FF",
-      "description": "논의 필요"
     },
     {
       "labelId": 7,
