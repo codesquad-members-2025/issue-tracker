@@ -46,10 +46,6 @@ public class JwtAuthFilter implements Filter {
         // ✅ 정적 리소스 및 공개 경로 우회
         if (isPermitAllPath(requestURI)) {
             log.info("[JWT Filter] ✅ 인증 예외 경로 우회: {}", requestURI);
-
-        // 특정 URL 경로는 필터를 적용하지 않도록 처리
-        if (requestURI.equals("/login") || requestURI.equals("/signup") || requestURI.equals("/oauth/callback/github")) {
-
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }
@@ -94,7 +90,8 @@ public class JwtAuthFilter implements Filter {
                 uri.endsWith(".svg") ||
                 uri.endsWith(".ico") ||
                 uri.startsWith("/assets/") ||
-                uri.startsWith("/static/");
+                uri.startsWith("/static/") ||
+                uri.startsWith("/oauth/callback/github");
     }
 
     private void writeJsonResponse(HttpServletResponse response, BaseResponseDto dto, HttpStatus status) throws IOException {
