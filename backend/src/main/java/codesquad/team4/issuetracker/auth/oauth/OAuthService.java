@@ -62,13 +62,7 @@ public class OAuthService {
         return UUID.randomUUID().toString();
     }
 
-    public User handleCallback(OAuthRequestDto.GitHubCallback callback, HttpSession session) {
-        //state 값 비교
-        String savedState = (String) session.getAttribute("oauth_state");
-        if (!callback.getState().equals(savedState)) {
-            throw new InvalidOAuthStateException();
-        }
-
+    public User handleCallback(OAuthRequestDto.GitHubCallback callback) {
         //access tocken 요청
         String accessToken = requestAccessToken(callback.getCode());
         //Github 사용자 정보 요청

@@ -5,6 +5,7 @@ import codesquad.team4.issuetracker.auth.dto.AuthResponseDto;
 import codesquad.team4.issuetracker.auth.oauth.dto.OAuthRequestDto;
 import codesquad.team4.issuetracker.auth.oauth.dto.OAuthResponseDto;
 import codesquad.team4.issuetracker.entity.User;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidOAuthStateException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,13 @@ public class OAuthController {
 
     //GitHub 인증 처리 + 로그인/회원가입
     private User processOAuthCallback(String code, String state, HttpSession session) {
-        return oAuthService.handleCallback(new OAuthRequestDto.GitHubCallback(code, state), session);
+        //state 값 비교
+        String savedState = (String) session.getAttribute("oauth_state");
+        if (!state.equals(savedState)) {
+            throw new InvalidOAuthStateException();
+        }
+
+        return oAuthService.handleCallback(new OAuthRequestDto.GitHubCallback(code, state));
     }
 
     //JWT 발급 및 쿠키 설정
