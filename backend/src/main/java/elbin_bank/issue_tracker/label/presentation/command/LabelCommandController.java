@@ -29,5 +29,12 @@ public class LabelCommandController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLabel(@PathVariable("id") Long id) {
+        labelCommandService.deleteLabel(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 
 }

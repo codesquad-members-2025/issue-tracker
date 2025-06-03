@@ -24,4 +24,9 @@ public class Milestone extends BaseEntity {
     private String description;
     private LocalDate expiredAt;
 
+    public static Milestone of(String title, String expiredAt, String description) {
+        LocalDate expiredDate = expiredAt != null ? LocalDate.parse(expiredAt) : null;
+        return new Milestone(null, false, title, description, expiredDate); // id는 DB에서 생성
+    }
+
 }

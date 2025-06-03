@@ -4,10 +4,11 @@ import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProje
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface LabelQueryRepository {
 
-    LabelProjection findById(Long id);
+    Optional<LabelProjection> findById(Long id);
 
     Map<Long, List<LabelProjection>> findByIssueIds(List<Long> issueIds);
 

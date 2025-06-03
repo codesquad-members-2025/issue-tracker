@@ -15,4 +15,5 @@ public interface LabelCommandRepository {
 
     void update(LabelProjection label, LabelUpdateRequestDto labelUpdateRequestDto);
 
+    void deleteById(Long id);
 }

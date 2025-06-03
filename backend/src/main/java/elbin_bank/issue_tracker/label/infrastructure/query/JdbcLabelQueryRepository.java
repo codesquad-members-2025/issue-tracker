@@ -3,13 +3,14 @@ package elbin_bank.issue_tracker.label.infrastructure.query;
 import elbin_bank.issue_tracker.label.application.query.repository.LabelQueryRepository;
 import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -19,24 +20,29 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
     private final NamedParameterJdbcTemplate jdbc;
 
     @Override
-    public LabelProjection findById(Long id) {
+    public Optional<LabelProjection> findById(Long id) {
         String sql = """
-                SELECT id,
-                       name,
-                       color,
-                       description
-                  FROM label
-                 WHERE id = :id
-                """;
+            SELECT id,
+                   name,
+                   color,
+                   description
+              FROM label
+             WHERE id = :id
+            """;
 
         var params = new MapSqlParameterSource("id", id);
 
-        return jdbc.queryForObject(sql, params, (rs, rowNum) -> new LabelProjection(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("color"),
-                rs.getString("description")
-        ));
+        try {
+            LabelProjection labelProjection = jdbc.queryForObject(sql, params, (rs, rowNum) -> new LabelProjection(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("color"),
+                    rs.getString("description")
+            ));
+            return Optional.of(labelProjection);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

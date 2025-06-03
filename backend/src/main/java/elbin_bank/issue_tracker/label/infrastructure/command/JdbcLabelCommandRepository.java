@@ -86,4 +86,16 @@ public class JdbcLabelCommandRepository implements LabelCommandRepository {
         jdbc.update(sql, params);
     }
 
+    @Override
+    public void deleteById(Long id) {
+        String sql = """
+                UPDATE label
+                SET deleted_at = CURRENT_TIMESTAMP
+                WHERE id = :id
+                """;
+
+        var params = new MapSqlParameterSource().addValue("id", id);
+        jdbc.update(sql, params);
+    }
+
 }
