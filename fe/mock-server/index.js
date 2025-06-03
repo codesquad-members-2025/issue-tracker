@@ -191,7 +191,7 @@ app.get('/home', authMiddleware, async (req, res) => {
     // 페이지네이션
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
-    const totalCount = issues.length;
+    const totalCount = issues?.length;
     const totalPages = Math.ceil(totalCount / limitNum);
     const startIndex = (pageNum - 1) * limitNum;
     const paginatedIssues = issues.slice(startIndex, startIndex + limitNum);
@@ -219,8 +219,8 @@ app.get('/home', authMiddleware, async (req, res) => {
         milestones: json.milestones,
         metaData: {
           currentPage: pageNum,
-          openIssueNumber: baseFilteredIssues.filter((i) => i.isOpen === true).length,
-          closeIssueNumber: baseFilteredIssues.filter((i) => i.isOpen === false).length,
+          openIssueNumber: baseFilteredIssues.filter((i) => i.isOpen === true)?.length,
+          closeIssueNumber: baseFilteredIssues.filter((i) => i.isOpen === false)?.length,
         },
       }),
     );
@@ -676,17 +676,17 @@ app.get('/milestones', authMiddleware, async (req, res) => {
     const milestonesWithIssueCounts = milestones.map((m) => {
       const openIssue = issues.filter(
         (issue) => issue.milestone?.milestoneId === m.milestoneId && issue.isOpen === true,
-      ).length;
+      )?.length;
       const closeIssue = issues.filter(
         (issue) => issue.milestone?.milestoneId === m.milestoneId && issue.isOpen === false,
-      ).length;
+      )?.length;
       return { ...m, openIssue, closeIssue };
     });
 
     // 마일스톤 개수 카운트 (isOpen 필터링 전, 전체)
     const allMilestones = json.milestones;
-    const openCount = allMilestones.filter((m) => m.isOpen === true).length;
-    const closedCount = allMilestones.filter((m) => m.isOpen === false).length;
+    const openCount = allMilestones.filter((m) => m.isOpen === true)?.length;
+    const closedCount = allMilestones.filter((m) => m.isOpen === false)?.length;
 
     res.json({
       success: true,

@@ -20,7 +20,7 @@ export default function DetailIssueHeader({ issueFetchHandler }) {
   const [isEdit, setIsEdit] = useState(false);
   const issue = useIssueDetailStore((s) => s.issue);
   const [editTitle, setEditTitle] = useState(issue.title);
-  const commentCount = useIssueDetailStore((s) => s.comments).length;
+  const commentCount = useIssueDetailStore((s) => s.comments)?.length;
   const { isValid, setCurrentInput } = useValidation({ existedString: issue.title });
 
   function getTitleComponent() {
