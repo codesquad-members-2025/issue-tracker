@@ -99,7 +99,7 @@ public class MilestoneDto {
 
 		String description,
 
-		@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}")    // YYYY-MM-DD
+		@Pattern(regexp = "^$|\\d{4}-\\d{2}-\\d{2}")    // YYYY-MM-DD
 		String dueDate
 	) {
 	}
@@ -131,7 +131,7 @@ public class MilestoneDto {
 
 		String description,
 
-		@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}")    // YYYY-MM-DD
+		@Pattern(regexp = "^$|\\d{4}-\\d{2}-\\d{2}")    // YYYY-MM-DD
 		String dueDate,
 
 		@NotBlank(message = "상태는 필수입니다.")
