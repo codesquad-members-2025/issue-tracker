@@ -137,8 +137,8 @@ public class MilestoneDto {
 
 		@NotBlank(message = "상태는 필수입니다.")
 		@Pattern(
-			regexp = "^(OPEN|CLOSE)$",
-			message = "state 값은 'OPEN' 또는 'CLOSE' 만 가능합니다."
+			regexp = "^(OPEN|CLOSED)$",
+			message = "state 값은 'OPEN' 또는 'CLOSED' 만 가능합니다."
 		)
 		String state
 	) {
