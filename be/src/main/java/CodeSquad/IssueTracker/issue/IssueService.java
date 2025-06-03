@@ -103,7 +103,7 @@ public class IssueService {
 
     public IssueDetailResponse toDetailResponse(Issue issue) {
         // ✅ 작성자 정보 조회
-        User author = userService.findById(issue.getAuthorId()).orElseThrow();
+        User author = userService.findById(issue.getAuthorId());
         IssueWithAuthorInfo issueWithAuthorInfo = IssueWithAuthorInfo.from(issue, author);
 
         IssueDetailResponse response = new IssueDetailResponse();
