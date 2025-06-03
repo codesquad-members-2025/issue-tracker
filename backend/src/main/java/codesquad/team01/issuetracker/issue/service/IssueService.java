@@ -241,7 +241,7 @@ public class IssueService {
 		IssueDto.IssueStateAndWriterIdRow stateAndWriterIdRow =
 			issueRepository.findIssueStateAndWriterIdByIssueId(issueId);
 
-		// 작성자가 로그인된 사용자인지 확인
+		// 작성자가 로그인된 사용자인지 확인 // git projects는 팀원들 모두 수정 가능
 		if (stateAndWriterIdRow.writerId() != userId) {
 			throw new IssueAccessForbiddenException(issueId, userId);
 		}
@@ -269,7 +269,7 @@ public class IssueService {
 
 		if (request.isUpdatingLabels()) {
 			issueRepository.removeLabelsFromIssue(issueId);
-			List<Integer> labelIds = request.labelIds();
+			List<Integer> labelIds = request.getLabelIds();
 			if (!labelIds.isEmpty()) {
 				List<Integer> validLabelIds = labelRepository.findValidLabelIds(labelIds);
 				if (!validLabelIds.isEmpty()) {
@@ -283,7 +283,7 @@ public class IssueService {
 
 		if (request.isUpdatingAssignees()) {
 			issueRepository.removeAssigneesFromIssue(issueId);
-			List<Integer> assigneeIds = request.assigneeIds();
+			List<Integer> assigneeIds = request.getAssigneeIds();
 			if (!assigneeIds.isEmpty()) {
 				List<Integer> validAssigneeIds = userRepository.findValidUserIds(assigneeIds);
 				if (!validAssigneeIds.isEmpty()) {
@@ -300,8 +300,8 @@ public class IssueService {
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
 		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); // 댓글 구현 시
 
-		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows,
-			assigneeRows, 0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
+		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows,
+			0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
 	}
 
 	private void validateMilestoneExists(Integer milestoneId) {
@@ -313,5 +313,4 @@ public class IssueService {
 			throw new MilestoneNotFoundException("존재하지 않는 마일스톤: " + milestoneId);
 		}
 	}
-
 }
