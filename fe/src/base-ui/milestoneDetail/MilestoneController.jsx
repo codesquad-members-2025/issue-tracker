@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { typography } from '@/styles/foundation';
+import { GhostButton } from '../components/Button';
 
 export default function MilestoneController({ isOpen, statusHandler, editHandler, deleteHandler }) {
   return (
@@ -165,10 +166,8 @@ const Container = styled.div`
   color: ${({ theme }) => theme.text.default};
 `;
 
-const StyledButton = styled.button`
-  display: flex;
+const StyledButton = styled(GhostButton)`
   gap: 4px;
-  align-items: center;
 `;
 
 const DeleteButton = styled(StyledButton)`

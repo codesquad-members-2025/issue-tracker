@@ -6,6 +6,7 @@ import { SmallOutlineButton } from '../components/OutlineButtons';
 import { SmallContainerButton } from '../components/ContainerButtons';
 import formatDateInput from './formatDateInput';
 import useValidation from '@/hooks/useValidation';
+import formatDateToDotYMD from '@/utils/common/formatDateToDotYMD';
 
 export default function MilestoneCreateForm({
   isAdd,
@@ -36,7 +37,7 @@ export default function MilestoneCreateForm({
 
   useEffect(() => {
     setNameValue(name);
-    setDateValue(endDate);
+    setDateValue(formatDateToDotYMD(endDate));
     setDescriptionValue(description);
     setCurrentInput(name);
   }, []);

@@ -16,6 +16,9 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 16px 54px 16px 32px;
+  &:hover {
+    background-color: ${({ theme }) => theme.surface.bold};
+  }
 `;
 
 const LetfWrapper = styled.div`
