@@ -3015,7 +3015,7 @@
       "milestoneId": 5,
       "name": "ㅁ",
       "description": "111",
-      "endDate": "1111.11.11",
+      "endDate": "1111-11-11T00:00:00.000Z",
       "isOpen": false,
       "processingRate": 0
     },
@@ -3023,7 +3023,7 @@
       "milestoneId": 4,
       "name": "테스트",
       "description": "1",
-      "endDate": "2026.11.12",
+      "endDate": "2026-11-15T00:00:00.000Z",
       "isOpen": true,
       "processingRate": 0
     },

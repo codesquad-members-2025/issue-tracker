@@ -17,6 +17,7 @@ import MilestoneCreateForm from '@/base-ui/milestoneDetail/MilestoneCreateForm';
 import { getPatchUrl, POST_MILESTONE } from '@/api/milestones';
 import MileStoneTitle from '@/base-ui/utils/MileStoneTitle';
 import MilestoneItem from '@/units/milestone/MilestoneItem';
+import parseDateString from '@/utils/common/parseDateString';
 
 export default function MilestonePage() {
   const { response, fetchData } = useDataFetch({ fetchType: 'Milestone' });
@@ -47,7 +48,7 @@ export default function MilestonePage() {
   }) {
     const isPatch = fetchMethod === 'PATCH';
     const API = isPatch ? getPatchUrl(milestoneId) : POST_MILESTONE;
-    const body = { name, description, endDate };
+    const body = { name, description, endDate: parseDateString(endDate) };
     const fetchOption = {
       method: fetchMethod,
       headers: { 'Content-Type': 'application/json' },
