@@ -41,7 +41,5 @@ public interface IssueQueryRepository {
 	List<MilestoneDto.MilestoneIssueCountRow> countByMilestoneIds(List<Integer> milestoneIds);
 
 	// IssueDto.BatchUpdateResponse batchUpdateIssueState(List<Integer> issueIds, IssueState action);
-	int batchUpdateIssueStates(List<Integer> issueIds, IssueState action, LocalDateTime now);
 
-	List<IssueDto.BatchIssueRow> findExistingIssuesByIds(List<Integer> issueIds);
 }
