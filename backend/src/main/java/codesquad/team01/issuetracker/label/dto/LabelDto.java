@@ -86,7 +86,6 @@ public class LabelDto {
 	@Builder
 	public record LabelFilterResponse(
 		int id,
-
 		String name,
 		String color
 	) {
@@ -196,4 +195,5 @@ public class LabelDto {
 			);
 		}
 	}
+
 }
