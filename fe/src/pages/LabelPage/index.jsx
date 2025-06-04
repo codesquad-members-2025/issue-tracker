@@ -85,6 +85,13 @@ const Container = styled.div`
   flex-direction: column;
   gap: 24px;
   padding: 32px 80px;
+
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+
+  &.loaded {
+    opacity: 1;
+  }
 `;
 
 const LabelList = styled.div`
