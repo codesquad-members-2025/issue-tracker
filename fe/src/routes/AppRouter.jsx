@@ -9,6 +9,7 @@ import LabelPage from '@/pages/LabelPage';
 import MilestonePage from '@/pages/MilestonePage';
 import IssueDetailPage from '@/pages/IssueDetailPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import OAuthSuccess from '@/pages/OAuthSuccess';
 
 export default function AppRouter() {
   return (
@@ -17,7 +18,7 @@ export default function AppRouter() {
         {/* 로그인/회원가입은 레이아웃 없이 단독 페이지 */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signUp" element={<SignUpPage />} />
-        <Route path="/oauth-success" element={<OAuthSuccess />} />
+        <Route path="/oauth/callback/github" element={<OAuthSuccess />} />
 
         {/* 로그인된 유저만 접근 가능한 경로 */}
         <Route element={<PrivateRoute />}>

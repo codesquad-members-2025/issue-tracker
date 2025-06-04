@@ -21,6 +21,11 @@ const Container = styled.div`
   height: 100vh;
 `;
 
+function githubLoginHandler() {
+  const githubAuthUrl = ' https://github.com/login/oauth/authorize?client_id=Ov23li5U17azTv9i2pZk';
+  window.location.href = githubAuthUrl;
+}
+
 export default function LoginPage() {
   const [Id, setId] = useState('');
   const [pw, setPw] = useState('');
@@ -59,7 +64,7 @@ export default function LoginPage() {
       {isLoading && <h1>로딩중입니다.</h1>}
       <ToggleTheme />
       <Logo />
-      <GitHubLoginButton />
+      <GitHubLoginButton onClick={githubLoginHandler} />
       <OrLabel />
       <InputForm
         setId={setId}
