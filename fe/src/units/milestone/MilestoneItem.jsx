@@ -41,6 +41,7 @@ export default function MilestoneItem({ milestoneObj, submitHandler, statusHandl
               ...data,
               milestoneId: milestoneObj.milestoneId,
               fetchMethod: 'PATCH',
+              isOpen: milestoneObj.isOpen,
               setterFn: setIsAddTableOpen,
             })
           }

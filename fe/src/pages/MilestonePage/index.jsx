@@ -42,7 +42,7 @@ export default function MilestonePage() {
   }) {
     const isPatch = fetchMethod === 'PATCH';
     const API = isPatch ? getPatchUrl(milestoneId) : POST_MILESTONE;
-    const body = { name, description, endDate: parseDateString(endDate) };
+    const body = { name, description, isOpen, endDate: parseDateString(endDate) };
     const fetchOption = {
       method: fetchMethod,
       headers: { 'Content-Type': 'application/json' },
