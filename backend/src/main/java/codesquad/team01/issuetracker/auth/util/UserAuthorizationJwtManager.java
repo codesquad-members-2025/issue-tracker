@@ -28,13 +28,9 @@ public class UserAuthorizationJwtManager {
 	private final long accessTokenLifetime;
 	private final long refreshTokenLifetime;
 
-	public UserAuthorizationJwtManager(
-		@Value("${JWT_SECRET_KEY}")
-		String secretKey,
-		@Value("${JWT_ACCESS_TOKEN_LIFETIME}")
-		long accessTokenLifetime,
-		@Value("${JWT_REFRESH_TOKEN_LIFETIME}")
-		long refreshTokenLifetime) {
+	public UserAuthorizationJwtManager(@Value("${JWT_SECRET_KEY}") String secretKey,
+		@Value("${JWT_ACCESS_TOKEN_LIFETIME}") long accessTokenLifetime,
+		@Value("${JWT_REFRESH_TOKEN_LIFETIME}") long refreshTokenLifetime) {
 		this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 		this.accessTokenLifetime = accessTokenLifetime;
 		this.refreshTokenLifetime = refreshTokenLifetime;
@@ -65,10 +61,7 @@ public class UserAuthorizationJwtManager {
 
 	public Claims parseClaims(String token) {
 		try {
-			Jwt<?, Claims> jwt = Jwts.parser()
-				.verifyWith(key)
-				.build()
-				.parseSignedClaims(token);
+			Jwt<?, Claims> jwt = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
 			return jwt.getPayload();
 		} catch (JwtException e) {
 			throw new IllegalArgumentException("허용되지 않거나 만료된 토큰입니다");
@@ -77,10 +70,7 @@ public class UserAuthorizationJwtManager {
 
 	public boolean validateRefreshToken(String token) {
 		try {
-			Jwt<?, Claims> jwt = Jwts.parser()
-				.verifyWith(key)
-				.build()
-				.parseSignedClaims(token);
+			Jwt<?, Claims> jwt = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
 			return true;
 		} catch (ExpiredJwtException e) {
 			log.info("Refresh token이 만료되었습니다. : {}", e.getMessage());
