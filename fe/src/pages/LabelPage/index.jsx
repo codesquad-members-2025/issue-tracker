@@ -41,8 +41,8 @@ export default function LabelPage() {
     };
     const { ok } = await fetchData(API, getOptionWithToken(fetchOption));
     if (ok) {
-      reFetchHandler(true);
       setIsAddTableOpen(false);
+      reFetchHandler(true);
     }
   }
 
