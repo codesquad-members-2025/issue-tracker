@@ -59,7 +59,7 @@ public class AuthService {
                 });
     }
 
-    public User checkEmailAndPassword(LoginRequestDto request) {
+    public User authenticateUser(LoginRequestDto request) {
         User user = userRepository.findByEmail(request.getEmail())
             .orElseThrow(UserByEmailNotFoundException::new);
 
