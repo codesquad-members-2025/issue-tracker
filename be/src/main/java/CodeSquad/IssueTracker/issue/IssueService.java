@@ -172,5 +172,10 @@ public class IssueService {
         issueLabelService.unassignLabel(issueId);
         issueRepository.deleteById(issueId);
     }
+
+    public GroupedCountDto getGroupedIssueCounts(IssueFilterCondition condition) {
+        return issueRepository.countGroupedIssues(condition);
+    }
+
 }
 

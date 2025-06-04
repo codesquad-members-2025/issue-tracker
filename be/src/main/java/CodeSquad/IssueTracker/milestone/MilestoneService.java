@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.milestone;
 
+import CodeSquad.IssueTracker.global.exception.NotFoundException;
 import CodeSquad.IssueTracker.issue.IssueRepository;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneListResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
@@ -36,7 +37,8 @@ public class MilestoneService {
     }
 
     public MilestoneResponse findMilestoneResponsesByIssueId(Long issueId) {
-        return milestoneRepository.findMilestoneResponsesByIssueId(issueId);
+        return milestoneRepository.findMilestoneResponsesByIssueId(issueId)
+                .orElseThrow(() -> new NotFoundException("Milestone not found"));
     }
 
     public MilestoneListResponse getMilestonesByStatus(boolean isOpen) {

@@ -13,7 +13,7 @@ public interface MilestoneRepository {
     List<Milestone> findAll();
     void deleteById(Long milestoneId);
     void update(Long id, MilestoneUpdateDto updateDto);
-    MilestoneResponse findMilestoneResponsesByIssueId(Long issueId);
+    Optional<MilestoneResponse> findMilestoneResponsesByIssueId(Long issueId);
     List<Milestone> findByStatus(boolean isOpen);
     Long calculateProcessingRate(Milestone milestone);
     Integer countByStatus(boolean isOpen);

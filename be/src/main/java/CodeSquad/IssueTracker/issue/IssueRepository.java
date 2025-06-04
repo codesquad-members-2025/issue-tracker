@@ -2,6 +2,7 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
+import CodeSquad.IssueTracker.issue.dto.GroupedCountDto;
 import CodeSquad.IssueTracker.issue.dto.IssueStatusUpdateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
 
@@ -27,4 +28,6 @@ public interface IssueRepository {
     void deleteById(Long issueId);
 
     void clearMilestoneFromIssues(Long milestoneId);
+
+    GroupedCountDto countGroupedIssues(IssueFilterCondition condition);
 }
