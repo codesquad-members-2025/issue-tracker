@@ -10,7 +10,7 @@ export default function LabelItem({ labelObj, submitHandler, deleteHandler }) {
 
   function handleDelete() {
     if (window.confirm('정말 이 레이블을 삭제하시겠습니까?')) {
-      deleteHandler(labelObj.labelId);
+      deleteHandler(labelObj.id);
     }
   }
 
@@ -22,7 +22,7 @@ export default function LabelItem({ labelObj, submitHandler, deleteHandler }) {
           defaultValue={labelObj}
           onCancel={() => setIsEdit(false)}
           onSubmit={(data) =>
-            submitHandler({ ...data, fetchMethod: 'PATCH', labelId: labelObj.labelId })
+            submitHandler({ ...data, fetchMethod: 'PATCH', labelId: labelObj.id })
           }
         />
       </Item>
