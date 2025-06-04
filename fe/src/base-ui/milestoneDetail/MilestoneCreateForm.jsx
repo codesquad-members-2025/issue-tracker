@@ -134,7 +134,12 @@ export default function MilestoneCreateForm({
 
 function timeZoneCutter(rawdate) {
   const [yyyy, mm, dd] = rawdate.split('.').map((v) => v.padStart(2, '0'));
-  return `${yyyy}-${mm}-${dd}T00:00:00`; // ✅ UTC, ISO 전혀 안 쓰고 직접 고정
+  const date = new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
+  date.setDate(date.getDate() + 1);
+  const yyyyStr = date.getFullYear();
+  const mmStr = String(date.getMonth() + 1).padStart(2, '0');
+  const ddStr = String(date.getDate()).padStart(2, '0');
+  return `${yyyyStr}-${mmStr}-${ddStr}T00:00:00`;
 }
 
 const Wrapper = styled.div`
