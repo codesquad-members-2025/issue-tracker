@@ -2,6 +2,7 @@ package codesquad.team01.issuetracker.auth.api;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import codesquad.team01.issuetracker.auth.service.TokenService;
 import codesquad.team01.issuetracker.auth.util.AuthorizationUrlBuilder;
 import codesquad.team01.issuetracker.common.dto.ApiResponse;
 import codesquad.team01.issuetracker.user.domain.User;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -74,6 +76,15 @@ public class AuthController {
 		return ApiResponse.success(tokens);
 	}
 
+	// 인증한 사용자 username, profileImageUrl
+	@GetMapping("/v1/auth/me")
+	public ApiResponse<?> getUsernameAndProfileImage(HttpServletRequest request) {
+		String username = (String)request.getAttribute("username");
+		String profileImage = (String)request.getAttribute("profileImageUrl");
+
+		return ApiResponse.success(Map.of("username", username, "profileImage", profileImage));
+	}
+
 	//로그아웃
 	@PostMapping("/v1/auth/logout")
 	public String logout(@RequestBody AuthDto.LogoutRequest request) {
@@ -82,6 +93,13 @@ public class AuthController {
 		return "redirect:/login";
 	}
 
+	/*
+	@PostMapping("/v1/auth/logout")
+	public ApiResponse<?> logout(@RequestBody AuthDto.LogoutRequest request) {
+		authService.logout(request.refreshToken());
+		return ApiResponse.success("로그아웃이 성공적으로 처리되었습니다.");
+	}
+	*/
 	@PostMapping("/v1/auth/signup")
 	public ApiResponse<?> signup(@RequestBody AuthDto.SignUpRequest request) throws Exception {
 		authService.signUp(request);
