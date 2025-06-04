@@ -26,6 +26,7 @@ public class LabelDto {
 	) {
 	}
 
+	// 레이블 리스트를 구성하는 레이블
 	@Builder
 	public record IssueDetailLabelResponse(
 		int id,
