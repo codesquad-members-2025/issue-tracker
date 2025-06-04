@@ -3,7 +3,7 @@ package elbin_bank.issue_tracker.comment.application.query;
 import elbin_bank.issue_tracker.comment.application.query.dto.CommentDto;
 import elbin_bank.issue_tracker.comment.application.query.dto.CommentsResponseDto;
 import elbin_bank.issue_tracker.comment.infrastructure.query.projection.CommentProjection;
-import elbin_bank.issue_tracker.user.application.query.UserQueryRepository;
+import elbin_bank.issue_tracker.user.application.query.repository.UserQueryRepository;
 import elbin_bank.issue_tracker.user.infrastructure.query.projection.UserProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

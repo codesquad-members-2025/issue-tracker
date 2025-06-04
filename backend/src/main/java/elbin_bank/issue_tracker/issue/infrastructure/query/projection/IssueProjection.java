@@ -8,5 +8,8 @@ public record IssueProjection(long id,
                               boolean isClosed,
                               LocalDateTime createdAt,
                               LocalDateTime updatedAt,
-                              String milestone) {
+                              String milestone,
+                              Long openCount,
+                              Long closedCount
+) {
 }

@@ -1,8 +1,7 @@
 package elbin_bank.issue_tracker.common.config;
 
-import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.FilterStrategy;
-import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.FilterStrategyContext;
-import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.StateFilterStrategy;
+import elbin_bank.issue_tracker.issue.infrastructure.query.SqlBuilder;
+import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,13 +13,16 @@ public class FilterConfig {
     @Bean
     public List<FilterStrategy> filterStrategies() {
         return List.of(
-                new StateFilterStrategy()
+                new LabelFilterStrategy(),
+                new MilestoneFilterStrategy(),
+                new AssigneeFilterStrategy(),
+                new AuthorFilterStrategy()
         );
     }
 
     @Bean
-    public FilterStrategyContext filterStrategyContext(List<FilterStrategy> strategies) {
-        return new FilterStrategyContext(strategies);
+    public SqlBuilder filterStrategyContext(List<FilterStrategy> strategies) {
+        return new SqlBuilder(strategies);
     }
 
 }

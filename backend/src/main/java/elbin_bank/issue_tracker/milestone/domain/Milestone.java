@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
@@ -25,7 +24,9 @@ public class Milestone extends BaseEntity {
     private String description;
     private LocalDate expiredAt;
 
+    public static Milestone of(String title, String expiredAt, String description) {
+        LocalDate expiredDate = expiredAt != null ? LocalDate.parse(expiredAt) : null;
+        return new Milestone(null, false, title, description, expiredDate); // id는 DB에서 생성
+    }
+
 }
-
-
-

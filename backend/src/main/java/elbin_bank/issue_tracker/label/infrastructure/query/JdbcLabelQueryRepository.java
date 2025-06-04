@@ -3,12 +3,14 @@ package elbin_bank.issue_tracker.label.infrastructure.query;
 import elbin_bank.issue_tracker.label.application.query.repository.LabelQueryRepository;
 import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -17,12 +19,48 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
 
-    public Map<Long, List<LabelProjection>> findByIssueIds(List<Long> issueIds) {
+    @Override
+    public Optional<LabelProjection> findById(Long id) {
         String sql = """
-                    SELECT il.issue_id, l.id, l.name, l.description, l.color
-                      FROM issue_label il
-                 JOIN label l ON l.id = il.label_id
-                     WHERE il.issue_id IN (:ids)
+            SELECT id,
+                   name,
+                   color,
+                   description
+              FROM label
+             WHERE id = :id
+            """;
+
+        var params = new MapSqlParameterSource("id", id);
+
+        try {
+            LabelProjection labelProjection = jdbc.queryForObject(sql, params, (rs, rowNum) -> new LabelProjection(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("color"),
+                    rs.getString("description")
+            ));
+            return Optional.of(labelProjection);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Map<Long, List<LabelProjection>> findByIssueIds(List<Long> issueIds) {
+        if (issueIds == null || issueIds.isEmpty()) {
+            return Map.of();
+        }
+
+        String sql = """
+                SELECT il.issue_id,
+                       l.id,
+                       l.name,
+                       l.description,
+                       l.color
+                FROM issue_label il
+                JOIN label l ON l.id = il.label_id
+                WHERE il.issue_id IN (:ids)
+                AND l.deleted_at IS NULL
                 """;
 
         var params = new MapSqlParameterSource("ids", issueIds);
@@ -38,12 +76,48 @@ public class JdbcLabelQueryRepository implements LabelQueryRepository {
                                         rs.getString("description")
                                 )
                         )
-                ).stream()
+                )
+                .stream()
                 .collect(Collectors.groupingBy(
                         Map.Entry::getKey,
                         Collectors.mapping(Map.Entry::getValue, Collectors.toList())
                 ));
+    }
 
+    @Override
+    public List<Long> findLabelIdsByIssueId(long issueId) {
+        String sql = """
+                SELECT l.id
+                FROM issue_label il
+                JOIN label l ON l.id = il.label_id
+                WHERE il.issue_id = :issueId
+                AND l.deleted_at IS NULL
+                """;
+
+        var params = new MapSqlParameterSource("issueId", issueId);
+        return jdbc.queryForList(sql, params, Long.class);
+    }
+
+    @Override
+    public List<LabelProjection> findAll() {
+        String sql = """
+                SELECT id,
+                       name,
+                       color,
+                       description
+                FROM label
+                WHERE deleted_at IS NULL
+                """;
+
+        return jdbc.query(
+                sql,
+                (rs, rowNum) -> new LabelProjection(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("color"),
+                        rs.getString("description")
+                )
+        );
     }
 
 }

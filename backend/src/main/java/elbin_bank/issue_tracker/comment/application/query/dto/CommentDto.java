@@ -10,5 +10,5 @@ public record CommentDto(
         String content,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-        ) {
+) {
 }

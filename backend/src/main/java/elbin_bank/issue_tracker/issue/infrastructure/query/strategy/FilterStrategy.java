@@ -1,25 +1,30 @@
 package elbin_bank.issue_tracker.issue.infrastructure.query.strategy;
 
+import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
 import java.util.Map;
 
 public interface FilterStrategy {
 
     /**
-     * 키워드에 해당하면 true,
-     * ex p.startsWith("state:")
+     * 이 필터가 이번 요청(FilterCriteria)에 적용되어야 하는지 여부
      */
-    boolean supports(String part);
+    boolean supports(FilterCriteria criteria);
 
     /**
-     * SQL WHERE 절 조각 (AND 생략)
-     * ex "i.is_closed = :closed"
+     * JOIN 절에 추가할 SQL fragment (ex: " JOIN assignee …")
      */
-    String getSqlPart();
+    void applyJoin(StringBuilder join, FilterCriteria criteria);
 
     /**
-     * 파라미터 매핑
-     * ex Map.of("closed", true)
+     * WHERE 절에 추가할 SQL fragment, 파라미터 세팅
      */
-    Map<String, Object> getParameters(String part);
+    void applyWhere(StringBuilder where, MapSqlParameterSource params, FilterCriteria criteria);
+
+    /**
+     * HAVING 절에 추가할 SQL fragment, 파라미터 세팅
+     */
+    void applyHaving(StringBuilder having, MapSqlParameterSource params, FilterCriteria criteria);
 
 }

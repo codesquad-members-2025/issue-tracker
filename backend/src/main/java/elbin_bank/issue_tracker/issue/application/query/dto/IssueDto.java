@@ -5,15 +5,13 @@ import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProje
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record IssueDto(
-        long id,
-        String author,
-        String title,
-        List<LabelProjection> labels,
-        boolean isClosed,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt,
-        List<String> assigneesProfileImages,
-        String milestone
-) {
+public record IssueDto(long id,
+                       String author,
+                       String title,
+                       boolean isClosed,
+                       List<LabelProjection> labels,
+                       List<String> assigneesProfileImages,
+                       LocalDateTime createdAt,
+                       LocalDateTime updatedAt,
+                       String milestone) {
 }

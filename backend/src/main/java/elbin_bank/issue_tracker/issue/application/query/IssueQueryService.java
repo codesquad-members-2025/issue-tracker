@@ -1,12 +1,19 @@
 package elbin_bank.issue_tracker.issue.application.query;
 
-import elbin_bank.issue_tracker.issue.application.query.dto.IssueDto;
-import elbin_bank.issue_tracker.issue.application.query.dto.IssuesResponseDto;
+import elbin_bank.issue_tracker.issue.application.query.dsl.DslParser;
+import elbin_bank.issue_tracker.issue.application.query.dsl.FilterCriteria;
+import elbin_bank.issue_tracker.issue.application.query.dto.*;
+import elbin_bank.issue_tracker.issue.application.query.mapper.IssueDtoMapper;
 import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRepository;
-import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
+import elbin_bank.issue_tracker.issue.exception.IssueDetailNotFoundException;
+import elbin_bank.issue_tracker.issue.exception.MilestoneForIssueNotFoundException;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueDetailProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
+import elbin_bank.issue_tracker.issue.infrastructure.query.projection.UserInfoProjection;
 import elbin_bank.issue_tracker.label.application.query.repository.LabelQueryRepository;
 import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
+import elbin_bank.issue_tracker.milestone.application.query.repository.MilestoneQueryRepository;
+import elbin_bank.issue_tracker.milestone.infrastructure.query.projection.MilestoneProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,42 +27,52 @@ public class IssueQueryService {
 
     private final IssueQueryRepository issueQueryRepository;
     private final LabelQueryRepository labelQueryRepository;
+    private final MilestoneQueryRepository milestoneQueryRepository;
+    private final IssueDtoMapper issueDtoMapper;
 
     @Transactional(readOnly = true)
-    public IssuesResponseDto getFilteredIssues(String q) {
-        String rawQuery = normalize(q);
-        List<IssueProjection> issues = issueQueryRepository.findIssues(rawQuery);
+    public IssuesResponseDto getFilteredIssues(String dsl) {
+        FilterCriteria crit = DslParser.parse(dsl);
+        if (crit.isInvalidFilter()) {
+            return issueDtoMapper.toIssuesResponseDto(List.of(), Map.of(), Map.of());
+        }
 
+        List<IssueProjection> issues = issueQueryRepository.findIssues(crit);
         List<Long> ids = issues.stream().map(IssueProjection::id).toList();
-
+        Map<Long, List<String>> assigneeNames = issueQueryRepository.findAssigneeNamesByIssueIds(ids);
         Map<Long, List<LabelProjection>> labels = labelQueryRepository.findByIssueIds(ids);
-        Map<Long, List<String>> assigneeNames = issueQueryRepository.findAssigneesByIssueIds(ids);
 
-        IssueCountProjection issueCount = issueQueryRepository.countIssueOpenAndClosed();
-
-        return new IssuesResponseDto(issues.stream()
-                .map(b -> new IssueDto(
-                        b.id(), b.author(), b.title(),
-                        labels.getOrDefault(b.id(), List.of()),
-                        b.isClosed(), b.createdAt(), b.updatedAt(),
-                        assigneeNames.getOrDefault(b.id(), List.of()),
-                        b.milestone()
-                )).toList(),
-                issueCount.openCount(),
-                issueCount.closedCount());
+        return issueDtoMapper.toIssuesResponseDto(issues, assigneeNames, labels);
     }
 
-    private String normalize(String raw) {
-        if (raw == null || raw.isBlank()) {
-            // 아무것도 없으면 열린 이슈만
-            return "state:open";
-        }
-        String q = raw.trim();
-        // 명시적으로 'is:issue'만 주면 모든 이슈
-        if ("is:issue".equals(q)) {
-            return "";
-        }
-        return q;
+    @Transactional(readOnly = true)
+    public IssueDetailResponseDto getIssue(long id) {
+        IssueDetailProjection issue = issueQueryRepository.findById(id)
+                .orElseThrow(() -> new IssueDetailNotFoundException(id));
+
+        return issueDtoMapper.toIssueDetailDto(issue);
+    }
+
+    @Transactional(readOnly = true)
+    public LabelsResponseDto getLabelsRelatedToIssue(long id) {
+        List<LabelProjection> labels = labelQueryRepository.findByIssueIds(List.of(id)).getOrDefault(id, List.of());
+
+        return issueDtoMapper.toLabelsResponseDto(labels);
+    }
+
+    @Transactional(readOnly = true)
+    public AssigneesResponseDto getAssigneesRelatedToIssue(long id) {
+        List<UserInfoProjection> assigneeNames = issueQueryRepository.findAssigneeByIssueId(id);
+
+        return issueDtoMapper.toAssigneesResponseDto(assigneeNames);
+    }
+
+    @Transactional(readOnly = true)
+    public MilestoneResponseDto getMilestoneForIssue(long id) {
+        MilestoneProjection milestone = milestoneQueryRepository.findByIssueId(id)
+                .orElseThrow(() -> new MilestoneForIssueNotFoundException());
+
+        return issueDtoMapper.toMilestoneResponseDto(milestone);
     }
 
 }

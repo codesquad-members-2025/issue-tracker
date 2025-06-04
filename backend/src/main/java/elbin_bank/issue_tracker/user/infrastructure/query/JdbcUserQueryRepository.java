@@ -1,7 +1,7 @@
 package elbin_bank.issue_tracker.user.infrastructure.query;
 
 import elbin_bank.issue_tracker.user.infrastructure.query.projection.UserProjection;
-import elbin_bank.issue_tracker.user.application.query.UserQueryRepository;
+import elbin_bank.issue_tracker.user.application.query.repository.UserQueryRepository;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,7 +25,7 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
             return Map.of();
         }
 
-        String sql = "SELECT id, nickname FROM user WHERE id IN (:ids)";
+        String sql = "SELECT id, nickname FROM user WHERE id IN (:ids) AND deleted_at IS NULL";
         Map<String, Object> params = Map.of("ids", ids);
 
         return jdbc.query(sql, params, rs -> {
@@ -47,6 +47,7 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
                 SELECT id, nickname, profile_image_url
                 FROM user
                 WHERE id IN (:Ids)
+                AND deleted_at IS NULL
                 """;
 
         var params = new MapSqlParameterSource("Ids", userIds);
@@ -63,6 +64,25 @@ public class JdbcUserQueryRepository implements UserQueryRepository {
             }
             return result;
         });
+    }
+
+    @Override
+    public List<UserProjection> findAll() {
+        String sql = """
+                SELECT
+                  u.id,
+                  u.nickname,
+                  u.profile_image_url
+                FROM `user` u
+                WHERE u.deleted_at IS NULL
+                """;
+
+        return jdbc.query(sql, new MapSqlParameterSource(), (rs, rowNum) ->
+                new UserProjection(
+                        rs.getLong("id"),
+                        rs.getString("nickname"),
+                        rs.getString("profile_image_url")
+                ));
     }
 
 }
