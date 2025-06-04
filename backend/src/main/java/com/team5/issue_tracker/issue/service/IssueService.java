@@ -28,6 +28,7 @@ import com.team5.issue_tracker.issue.query.IssueQueryRepository;
 import com.team5.issue_tracker.issue.repository.IssueAssigneeRepository;
 import com.team5.issue_tracker.issue.repository.IssueLabelRepository;
 import com.team5.issue_tracker.issue.repository.IssueRepository;
+import com.team5.issue_tracker.user.domain.User;
 import com.team5.issue_tracker.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -43,11 +44,8 @@ public class IssueService {
   private final UserRepository userRepository;
 
   @Transactional
-  public Long createIssue(IssueCreateRequest request) {
-    Long userId = 1L; // TODO: 유저가 없으니 우선 임시데이터 넣음!, 유저가 없으면 생성 불가!
-    if (!userRepository.existsById(userId)) {
-      throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
-    }
+  public Long createIssue(IssueCreateRequest request, Long userId) {
+    validateUserExists(userId);
 
     Instant now = Instant.now();
     Issue issue = new Issue(request.getTitle(), userId, request.getMilestoneId(), true, now, now);
@@ -65,9 +63,11 @@ public class IssueService {
   }
 
   @Transactional
-  public void updateIssueTitle(Long issueId, UpdateIssueTitleRequest request) {
+  public void updateIssueTitle(Long issueId, UpdateIssueTitleRequest request, Long userId) {
     String title = request.getTitle();
     Issue issue = getIssueOrThrow(issueId);
+
+    validateUserOwnsIssue(userId, issueId);
 
     issue.setTitle(title);
     issue.setUpdatedAt(Instant.now());
@@ -75,19 +75,23 @@ public class IssueService {
   }
 
   @Transactional
-  public void updateIssueStatus(Long issueId, UpdateIssueStatusRequest request) {
+  public void updateIssueStatus(Long issueId, UpdateIssueStatusRequest request, Long userId) {
     Boolean isOpen = request.getIsOpen();
     Issue issue = getIssueOrThrow(issueId);
+
+    validateUserOwnsIssue(userId, issueId);
 
     issue.setIsOpen(isOpen);
     issueRepository.save(issue);
   }
 
   @Transactional
-  public void updateIssueLabels(Long issueId, UpdateIssueLabelsRequest request) {
+  public void updateIssueLabels(Long issueId, UpdateIssueLabelsRequest request, Long userId) {
     Set<Long> labelIds = request.getLabelIds();
 
     Issue issue = getIssueOrThrow(issueId);
+
+    validateUserOwnsIssue(userId, issueId);
 
     // 스프링 데이터 jdbc에서는 한 번에 지우는게 안되는 것 같아서 분리
     List<IssueLabel> issueLabels = issueLabelRepository.findAllByIssueId(issueId);
@@ -100,9 +104,11 @@ public class IssueService {
   }
 
   @Transactional
-  public void updateIssueMilestone(Long issueId, UpdateIssueMilestoneRequest request) {
+  public void updateIssueMilestone(Long issueId, UpdateIssueMilestoneRequest request, Long userId) {
     Long milestoneId = request.getMilestoneId();
     Issue issue = getIssueOrThrow(issueId);
+
+    validateUserOwnsIssue(userId, issueId);
 
     issue.setMilestoneId(milestoneId);
     issue.setUpdatedAt(Instant.now());
@@ -110,10 +116,13 @@ public class IssueService {
   }
 
   @Transactional
-  public void updateIssueAssignees(Long issueId, UpdateIssueAssigneesRequest request) {
+  public void updateIssueAssignees(Long issueId, UpdateIssueAssigneesRequest request, Long userId) {
     Set<Long> assigneeIds = request.getAssigneeIds();
 
     Issue issue = getIssueOrThrow(issueId);
+
+    validateUserOwnsIssue(userId, issueId);
+
     // 스프링 데이터 jdbc에서는 한 번에 지우는게 안되는 것 같아서 분리
     List<IssueAssignee> issueAssignees = issueAssigneeRepository.findAllByIssueId(issueId);
     issueAssigneeRepository.deleteAll(issueAssignees);
@@ -125,23 +134,32 @@ public class IssueService {
   }
 
   @Transactional
-  public void deleteIssue(Long issueId) {
-    validateIssueExists(issueId);
+  public void deleteIssue(Long issueId, Long userId) {
+    validateUserOwnsIssue(userId, issueId);
     issueRepository.deleteById(issueId);
   }
 
   @Transactional
-  public void deleteIssues(IssueDeleteRequest request) {
+  public void deleteIssues(IssueDeleteRequest request, Long userId) {
+    validateUserExists(userId);
     Iterable<Issue> issues = issueRepository.findAllById(request.getIssueIds());
+    for(Issue issue : issues) {
+      validateUserOwnsIssue(userId, issue.getId());
+    }
     issueRepository.deleteAll(issues);
   }
 
   @Transactional
-  public void updateBulkIssuesStatus(UpdateBulkIssueStatusRequest request) {
+  public void updateBulkIssuesStatus(UpdateBulkIssueStatusRequest request, Long userId) {
     List<Long> issueIds = request.getIssueIds();
     Boolean isOpen = request.getIsOpen();
 
     List<Issue> issues = issueQueryRepository.findAllByIds(issueIds);
+
+    for (Long issueId : issueIds) {
+      validateUserOwnsIssue(userId, issueId);
+    }
+
     for (Issue issue : issues) {
       issue.setIsOpen(isOpen);
       issue.setUpdatedAt(Instant.now());
@@ -174,5 +192,20 @@ public class IssueService {
   private Issue getIssueOrThrow(Long issueId) {
     return issueRepository.findById(issueId)
         .orElseThrow(() -> new NotFoundException(ErrorCode.ISSUE_NOT_FOUND));
+  }
+
+  private void validateUserExists(Long userId) {
+    if (!userRepository.existsById(userId)) {
+      throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
+    }
+  }
+
+  private void validateUserOwnsIssue(Long userId, Long issueId) {
+    validateIssueExists(issueId);
+    validateUserExists(userId);
+
+    if (issueId.equals(userId)) {
+      throw new NotFoundException(ErrorCode.ISSUE_NOT_FOUND);
+    }
   }
 }

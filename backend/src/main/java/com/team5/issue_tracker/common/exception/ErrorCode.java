@@ -7,6 +7,8 @@ public enum ErrorCode {
   // 유저 관련
   USER_NOT_FOUND(404, "USER_NOT_FOUND", "해당 유저를 찾을 수 없습니다."),
   USER_ALREADY_EXISTS(409, "USER_ALREADY_EXISTS", "이미 존재하는 유저입니다."),
+  EMAIL_ALREADY_EXISTS(409, "EMAIL_ALREADY_EXISTS", "이미 존재하는 이메일입니다."),
+  USERNAME_ALREADY_EXISTS(409, "USERNAME_ALREADY_EXISTS", "이미 존재하는 유저이름입니다."),
   // 코멘트 관련
   COMMENT_NOT_FOUND(404, "COMMENT_NOT_FOUND", "해당 댓글을 찾을 수 없습니다."),
   // 라벨 관련
@@ -17,6 +19,7 @@ public enum ErrorCode {
   ISSUE_NOT_FOUND(404, "ISSUE_NOT_FOUND", "해당 이슈를 찾을 수 없습니다."),
   // 인증 관련
   UNAUTHORIZED(401, "UNAUTHORIZED", "인증이 필요합니다."),
+  INVALID_PASSWORD(401, "INVALID_PASSWORD", "잘못된 비밀번호입니다."),
   // 서버 오류
   INTERNAL_SERVER_ERROR(500, "INTERNAL_SERVER_ERROR", "서버에 오류가 발생했습니다."),
   // 파일 관련

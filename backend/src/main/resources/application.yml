@@ -25,3 +25,6 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket: team5-issue-tracker-images
+
+jwt:
+  secret: ${JWT_SECRET:F9c0FlcLC_NSSXm3EFy2q7zZphkBNoHcer0PrcAe3AQ_} #기본값, 실제 환경엔 환경 변수 설정
