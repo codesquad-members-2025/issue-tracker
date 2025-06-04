@@ -21,7 +21,15 @@ const useFilterStore = create(
 
     setFilter: (key, value) =>
       set((state) => {
-        state.selectedFilters[key] = value;
+        if (key === 'isOpen') {
+          state.selectedFilters[key] = value;
+          return;
+        }
+        if (key in state.selectedFilters) {
+          delete state.selectedFilters[key];
+        } else {
+          state.selectedFilters[key] = value;
+        }
       }),
 
     initFilter: (filters) =>
