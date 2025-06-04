@@ -244,17 +244,11 @@ public class IssueService {
 		// 요청 충돌 검증
 		request.validateRequest();
 
-		// 이슈 존재 확인 + 해당 issue의 state, writerId 가져오기
-		IssueDto.IssueStateAndWriterIdRow stateAndWriterIdRow =
-			issueRepository.findIssueStateAndWriterIdByIssueId(issueId);
-
-		// // 작성자가 로그인된 사용자인지 확인 // git projects는 팀원들 모두 수정 가능
-		// if (stateAndWriterIdRow.writerId() != userId) {
-		// 	throw new IssueAccessForbiddenException(issueId, userId);
-		// }
+		// 이슈 존재 확인 + 해당 issue의 state 가져오기
+		IssueState state = issueRepository.findIssueStateByIssueId(issueId);
 
 		// 기존 상태가 CLOSED인 경우 제목, 내용 수정 불가
-		if (stateAndWriterIdRow.state() == IssueState.CLOSED) {
+		if (state == IssueState.CLOSED) {
 			if (request.isUpdatingTitle() || request.isUpdatingContent()) {
 				throw new ClosedIssueModificationException("제목, 내용");
 			}
@@ -312,18 +306,10 @@ public class IssueService {
 	@Transactional
 	public void deleteIssue(Integer issueId) {
 
-		// IssueDto.IssueStateAndWriterIdRow stateAndWriterIdByIssueId =
-		// 	issueRepository.findIssueStateAndWriterIdByIssueId(issueId);
-
-		// // 권한 확인
-		// if (stateAndWriterIdByIssueId.writerId() != userId) {
-		// 	throw new IssueAccessForbiddenException(issueId, userId);
-		// }
-
 		// 중간 테이블은 hard delete
 		issueRepository.removeLabelsFromIssue(issueId);
 		issueRepository.removeAssigneesFromIssue(issueId);
-		// commentRepository.deleteCommentByIssueId(issueId); // 댓글 구현 후
+		// commentRepository.deleteCommentByIssueId(issueId); // todo: 댓글 구현 후
 
 		// issue는 soft delete
 		issueRepository.deleteIssue(issueId, LocalDateTime.now());
@@ -343,7 +329,7 @@ public class IssueService {
 		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findIssueById(issueId);
 		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
-		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); // 댓글 구현 시
+		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); //todo: 댓글 구현 시
 
 		return issueAssembler.assembleSingleIssueDetails(
 			detailBaseRow, labelRows, assigneeRows, 0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요

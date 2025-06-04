@@ -32,7 +32,7 @@ public interface IssueQueryRepository {
 
 	void updateIssue(Integer issueId, IssueDto.UpdateQueryParams queryParams, LocalDateTime now);
 
-	IssueDto.IssueStateAndWriterIdRow findIssueStateAndWriterIdByIssueId(Integer issueId);
+	IssueState findIssueStateByIssueId(Integer issueId);
 
 	void deleteIssue(Integer issueId, LocalDateTime now);
 	List<MilestoneDto.MilestoneIssueCountRow> countByMilestoneIds(List<Integer> milestoneIds);

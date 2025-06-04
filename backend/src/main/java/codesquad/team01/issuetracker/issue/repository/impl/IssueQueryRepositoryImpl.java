@@ -169,10 +169,9 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 				WHERE id = :issueId AND deleted_at IS NULL
 		""";
 
-	private static final String FIND_ISSUE_STATE_AND_WRITER_ID_QUERY = """
+	private static final String FIND_ISSUE_STATE_QUERY = """
 		SELECT 
-			i.state,
-			i.writer_id
+			i.state as state
 		FROM issue i 
 		WHERE i.id = :issueId 
 		AND i.deleted_at IS NULL
@@ -252,11 +251,8 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			.closedCount(rs.getLong("closedCount"))
 			.build();
 
-	private final RowMapper<IssueDto.IssueStateAndWriterIdRow> stateAndWriterRowMapper =
-		(rs, rowNum) -> IssueDto.IssueStateAndWriterIdRow.builder()
-			.state(IssueState.fromStateStr(rs.getString("state")))
-			.writerId(rs.getInt("writer_id"))
-			.build();
+	private final RowMapper<IssueState> stateRowMapper =
+		(rs, rowNum) -> IssueState.fromStateStr(rs.getString("state"));
 
 	@Override
 	public List<IssueDto.BaseRow> findIssuesWithFilters(IssueDto.ListQueryParams queryParams,
@@ -456,11 +452,11 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 	}
 
 	@Override
-	public IssueDto.IssueStateAndWriterIdRow findIssueStateAndWriterIdByIssueId(Integer issueId) {
+	public IssueState findIssueStateByIssueId(Integer issueId) {
 		MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
 
 		try {
-			return jdbcTemplate.queryForObject(FIND_ISSUE_STATE_AND_WRITER_ID_QUERY, params, stateAndWriterRowMapper);
+			return jdbcTemplate.queryForObject(FIND_ISSUE_STATE_QUERY, params, stateRowMapper);
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new IssueNotFoundException("존재하지 않는 이슈입니다: " + issueId);
