@@ -29,9 +29,9 @@ VALUES
 
 
 -- Issues
-INSERT INTO issues (issue_id, title, content, author_id, milestone_id, is_open, last_modified_at, image_url)
+INSERT INTO issues (issue_id, title, content, author_id, milestone_id, is_open, last_modified_at, issue_file_url)
 VALUES
-    (14, '이슈 제목 14', '이슈 내용 14', 8, 2, 1, NOW(), NULL),
+    (14, '이슈 제목 14', '이슈 내용 14', 8, 2, 1, NOW(), 'https://issue-tracker-image-bucket.s3.ap-northeast-2.amazonaws.com/%ED%96%84%EC%8A%A4%ED%84%B0.jpeg'),
     (18, '이슈 제목 18', '이슈 내용 18', 10, 3, 1, NOW(), NULL),
     (24, '이슈 제목 24', '이슈 내용 24', 2, 2, 1, NOW(), NULL),
     (46, '이슈 제목 46', '이슈 내용 46', 1, 3, 1, NOW(), NULL),
@@ -42,7 +42,7 @@ VALUES
     (70, '이슈 제목 70', '이슈 내용 70', 8, 2, 1, NOW(), NULL),
     (75, '이슈 제목 75', '이슈 내용 75', 8, 5, 1, NOW(), NULL),
     (84, '이슈 제목 84', '이슈 내용 84', 4, 4, 1, NOW(), NULL),
-    (95, '이슈 제목 95', '이슈 내용 95', 9, 1, 1, NOW(), NULL);
+    (95, '이슈 제목 95', '이슈 내용 95', 9, 1, 1, NOW(), 'https://issue-tracker-image-bucket.s3.ap-northeast-2.amazonaws.com/%ED%96%84%EC%8A%A4%ED%84%B0.jpeg');
 
 
 -- Issue_Label
@@ -78,7 +78,7 @@ VALUES
     (95, 7, NOW());
 
 -- Comments
-INSERT INTO comments (issue_id, content, author_id, last_modified_at, image_url)
+INSERT INTO comments (issue_id, content, author_id, last_modified_at, issue_file_url)
 VALUES
     (14, '댓글 내용 16', 10, NOW(), NULL),
     (14, '댓글 내용 17', 1, NOW(), NULL),
@@ -99,4 +99,4 @@ VALUES
     (75, '댓글 내용 70', 10, NOW(), NULL),
     (75, '댓글 내용 71', 6, NOW(), NULL),
     (84, '댓글 내용 83', 3, NOW(), NULL),
-    (95, '댓글 내용 97', 10, NOW(), NULL);
+    (95, '댓글 내용 97', 10, NOW(), 'https://issue-tracker-image-bucket.s3.ap-northeast-2.amazonaws.com/%ED%96%84%EC%8A%A4%ED%84%B0.jpeg');

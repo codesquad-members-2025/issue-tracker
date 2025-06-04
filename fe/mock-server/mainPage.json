@@ -2,48 +2,35 @@
   "issues": [
     {
       "id": 1,
-      "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴsss",
+      "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴssss",
       "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음\n\n-> 테스트",
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "email": "devchan@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         },
         {
           "id": 103,
-          "nickname": "bob",
+          "nickName": "bob",
           "email": "bob@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         },
         {
           "id": 104,
-          "nickname": "charlie",
+          "nickName": "charlie",
           "email": "charlie@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF",
-          "description": "논의 필요"
-        },
-        {
-          "labelId": 7,
-          "name": "test",
-          "color": "#CCCCCC",
-          "description": "테스트 관련"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "name": "v2.0",
@@ -96,16 +83,16 @@
       "id": 2,
       "title": "UI 개선 요청",
       "content": "메인 페이지의 UI가 모바일에서 깨지는 현상이 있습니다. 특히 iPhone SE에서 심각합니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -147,27 +134,27 @@
       "id": 3,
       "title": "성능 최적화 필요",
       "content": "이미지 로딩 시 성능이 저하되는 현상이 발생합니다.-> 코멘트 편집 테스트",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "email": "alice@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         },
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "email": "devchan@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         }
@@ -211,21 +198,21 @@
       "id": 4,
       "title": "새로운 기능 제안",
       "content": "드래그 앤 드롭으로 이슈 순서를 변경할 수 있으면 좋겠습니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -234,11 +221,6 @@
           "labelId": 5,
           "name": "feature",
           "color": "#00FF00"
-        },
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
         }
       ],
       "milestone": {
@@ -265,16 +247,16 @@
       "id": 5,
       "title": "테스트 코드 작성 필요",
       "content": "현재 테스트 커버리지가 낮습니다. 주요 컴포넌트들에 대한 테스트 코드가 필요합니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -301,16 +283,16 @@
       "id": 6,
       "title": "검색 기능 성능 개선",
       "content": "검색어 입력 시 지연이 발생하며, 대량의 데이터에서 검색할 때 브라우저가 버벅입니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -345,16 +327,16 @@
       "id": 7,
       "title": "다크모드 테마 구현",
       "content": "사용자 경험 향상을 위한 다크모드 테마가 필요합니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -385,27 +367,22 @@
     {
       "id": 8,
       "title": "보안 취약점 발견",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 105,
-        "nickname": "david"
+        "nickName": "david"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice"
+          "nickName": "alice"
         },
         {
           "id": 103,
-          "nickname": "bob"
+          "nickName": "bob"
         }
       ],
       "labels": [
-        {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        },
         {
           "labelId": 2,
           "name": "urgent",
@@ -421,15 +398,15 @@
     {
       "id": 9,
       "title": "다크 모드 지원",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 102,
-        "nickname": "alice"
+        "nickName": "alice"
       },
       "assignees": [
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         }
       ],
@@ -449,15 +426,15 @@
     {
       "id": 10,
       "title": "이메일 알림 기능 추가",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 103,
-        "nickname": "bob"
+        "nickName": "bob"
       },
       "assignees": [
         {
           "id": 104,
-          "nickname": "charlie",
+          "nickName": "charlie",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
@@ -480,27 +457,21 @@
       "isOpen": false,
       "author": {
         "id": 104,
-        "nickname": "charlie"
+        "nickName": "charlie"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         },
         {
           "id": 103,
-          "nickname": "bob",
+          "nickName": "bob",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 7,
         "name": "v0.9 릴리즈"
@@ -513,12 +484,12 @@
       "isOpen": false,
       "author": {
         "id": 105,
-        "nickname": "david"
+        "nickName": "david"
       },
       "assignees": [
         {
           "id": 106,
-          "nickname": "eve",
+          "nickName": "eve",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
         }
       ],
@@ -541,27 +512,16 @@
       "isOpen": false,
       "author": {
         "id": 101,
-        "nickname": "devchan"
+        "nickName": "devchan"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        },
-        {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 5,
         "name": "v1.0 릴리즈"
@@ -574,12 +534,12 @@
       "isOpen": false,
       "author": {
         "id": 102,
-        "nickname": "alice"
+        "nickName": "alice"
       },
       "assignees": [
         {
           "id": 103,
-          "nickname": "bob",
+          "nickName": "bob",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         }
       ],
@@ -602,12 +562,12 @@
       "isOpen": false,
       "author": {
         "id": 103,
-        "nickname": "bob"
+        "nickName": "bob"
       },
       "assignees": [
         {
           "id": 104,
-          "nickname": "charlie",
+          "nickName": "charlie",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
@@ -630,12 +590,12 @@
       "isOpen": false,
       "author": {
         "id": 104,
-        "nickname": "charlie"
+        "nickName": "charlie"
       },
       "assignees": [
         {
           "id": 105,
-          "nickname": "david",
+          "nickName": "david",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
         }
       ],
@@ -658,17 +618,17 @@
       "isOpen": false,
       "author": {
         "id": 105,
-        "nickname": "david"
+        "nickName": "david"
       },
       "assignees": [
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         },
         {
           "id": 106,
-          "nickname": "eve",
+          "nickName": "eve",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
         }
       ],
@@ -691,22 +651,16 @@
       "isOpen": false,
       "author": {
         "id": 101,
-        "nickname": "devchan"
+        "nickName": "devchan"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 5,
         "name": "v1.0 릴리즈"
@@ -720,23 +674,17 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#FF0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 1,
         "name": "v1.0",
@@ -764,13 +712,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -800,13 +748,13 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -844,13 +792,13 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -880,13 +828,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -916,13 +864,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -960,23 +908,17 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#FF0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 1,
         "name": "v1.0",
@@ -996,13 +938,13 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1011,11 +953,6 @@
           "labelId": 5,
           "name": "feature",
           "color": "#00FF00"
-        },
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
         }
       ],
       "milestone": {
@@ -1045,13 +982,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1081,18 +1018,18 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -1135,13 +1072,13 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1179,19 +1116,19 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 103,
-          "nickname": "bob",
+          "nickName": "bob",
           "email": "bob@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1271,13 +1208,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1315,13 +1252,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1356,13 +1293,13 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1400,18 +1337,18 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         },
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -1454,13 +1391,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1490,13 +1427,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1539,18 +1476,18 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         },
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -1588,13 +1525,13 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -1632,13 +1569,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1687,21 +1624,21 @@
       "id": 39,
       "title": "이슈 보드 커스터마이징",
       "content": "사용자가 이슈 보드의 컬럼과 필터를 자유롭게 커스터마이징할 수 있는 기능이 필요합니다",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1741,16 +1678,16 @@
       "id": 40,
       "title": "이슈 템플릿 버전 관리",
       "content": "이슈 템플릿의 버전을 관리하고 이전 버전으로 롤백할 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1777,16 +1714,16 @@
       "id": 41,
       "title": "이슈 메타데이터 확장",
       "content": "이슈에 커스텀 필드를 추가할 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1826,31 +1763,25 @@
       "id": 42,
       "title": "이슈 워크플로우 자동화",
       "content": "특정 조건이 충족되면 자동으로 이슈의 상태나 담당자가 변경되는 워크플로우 자동화 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 5,
-          "name": "feature",
-          "color": "#00FF00"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "name": "v2.0",
@@ -1875,16 +1806,16 @@
       "id": 43,
       "title": "이슈 보드 성능 최적화",
       "content": "대량의 이슈가 있을 때 보드 렌더링 성능이 저하되는 문제를 해결해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1919,16 +1850,16 @@
       "id": 44,
       "title": "이슈 검색 필터 개선",
       "content": "고급 검색 필터와 저장된 검색 쿼리 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1955,21 +1886,21 @@
       "id": 45,
       "title": "이슈 마일스톤 간트 차트",
       "content": "마일스톤별 이슈 진행 상황을 간트 차트로 시각화하는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2004,16 +1935,16 @@
       "id": 46,
       "title": "이슈 보드 다크 모드",
       "content": "시스템 설정에 따라 자동으로 다크 모드가 적용되는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2048,16 +1979,16 @@
       "id": 47,
       "title": "이슈 보드 접근성 개선",
       "content": "스크린 리더 지원과 키보드 네비게이션을 개선해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -2084,21 +2015,21 @@
       "id": 48,
       "title": "이슈 보드 국제화",
       "content": "다국어 지원을 위한 i18n 시스템 구축이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         },
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -2133,16 +2064,16 @@
       "id": 49,
       "title": "이슈 보드 오프라인 지원",
       "content": "오프라인 상태에서도 기본적인 이슈 조회와 수정이 가능하도록 PWA 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -2182,16 +2113,16 @@
       "id": 50,
       "title": "이슈 보드 모바일 최적화",
       "content": "모바일 환경에서의 사용성을 개선하고 반응형 디자인을 적용해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2218,21 +2149,21 @@
       "id": 51,
       "title": "이슈 보드 데이터 백업",
       "content": "주기적으로 이슈 데이터를 백업하고 복원할 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -2267,16 +2198,16 @@
       "id": 52,
       "title": "이슈 보드 알림 시스템",
       "content": "이슈 상태 변경이나 새로운 코멘트가 있을 때 브라우저 알림을 보내는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -2311,16 +2242,16 @@
       "id": 53,
       "title": "이슈 보드 단축키 지원",
       "content": "주요 기능들에 대한 키보드 단축키를 지원해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -2347,21 +2278,21 @@
       "id": 54,
       "title": "이슈 보드 데이터 내보내기",
       "content": "이슈 데이터를 CSV나 Excel 형식으로 내보낼 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2399,22 +2330,17 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
       "labels": [
-        {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        },
         {
           "labelId": 2,
           "name": "high-priority",
@@ -2445,16 +2371,16 @@
       "id": 56,
       "title": "이슈 보드 성능 모니터링",
       "content": "프론트엔드 성능 메트릭을 수집하고 분석하는 시스템이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -2481,21 +2407,21 @@
       "id": 57,
       "title": "이슈 보드 에러 처리 개선",
       "content": "사용자 친화적인 에러 메시지와 복구 방안을 제공해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2530,10 +2456,10 @@
       "id": 58,
       "title": "이슈 작성 테스트",
       "content": "테스트 입니다",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2545,16 +2471,16 @@
       "id": 59,
       "title": "사이드바 테스트",
       "content": "사이드바 테스트",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         }
       ],
@@ -2572,13 +2498,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 106,
-          "nickname": "eve",
+          "nickName": "eve",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
         }
       ],
@@ -2603,13 +2529,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -2627,13 +2553,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -2651,13 +2577,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
@@ -2691,7 +2617,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2706,23 +2632,17 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "processingRate": 0
@@ -2736,7 +2656,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2751,7 +2671,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2766,7 +2686,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2781,7 +2701,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2798,7 +2718,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2815,7 +2735,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2847,7 +2767,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2864,7 +2784,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2889,7 +2809,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2906,72 +2826,95 @@
           "lastModifiedAt": "2025-06-02T04:24:25.036Z"
         }
       ]
+    },
+    {
+      "id": 75,
+      "title": "zxcasd",
+      "content": "zxc",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickName": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-06-04T04:18:55.845Z",
+      "issueFileUrl": null,
+      "comments": []
     }
   ],
   "users": [
     {
       "id": 1,
-      "nickname": "devchan",
+      "nickName": "devchan",
       "profileImageUrl": "https://dummy.local/profile/devchan.png"
     },
     {
       "id": 2,
-      "nickname": "홍길동",
+      "nickName": "홍길동",
       "profileImageUrl": "https://dummy.local/profile/user1.png"
     },
     {
       "id": 3,
-      "nickname": "김철수",
+      "nickName": "김철수",
       "profileImageUrl": "https://dummy.local/profile/user2.png"
     },
     {
       "id": 4,
-      "nickname": "이영희",
+      "nickName": "이영희",
       "profileImageUrl": "https://dummy.local/profile/user3.png"
     },
     {
       "id": 101,
-      "nickname": "devchan",
+      "nickName": "devchan",
       "email": "devchan@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
     },
     {
       "id": 102,
-      "nickname": "alice",
+      "nickName": "alice",
       "email": "alice@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
     },
     {
       "id": 103,
-      "nickname": "bob",
+      "nickName": "bob",
       "email": "bob@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
     },
     {
       "id": 104,
-      "nickname": "charlie",
+      "nickName": "charlie",
       "email": "charlie@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
     },
     {
       "id": 105,
-      "nickname": "david",
+      "nickName": "david",
       "email": "david@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
     },
     {
       "id": 106,
-      "nickname": "eve",
+      "nickName": "eve",
       "email": "eve@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
     }
   ],
   "labels": [
     {
-      "labelId": 1,
-      "name": "bug",
-      "color": "#FF0000",
-      "description": "버그 관련 이슈"
+      "labelId": 9,
+      "name": "똥",
+      "description": "히히",
+      "color": "#000000"
+    },
+    {
+      "labelId": 8,
+      "name": "테스트",
+      "description": "테스트 입니다",
+      "color": "#ed6b39"
     },
     {
       "labelId": 2,
@@ -2998,12 +2941,6 @@
       "description": "새로운 기능"
     },
     {
-      "labelId": 6,
-      "name": "discussion",
-      "color": "#FF00FF",
-      "description": "논의 필요"
-    },
-    {
       "labelId": 7,
       "name": "test",
       "color": "#CCCCCC",
@@ -3016,7 +2953,7 @@
       "name": "테스트",
       "description": "111",
       "endDate": "1111-11-11T00:00:00.000Z",
-      "isOpen": false,
+      "isOpen": true,
       "processingRate": 0
     },
     {
@@ -3033,15 +2970,15 @@
       "description": "1차 출시",
       "endDate": "2025-06-30",
       "processingRate": 0,
-      "isOpen": true
+      "isOpen": false
     },
     {
       "milestoneId": 2,
       "name": "v1.1",
       "description": "UI/UX 개선-> 편집 테스트",
-      "endDate": "2025-07-31",
+      "endDate": "2025-07-22T00:00:00.000Z",
       "processingRate": 30,
-      "isOpen": false
+      "isOpen": true
     },
     {
       "milestoneId": 3,
