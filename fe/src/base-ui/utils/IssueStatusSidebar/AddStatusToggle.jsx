@@ -27,6 +27,7 @@ import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import AuthorInform from '../AuthorInform'; //상세 이슈 페이지에서 사이드바 PATCH요청시 필요
 import GetSelectedElements from './SelectedElements';
 import { issueDetailStoreSelectorMap, toggleSelectorMap } from './storeMannager';
+import getFormData from '@/utils/common/getFormData';
 
 const Overlay = styled.div`
   position: fixed;
@@ -94,7 +95,8 @@ function getFetchBody(toggleType, value) {
       ? value.filter((selected) => selected && selected.id).map((selected) => selected.id)
       : value.id,
   };
-  return JSON.stringify(body);
+  // return JSON.stringify(body); -> 멀티파트로 BE에 PATCH 요청으로 인해 수정!
+  return getFormData(body);
 }
 
 //itemsArr는 객체배열을 받는다/

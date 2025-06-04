@@ -15,6 +15,7 @@ import AuthorInform from '@/base-ui/utils/AuthorInform';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import { IssueTitleInput } from '@/base-ui/IssuePage/IssueTitleInput';
 import useValidation from '@/hooks/useValidation';
+import getFormData from '@/utils/common/getFormData';
 
 export default function DetailIssueHeader({ issueFetchHandler }) {
   const [isEdit, setIsEdit] = useState(false);
@@ -63,10 +64,11 @@ export default function DetailIssueHeader({ issueFetchHandler }) {
     if (isEdit) {
       const PATCHoptions = {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title: editTitle }),
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // }, -> 멀티파트 데이터로 보내주면서 사용하지 않음.
+        body: getFormData({ title: editTitle }),
+        // body: JSON.stringify({ title: editTitle }),
       };
 
       return (
@@ -82,10 +84,11 @@ export default function DetailIssueHeader({ issueFetchHandler }) {
       function getPATCHoptions(isOpen) {
         return {
           method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ isOpen }),
+          // headers: {
+          //   'Content-Type': 'application/json',
+          // },
+          body: getFormData({ isOpen }),
+          // JSON.stringify({ isOpen }),
         };
       }
       return issue.isOpen ? (

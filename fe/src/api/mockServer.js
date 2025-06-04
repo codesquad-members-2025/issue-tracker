@@ -20,8 +20,8 @@ export const mockServer = {
             return user
               ? {
                   id: user.id,
-                  nickname: user.nickname,
-                  profileImageUrl: `https://dummy.local/profile/${user.nickname}.png`,
+                  nickName: user.nickName,
+                  profileImageUrl: `https://dummy.local/profile/${user.nickName}.png`,
                 }
               : null;
           })
