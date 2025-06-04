@@ -272,17 +272,14 @@ public class IssueService {
         //작성자 검증
         validateAuthor(oldIssue.getAuthorId(), user);
 
-        if (request.getMilestoneId() != null) {
-            milestoneRepository.findById(request.getMilestoneId())
-                    .orElseThrow(() -> new MilestoneNotFoundException(request.getMilestoneId()));
-        }
+        Long milestoneId = determineMilestoneId(request, oldIssue);
 
         boolean oldOpen = oldIssue.isOpen();
 
         //기존 이미지를 삭제하는 것인지 확인
         String newFileUrl = determineNewFileUrl(request, uploadUrl, oldIssue);
 
-        Issue updated = createupdatedIssue(request, oldIssue, newFileUrl);
+        Issue updated = createupdatedIssue(request, oldIssue, newFileUrl, milestoneId);
 
         issueRepository.save(updated);
 
@@ -298,12 +295,12 @@ public class IssueService {
         return createMessageResult(updated.getId(), UPDATE_ISSUE);
     }
 
-    private  Issue createupdatedIssue(IssueUpdateDto request, Issue oldIssue, String newFileUrl) {
+    private  Issue createupdatedIssue(IssueUpdateDto request, Issue oldIssue, String newFileUrl, Long milestoneId) {
         return oldIssue.toBuilder()
                 .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
                 .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
                 .FileUrl(newFileUrl)
-                .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
+                .milestoneId(milestoneId)
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
                 .build();
     }
@@ -317,6 +314,22 @@ public class IssueService {
             newFileUrl = uploadUrl;
         }
         return newFileUrl;
+    }
+
+    private Long determineMilestoneId(IssueUpdateDto request, Issue oldIssue) {
+        if (Boolean.TRUE.equals(request.getRemoveMilestone())) {
+            return null;
+        }
+
+        Long newMilestoneId = request.getMilestoneId();
+
+        if (newMilestoneId != null) {
+            milestoneRepository.findById(newMilestoneId)
+                .orElseThrow(() -> new MilestoneNotFoundException(newMilestoneId));
+            return newMilestoneId;
+        }
+
+        return oldIssue.getMilestoneId();
     }
 
     @Transactional

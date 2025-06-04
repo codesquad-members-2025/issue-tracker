@@ -46,6 +46,7 @@ public class IssueRequestDto {
         private Long milestoneId;
         private Boolean isOpen;
         private Boolean removeImage;
+        private Boolean removeMilestone;
     }
 
     @AllArgsConstructor
