@@ -34,10 +34,10 @@ export default function MilestonePage() {
   async function submitHandler({
     fetchMethod,
     name,
+    isOpen,
     milestoneId = null,
     description = null,
     endDate = null,
-    isOpen = null,
     setterFn = null,
   }) {
     const isPatch = fetchMethod === 'PATCH';
