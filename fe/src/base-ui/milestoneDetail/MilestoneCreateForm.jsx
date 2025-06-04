@@ -133,9 +133,9 @@ export default function MilestoneCreateForm({
 }
 
 function timeZoneCutter(rawdate) {
-  const date = new Date(rawdate);
-  const localISOString = date.toISOString().slice(0, 19); // "1111-11-11T00:00:00"
-  return localISOString;
+  const [yyyy, mm, dd] = rawdate.split('.').map((v) => parseInt(v, 10));
+  const date = new Date(yyyy, mm - 1, dd);
+  return date.toISOString().slice(0, 19); // "2011-01-11T00:00:00"
 }
 
 const Wrapper = styled.div`
