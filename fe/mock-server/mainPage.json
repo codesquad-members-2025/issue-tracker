@@ -4,7 +4,7 @@
       "id": 1,
       "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴssss",
       "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음\n\n-> 테스트",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 1,
         "nickName": "devchan",
@@ -83,7 +83,7 @@
       "id": 2,
       "title": "UI 개선 요청",
       "content": "메인 페이지의 UI가 모바일에서 깨지는 현상이 있습니다. 특히 iPhone SE에서 심각합니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 2,
         "nickName": "홍길동",
@@ -134,7 +134,7 @@
       "id": 3,
       "title": "성능 최적화 필요",
       "content": "이미지 로딩 시 성능이 저하되는 현상이 발생합니다.-> 코멘트 편집 테스트",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 3,
         "nickName": "김철수",
@@ -198,7 +198,7 @@
       "id": 4,
       "title": "새로운 기능 제안",
       "content": "드래그 앤 드롭으로 이슈 순서를 변경할 수 있으면 좋겠습니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 4,
         "nickName": "이영희",
@@ -247,7 +247,7 @@
       "id": 5,
       "title": "테스트 코드 작성 필요",
       "content": "현재 테스트 커버리지가 낮습니다. 주요 컴포넌트들에 대한 테스트 코드가 필요합니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 1,
         "nickName": "devchan",
@@ -283,7 +283,7 @@
       "id": 6,
       "title": "검색 기능 성능 개선",
       "content": "검색어 입력 시 지연이 발생하며, 대량의 데이터에서 검색할 때 브라우저가 버벅입니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 3,
         "nickName": "김철수",
@@ -327,7 +327,7 @@
       "id": 7,
       "title": "다크모드 테마 구현",
       "content": "사용자 경험 향상을 위한 다크모드 테마가 필요합니다.",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 2,
         "nickName": "홍길동",
@@ -367,7 +367,7 @@
     {
       "id": 8,
       "title": "보안 취약점 발견",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 105,
         "nickName": "david"
@@ -398,7 +398,7 @@
     {
       "id": 9,
       "title": "다크 모드 지원",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 102,
         "nickName": "alice"
@@ -426,7 +426,7 @@
     {
       "id": 10,
       "title": "이메일 알림 기능 추가",
-      "isOpen": false,
+      "isOpen": true,
       "author": {
         "id": 103,
         "nickName": "bob"
@@ -2064,7 +2064,7 @@
       "id": 49,
       "title": "이슈 보드 오프라인 지원",
       "content": "오프라인 상태에서도 기본적인 이슈 조회와 수정이 가능하도록 PWA 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickName": "devchan",
@@ -2113,7 +2113,7 @@
       "id": 50,
       "title": "이슈 보드 모바일 최적화",
       "content": "모바일 환경에서의 사용성을 개선하고 반응형 디자인을 적용해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
         "nickName": "홍길동",
@@ -2149,7 +2149,7 @@
       "id": 51,
       "title": "이슈 보드 데이터 백업",
       "content": "주기적으로 이슈 데이터를 백업하고 복원할 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 3,
         "nickName": "김철수",
@@ -2198,7 +2198,7 @@
       "id": 52,
       "title": "이슈 보드 알림 시스템",
       "content": "이슈 상태 변경이나 새로운 코멘트가 있을 때 브라우저 알림을 보내는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
         "nickName": "이영희",
@@ -2242,7 +2242,7 @@
       "id": 53,
       "title": "이슈 보드 단축키 지원",
       "content": "주요 기능들에 대한 키보드 단축키를 지원해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickName": "devchan",
@@ -2278,7 +2278,7 @@
       "id": 54,
       "title": "이슈 보드 데이터 내보내기",
       "content": "이슈 데이터를 CSV나 Excel 형식으로 내보낼 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 2,
         "nickName": "홍길동",
@@ -2371,7 +2371,7 @@
       "id": 56,
       "title": "이슈 보드 성능 모니터링",
       "content": "프론트엔드 성능 메트릭을 수집하고 분석하는 시스템이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
         "nickName": "이영희",
@@ -2407,7 +2407,7 @@
       "id": 57,
       "title": "이슈 보드 에러 처리 개선",
       "content": "사용자 친화적인 에러 메시지와 복구 방안을 제공해야 합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickName": "devchan",
@@ -2456,7 +2456,7 @@
       "id": 58,
       "title": "이슈 작성 테스트",
       "content": "테스트 입니다",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickName": "devchan",
@@ -2471,7 +2471,7 @@
       "id": 59,
       "title": "사이드바 테스트",
       "content": "사이드바 테스트",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 1,
         "nickName": "devchan",
