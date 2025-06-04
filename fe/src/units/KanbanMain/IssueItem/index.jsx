@@ -16,6 +16,9 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 16px 54px 16px 32px;
+  &:hover {
+    background-color: ${({ theme }) => theme.surface.bold};
+  }
 `;
 
 const LetfWrapper = styled.div`
@@ -64,7 +67,16 @@ const ClickableTitle = styled.span`
   }
 `;
 export default function IssueItem({ issue }) {
-  const { id, isOpen, title, labels, lastModifiedAt, author, milestone, assignees } = issue;
+  const {
+    issueId: id,
+    isOpen,
+    title,
+    labels,
+    lastModifiedAt,
+    author,
+    milestone,
+    assignees,
+  } = issue;
   const toggleCheckBox = useCheckBoxStore((state) => state.toggleCheckBox);
   const checkBoxEntry = useCheckBoxStore((state) => state.checkBoxEntry);
   const navigate = useNavigate();

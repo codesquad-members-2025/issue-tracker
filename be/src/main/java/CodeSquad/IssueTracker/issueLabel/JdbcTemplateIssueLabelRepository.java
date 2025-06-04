@@ -5,12 +5,15 @@ import CodeSquad.IssueTracker.issueLabel.dto.IssueLabelResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +67,29 @@ public class JdbcTemplateIssueLabelRepository implements IssueLabelRepository {
                 )
         );
     }
+
+    @Override
+    public Map<Long, List<SummaryLabelDto>> findSummaryLabelsByIssueIds(List<Long> issueIds) {
+        String sql = """
+        SELECT il.issue_id, l.id, l.name, l.color
+        FROM issue_label il
+        JOIN labels l ON il.label_id = l.id
+        WHERE il.issue_id IN (:ids)
+    """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource("ids", issueIds);
+
+        return template.query(sql, params, rs -> {
+            Map<Long, List<SummaryLabelDto>> result = new HashMap<>();
+            while (rs.next()) {
+                long issueId = rs.getLong("issue_id");
+                SummaryLabelDto label = new SummaryLabelDto(rs.getLong("id"), rs.getString("name"), rs.getString("color"));
+                result.computeIfAbsent(issueId, k -> new ArrayList<>()).add(label);
+            }
+            return result;
+        });
+    }
+
 
     @Override
     public List<SummaryLabelDto> findSummaryLabelByIssueId(Long issueId) {

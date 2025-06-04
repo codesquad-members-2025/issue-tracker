@@ -46,6 +46,16 @@ const ghostButtonStyle = css`
     }
   }
 
+  &.active {
+    color: ${({ theme }) => theme.text.strong};
+    ${typography.selected.bold16}
+    svg {
+      path {
+        stroke: ${({ theme }) => theme.text.strong};
+      }
+    }
+  }
+
   svg path {
     stroke: ${({ theme }) => theme.text.default};
     transition: stroke 0.2s ease;

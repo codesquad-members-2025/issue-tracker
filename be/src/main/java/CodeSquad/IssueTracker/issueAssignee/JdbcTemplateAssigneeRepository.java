@@ -5,12 +5,15 @@ import CodeSquad.IssueTracker.issueAssignee.dto.IssueAssigneeResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +63,28 @@ public class JdbcTemplateAssigneeRepository implements IssueAssigneeRepository {
                 )
         );
     }
+    @Override
+    public Map<Long, List<SummaryUserDto>> findSummaryAssigneesByIssueIds(List<Long> issueIds) {
+        String sql = """
+        SELECT ia.issue_id, u.id, u.nick_name
+        FROM issue_assignee ia
+        JOIN users u ON ia.assignee_id = u.id
+        WHERE ia.issue_id IN (:ids)
+    """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource("ids", issueIds);
+
+        return template.query(sql, params, rs -> {
+            Map<Long, List<SummaryUserDto>> result = new HashMap<>();
+            while (rs.next()) {
+                long issueId = rs.getLong("issue_id");
+                SummaryUserDto user = new SummaryUserDto(rs.getLong("id"), rs.getString("nick_name"));
+                result.computeIfAbsent(issueId, k -> new ArrayList<>()).add(user);
+            }
+            return result;
+        });
+    }
+
 
     @Override
     public List<SummaryUserDto> findSummaryAssigneeByIssueId(Long issueId) {
