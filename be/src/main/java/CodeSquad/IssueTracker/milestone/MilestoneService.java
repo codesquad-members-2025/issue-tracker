@@ -1,6 +1,7 @@
 package CodeSquad.IssueTracker.milestone;
 
 import CodeSquad.IssueTracker.issue.IssueRepository;
+import CodeSquad.IssueTracker.milestone.dto.MilestoneIssueCount;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneListResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
@@ -42,14 +43,20 @@ public class MilestoneService {
 
     public MilestoneListResponse getMilestonesByStatus(boolean isOpen) {
         List<Milestone> milestones = milestoneRepository.findByStatus(isOpen);
-        milestones.forEach(this::setCalculateProcessingRate);
+
         List<MilestoneResponse> milestoneResponses = milestones.stream()
-                .map(MilestoneResponse::convertMilestoneResponse)
+                .map(milestone -> {
+                    setCalculateProcessingRate(milestone);
+                    MilestoneResponse response = MilestoneResponse.convertMilestoneResponse(milestone);
+                    setOpenClosedIssueCount(milestone, response);
+                    return response;
+                })
                 .toList();
+
         return new MilestoneListResponse(
-                milestoneResponses
-                ,countOpenAndClose(true)
-                ,countOpenAndClose(false)
+                milestoneResponses,
+                countOpenAndClose(true),
+                countOpenAndClose(false)
         );
     }
 
@@ -60,4 +67,11 @@ public class MilestoneService {
     private void setCalculateProcessingRate(Milestone milestone){
         milestone.setProcessingRate(milestoneRepository.calculateProcessingRate(milestone));
     }
+
+    private void setOpenClosedIssueCount(Milestone milestone, MilestoneResponse response) {
+        MilestoneIssueCount count = milestoneRepository.getIssueCountByMilestoneId(milestone.getMilestoneId());
+        response.setOpenIssue(count.getOpenCount());
+        response.setCloseIssue(count.getClosedCount());
+    }
+
 }

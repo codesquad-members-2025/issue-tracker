@@ -1,5 +1,6 @@
 package CodeSquad.IssueTracker.milestone;
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneIssueCount;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -146,6 +147,25 @@ public class JdbcTemplatesMilestoneRepository implements MilestoneRepository {
         Map<String, Object> param = Map.of("isOpen", isOpen);
         return template.queryForObject(sql, param, Integer.class);
     }
+
+    @Override
+    public MilestoneIssueCount getIssueCountByMilestoneId(Long milestoneId) {
+        String sql = """
+        SELECT 
+            SUM(CASE WHEN is_open = true THEN 1 ELSE 0 END) AS openCount,
+            SUM(CASE WHEN is_open = false THEN 1 ELSE 0 END) AS closedCount
+        FROM issues
+        WHERE milestone_id = :milestoneId
+    """;
+
+        return template.queryForObject(sql, Map.of("milestoneId", milestoneId), (rs, rowNum) ->
+                new MilestoneIssueCount(
+                        rs.getInt("openCount"),
+                        rs.getInt("closedCount")
+                )
+        );
+    }
+
 
     private RowMapper<Milestone> milestoneRowMapper() {
         return BeanPropertyRowMapper.newInstance(Milestone.class);

@@ -1,6 +1,7 @@
 package CodeSquad.IssueTracker.milestone;
 
 
+import CodeSquad.IssueTracker.milestone.dto.MilestoneIssueCount;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 
@@ -17,4 +18,5 @@ public interface MilestoneRepository {
     List<Milestone> findByStatus(boolean isOpen);
     Long calculateProcessingRate(Milestone milestone);
     Integer countByStatus(boolean isOpen);
+    MilestoneIssueCount getIssueCountByMilestoneId(Long milestoneId);
 }
