@@ -23,7 +23,12 @@ const ItemRightWrapper = styled.div`
   align-items: flex-end;
 `;
 
-export default function MilestoneItem({ milestoneObj, submitHandler, statusHandler }) {
+export default function MilestoneItem({
+  milestoneObj,
+  submitHandler,
+  statusHandler,
+  deleteHandler,
+}) {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
 
   return (
@@ -66,6 +71,7 @@ export default function MilestoneItem({ milestoneObj, submitHandler, statusHandl
                 })
               }
               editHandler={() => setIsAddTableOpen(true)}
+              deleteHandler={() => deleteHandler(milestoneObj.milestoneId)}
             />
             <ProgressIndicator
               processingRate={milestoneObj.processingRate}
