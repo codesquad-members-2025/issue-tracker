@@ -91,7 +91,9 @@ public class JwtAuthFilter implements Filter {
                 uri.endsWith(".ico") ||
                 uri.startsWith("/assets/") ||
                 uri.startsWith("/static/") ||
-                uri.startsWith("/oauth/callback/github");
+                uri.startsWith("/oauth/callback/github") ||
+                uri.startsWith("/oauth-success");
+
     }
 
     private void writeJsonResponse(HttpServletResponse response, BaseResponseDto dto, HttpStatus status) throws IOException {
