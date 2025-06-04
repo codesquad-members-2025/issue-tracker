@@ -12,10 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class JdbcTemplateIssueLabelRepository implements IssueLabelRepository {
@@ -70,6 +67,10 @@ public class JdbcTemplateIssueLabelRepository implements IssueLabelRepository {
 
     @Override
     public Map<Long, List<SummaryLabelDto>> findSummaryLabelsByIssueIds(List<Long> issueIds) {
+        if (issueIds == null || issueIds.isEmpty()) {
+            return Collections.emptyMap();  // ✅ 리스트가 비면 SQL 실행 X
+        }
+
         String sql = """
         SELECT il.issue_id, l.label_id, l.name, l.color
         FROM issue_label il
