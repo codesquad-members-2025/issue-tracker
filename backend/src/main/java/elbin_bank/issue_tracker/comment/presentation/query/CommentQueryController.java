@@ -18,11 +18,7 @@ public class CommentQueryController {
 
     @GetMapping("/{id}/comments")
     public ResponseEntity<CommentsResponseDto> getComments(@PathVariable long id) {
-        try {
-            return ResponseEntity.ok(commentQueryService.findByIssueId(id));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(commentQueryService.findByIssueId(id));
     }
 
 }

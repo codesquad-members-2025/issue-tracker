@@ -4,6 +4,7 @@ import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProje
 import elbin_bank.issue_tracker.label.presentation.command.dto.request.LabelUpdateRequestDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface LabelCommandRepository {
 
@@ -16,4 +17,7 @@ public interface LabelCommandRepository {
     void update(LabelProjection label, LabelUpdateRequestDto labelUpdateRequestDto);
 
     void deleteById(Long id);
+
+    Optional<Label> findByName(String name);
+
 }

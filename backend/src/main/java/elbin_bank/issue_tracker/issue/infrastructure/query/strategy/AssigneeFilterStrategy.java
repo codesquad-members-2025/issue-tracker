@@ -20,7 +20,7 @@ public class AssigneeFilterStrategy implements FilterStrategy {
 
     @Override
     public void applyWhere(StringBuilder where, MapSqlParameterSource params, FilterCriteria c) {
-        where.append(" AND u2.login IN (:assignees)");
+        where.append(" AND u2.nickname IN (:assignees)");
         params.addValue("assignees", c.assignees());
     }
 

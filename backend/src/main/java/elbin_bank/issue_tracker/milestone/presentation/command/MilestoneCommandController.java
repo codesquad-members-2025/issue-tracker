@@ -3,6 +3,7 @@ package elbin_bank.issue_tracker.milestone.presentation.command;
 import elbin_bank.issue_tracker.milestone.application.command.MilestoneCommandService;
 import elbin_bank.issue_tracker.milestone.presentation.command.dto.request.MilestoneCreateRequestDto;
 import elbin_bank.issue_tracker.milestone.presentation.command.dto.request.MilestoneUpdateRequestDto;
+import elbin_bank.issue_tracker.milestone.presentation.command.dto.request.MilestoneUpdateStateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,14 @@ public class MilestoneCommandController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteMilestone(@PathVariable Long id) {
         milestoneCommandService.deleteMilestone(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PatchMapping("{id}/state")
+    public ResponseEntity<Void> changeMilestoneState(@PathVariable Long id,
+                                                     @RequestBody MilestoneUpdateStateRequestDto milestoneUpdateStateRequestDto) {
+        milestoneCommandService.changeMilestoneState(id, milestoneUpdateStateRequestDto);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

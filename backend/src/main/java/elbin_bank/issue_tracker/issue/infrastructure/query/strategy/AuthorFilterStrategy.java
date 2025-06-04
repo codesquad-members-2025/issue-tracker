@@ -19,7 +19,7 @@ public class AuthorFilterStrategy implements FilterStrategy {
 
     @Override
     public void applyWhere(StringBuilder where, MapSqlParameterSource params, FilterCriteria c) {
-        where.append(" AND a.login = :author");
+        where.append(" AND au.nickname = :author");
         params.addValue("author", c.author());
     }
 

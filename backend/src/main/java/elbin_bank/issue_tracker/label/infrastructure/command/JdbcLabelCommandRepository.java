@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -96,6 +97,20 @@ public class JdbcLabelCommandRepository implements LabelCommandRepository {
 
         var params = new MapSqlParameterSource().addValue("id", id);
         jdbc.update(sql, params);
+    }
+
+    @Override
+    public Optional<Label> findByName(String name) {
+        String sql = "SELECT * FROM label WHERE name = :name";
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", name);
+
+        List<Label> labels = jdbc.query(sql, params, (rs, rowNum) ->
+            new Label(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getString("color"))
+        );
+
+        return labels.stream().findFirst();
     }
 
 }

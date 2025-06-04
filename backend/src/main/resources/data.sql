@@ -20,12 +20,11 @@ VALUES (1001, 'user1', 'pass1', 'salt1', 'Yoon', 'https://avatars.githubusercont
 -- 2) Milestones
 -- ─────────────────────────────────────────────────────────────────────────────
 INSERT INTO `milestone` (`is_closed`, `title`, `description`, `expired_at`, `total_issues`, `closed_issues`)
-VALUES (FALSE, 'v1.0', 'First release', '2025-06-01', 100, 50),
-       (TRUE, 'v1.1', 'Hotfix', '2025-05-15', 20, 20),
-       (FALSE, 'v2.0', 'Second release', '2025-12-01', 150, 30),
-       (FALSE, 'planning', 'Planning phase', NULL, 5, 0),
-       (TRUE, 'legacy', 'Legacy support', '2025-01-01', 10, 10);
-
+VALUES (FALSE, 'v1.0', 'First release', '2025-06-01', 16, 8),
+       (TRUE, 'v1.1', 'Hotfix', '2025-05-15', 17, 9),
+       (FALSE, 'v2.0', 'Second release', '2025-12-01', 17, 9),
+       (FALSE, 'planning', 'Planning phase', NULL, 17, 8),
+       (TRUE, 'legacy', 'Legacy support', '2025-01-01', 17, 8);
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 3) Labels
 -- ─────────────────────────────────────────────────────────────────────────────

@@ -5,6 +5,8 @@ import java.util.List;
 
 public class DslParser {
 
+    private static final int MIN_SIZE = 1;
+
     private DslParser() {
     }
 
@@ -93,9 +95,9 @@ public class DslParser {
     }
 
     private static boolean isUnsatisfiable(ParsedValues parsed) {
-        return parsed.states.size() > 1
-                || parsed.authors.size() > 1
-                || parsed.milestones.size() > 1;
+        return parsed.states.size() > MIN_SIZE
+                || parsed.authors.size() > MIN_SIZE
+                || parsed.milestones.size() > MIN_SIZE;
     }
 
     private static FilterCriteria toCriteria(ParsedValues parsed, boolean unsatisfiable) {

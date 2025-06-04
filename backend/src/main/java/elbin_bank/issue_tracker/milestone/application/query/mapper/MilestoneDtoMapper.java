@@ -16,7 +16,15 @@ public class MilestoneDtoMapper {
                 milestones.stream().map(i -> new MilestoneDto(
                         i.id(),
                         i.title(),
-                        ProgressRateCalculator.calculate(i.totalIssueCount(), i.closedIssueCount())
+                        i.description(),
+                        i.expiredAt(),
+                        ProgressRateCalculator.calculate(
+                                i.totalIssueCount(),
+                                i.closedIssueCount()
+                        ),
+                        i.isClosed(),
+                        i.totalIssueCount(),
+                        i.closedIssueCount()
                 )).toList()
         );
     }

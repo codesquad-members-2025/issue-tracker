@@ -35,7 +35,9 @@ public class IssueQueryController {
 
     @GetMapping("{id}/milestone")
     public ResponseEntity<MilestoneResponseDto> getMilestoneForIssue(@PathVariable("id") long id) {
-        return ResponseEntity.ok(issueQueryService.getMilestoneForIssue(id));
+        return issueQueryService.getMilestoneForIssue(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 
 }
