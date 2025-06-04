@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,6 +26,7 @@ import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.exception.IssueCreationException;
 import codesquad.team01.issuetracker.issue.exception.IssueNotFoundException;
+import codesquad.team01.issuetracker.issue.exception.IssueUpdateException;
 import codesquad.team01.issuetracker.issue.repository.IssueQueryRepository;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import lombok.RequiredArgsConstructor;
@@ -140,16 +142,40 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		DELETE FROM issue_assignee WHERE issue_id = :issueId
 		""";
 
-	private static final String DELETE_SPECIFIC_ISSUE_LABELS_QUERY = """
-		DELETE FROM issue_label
-		WHERE issue_id = :issueId AND label_id IN (:labelIds)
+	private static final String UPDATE_ISSUE_TITLE_QUERY = """
+		UPDATE issue
+		SET title = :title, updated_at = :now
+		WHERE id = :issueId AND deleted_at IS NULL
+		""";
+	private static final String UPDATE_ISSUE_CONTENT_QUERY = """
+				UPDATE issue
+				SET content = :content, updated_at :now
+				WHERE id = :issueId AND deleted_at IS NULL
+		""";
+	private static final String UPDATE_ISSUE_MILESTONE_QUERY = """
+				UPDATE issue
+				SET milestone_id = :milestoneId, updated_at = :now
+				WHERE id = :issueId AND deleted_at IS NULL
+		""";
+	private static final String UPDATE_ISSUE_STATE_QUERY = """
+				UPDATE issue
+				SET state = :state,
+					closed_at = CASE
+						WHEN :state = 'CLOSED' THEN :now
+						ELSE NULL
+					END,
+					updated_at = :now
+				WHERE id = :issueId AND deleted_at IS NULL
 		""";
 
-	private static final String DELETE_SPECIFIC_ISSUE_ASSIGNEES_QUERY = """
-		DELETE FROM issue_assignee
-		WHERE issue_id = :issueId AND user_id IN (:userIds)
-		""";
-
+	private static final String FIND_ISSUE_STATE_AND_WRITER_ID_QUERY = """
+		SELECT 
+			i.state,
+			i.writer_id
+		FROM issue i 
+		WHERE i.id = :issueId 
+		AND i.deleted_at IS NULL
+		  """;
 	private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> {
 
 		Integer milestoneId = rs.getObject("milestone_id", Integer.class);
@@ -223,6 +249,12 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			.milestoneId(rs.getInt("milestoneId"))
 			.openCount(rs.getLong("openCount"))
 			.closedCount(rs.getLong("closedCount"))
+			.build();
+
+	private final RowMapper<IssueDto.IssueStateAndWriterIdRow> stateAndWriterRowMapper =
+		(rs, rowNum) -> IssueDto.IssueStateAndWriterIdRow.builder()
+			.state(IssueState.fromStateStr(rs.getString("state")))
+			.writerId(rs.getInt("writer_id"))
 			.build();
 
 	@Override
@@ -442,48 +474,77 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 
 		try {
 			int deletedCount = jdbcTemplate.update(DELETE_ISSUE_ASSIGNEES_QUERY, params);
-			log.debug("이슈 {}으 모든 담당자 제거 완료: {}개", issueId, deletedCount);
+			log.debug("이슈 {}의 모든 담당자 제거 완료: {}개", issueId, deletedCount);
 		} catch (DataAccessException e) {
 			log.error("이슈 담당자 제거 중 오류 발생: issueId={}, error={}", issueId, e.getMessage());
 			throw new IssueCreationException("이슈 담당자 제거 중 오류 발생", e);
 		}
 	}
 
-	public void removeSpecificLabelsFromIssue(Integer issueId, List<Integer> labelIds) {
-		if (labelIds.isEmpty()) {
-			return;
-		}
-
+	@Override
+	public void updateIssueTitle(Integer issueId, String title, LocalDateTime now) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("issueId", issueId);
-		params.addValue("labelIds", labelIds);
+		params.addValue("title", title);
+		params.addValue("now", now);
 
-		try {
-			int deletedCount = jdbcTemplate.update(DELETE_SPECIFIC_ISSUE_LABELS_QUERY, params);
-			log.debug("이슈 {}에서 {}개 레이블 제거 완료", issueId, deletedCount);
-		} catch (DataAccessException e) {
-			log.error("특정 이슈 레이블 제거 중 오류 발생: issueId={}, labelIds={}, error={}",
-				issueId, labelIds, e.getMessage());
-			throw new IssueCreationException("이슈 레이블 제거 중 오류 발생", e);
+		int updatedRows = jdbcTemplate.update(UPDATE_ISSUE_TITLE_QUERY, params);
+		if (updatedRows == 0) {
+			throw new IssueNotFoundException("조회할 수 없거나 삭제된 이슈: " + issueId);
 		}
 	}
 
-	public void removeSpecificAssigneesFromIssue(Integer issueId, List<Integer> assigneeIds) {
-		if (assigneeIds.isEmpty()) {
-			return;
-		}
-
+	@Override
+	public void updateIssueContent(Integer issueId, String content, LocalDateTime now) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("issueId", issueId);
-		params.addValue("assigneeIds", assigneeIds);
+		params.addValue("content", content);
+		params.addValue("now", now);
+
+		int updatedRows = jdbcTemplate.update(UPDATE_ISSUE_CONTENT_QUERY, params);
+		if (updatedRows == 0) {
+			throw new IssueNotFoundException("조회할 수 없거나 삭제된 이슈: " + issueId);
+		}
+	}
+
+	@Override
+	public void updateIssueMilestone(Integer issueId, Integer milestoneId, LocalDateTime now) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("issueId", issueId);
+		params.addValue("milestoneId", milestoneId);
+		params.addValue("now", now);
+
+		int updatedRows = jdbcTemplate.update(UPDATE_ISSUE_MILESTONE_QUERY, params);
+		if (updatedRows == 0) {
+			throw new IssueNotFoundException("조회할 수 없거나 삭제된 이슈: " + issueId);
+		}
+	}
+
+	@Override
+	public void updateIssueState(Integer issueId, IssueState targetState, LocalDateTime now) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("issueId", issueId);
+		params.addValue("state", targetState.name());
+		params.addValue("now", now);
+
+		int updatedRows = jdbcTemplate.update(UPDATE_ISSUE_STATE_QUERY, params);
+		if (updatedRows == 0) {
+			throw new IssueNotFoundException("조회할 수 없거나 삭제된 이슈: " + issueId);
+		}
+	}
+
+	@Override
+	public IssueDto.IssueStateAndWriterIdRow findIssueStateAndWriterIdByIssueId(Integer issueId) {
+		MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
 
 		try {
-			int deletedCount = jdbcTemplate.update(DELETE_SPECIFIC_ISSUE_ASSIGNEES_QUERY, params);
-			log.debug("이슈 {}에서 {}개 담당자 제거 완료", issueId, deletedCount);
+			return jdbcTemplate.queryForObject(FIND_ISSUE_STATE_AND_WRITER_ID_QUERY, params, stateAndWriterRowMapper);
+
+		} catch (EmptyResultDataAccessException e) {
+			throw new IssueNotFoundException("존재하지 않는 이슈입니다: " + issueId);
 		} catch (DataAccessException e) {
-			log.error("특정 이슈 담당자 제거 중 오류 발생: issueId={}, assigneeIds={}, error={}",
-				issueId, assigneeIds, e.getMessage());
-			throw new IssueCreationException("이슈 담당자 제거 중 오류 발생", e);
+			log.error("이슈 상태 및 작성자 조회 중 데이터베이스 오류 발생: issueId={}, error={}", issueId, e.getMessage());
+			throw new IssueUpdateException("이슈 정보 조회 중 오류가 발생했습니다.", e);
 		}
 	}
 
