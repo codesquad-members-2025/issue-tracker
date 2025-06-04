@@ -12,10 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class JdbcTemplateAssigneeRepository implements IssueAssigneeRepository {
@@ -65,6 +62,10 @@ public class JdbcTemplateAssigneeRepository implements IssueAssigneeRepository {
     }
     @Override
     public Map<Long, List<SummaryUserDto>> findSummaryAssigneesByIssueIds(List<Long> issueIds) {
+        if (issueIds == null || issueIds.isEmpty()) {
+            return Collections.emptyMap();  // ✅ 리스트가 비면 SQL 실행 X
+        }
+
         String sql = """
         SELECT ia.issue_id, u.id, u.nick_name, u.profile_image_url
         FROM issue_assignee ia
