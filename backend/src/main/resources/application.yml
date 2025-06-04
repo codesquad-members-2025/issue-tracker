@@ -28,3 +28,9 @@ cloud:
 
 jwt:
   secret: ${JWT_SECRET:F9c0FlcLC_NSSXm3EFy2q7zZphkBNoHcer0PrcAe3AQ_} #기본값, 실제 환경엔 환경 변수 설정
+
+oauth:
+  github:
+    client-id: ${OAUTH_GITHUB_CLIENT_ID}
+    client-secret: ${OAUTH_GITHUB_CLIENT_SECRET}
+    redirect-uri: ${OAUTH_GITHUB_REDIRECT_URI}
