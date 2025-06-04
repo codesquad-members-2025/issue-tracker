@@ -197,4 +197,10 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			}
 		}
 	}
+
+/*	@Override
+	public IssueDto.BatchUpdateResponse batchUpdateIssueState(List<Integer> issueIds, IssueState action) {
+
+		return null;
+	}*/
 }

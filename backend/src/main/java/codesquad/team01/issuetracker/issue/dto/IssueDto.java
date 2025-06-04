@@ -28,6 +28,7 @@ public class IssueDto {
 	/**
 	 * 요청 DTO
 	 */
+
 	// 열린/닫힌 이슈 개수 조회 필터 쿼리 요청 DTO
 	@Builder
 	public record CountQueryRequest(
@@ -280,6 +281,7 @@ public class IssueDto {
 	@Builder
 	public static class ListItemResponse {
 		private final int id;
+
 		private final String title;
 		private final String state;
 		private final LocalDateTime createdAt;

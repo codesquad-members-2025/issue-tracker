@@ -344,4 +344,5 @@ public class IssueService {
 		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows,
 			0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
 	}
+
 }

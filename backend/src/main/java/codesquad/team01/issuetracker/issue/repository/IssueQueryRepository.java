@@ -35,4 +35,7 @@ public interface IssueQueryRepository {
 	IssueDto.IssueStateAndWriterIdRow findIssueStateAndWriterIdByIssueId(Integer issueId);
 
 	void deleteIssue(Integer issueId, LocalDateTime now);
+	List<MilestoneDto.MilestoneIssueCountRow> countByMilestoneIds(List<Integer> milestoneIds);
+
+	// IssueDto.BatchUpdateResponse batchUpdateIssueState(List<Integer> issueIds, IssueState action);
 }
