@@ -47,12 +47,9 @@ export default function LoginPage() {
   useEffect(() => {
     if (response && response.data.accessToken) {
       const token = response.data.accessToken;
-      // const { loginId, profileImageUrl } = tokenDecoder(token);
-      const testToken =
-        'eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoxLCJsb2dpblVzZXIiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInByb2ZpbGVJbWFnZVVybCI6Imh0dHBzOi8vaXNzdWUtdHJhY2tlci1pbWFnZS1idWNrZXQuczMuYXAtbm9ydGhlYXN0LTIuYW1hem9uYXdzLmNvbS8lRUQlOTYlODQlRUMlOEElQTQlRUQlODQlQjAuanBlZyIsImlhdCI6MTc0ODkyNzc4NiwiZXhwIjoxNzQ5MDE0MTg2fQ.ZmzGHRXfhMM1zaW0ZEk3_ND2jEACGda-KLaeMajFg-s';
-      const { loginId, profileImageUrl } = tokenDecoder(testToken);
+      const { loginId, profileImageUrl } = tokenDecoder(token);
 
-      setUser(loginId, profileImageUrl, testToken);
+      setUser(loginId, profileImageUrl, token);
       localStorage.setItem('token', token);
       navigate('/');
     }
