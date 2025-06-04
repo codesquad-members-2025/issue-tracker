@@ -46,6 +46,7 @@
                 SELECT
                     i.issue_id AS issue_id,
                     i.title,
+                    i.created_at,
                     u.user_id AS author_id,
                     u.nickname AS author_nickname,
                     u.profile_image AS author_profile,
@@ -211,6 +212,7 @@
                 SELECT
                     i.content AS issue_content,
                     i.file_url AS issue_file_url,
+                    i.created_at AS created_at,
                     c.comment_id AS comment_id,
                     c.content AS comment_content,
                     c.file_url AS comment_file_url,

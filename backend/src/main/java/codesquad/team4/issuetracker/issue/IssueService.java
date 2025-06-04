@@ -111,6 +111,7 @@ public class IssueService {
 
     private void addIssueToMap(Map<String, Object> row, Map<Long, IssueInfo> issueMap, Long issueId,
                                   Map<Long, Set<UserInfo>> assigneeMap, Map<Long, Set<LabelInfo>> labelMap) {
+        Timestamp createdAt = (Timestamp) row.get("created_at");
         issueMap.computeIfAbsent(issueId, id ->
                 IssueInfo.builder()
                         .id(issueId)
@@ -126,7 +127,8 @@ public class IssueService {
                                 .id((Long) row.get("milestone_id"))
                                 .title((String) row.get("milestone_title"))
                                 .build())
-                        .build()
+                    .createdAt(createdAt.toLocalDateTime())
+                .build()
         );
     }
 
@@ -240,7 +242,7 @@ public class IssueService {
 
         String issueContent = (String) issueById.get(0).get("issue_content");
         String issueImage = (String) issueById.get(0).get("issue_file_url");
-
+        Timestamp createdAt = (Timestamp) issueById.get(0).get("created_at");
         List<CommentResponseDto.CommentInfo> comments = issueById.stream()
                 .filter(row -> row.get("comment_id") != null) // 댓글이 없는 경우 필터링
                 .map(row -> CommentResponseDto.CommentInfo.builder()
@@ -259,6 +261,7 @@ public class IssueService {
         return IssueResponseDto.searchIssueDetailDto.builder()
                 .content(issueContent)
                 .contentFileUrl(issueImage)
+                .createdAt(createdAt.toLocalDateTime())
                 .comments(comments)
                 .commentSize(comments.size())
                 .build();
