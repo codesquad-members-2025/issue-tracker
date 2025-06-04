@@ -4,6 +4,9 @@ import styled from 'styled-components';
 
 const Button = styled(GhostButton)`
   color: ${({ theme }) => theme.danger.text};
+  svg {
+    stroke: ${({ theme }) => theme.danger.text};
+  }
 `;
 
 export default function DeleteIssueBtn({ onClick }) {
