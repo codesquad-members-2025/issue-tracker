@@ -2950,9 +2950,9 @@
   "milestones": [
     {
       "milestoneId": 5,
-      "name": "테스트",
-      "description": "111",
-      "endDate": "1111-10-22T00:00:00.000Z",
+      "name": "테스트ㅁㄴㅇ",
+      "description": "111ㅁㄴㅇ",
+      "endDate": "1111-10-10T07:04:16.000Z",
       "isOpen": true,
       "processingRate": 0
     },
@@ -2960,7 +2960,7 @@
       "milestoneId": 4,
       "name": "테스트",
       "description": "1",
-      "endDate": "2026-11-15T00:00:00.000Z",
+      "endDate": "2026-11-11T06:00:00.000Z",
       "isOpen": false,
       "processingRate": 0
     },
@@ -2976,9 +2976,9 @@
       "milestoneId": 2,
       "name": "v1.1",
       "description": "UI/UX 개선-> 편집 테스트",
-      "endDate": "2025-07-22T00:00:00.000Z",
+      "endDate": "2025-07-10T06:00:00.000Z",
       "processingRate": 30,
-      "isOpen": true
+      "isOpen": false
     },
     {
       "milestoneId": 3,
