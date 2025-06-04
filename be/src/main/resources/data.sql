@@ -29,20 +29,21 @@ VALUES
 
 
 -- Issues
-INSERT INTO issues (title, content, author_id, milestone_id, is_open, last_modified_at, image_url)
+INSERT INTO issues (issue_id, title, content, author_id, milestone_id, is_open, last_modified_at, image_url)
 VALUES
-    ('이슈 제목 14', '이슈 내용 14', 8, 2, 1, NOW(), NULL),
-    ('이슈 제목 18', '이슈 내용 18', 10, 3, 1, NOW(), NULL),
-    ('이슈 제목 24', '이슈 내용 24', 2, 2, 1, NOW(), NULL),
-    ('이슈 제목 46', '이슈 내용 46', 1, 3, 1, NOW(), NULL),
-    ('이슈 제목 47', '이슈 내용 47', 8, 1, 1, NOW(), NULL),
-    ('이슈 제목 54', '이슈 내용 54', 7, 2, 1, NOW(), NULL),
-    ('이슈 제목 60', '이슈 내용 60', 10, 4, 1, NOW(), NULL),
-    ('이슈 제목 69', '이슈 내용 69', 9, 2, 1, NOW(), NULL),
-    ('이슈 제목 70', '이슈 내용 70', 8, 2, 1, NOW(), NULL),
-    ('이슈 제목 75', '이슈 내용 75', 8, 5, 1, NOW(), NULL),
-    ('이슈 제목 84', '이슈 내용 84', 4, 4, 1, NOW(), NULL),
-    ('이슈 제목 95', '이슈 내용 95', 9, 1, 1, NOW(), NULL);
+    (14, '이슈 제목 14', '이슈 내용 14', 8, 2, 1, NOW(), NULL),
+    (18, '이슈 제목 18', '이슈 내용 18', 10, 3, 1, NOW(), NULL),
+    (24, '이슈 제목 24', '이슈 내용 24', 2, 2, 1, NOW(), NULL),
+    (46, '이슈 제목 46', '이슈 내용 46', 1, 3, 1, NOW(), NULL),
+    (47, '이슈 제목 47', '이슈 내용 47', 8, 1, 1, NOW(), NULL),
+    (54, '이슈 제목 54', '이슈 내용 54', 7, 2, 1, NOW(), NULL),
+    (60, '이슈 제목 60', '이슈 내용 60', 10, 4, 1, NOW(), NULL),
+    (69, '이슈 제목 69', '이슈 내용 69', 9, 2, 1, NOW(), NULL),
+    (70, '이슈 제목 70', '이슈 내용 70', 8, 2, 1, NOW(), NULL),
+    (75, '이슈 제목 75', '이슈 내용 75', 8, 5, 1, NOW(), NULL),
+    (84, '이슈 제목 84', '이슈 내용 84', 4, 4, 1, NOW(), NULL),
+    (95, '이슈 제목 95', '이슈 내용 95', 9, 1, 1, NOW(), NULL);
+
 
 -- Issue_Label
 INSERT INTO issue_label (issue_id, label_id, last_modified_at)
