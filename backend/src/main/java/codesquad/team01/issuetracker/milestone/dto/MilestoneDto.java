@@ -57,15 +57,16 @@ public class MilestoneDto {
 		String description,
 		LocalDate dueDate,
 		MilestoneState state,
-		int openCount,
-		int closeCount,
+		Long openCount,
+		Long closeCount,
 		double progress
 	) {
-		public static MilestoneListItem from(MilestoneRow row, MilestoneIssueCount count) {
-			int openCount = count.openCount;
-			int closedCount = count.closedCount;
+		public static MilestoneListItem from(MilestoneRow row, MilestoneDto.MilestoneIssueCountRow count) {
+
+			Long openCount = count.openCount();
+			Long closedCount = count.closedCount();
 			double progress = 0.0;
-			int total = openCount + closedCount;
+			Long total = openCount + closedCount;
 			if (total > 0) {
 				progress = (double)closedCount / total;
 			}
