@@ -15,8 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-import static CodeSquad.IssueTracker.global.message.SuccessMessage.ISSUE_DELETE_SUCCESS;
-import static CodeSquad.IssueTracker.global.message.SuccessMessage.ISSUE_DETAIL_FETCH_SUCCESS;
+import static CodeSquad.IssueTracker.global.message.SuccessMessage.*;
 
 @Slf4j
 @RestController
@@ -27,14 +26,14 @@ public class IssueController {
     private final IssueService issueService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BaseResponseDto createIssue(
+    public BaseResponseDto<IssueDetailResponse> createIssue(
             @RequestPart("data") @Validated IssueCreateRequest request,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
             HttpServletRequest httpRequest
     ) throws IOException {
         String loginId = httpRequest.getAttribute("loginId").toString();
         log.info("Creating new issue with login id {}", loginId);
-        return new BaseResponseDto(true,"이슈생성에 성공했습니다",issueService.createIssue(request,files,loginId));
+        return BaseResponseDto.success(ISSUE_CREATE_SUCCESS.getMessage(), issueService.createIssue(request,files,loginId));
     }
 
 
@@ -45,10 +44,10 @@ public class IssueController {
     }
 
     @PatchMapping("/{issueId}")
-    public IssueDetailResponse updateIssue(@PathVariable Long issueId,
+    public BaseResponseDto<IssueDetailResponse> updateIssue(@PathVariable Long issueId,
                                            @RequestPart("data") IssueUpdateDto updateParam,
                                            @RequestPart(value = "files",required = false) List<MultipartFile> files) throws IOException {
-        return issueService.update(issueId, updateParam ,files);
+        return BaseResponseDto.success(ISSUE_UPDATE_SUCCESS, issueService.update(issueId, updateParam, files));
     }
 
     @DeleteMapping("/{issueId}")
