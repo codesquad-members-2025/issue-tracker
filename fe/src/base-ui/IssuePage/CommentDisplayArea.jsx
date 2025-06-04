@@ -17,11 +17,12 @@ export default function CommentDisplayArea({ content, issueFileUrl }) {
   return (
     <CommentWrapper>
       <span>{content}</span>
-      {isImageFile(issueFileUrl) ? (
-        <img src={issueFileUrl} alt="첨부 이미지" />
-      ) : (
-        <a href={issueFileUrl}>첨부파일입니다.</a>
-      )}
+      {issueFileUrl &&
+        (isImageFile(issueFileUrl) ? (
+          <img src={issueFileUrl} alt="첨부 이미지" />
+        ) : (
+          <a href={issueFileUrl}>첨부파일입니다.</a>
+        ))}
     </CommentWrapper>
   );
 }

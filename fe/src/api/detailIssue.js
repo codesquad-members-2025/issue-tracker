@@ -15,3 +15,7 @@ export function postCommentInDetailIssueAPI(issueId) {
 export function patchCommentInDetailIssueAPI(issueId, commentId) {
   return `${defaultAPI}/${issueId}/comments/${commentId}`;
 }
+
+export function deleteDetailIssueAPI(id) {
+  return `http://localhost:8080/issues/${id}`;
+}

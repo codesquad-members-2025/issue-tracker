@@ -8,12 +8,16 @@ import {
   patchDetailIssueAPI,
   postCommentInDetailIssueAPI,
   patchCommentInDetailIssueAPI,
+  deleteDetailIssueAPI,
 } from '@/api/detailIssue';
 import { useParams } from 'react-router-dom';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import DisplayComment from '@/units/issuePage/DisplayComment';
 import SideBar from '@/units/SideBar';
 import NewComment from '@/units/issuePage/NewComment';
+import DeleteIssue from '@/base-ui/IssuePage/DeleteIssue';
+import DeleteIssueBtn from '@/base-ui/IssuePage/DeleteIssueBtn';
+import { useNavigate } from 'react-router-dom';
 
 export default function IssueDetailPage() {
   const { response, fetchData, isLoading } = useDataFetch({ fetchType: '이슈 상세 페이지' });
@@ -49,6 +53,23 @@ export default function IssueDetailPage() {
       if (ok) {
         shouldRefetch.current = true;
       }
+    }
+  }
+
+  async function deleteIssueHandler() {
+    const fetchOption = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = await fetchData(deleteDetailIssueAPI(id), getOptionWithToken(fetchOption));
+
+    if (response.ok) {
+      navigate('/'); // 삭제 성공하면 메인 페이지로 이동
+    } else {
+      console.error('이슈 삭제 실패');
     }
   }
 
@@ -106,7 +127,10 @@ export default function IssueDetailPage() {
           })}
           <NewComment commentFetchHandler={commentFetchHandler} />
         </CommentsWrapper>
-        <SideBar pageType={'detail'} issueFetchHandler={issueFetchHandler} />
+        <SideWrapper>
+          <SideBar pageType={'detail'} issueFetchHandler={issueFetchHandler} />
+          <DeleteIssueBtn onClick={deleteIssueHandler} />
+        </SideWrapper>
       </Kanban>
     </Container>
   );
@@ -131,6 +155,13 @@ const CommentsWrapper = styled.div`
   flex-direction: column;
   gap: 24px;
   width: 960px;
+`;
+
+const SideWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-end;
 `;
 
 function mainCommentMap(issue) {

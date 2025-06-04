@@ -4,6 +4,12 @@
 - 현재 필터 상황 이 스토어에서 확인 가능
 */
 
+// assignee: null,
+// label: null,
+// milestone: null,
+// author: null,
+// commentedBy: null,
+
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
@@ -11,11 +17,7 @@ const useFilterStore = create(
   immer((set) => ({
     selectedFilters: {
       page: 1,
-      assignee: null,
-      label: null,
-      milestone: null,
-      author: null,
-      commentedBy: null,
+
       isOpen: true,
     },
 
@@ -26,7 +28,11 @@ const useFilterStore = create(
           return;
         }
         if (key in state.selectedFilters) {
-          delete state.selectedFilters[key];
+          if (Number(state.selectedFilters[key]) === Number(value)) {
+            delete state.selectedFilters[key];
+          } else {
+            state.selectedFilters[key] = value;
+          }
         } else {
           state.selectedFilters[key] = value;
         }
