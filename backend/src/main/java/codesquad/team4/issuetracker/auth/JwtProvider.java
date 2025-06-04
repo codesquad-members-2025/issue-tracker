@@ -1,5 +1,6 @@
 package codesquad.team4.issuetracker.auth;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -32,24 +33,36 @@ public class JwtProvider {
             .compact();
     }
 
+    public String createToken(Long userId, long expirationMillis) {
+        Date now = new Date();
+        return Jwts.builder()
+            .setSubject(String.valueOf(userId))
+            .setIssuedAt(now)
+            .setExpiration(new Date(now.getTime() + expirationMillis))
+            .signWith(key, SignatureAlgorithm.HS256)
+            .compact();
+    }
+
     public Long getUserId(String token) {
         return Long.valueOf(Jwts.parserBuilder()
-            .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+            .setSigningKey(key)
             .build()
             .parseClaimsJws(token)
             .getBody()
             .getSubject());
     }
 
-    public boolean isValid(String token) {
+    public TokenValidationResult isValid(String token) {
         try {
             Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token);
-            return true;
+            return TokenValidationResult.VALID;
+        } catch (ExpiredJwtException e) {
+            return TokenValidationResult.EXPIRED;
         } catch (JwtException | IllegalArgumentException e) {
-            return false;
+            return TokenValidationResult.INVALID;
         }
     }
 }
