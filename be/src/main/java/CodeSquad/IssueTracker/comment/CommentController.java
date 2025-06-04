@@ -3,7 +3,7 @@ package CodeSquad.IssueTracker.comment;
 import CodeSquad.IssueTracker.comment.dto.CommentRequestDto;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
 import CodeSquad.IssueTracker.comment.dto.CommentUpdateDto;
-import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
+import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
+
+import static CodeSquad.IssueTracker.global.message.SuccessMessage.COMMENT_DELETE_SUCCESS;
 
 @RestController
 @RequestMapping("/issues/{issueId}/comments")
@@ -42,5 +43,10 @@ public class CommentController {
         return commentService.update(commentId,request,files, Long.valueOf(authorId));
     }
 
+    @DeleteMapping("/{commentId}")
+    public BaseResponseDto<String> deleteComment(@PathVariable("commentId") Long commentId) {
+        commentService.deleteById(commentId);
+        return BaseResponseDto.success(COMMENT_DELETE_SUCCESS.getMessage(), null);
+    }
 
 }
