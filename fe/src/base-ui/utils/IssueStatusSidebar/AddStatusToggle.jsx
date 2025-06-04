@@ -145,9 +145,9 @@ export default function AddStatusToggle({
     if (context === 'detail') {
       const PATCHoption = {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
         body: getFetchBody(toggleType, selected),
       };
       issueFetchHandler('PATCH', PATCHoption);
