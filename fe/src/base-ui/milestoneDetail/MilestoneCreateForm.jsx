@@ -98,7 +98,7 @@ export default function MilestoneCreateForm({
               name: nameValue,
               endDate: timeZoneCutter(dateValue),
               description: descriptionValue,
-              isOpen: isOpen,
+              isOpen,
             })
           }
           disabled={!isValid}

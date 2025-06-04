@@ -34,15 +34,15 @@ export default function MilestonePage() {
   async function submitHandler({
     fetchMethod,
     name,
+    isOpen,
     milestoneId = null,
     description = null,
     endDate = null,
-    isOpen = null,
     setterFn = null,
   }) {
     const isPatch = fetchMethod === 'PATCH';
     const API = isPatch ? getPatchUrl(milestoneId) : POST_MILESTONE;
-    const body = { name, description, endDate: parseDateString(endDate) };
+    const body = { name, description, isOpen, endDate: parseDateString(endDate) };
     const fetchOption = {
       method: fetchMethod,
       headers: { 'Content-Type': 'application/json' },
