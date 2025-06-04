@@ -13,7 +13,6 @@ import CodeSquad.IssueTracker.issueLabel.IssueLabelService;
 import CodeSquad.IssueTracker.issueLabel.dto.IssueLabelResponse;
 import CodeSquad.IssueTracker.issueLabel.dto.SummaryLabelDto;
 import CodeSquad.IssueTracker.milestone.MilestoneService;
-import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.user.User;
 import CodeSquad.IssueTracker.user.UserService;
 import CodeSquad.IssueTracker.user.dto.SummaryUserDto;
@@ -55,12 +54,12 @@ public class IssueService {
 
         issueRepository.update(issueId,updateParam,updateIssueFileUrl);
 
-        if(updateParam.getAssigneeIds() != null && !updateParam.getAssigneeIds().isEmpty()) {
-            issueAssigneeService.assignAssignees(issueId, updateParam.getAssigneeIds());
+        if(updateParam.getAssigneeId() != null && !updateParam.getAssigneeId().isEmpty()) {
+            issueAssigneeService.assignAssignees(issueId, updateParam.getAssigneeId());
         }
 
-        if(updateParam.getLabelIds() != null && !updateParam.getLabelIds().isEmpty()) {
-            issueLabelService.assignLabels(issueId, updateParam.getLabelIds());
+        if(updateParam.getLabelId() != null && !updateParam.getLabelId().isEmpty()) {
+            issueLabelService.assignLabels(issueId, updateParam.getLabelId());
         }
 
         return toDetailResponse(findById(issueId));
