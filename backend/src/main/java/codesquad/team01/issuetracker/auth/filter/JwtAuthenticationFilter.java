@@ -59,6 +59,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		User user = userRepository.findById(userId)
 			.orElseThrow(UserNotFoundException::new);
 
+		request.setAttribute("authenticatedUser", user);
+		request.setAttribute("username", username);
+		request.setAttribute("profileImageUrl", profileImageUrl);
+
 		chain.doFilter(request, response);
 	}
 }
