@@ -22,5 +22,6 @@ spring:
   github:
     client-id: dummy
     client-secret: dummy
-    redirect-uri: dummy
+    redirect-uri: http://localhost:8080/oauth/callback/github
 
+  frontendApiBaseUrl: http://localhost:3000
