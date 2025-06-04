@@ -1,6 +1,5 @@
 package CodeSquad.IssueTracker.milestone;
 
-import CodeSquad.IssueTracker.global.exception.NotFoundException;
 import CodeSquad.IssueTracker.issue.IssueRepository;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneListResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +36,8 @@ public class MilestoneService {
         milestoneRepository.deleteById(id);
     }
 
-    public MilestoneResponse findMilestoneResponsesByIssueId(Long issueId) {
-        return milestoneRepository.findMilestoneResponsesByIssueId(issueId)
-                .orElseThrow(() -> new NotFoundException("Milestone not found"));
+    public Optional<MilestoneResponse> findMilestoneResponsesByIssueId(Long issueId) {
+        return milestoneRepository.findMilestoneResponsesByIssueId(issueId);
     }
 
     public MilestoneListResponse getMilestonesByStatus(boolean isOpen) {

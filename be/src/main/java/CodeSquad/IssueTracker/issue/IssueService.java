@@ -124,9 +124,8 @@ public class IssueService {
         response.setLabels(labels);
 
         // ✅ Milestone 정보 조회
-        MilestoneResponse milestone =
-                milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
-        response.setMilestone(milestone);
+        milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId())
+                .ifPresent(response::setMilestone);
 
         // ✅ Comments 정보 조회
         List<CommentResponseDto> comments =
