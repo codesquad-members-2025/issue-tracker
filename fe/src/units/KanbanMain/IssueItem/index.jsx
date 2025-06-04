@@ -101,7 +101,7 @@ export default function IssueItem({ issue }) {
           </Header>
           <Information>
             <IssueNumber issueNumber={id} />
-            <AuthorInform lastModifiedAt={lastModifiedAt} author={author.nickname} />
+            <AuthorInform lastModifiedAt={lastModifiedAt} author={author.nickName} />
             <MileStoneTitle mileStoneTitle={milestone?.name} />
           </Information>
         </Main>

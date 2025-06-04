@@ -140,6 +140,7 @@ const Kanban = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 16px;
+  overflow: hidden;
 `;
 
 const KanbanHeader = styled.div`
@@ -158,17 +159,4 @@ const HeaderLeft = styled.div`
   display: flex;
   gap: 24px;
   align-items: center;
-`;
-
-const Item = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 32px;
-`;
-const ItemRightWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-end;
 `;

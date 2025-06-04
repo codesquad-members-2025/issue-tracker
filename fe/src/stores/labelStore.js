@@ -4,10 +4,12 @@ import { immer } from 'zustand/middleware/immer';
 const useLabelStore = create(
   immer((set) => ({
     labels: [],
+    count: null,
 
-    setLabels: (labels) =>
+    setLabels: (labels, count = null) =>
       set((state) => {
         state.labels = labels;
+        state.count = count ? count : 0;
       }),
 
     addLabel: (label) =>

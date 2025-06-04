@@ -2,48 +2,35 @@
   "issues": [
     {
       "id": 1,
-      "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴsss",
+      "title": "로그인 버튼이 작동하지 않음-> 테스트ㄴㄴㄴㄴㄴssss",
       "content": "로그인 버튼을 눌러도 반응이 없습니다.\n\n재현 방법:\n1. 메인 페이지 접속\n2. 로그인 버튼 클릭\n\n기대 동작: 로그인 모달이 열림\n실제 동작: 아무 반응 없음\n\n-> 테스트",
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "email": "devchan@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         },
         {
           "id": 103,
-          "nickname": "bob",
+          "nickName": "bob",
           "email": "bob@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         },
         {
           "id": 104,
-          "nickname": "charlie",
+          "nickName": "charlie",
           "email": "charlie@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF",
-          "description": "논의 필요"
-        },
-        {
-          "labelId": 7,
-          "name": "test",
-          "color": "#CCCCCC",
-          "description": "테스트 관련"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "name": "v2.0",
@@ -99,13 +86,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -150,24 +137,24 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "email": "alice@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         },
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "email": "devchan@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         }
@@ -214,18 +201,18 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -234,11 +221,6 @@
           "labelId": 5,
           "name": "feature",
           "color": "#00FF00"
-        },
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
         }
       ],
       "milestone": {
@@ -268,13 +250,13 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -304,13 +286,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -348,13 +330,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -388,24 +370,19 @@
       "isOpen": false,
       "author": {
         "id": 105,
-        "nickname": "david"
+        "nickName": "david"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice"
+          "nickName": "alice"
         },
         {
           "id": 103,
-          "nickname": "bob"
+          "nickName": "bob"
         }
       ],
       "labels": [
-        {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        },
         {
           "labelId": 2,
           "name": "urgent",
@@ -424,12 +401,12 @@
       "isOpen": false,
       "author": {
         "id": 102,
-        "nickname": "alice"
+        "nickName": "alice"
       },
       "assignees": [
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         }
       ],
@@ -452,12 +429,12 @@
       "isOpen": false,
       "author": {
         "id": 103,
-        "nickname": "bob"
+        "nickName": "bob"
       },
       "assignees": [
         {
           "id": 104,
-          "nickname": "charlie",
+          "nickName": "charlie",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
@@ -480,27 +457,21 @@
       "isOpen": false,
       "author": {
         "id": 104,
-        "nickname": "charlie"
+        "nickName": "charlie"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         },
         {
           "id": 103,
-          "nickname": "bob",
+          "nickName": "bob",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 7,
         "name": "v0.9 릴리즈"
@@ -513,12 +484,12 @@
       "isOpen": false,
       "author": {
         "id": 105,
-        "nickname": "david"
+        "nickName": "david"
       },
       "assignees": [
         {
           "id": 106,
-          "nickname": "eve",
+          "nickName": "eve",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
         }
       ],
@@ -541,27 +512,16 @@
       "isOpen": false,
       "author": {
         "id": 101,
-        "nickname": "devchan"
+        "nickName": "devchan"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        },
-        {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 5,
         "name": "v1.0 릴리즈"
@@ -574,12 +534,12 @@
       "isOpen": false,
       "author": {
         "id": 102,
-        "nickname": "alice"
+        "nickName": "alice"
       },
       "assignees": [
         {
           "id": 103,
-          "nickname": "bob",
+          "nickName": "bob",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         }
       ],
@@ -602,12 +562,12 @@
       "isOpen": false,
       "author": {
         "id": 103,
-        "nickname": "bob"
+        "nickName": "bob"
       },
       "assignees": [
         {
           "id": 104,
-          "nickname": "charlie",
+          "nickName": "charlie",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
         }
       ],
@@ -630,12 +590,12 @@
       "isOpen": false,
       "author": {
         "id": 104,
-        "nickname": "charlie"
+        "nickName": "charlie"
       },
       "assignees": [
         {
           "id": 105,
-          "nickname": "david",
+          "nickName": "david",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
         }
       ],
@@ -658,17 +618,17 @@
       "isOpen": false,
       "author": {
         "id": 105,
-        "nickname": "david"
+        "nickName": "david"
       },
       "assignees": [
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         },
         {
           "id": 106,
-          "nickname": "eve",
+          "nickName": "eve",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
         }
       ],
@@ -691,22 +651,16 @@
       "isOpen": false,
       "author": {
         "id": 101,
-        "nickname": "devchan"
+        "nickName": "devchan"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#ff0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 5,
         "name": "v1.0 릴리즈"
@@ -720,23 +674,17 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#FF0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 1,
         "name": "v1.0",
@@ -764,13 +712,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -800,13 +748,13 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -844,13 +792,13 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -880,13 +828,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -916,13 +864,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -960,23 +908,17 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 1,
-          "name": "bug",
-          "color": "#FF0000"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 1,
         "name": "v1.0",
@@ -996,13 +938,13 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1011,11 +953,6 @@
           "labelId": 5,
           "name": "feature",
           "color": "#00FF00"
-        },
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
         }
       ],
       "milestone": {
@@ -1045,13 +982,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1081,18 +1018,18 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -1135,13 +1072,13 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1179,19 +1116,19 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 103,
-          "nickname": "bob",
+          "nickName": "bob",
           "email": "bob@example.com",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1271,13 +1208,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1315,13 +1252,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1356,13 +1293,13 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1400,18 +1337,18 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         },
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -1454,13 +1391,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1490,13 +1427,13 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1539,18 +1476,18 @@
       "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         },
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -1588,13 +1525,13 @@
       "isOpen": false,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -1632,13 +1569,13 @@
       "isOpen": false,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -1690,18 +1627,18 @@
       "isOpen": true,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1741,16 +1678,16 @@
       "id": 40,
       "title": "이슈 템플릿 버전 관리",
       "content": "이슈 템플릿의 버전을 관리하고 이전 버전으로 롤백할 수 있는 기능이 필요합니다.",
-      "isOpen": true,
+      "isOpen": false,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1780,13 +1717,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1829,28 +1766,22 @@
       "isOpen": true,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 5,
-          "name": "feature",
-          "color": "#00FF00"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "name": "v2.0",
@@ -1878,13 +1809,13 @@
       "isOpen": true,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -1922,13 +1853,13 @@
       "isOpen": true,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -1958,18 +1889,18 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2007,13 +1938,13 @@
       "isOpen": true,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2051,13 +1982,13 @@
       "isOpen": true,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -2087,18 +2018,18 @@
       "isOpen": true,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         },
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -2136,13 +2067,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         }
       ],
@@ -2185,13 +2116,13 @@
       "isOpen": true,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2221,18 +2152,18 @@
       "isOpen": true,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         },
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -2270,13 +2201,13 @@
       "isOpen": true,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -2314,13 +2245,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -2350,18 +2281,18 @@
       "isOpen": true,
       "author": {
         "id": 2,
-        "nickname": "홍길동",
+        "nickName": "홍길동",
         "profileImageUrl": "https://dummy.local/profile/user1.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2399,22 +2330,17 @@
       "isOpen": false,
       "author": {
         "id": 3,
-        "nickname": "김철수",
+        "nickName": "김철수",
         "profileImageUrl": "https://dummy.local/profile/user2.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
       "labels": [
-        {
-          "labelId": 6,
-          "name": "security",
-          "color": "#800000"
-        },
         {
           "labelId": 2,
           "name": "high-priority",
@@ -2448,13 +2374,13 @@
       "isOpen": true,
       "author": {
         "id": 4,
-        "nickname": "이영희",
+        "nickName": "이영희",
         "profileImageUrl": "https://dummy.local/profile/user3.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
@@ -2484,18 +2410,18 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 3,
-          "nickname": "김철수",
+          "nickName": "김철수",
           "profileImageUrl": "https://dummy.local/profile/user2.png"
         },
         {
           "id": 4,
-          "nickname": "이영희",
+          "nickName": "이영희",
           "profileImageUrl": "https://dummy.local/profile/user3.png"
         }
       ],
@@ -2533,7 +2459,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2548,13 +2474,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 101,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
         }
       ],
@@ -2572,13 +2498,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 106,
-          "nickname": "eve",
+          "nickName": "eve",
           "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
         }
       ],
@@ -2603,13 +2529,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -2627,13 +2553,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 1,
-          "nickname": "devchan",
+          "nickName": "devchan",
           "profileImageUrl": "https://dummy.local/profile/devchan.png"
         }
       ],
@@ -2651,13 +2577,13 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 102,
-          "nickname": "alice",
+          "nickName": "alice",
           "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
         }
       ],
@@ -2691,7 +2617,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2706,23 +2632,17 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [
         {
           "id": 2,
-          "nickname": "홍길동",
+          "nickName": "홍길동",
           "profileImageUrl": "https://dummy.local/profile/user1.png"
         }
       ],
-      "labels": [
-        {
-          "labelId": 6,
-          "name": "discussion",
-          "color": "#FF00FF"
-        }
-      ],
+      "labels": [],
       "milestone": {
         "milestoneId": 3,
         "processingRate": 0
@@ -2736,7 +2656,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2751,7 +2671,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2766,7 +2686,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2781,7 +2701,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2798,7 +2718,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2815,7 +2735,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2847,7 +2767,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2864,7 +2784,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2889,7 +2809,7 @@
       "isOpen": true,
       "author": {
         "id": 1,
-        "nickname": "devchan",
+        "nickName": "devchan",
         "profileImageUrl": "https://dummy.local/profile/devchan.png"
       },
       "assignees": [],
@@ -2906,72 +2826,95 @@
           "lastModifiedAt": "2025-06-02T04:24:25.036Z"
         }
       ]
+    },
+    {
+      "id": 75,
+      "title": "zxcasd",
+      "content": "zxc",
+      "isOpen": false,
+      "author": {
+        "id": 1,
+        "nickName": "devchan",
+        "profileImageUrl": "https://dummy.local/profile/devchan.png"
+      },
+      "assignees": [],
+      "labels": [],
+      "milestone": null,
+      "createdAt": "2025-06-04T04:18:55.845Z",
+      "issueFileUrl": null,
+      "comments": []
     }
   ],
   "users": [
     {
       "id": 1,
-      "nickname": "devchan",
+      "nickName": "devchan",
       "profileImageUrl": "https://dummy.local/profile/devchan.png"
     },
     {
       "id": 2,
-      "nickname": "홍길동",
+      "nickName": "홍길동",
       "profileImageUrl": "https://dummy.local/profile/user1.png"
     },
     {
       "id": 3,
-      "nickname": "김철수",
+      "nickName": "김철수",
       "profileImageUrl": "https://dummy.local/profile/user2.png"
     },
     {
       "id": 4,
-      "nickname": "이영희",
+      "nickName": "이영희",
       "profileImageUrl": "https://dummy.local/profile/user3.png"
     },
     {
       "id": 101,
-      "nickname": "devchan",
+      "nickName": "devchan",
       "email": "devchan@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f17e489affba0627eb1eb39695f93dd"
     },
     {
       "id": 102,
-      "nickname": "alice",
+      "nickName": "alice",
       "email": "alice@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f4022de826f725e10df604bf1b9725cfd"
     },
     {
       "id": 103,
-      "nickname": "bob",
+      "nickName": "bob",
       "email": "bob@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/c900c04fc7cd8e2d56d595d61b4d6d8f9f5287469802eca457586a25a096fd31"
     },
     {
       "id": 104,
-      "nickname": "charlie",
+      "nickName": "charlie",
       "email": "charlie@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f09f5287469802eca457586a25a096fd31"
     },
     {
       "id": 105,
-      "nickname": "david",
+      "nickName": "david",
       "email": "david@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f08b566dca82634c93f811198148a26065"
     },
     {
       "id": 106,
-      "nickname": "eve",
+      "nickName": "eve",
       "email": "eve@example.com",
       "profileImageUrl": "https://item.kakaocdn.net/do/15e2ea6551fc8981b493de76601697f026397d82c8691bdabf557d1536959d9c"
     }
   ],
   "labels": [
     {
-      "labelId": 1,
-      "name": "bug",
-      "color": "#FF0000",
-      "description": "버그 관련 이슈"
+      "labelId": 9,
+      "name": "똥",
+      "description": "히히",
+      "color": "#000000"
+    },
+    {
+      "labelId": 8,
+      "name": "테스트",
+      "description": "테스트 입니다",
+      "color": "#ed6b39"
     },
     {
       "labelId": 2,
@@ -2998,12 +2941,6 @@
       "description": "새로운 기능"
     },
     {
-      "labelId": 6,
-      "name": "discussion",
-      "color": "#FF00FF",
-      "description": "논의 필요"
-    },
-    {
       "labelId": 7,
       "name": "test",
       "color": "#CCCCCC",
@@ -3016,7 +2953,7 @@
       "name": "테스트",
       "description": "111",
       "endDate": "1111-11-11T00:00:00.000Z",
-      "isOpen": false,
+      "isOpen": true,
       "processingRate": 0
     },
     {
@@ -3033,15 +2970,15 @@
       "description": "1차 출시",
       "endDate": "2025-06-30",
       "processingRate": 0,
-      "isOpen": true
+      "isOpen": false
     },
     {
       "milestoneId": 2,
       "name": "v1.1",
       "description": "UI/UX 개선-> 편집 테스트",
-      "endDate": "2025-07-31",
+      "endDate": "2025-07-22T00:00:00.000Z",
       "processingRate": 30,
-      "isOpen": false
+      "isOpen": true
     },
     {
       "milestoneId": 3,

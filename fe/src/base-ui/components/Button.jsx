@@ -67,7 +67,7 @@ const ghostButtonStyle = css`
   }
   &:active {
     border-radius: 12px;
-    background-color: ${({ theme }) => theme.brand.surface.default};
+    background-color: ${({ theme }) => theme.surface.bold};
   }
 `;
 

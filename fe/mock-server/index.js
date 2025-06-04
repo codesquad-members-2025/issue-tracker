@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix);
   },
 });
-const upload = multer({ storage, limits: { fileSize: 30 * 1024 * 1024 } }); // 30MB 제한
+const upload = multer({ storage, limits: { fileSize: 30 * 1024 * 1024 }, preservePath: true }); // 30MB 제한
 
 app.use(
   cors({
@@ -35,8 +35,15 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.json());
-// multipart/form-data 전용 요청은 multer에서 파싱, JSON 요청만 express.json
+
+app.use((req, res, next) => {
+  const contentType = req.headers['content-type'];
+  if (contentType && contentType.includes('application/json')) {
+    express.json()(req, res, next);
+  } else {
+    next();
+  }
+});
 
 // 인증 미들웨어
 const validTokens = ['test-token-123', 'sampleToken123']; // 실제 프로젝트에서는 DB 기반 검증 사용
@@ -59,104 +66,119 @@ const createResponse = (success, message, data) => ({
   data,
 });
 
-app.post('/issues', upload.single('files'), authMiddleware, async (req, res) => {
-  try {
-    // req.body.data는 json 문자열
-    const data = JSON.parse(req.body.data);
+app.post(
+  '/issues',
+  upload.fields([{ name: 'files' }, { name: 'data' }]),
+  authMiddleware,
+  async (req, res) => {
+    try {
+      let data;
+      try {
+        const jsonBuffer = req.files?.data?.[0]?.buffer;
+        if (!jsonBuffer) throw new Error('data 필드 누락');
+        data = JSON.parse(jsonBuffer.toString('utf-8'));
+      } catch (err) {
+        return res.status(400).json({
+          success: false,
+          message: 'data 필드는 JSON 형식이어야 합니다.',
+          error: err.message,
+        });
+      }
 
-    // 파일 처리
-    let fileUrl = null;
-    if (req.file) {
-      fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
-    }
+      // 파일 처리
+      let fileUrl = null;
+      if (req.files?.files?.[0]) {
+        fileUrl = `http://localhost:${PORT}/uploads/${req.files.files[0].filename}`;
+      }
 
-    const filePath = path.join(__dirname, 'mainPage.json');
-    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+      const filePath = path.join(__dirname, 'mainPage.json');
+      const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
-    // 새 이슈 ID 생성
-    const newIssueId = Math.max(...json.issues.map((i) => i.id)) + 1;
+      // 새 이슈 ID 생성
+      const newIssueId = Math.max(...json.issues.map((i) => i.id)) + 1;
 
-    // 새 이슈 객체 생성
-    const newIssue = {
-      issue: {
-        issueId: newIssueId,
-        title: data.title,
-        content: data.content,
-        authorId: 1, // 현재 로그인한 사용자 ID
-        milestoneId: data.milestoneId,
-        isOpen: true,
-        lastModifiedAt: new Date().toISOString(),
-        issueFileUrl: fileUrl,
-      },
-      assignees: (data.assigneeIds || [])
-        .map((id) => {
-          const user = json.users.find((u) => u.id === id);
-          return user
-            ? {
-                id: user.id,
-                nickname: user.nickname,
-                profileImageUrl:
-                  user.profileImageUrl || `https://dummy.local/profile/${user.nickname}.png`,
-              }
-            : null;
-        })
-        .filter(Boolean),
-      labels: (data.labelIds || [])
-        .map((id) => {
-          const label = json.labels.find((l) => l.labelId === id);
-          return label
-            ? {
-                labelId: label.labelId,
-                name: label.name,
-                color: label.color,
-              }
-            : null;
-        })
-        .filter(Boolean),
-      milestone: data.milestoneId
-        ? {
-            ...json.milestones.find((m) => m.id === data.milestoneId),
-            milestoneId: data.milestoneId,
-            processingRate: 0,
-          }
-        : null,
-      comments: [],
-    };
-
-    // 새 이슈를 기존 이슈 목록에 추가
-    json.issues.push({
-      id: newIssueId,
-      title: data.title,
-      content: data.content,
-      isOpen: true,
-      author: json.users.find((u) => u.id === 1),
-      assignees: newIssue.assignees,
-      labels: newIssue.labels,
-      milestone: newIssue.milestone,
-      createdAt: new Date().toISOString(),
-      issueFileUrl: fileUrl,
-      comments: [],
-    });
-
-    // 파일 저장
-    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
-
-    res.status(201).json(
-      createResponse(true, '새 이슈가 생성되었습니다.', {
+      // 새 이슈 객체 생성
+      const newIssue = {
         issue: {
           issueId: newIssueId,
+          title: data.title,
+          content: data.content,
+          authorId: 1, // 현재 로그인한 사용자 ID
+          milestoneId: data.milestoneId,
+          isOpen: true,
+          lastModifiedAt: new Date().toISOString(),
+          issueFileUrl: fileUrl,
         },
-      }),
-    );
-  } catch (error) {
-    console.error('🔥 이슈 생성 오류:', error.message);
-    res.status(500).json(
-      createResponse(false, '이슈 생성 중 서버 오류 발생', {
-        error: error.message,
-      }),
-    );
-  }
-});
+        assignees: (data.assigneeIds || [])
+          .map((id) => {
+            const user = json.users.find((u) => u.id === id);
+            return user
+              ? {
+                  id: user.id,
+                  nickName: user.nickName,
+                  profileImageUrl:
+                    user.profileImageUrl || `https://dummy.local/profile/${user.nickName}.png`,
+                }
+              : null;
+          })
+          .filter(Boolean),
+        labels: (data.labelIds || [])
+          .map((id) => {
+            const label = json.labels.find((l) => l.labelId === id);
+            return label
+              ? {
+                  labelId: label.labelId,
+                  name: label.name,
+                  color: label.color,
+                }
+              : null;
+          })
+          .filter(Boolean),
+        milestone: data.milestoneId
+          ? {
+              ...json.milestones.find((m) => m.id === data.milestoneId),
+              milestoneId: data.milestoneId,
+              processingRate: 0,
+            }
+          : null,
+        comments: [],
+      };
+
+      // 새 이슈를 기존 이슈 목록에 추가
+      json.issues.push({
+        id: newIssueId,
+        title: data.title,
+        content: data.content,
+        isOpen: true,
+        author: json.users.find((u) => u.id === 1),
+        assignees: newIssue.assignees,
+        labels: newIssue.labels,
+        milestone: newIssue.milestone,
+        createdAt: new Date().toISOString(),
+        issueFileUrl: fileUrl,
+        comments: [],
+      });
+
+      // 파일 저장
+      await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+
+      res.status(201).json(
+        createResponse(true, '새 이슈가 생성되었습니다.', {
+          issue: {
+            issueId: newIssueId,
+          },
+        }),
+      );
+    } catch (error) {
+      console.error('🔥 이슈 생성 오류:', error.message);
+      res.status(500).json(
+        createResponse(false, '이슈 생성 중 서버 오류 발생', {
+          error: error.message,
+        }),
+      );
+    }
+  },
+);
 app.use('/uploads', express.static(uploadDir));
 
 app.get('/home', authMiddleware, async (req, res) => {
@@ -240,7 +262,7 @@ app.post('/login', async (req, res) => {
     const filePath = path.join(__dirname, 'mainPage.json');
     const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
-    const user = json.users.find((u) => u.nickname === loginId);
+    const user = json.users.find((u) => u.nickName === loginId);
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -289,9 +311,24 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.patch('/toggleStatus', async (req, res) => {
+app.patch('/toggleStatus', upload.none(), async (req, res) => {
   try {
-    const { id: ids } = req.body; // id 배열을 받음
+    let ids = [];
+    if (req.body.data) {
+      try {
+        const parsed = JSON.parse(req.body.data);
+        ids = parsed.id;
+      } catch (err) {
+        return res.status(400).json({
+          success: false,
+          message: 'data 필드는 JSON 형식이어야 합니다.',
+          error: err.message,
+        });
+      }
+    } else {
+      ids = req.body.id;
+    }
+
     if (!Array.isArray(ids)) {
       return res.status(400).json({ success: false, message: 'id 필드는 배열이어야 합니다.' });
     }
@@ -329,8 +366,18 @@ app.patch('/toggleStatus', async (req, res) => {
 app.patch('/issues/:issueId/comments/:commentId', upload.single('files'), async (req, res) => {
   try {
     const { issueId, commentId } = req.params;
-    // data: JSON 문자열
-    const data = req.body.data ? JSON.parse(req.body.data) : {};
+    let data = {};
+    if (req.body.data) {
+      try {
+        data = JSON.parse(req.body.data);
+      } catch (err) {
+        return res.status(400).json({
+          success: false,
+          message: 'data 필드는 JSON 형식이어야 합니다.',
+          error: err.message,
+        });
+      }
+    }
 
     const filePath = path.join(__dirname, 'mainPage.json');
     const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
@@ -386,8 +433,16 @@ app.patch('/issues/:issueId/comments/:commentId', upload.single('files'), async 
 // 코멘트 생성 (FormData: data(JSON), files)
 app.post('/issues/:issueId/comments', upload.single('files'), async (req, res) => {
   try {
-    // data: JSON 문자열
-    const data = JSON.parse(req.body.data);
+    let data;
+    try {
+      data = JSON.parse(req.body.data);
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        message: 'data 필드는 JSON 형식이어야 합니다.',
+        error: err.message,
+      });
+    }
     const { issueId } = req.params;
 
     const filePath = path.join(__dirname, 'mainPage.json');
@@ -452,86 +507,110 @@ app.post('/issues/:issueId/comments', upload.single('files'), async (req, res) =
 });
 
 // PATCH /issues/:id - 이슈 수정
-app.patch('/issues/:id', upload.single('files'), authMiddleware, async (req, res) => {
-  try {
-    const issueId = parseInt(req.params.id);
-    const filePath = path.join(__dirname, 'mainPage.json');
-    const data = await fs.readFile(filePath, 'utf-8');
-    const json = JSON.parse(data);
+app.patch(
+  '/issues/:id',
+  upload.fields([{ name: 'files' }, { name: 'data' }]),
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const issueId = parseInt(req.params.id);
+      const filePath = path.join(__dirname, 'mainPage.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      const json = JSON.parse(data);
 
-    const issueIndex = json.issues.findIndex((issue) => issue.id === issueId);
-    if (issueIndex === -1) {
-      return res.status(404).json({
+      const issueIndex = json.issues.findIndex((issue) => issue.id === issueId);
+      // --- DEBUGGING BLOCK START ---
+      console.log('--- DEBUG: PATCH /issues/:id ---');
+      console.log('req.body:', req.body);
+      console.log('req.files:', req.files);
+      if (req.files?.data?.[0]) {
+        console.log('data buffer:', req.files.data[0].buffer?.toString('utf-8'));
+      }
+      // --- DEBUGGING BLOCK END ---
+      if (issueIndex === -1) {
+        return res.status(404).json({
+          success: false,
+          message: '이슈를 찾을 수 없습니다.',
+        });
+      }
+
+      // 🔽 멀티파트에서 data 필드를 JSON으로 파싱 (buffer 또는 텍스트 기반)
+      let updateData = {};
+      try {
+        if (req.files?.data?.[0]?.buffer) {
+          updateData = JSON.parse(req.files.data[0].buffer.toString('utf-8'));
+        } else if (req.body?.data) {
+          updateData = JSON.parse(req.body.data);
+        } else {
+          throw new Error('data 필드 누락');
+        }
+      } catch (err) {
+        return res.status(400).json({
+          success: false,
+          message: 'data 필드는 JSON 형식이어야 합니다.',
+          error: err.message,
+        });
+      }
+
+      let issue = json.issues[issueIndex];
+
+      // 파일 처리
+      if (req.files?.files?.[0]) {
+        const fileUrl = `http://localhost:${PORT}/uploads/${req.files.files[0].filename}`;
+        issue.issueFileUrl = fileUrl;
+      }
+
+      // 업데이트 할 필드들 반영
+      Object.keys(updateData).forEach((key) => {
+        if (key === 'assigneeId' && Array.isArray(updateData.assigneeId)) {
+          issue.assignees = updateData.assigneeId
+            .map((id) => json.users.find((user) => user.id === id))
+            .filter(Boolean);
+        } else if (key === 'labelId' && Array.isArray(updateData.labelId)) {
+          issue.labels = updateData.labelId
+            .map((id) => {
+              const label = json.labels.find((l) => l.labelId === id);
+              return label
+                ? {
+                    labelId: label.labelId,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description || '',
+                  }
+                : null;
+            })
+            .filter(Boolean);
+        } else if (key === 'milestoneId') {
+          const milestone = json.milestones.find((m) => m.milestoneId === updateData.milestoneId);
+          issue.milestone = milestone || null;
+        } else if (key === 'isOpen') {
+          // Accept isOpen from multipart/form-data (string or boolean)
+          issue.isOpen = updateData.isOpen === 'true' || updateData.isOpen === true;
+        } else if (key in issue) {
+          issue[key] = updateData[key];
+        }
+      });
+
+      // 갱신된 이슈 저장
+      json.issues[issueIndex] = issue;
+      await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+
+      return res.json({
+        success: true,
+        message: '이슈가 성공적으로 수정되었습니다.',
+        data: {
+          issue,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
         success: false,
-        message: '이슈를 찾을 수 없습니다.',
+        message: '이슈 수정 중 서버 오류 발생',
+        error: error.message,
       });
     }
-
-    // 멀티파트/폼데이터로 온 경우 data 필드에서 파싱
-    let updateData = {};
-    if (req.body.data) {
-      // FormData: data(JSON) + files
-      updateData = JSON.parse(req.body.data);
-    } else {
-      // application/json
-      updateData = req.body;
-    }
-
-    let issue = json.issues[issueIndex];
-
-    // 파일 처리: 있으면 덮어씀
-    if (req.file) {
-      const fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
-      issue.issueFileUrl = fileUrl;
-    }
-
-    // 업데이트 할 필드들 반영
-    Object.keys(updateData).forEach((key) => {
-      if (key === 'assigneeId' && Array.isArray(updateData.assigneeId)) {
-        issue.assignees = updateData.assigneeId
-          .map((id) => json.users.find((user) => user.id === id))
-          .filter(Boolean);
-      } else if (key === 'labelId' && Array.isArray(updateData.labelId)) {
-        issue.labels = updateData.labelId
-          .map((id) => {
-            const label = json.labels.find((l) => l.labelId === id);
-            return label
-              ? {
-                  labelId: label.labelId,
-                  name: label.name,
-                  color: label.color,
-                  description: label.description || '',
-                }
-              : null;
-          })
-          .filter(Boolean);
-      } else if (key === 'milestoneId') {
-        const milestone = json.milestones.find((m) => m.milestoneId === updateData.milestoneId);
-        issue.milestone = milestone || null;
-      } else if (key in issue) {
-        issue[key] = updateData[key];
-      }
-    });
-
-    // 갱신된 이슈 저장
-    json.issues[issueIndex] = issue;
-    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
-
-    return res.json({
-      success: true,
-      message: '이슈가 성공적으로 수정되었습니다.',
-      data: {
-        issue,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: '이슈 수정 중 서버 오류 발생',
-      error: error.message,
-    });
-  }
-});
+  },
+);
 
 app.get('/issues/:id', authMiddleware, async (req, res) => {
   try {
@@ -559,20 +638,20 @@ app.get('/issues/:id', authMiddleware, async (req, res) => {
           title: issue.title,
           content: issue.content,
           authorId: issue.author.id,
-          authorNickname: issue.author.nickname,
+          authorNickname: issue.author.nickName,
           milestoneId: issue.milestone?.milestoneId ?? null,
           isOpen: issue.isOpen,
           lastModifiedAt: issue.lastModifiedAt || issue.createdAt,
           issueFileUrl: issue.issueFileUrl || null,
           authorProfileUrl:
             issue.author.profileImageUrl ||
-            `https://dummy.local/profile/${issue.author.nickname}.png`,
+            `https://dummy.local/profile/${issue.author.nickName}.png`,
         },
         assignees: (issue.assignees || []).map((assignee) => ({
           id: assignee.id,
-          nickname: assignee.nickname,
+          nickName: assignee.nickName,
           profileImageUrl:
-            assignee.profileImageUrl || `https://dummy.local/profile/${assignee.nickname}.png`,
+            assignee.profileImageUrl || `https://dummy.local/profile/${assignee.nickName}.png`,
         })),
         labels: (issue.labels || []).map((label) => ({
           labelId: label.labelId,
@@ -591,7 +670,7 @@ app.get('/issues/:id', authMiddleware, async (req, res) => {
             }
           : null,
         comments: (issue.comments || []).map((comment) => {
-          const user = json.users.find((u) => u.nickname === comment.authorNickname);
+          const user = json.users.find((u) => u.nickName === comment.authorNickname);
           return {
             commentId: comment.commentId,
             content: comment.content,
@@ -748,6 +827,105 @@ app.post('/milestones', authMiddleware, async (req, res) => {
       message: '마일스톤 생성 중 서버 오류 발생',
       data: { error: error.message },
     });
+  }
+});
+
+// ----- LABELS API -----
+
+// GET /labels - 전체 레이블 목록 조회
+app.get('/labels', authMiddleware, async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+    // mainPage.json의 labels 배열 사용
+    res.json(
+      createResponse(true, '성공메세지', {
+        labels: json.labels || [],
+        count: (json.labels || []).length,
+      }),
+    );
+  } catch (error) {
+    res.status(500).json(createResponse(false, '레이블 조회 오류', { error: error.message }));
+  }
+});
+
+// POST /labels - 레이블 생성
+app.post('/labels', authMiddleware, async (req, res) => {
+  try {
+    const { name, description = '', color = '#CCCCCC' } = req.body;
+    if (!name || !color) {
+      return res.status(400).json(createResponse(false, 'name, color는 필수입니다.', null));
+    }
+
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+
+    // 새 레이블 id 부여 (labelId)
+    const newLabelId = Math.max(0, ...(json.labels || []).map((l) => l.labelId || l.id)) + 1;
+    const newLabel = {
+      labelId: newLabelId,
+      name,
+      description,
+      color,
+    };
+    json.labels = [newLabel, ...(json.labels || [])];
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+    res.status(201).json(
+      createResponse(true, '성공적으로 생성되었습니다.', {
+        label: newLabel,
+      }),
+    );
+  } catch (error) {
+    res.status(500).json(createResponse(false, '레이블 생성 오류', { error: error.message }));
+  }
+});
+
+// PATCH /labels/:id - 레이블 수정
+app.patch('/labels/:id', authMiddleware, async (req, res) => {
+  try {
+    const labelId = parseInt(req.params.id);
+    const { name, description = '', color } = req.body;
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+    const idx = (json.labels || []).findIndex((l) => Number(l.labelId) === labelId);
+    if (idx === -1) {
+      return res.status(404).json(createResponse(false, '해당 레이블 없음', null));
+    }
+    // 변경 사항만 반영
+    if (name) json.labels[idx].name = name;
+    if (description !== undefined) json.labels[idx].description = description;
+    if (color) json.labels[idx].color = color;
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+    res.json(
+      createResponse(true, '성공적으로 수정되었습니다.', {
+        label: json.labels[idx],
+      }),
+    );
+  } catch (error) {
+    res.status(500).json(createResponse(false, '레이블 수정 오류', { error: error.message }));
+  }
+});
+
+// DELETE /labels/:id - 레이블 삭제
+app.delete('/labels/:id', authMiddleware, async (req, res) => {
+  try {
+    const labelId = parseInt(req.params.id);
+    const filePath = path.join(__dirname, 'mainPage.json');
+    const json = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+    const beforeLen = (json.labels || []).length;
+    json.labels = (json.labels || []).filter((l) => Number(l.labelId) !== labelId);
+    // 이슈에서 해당 레이블도 제거
+    json.issues = (json.issues || []).map((issue) => ({
+      ...issue,
+      labels: (issue.labels || []).filter((l) => Number(l.labelId) !== labelId),
+    }));
+    if (json.labels.length === beforeLen) {
+      return res.status(404).json(createResponse(false, '해당 레이블 없음', null));
+    }
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8');
+    res.json(createResponse(true, '레이블이 삭제되었습니다.', null));
+  } catch (error) {
+    res.status(500).json(createResponse(false, '레이블 삭제 오류', { error: error.message }));
   }
 });
 
