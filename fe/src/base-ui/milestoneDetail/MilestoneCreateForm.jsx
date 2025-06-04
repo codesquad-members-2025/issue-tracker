@@ -15,6 +15,7 @@ export default function MilestoneCreateForm({
   description = '',
   onCancel,
   onSubmit,
+  isOpen,
 }) {
   const [nameValue, setNameValue] = useState('');
   const [dateValue, setDateValue] = useState('');
@@ -97,6 +98,7 @@ export default function MilestoneCreateForm({
               name: nameValue,
               endDate: timeZoneCutter(dateValue),
               description: descriptionValue,
+              isOpen,
             })
           }
           disabled={!isValid}

@@ -22,7 +22,12 @@ export default function LabelItem({ labelObj, submitHandler, deleteHandler }) {
           defaultValue={labelObj}
           onCancel={() => setIsEdit(false)}
           onSubmit={(data) =>
-            submitHandler({ ...data, fetchMethod: 'PATCH', labelId: labelObj.id })
+            submitHandler({
+              ...data,
+              fetchMethod: 'PATCH',
+              labelId: labelObj.id,
+              setterFn: setIsEdit,
+            })
           }
         />
       </Item>
