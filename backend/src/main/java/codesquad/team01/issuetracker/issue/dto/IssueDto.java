@@ -281,7 +281,6 @@ public class IssueDto {
 	@Builder
 	public static class ListItemResponse {
 		private final int id;
-
 		private final String title;
 		private final String state;
 		private final LocalDateTime createdAt;
