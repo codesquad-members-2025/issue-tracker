@@ -33,6 +33,7 @@ export default function MilestoneItem({ milestoneObj, submitHandler, statusHandl
           name={milestoneObj.name}
           endDate={milestoneObj.endDate}
           description={milestoneObj.description}
+          isOpen={milestoneObj.isOpen}
           isAdd={false}
           onCancel={() => setIsAddTableOpen(false)}
           onSubmit={(data) =>
