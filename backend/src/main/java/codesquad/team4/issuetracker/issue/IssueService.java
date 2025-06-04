@@ -30,6 +30,7 @@ import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
+import codesquad.team4.issuetracker.util.OpenStatus;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -88,7 +89,9 @@ public class IssueService {
         int closeCount = countMap.get("close");
 
         int totalElements = openCount + closeCount;
-        int totalPages = (int) Math.ceil((double) totalElements / size);
+        int totalPages = (int) Math.ceil((double) closeCount / size);;
+        if (params.getStatus() == OpenStatus.OPEN)
+            totalPages = (int) Math.ceil((double) openCount / size);
 
         return IssueResponseDto.IssueListDto.builder()
             .issues(new ArrayList<>(issueMap.values()))
