@@ -79,6 +79,18 @@ public class IssueQueryBuilder {
 			FROM issue i
 			JOIN users u ON i.writer_id = u.id
 			LEFT JOIN milestone m ON i.milestone_id = m.id
+			""");
+
+		// filter=commented인 경우 comment 테이블과 조인 추가
+		if ("commented".equals(queryParams.filter()) && queryParams.commentedUserId() != null) {
+			baseQuery.append("""
+				JOIN comment c ON i.id = c.issue_id 
+				AND c.writer_id = :commentedUserId 
+				AND c.deleted_at IS NULL
+				""");
+		}
+
+		baseQuery.append("""
 			WHERE i.deleted_at IS NULL
 			AND i.state = :state
 			""");
@@ -90,10 +102,15 @@ public class IssueQueryBuilder {
 		addCommonFilterConditions(queryParams.writerId(), queryParams.milestoneId(), queryParams.labelIds(),
 			queryParams.assigneeIds(), conditions, params);
 
-		// 이슈 상태
+		// commented 필터 처리
+		if ("commented".equals(queryParams.filter()) && queryParams.commentedUserId() != null) {
+			params.addValue("commentedUserId", queryParams.commentedUserId());
+		}
+
+		// 상태
 		params.addValue("state", queryParams.state().name());
 
-		// 커서 기반 페이징 조건
+		// 커서
 		if (cursor != null) {
 			conditions.add("""
 				(i.created_at < :cursorCreatedAt
@@ -103,13 +120,21 @@ public class IssueQueryBuilder {
 			params.addValue("cursorId", cursor.getId());
 		}
 
-		// AND 조건 연결
+		// AND
 		if (!conditions.isEmpty()) {
 			baseQuery.append(" AND ").append(String.join(" AND ", conditions));
 		}
 
-		// 정렬 및 제한
+		// filter=commented인 경우 중복 제거를 위해 GROUP BY 추가
+		if ("commented".equals(queryParams.filter()) && queryParams.commentedUserId() != null) {
+			baseQuery.append(
+				" GROUP BY i.id, i.title, i.state, i.created_at, i.updated_at, u.id, u.username, u.profile_image_url, m.id, m.title");
+		}
+
+		// 정렬
 		baseQuery.append(" ORDER BY i.created_at DESC, i.id DESC");
+
+		// 제한
 		baseQuery.append(" LIMIT :pageSize");
 		params.addValue("pageSize", IssueConstants.PAGE_SIZE + 1);
 

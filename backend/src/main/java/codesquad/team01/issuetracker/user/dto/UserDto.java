@@ -70,6 +70,18 @@ public class UserDto {
 		}
 	}
 
+	// 댓글 작성자 응답 DTO
+	@Builder
+	public record CommentWriterResponse(
+		int id,
+		String username,
+		String profileImageUrl
+	) {
+		public String profileImageUrl() {
+			return profileImageUrl != null ? profileImageUrl : DEFAULT_PROFILE_IMAGE_URL;
+		}
+	}
+
 	/**
 	 * DB 조회용 DTO
 	 */

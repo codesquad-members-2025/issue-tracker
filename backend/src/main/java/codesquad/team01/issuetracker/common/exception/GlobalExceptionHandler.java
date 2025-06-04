@@ -10,6 +10,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import codesquad.team01.issuetracker.comment.exception.CommentAccessForbiddenException;
+import codesquad.team01.issuetracker.comment.exception.CommentCreationException;
+import codesquad.team01.issuetracker.comment.exception.CommentNotFoundException;
 import codesquad.team01.issuetracker.common.dto.ApiResponse;
 import codesquad.team01.issuetracker.file.exception.ImageUploadException;
 import codesquad.team01.issuetracker.file.exception.ImageValidationException;
@@ -172,6 +175,27 @@ public class GlobalExceptionHandler {
 		log.error("ImageUploadException: {}", e.getMessage(), e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 			.body(ApiResponse.error("이미지 업로드 중 오류가 발생했습니다."));
+	}
+
+	@ExceptionHandler(CommentNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleCommentNotFoundException(CommentNotFoundException e) {
+		log.error("CommentNotFoundException: {}", e.getMessage());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
+	@ExceptionHandler(CommentAccessForbiddenException.class)
+	public ResponseEntity<ApiResponse<?>> handleCommentAccessForbiddenException(CommentAccessForbiddenException e) {
+		log.warn("CommentAccessForbiddenException: {}", e.getMessage());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN)
+			.body(ApiResponse.error("해당 댓글을 수정/삭제할 권한이 없습니다."));
+	}
+
+	@ExceptionHandler(CommentCreationException.class)
+	public ResponseEntity<ApiResponse<?>> handleCommentCreationException(CommentCreationException e) {
+		log.error("CommentCreationException: {}", e.getMessage());
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			.body(ApiResponse.error("댓글 처리 중 오류가 발생했습니다."));
 	}
 
 	@ExceptionHandler(Exception.class)

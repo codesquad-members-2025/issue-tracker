@@ -70,7 +70,10 @@ public class IssueDto {
 
 		List<@Positive(message = "레이블 ID는 양수여야 합니다") Integer> labelIds,
 
-		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds
+		List<@Positive(message = "담당자 ID는 양수여야 합니다") Integer> assigneeIds,
+
+		@Positive(message = "댓글 작성자 ID는 양수여야 합니다")
+		Integer commentedUserId
 
 	) {
 		@Override
@@ -82,6 +85,7 @@ public class IssueDto {
 				", milestoneId=" + milestoneId +
 				", labelIds=" + labelIds +
 				", assigneeIds=" + assigneeIds +
+				", commentedUserId=" + commentedUserId +
 				'}';
 		}
 
@@ -523,7 +527,8 @@ public class IssueDto {
 		Integer writerId,
 		Integer milestoneId,
 		List<Integer> labelIds,
-		List<Integer> assigneeIds
+		List<Integer> assigneeIds,
+		Integer commentedUserId
 	) {
 		public static ListQueryParams from(ListQueryRequest request) {
 			return new ListQueryParams(
@@ -532,7 +537,8 @@ public class IssueDto {
 				request.writerId(),
 				request.milestoneId(),
 				request.labelIds() != null ? request.labelIds() : List.of(),
-				request.assigneeIds() != null ? request.assigneeIds() : List.of()
+				request.assigneeIds() != null ? request.assigneeIds() : List.of(),
+				request.commentedUserId()
 			);
 		}
 	}

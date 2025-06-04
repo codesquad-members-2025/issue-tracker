@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquad.team01.issuetracker.comment.repository.CommentRepository;
 import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.common.exception.InvalidParameterException;
 import codesquad.team01.issuetracker.common.util.CursorEncoder;
@@ -37,6 +38,7 @@ public class IssueService {
 	private final UserRepository userRepository;
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
+	private final CommentRepository commentRepository;
 
 	private final IssueAssembler issueAssembler;
 	private final CursorEncoder cursorEncoder;
@@ -305,6 +307,8 @@ public class IssueService {
 
 	@Transactional
 	public void deleteIssue(Integer issueId) {
+		LocalDateTime now = LocalDateTime.now();
+		commentRepository.deleteCommentsByIssueId(issueId, now);
 
 		// 중간 테이블은 hard delete
 		issueRepository.removeLabelsFromIssue(issueId);
@@ -312,7 +316,7 @@ public class IssueService {
 		// commentRepository.deleteCommentByIssueId(issueId); // todo: 댓글 구현 후
 
 		// issue는 soft delete
-		issueRepository.deleteIssue(issueId, LocalDateTime.now());
+		issueRepository.deleteIssue(issueId, now);
 	}
 
 	private void validateMilestoneExists(Integer milestoneId) {
@@ -329,10 +333,10 @@ public class IssueService {
 		IssueDto.DetailBaseRow detailBaseRow = issueRepository.findIssueById(issueId);
 		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
-		// int commentCount = commentRepository.findCommentCountByIssueId(issueId); //todo: 댓글 구현 시
+		int commentCount = commentRepository.countCommentsByIssueId(issueId);
 
 		return issueAssembler.assembleSingleIssueDetails(
-			detailBaseRow, labelRows, assigneeRows, 0);// todo: 댓글 처리 후 0을 commentCount로 변경 필요
+			detailBaseRow, labelRows, assigneeRows, commentCount);
 	}
 
 	private IssueDto.ListQueryRequest applyFilter(IssueDto.ListQueryRequest request, Integer currentUserId) {
