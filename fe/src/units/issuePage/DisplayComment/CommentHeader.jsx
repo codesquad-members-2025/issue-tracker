@@ -6,6 +6,7 @@ import useTimeAgo from '@/hooks/useTimeAgo';
 import { radius } from '@/styles/foundation';
 import useIssueDetailStore from '@/stores/IssueDetailStore';
 import { useAuthStore } from '@/stores/authStore';
+import Label from '@/base-ui/utils/Label';
 
 export default function CommentHeader({
   authorNickname,
@@ -26,7 +27,11 @@ export default function CommentHeader({
       </LeftWrapper>
       <RightWrapper>
         {issue.authorId === commentAuthorId && <AuthorLabel />}
-        {loginId === commentAuthorId && <EditTriggerBtn onClick={editTriggerHandler} />}
+        {loginId === commentAuthorId ? (
+          <EditTriggerBtn onClick={editTriggerHandler} />
+        ) : (
+          <Label color={'#ff5670'} labelTitle={'Edit access denied'} />
+        )}
       </RightWrapper>
     </Container>
   );
