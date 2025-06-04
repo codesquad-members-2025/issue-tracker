@@ -39,7 +39,7 @@ export default function LabelPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, description, color }),
     };
-    const { ok } = fetchData(API, getOptionWithToken(fetchOption));
+    const { ok } = await fetchData(API, getOptionWithToken(fetchOption));
     if (ok) {
       reFetchHandler(true);
       setIsAddTableOpen(false);
