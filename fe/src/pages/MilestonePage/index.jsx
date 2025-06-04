@@ -8,7 +8,7 @@ import { GET_MILESTONE } from '@/api/milestones';
 import getOptionWithToken from '@/utils/getOptionWithToken/getOptionWithToken';
 import useMilestoneStore from '@/stores/milestoneStore';
 import MilestoneCreateForm from '@/base-ui/milestoneDetail/MilestoneCreateForm';
-import { getPatchUrl, POST_MILESTONE } from '@/api/milestones';
+import { getPatchUrl, POST_MILESTONE, DELETE_MILESTONE } from '@/api/milestones';
 import MilestoneItem from '@/units/milestone/MilestoneItem';
 import parseDateString from '@/utils/common/parseDateString';
 
@@ -57,6 +57,11 @@ export default function MilestonePage() {
         setIsAddTableOpen(false);
       }
     }
+  }
+
+  function deleteHandler(milestoneId) {
+    fetchData(DELETE_MILESTONE(milestoneId), getOptionWithToken({ method: 'DELETE' }));
+    reFetchHandler(true);
   }
 
   function statusHandler({ isOpen, milestoneId, name, description, endDate }) {
@@ -128,6 +133,7 @@ export default function MilestonePage() {
               milestoneObj={m}
               submitHandler={submitHandler}
               statusHandler={statusHandler}
+              deleteHandler={deleteHandler}
             />
           );
         })}
