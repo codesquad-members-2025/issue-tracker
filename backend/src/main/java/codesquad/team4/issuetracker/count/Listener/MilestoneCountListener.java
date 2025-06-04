@@ -5,8 +5,7 @@ import codesquad.team4.issuetracker.milestone.MilestoneEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
+import org.springframework.context.event.EventListener;
 
 @Slf4j
 @Component
@@ -14,12 +13,12 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class MilestoneCountListener {
     private final CountDao countDao;
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void onCreated(MilestoneEvent.Created e) {
         countDao.increment(CountDao.MILESTONE_OPEN);
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void onStatusChanged(MilestoneEvent.StatusChanged e) {
         if (e.isClosing()) {
             countDao.decrement(CountDao.MILESTONE_OPEN);
@@ -30,7 +29,7 @@ public class MilestoneCountListener {
         }
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void onDeleted(MilestoneEvent.Deleted e) {
         if (e.isWasOpen()) {
             countDao.decrement(CountDao.MILESTONE_OPEN);

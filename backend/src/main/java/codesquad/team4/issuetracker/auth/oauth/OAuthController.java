@@ -5,6 +5,7 @@ import codesquad.team4.issuetracker.auth.dto.AuthResponseDto;
 import codesquad.team4.issuetracker.auth.oauth.dto.OAuthRequestDto;
 import codesquad.team4.issuetracker.auth.oauth.dto.OAuthResponseDto;
 import codesquad.team4.issuetracker.entity.User;
+import codesquad.team4.issuetracker.exception.badrequest.InvalidOAuthStateException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,13 @@ public class OAuthController {
     private final JwtProvider jwtProvider;
 
     @GetMapping("/login")
-    public ResponseEntity<OAuthResponseDto.OAuthLoginUrl> githubLogin(HttpSession session) {
-        OAuthResponseDto.OAuthLoginUrl githubUrl = oAuthService.createGithubAuthorizeUrl(session);
+    public ResponseEntity<OAuthResponseDto.OAuthLoginUrl> githubLogin(HttpSession session, HttpServletResponse response) {
+        //session에 state 저장
+        String state = oAuthService.createGithubAuthorizeState();
+        session.setAttribute("oauth_state", state);
+
+        //Github 인증 URL 구성
+        OAuthResponseDto.OAuthLoginUrl githubUrl = oAuthService.buildGithubAuthorizeUrl(state);
         return ResponseEntity.ok(githubUrl);
     }
 
@@ -41,7 +47,17 @@ public class OAuthController {
 
     //GitHub 인증 처리 + 로그인/회원가입
     private User processOAuthCallback(String code, String state, HttpSession session) {
-        return oAuthService.handleCallback(new OAuthRequestDto.GitHubCallback(code, state), session);
+        validateState(state, session);
+        return oAuthService.handleCallback(new OAuthRequestDto.GitHubCallback(code));
+    }
+
+    //state 인증 + session 만료
+    private void validateState(String state, HttpSession session) {
+        String savedState = (String) session.getAttribute("oauth_state");
+        if (!state.equals(savedState)) {
+            throw new InvalidOAuthStateException();
+        }
+        session.invalidate();
     }
 
     //JWT 발급 및 쿠키 설정
