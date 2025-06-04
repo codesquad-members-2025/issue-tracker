@@ -58,6 +58,23 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error("레이블 '" + id + "' 을(를) 찾을 수 없습니다."));
 	}
 
+	@ExceptionHandler(InvalidDateException.class)
+	public ResponseEntity<ApiResponse<?>> handleInvalidDate(InvalidDateException e) {
+		log.error("InvalidDateException: {}", e.getMessage());
+		return ResponseEntity
+			.badRequest()
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
+	@ExceptionHandler(MilestoneNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleMilestoneNotFound(MilestoneNotFoundException e) {
+		int id = e.getId();
+		return ResponseEntity
+			.badRequest()
+			.body(ApiResponse.error("마일스톤 '" + id + "' 을(를) 찾을 수 없습니다."));
+	}
+
+	// 아이디가 존재하지 않는 경우
 	//아이디가 존재하지 않는 경우
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<ApiResponse<?>> handleUserNotFound(UserNotFoundException e) {
@@ -65,7 +82,7 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("존재하지 않는 ID 입니다"));
 	}
 
-	//패스워드가 틀린 경우
+	// 패스워드가 틀린 경우
 	@ExceptionHandler(InvalidPasswordException.class)
 	public ResponseEntity<ApiResponse<?>> handleInvalidPassword(InvalidPasswordException e) {
 		log.info("InvalidPasswordException : {}", e.getMessage());
