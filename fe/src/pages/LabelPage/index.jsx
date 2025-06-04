@@ -32,16 +32,18 @@ export default function LabelPage() {
     initLabels(response.data.labels, response.data.count);
   }, [response]);
 
-  function submitHandler({ name, description, color, fetchMethod, labelId = null }) {
+  async function submitHandler({ name, description, color, fetchMethod, labelId = null }) {
     const API = fetchMethod === 'PATCH' ? PATCH_LABEL(labelId) : POST_LABEL;
     const fetchOption = {
       method: fetchMethod,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, description, color }),
     };
-    fetchData(API, getOptionWithToken(fetchOption));
-    reFetchHandler(true);
-    setIsAddTableOpen(false);
+    const { ok } = fetchData(API, getOptionWithToken(fetchOption));
+    if (ok) {
+      reFetchHandler(true);
+      setIsAddTableOpen(false);
+    }
   }
 
   function deleteHandler(labelId) {
