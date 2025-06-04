@@ -8,13 +8,12 @@ import codesquad.team4.issuetracker.auth.dto.AuthRequestDto.SignupRequestDto;
 import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.exception.ExceptionMessage;
 import codesquad.team4.issuetracker.exception.badrequest.InvalidLoginTypeException;
-import codesquad.team4.issuetracker.exception.unauthorized.PasswordNotEqualException;
 import codesquad.team4.issuetracker.exception.conflict.EmailAlreadyExistException;
 import codesquad.team4.issuetracker.exception.conflict.NicknameAlreadyExistException;
+import codesquad.team4.issuetracker.exception.unauthorized.PasswordNotEqualException;
 import codesquad.team4.issuetracker.exception.unauthorized.UserByEmailNotFoundException;
 import codesquad.team4.issuetracker.user.UserRepository;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,17 +48,15 @@ public class AuthService {
     }
 
     private void validateDuplicateEmailOrNickname(SignupRequestDto request) {
-        Optional<User> duplicate = userRepository.findByEmailOrNickname(request.getEmail(), request.getNickname());
-
-        if (duplicate.isPresent()) {
-            User user = duplicate.get();
-            if (user.getEmail().equals(request.getEmail())) {
-                throw new EmailAlreadyExistException(EMAIL_ALREADY_EXIST);
-            }
-            if (user.getNickname().equals(request.getNickname())) {
-                throw new NicknameAlreadyExistException(NICKNAME_ALREADY_EXIST);
-            }
-        }
+        userRepository.findByEmailOrNickname(request.getEmail(), request.getNickname())
+                .ifPresent(user -> {
+                    if (user.getEmail().equals(request.getEmail())) {
+                        throw new EmailAlreadyExistException(EMAIL_ALREADY_EXIST);
+                    }
+                    if (user.getNickname().equals(request.getNickname())) {
+                        throw new NicknameAlreadyExistException(NICKNAME_ALREADY_EXIST);
+                    }
+                });
     }
 
     public User checkEmailAndPassword(LoginRequestDto request) {
