@@ -31,13 +31,14 @@ export default function MilestonePage() {
     },
   };
 
-  function submitHandler({
+  async function submitHandler({
     fetchMethod,
     name,
     milestoneId = null,
     description = null,
     endDate = null,
     isOpen = null,
+    setterFn = null,
   }) {
     const isPatch = fetchMethod === 'PATCH';
     const API = isPatch ? getPatchUrl(milestoneId) : POST_MILESTONE;
@@ -47,17 +48,23 @@ export default function MilestonePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
-    fetchData(API, getOptionWithToken(fetchOption));
-    reFetchHandler(true);
-    setIsAddTableOpen(false);
+    const { ok } = await fetchData(API, getOptionWithToken(fetchOption));
+    if (ok) {
+      reFetchHandler(true);
+      if (setterFn) {
+        setterFn(false);
+      } else {
+        setIsAddTableOpen(false);
+      }
+    }
   }
 
-  function statusHandler({ isOpen, milestoneId }) {
+  function statusHandler({ isOpen, milestoneId, name, description, endDate }) {
     const API = getPatchUrl(milestoneId);
     const fetchOption = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ isOpen: !isOpen }),
+      body: JSON.stringify({ name, description, endDate, isOpen: !isOpen }),
     };
     fetchData(API, getOptionWithToken(fetchOption));
     reFetchHandler(true);

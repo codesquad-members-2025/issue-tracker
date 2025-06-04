@@ -36,7 +36,12 @@ export default function MilestoneItem({ milestoneObj, submitHandler, statusHandl
           isAdd={false}
           onCancel={() => setIsAddTableOpen(false)}
           onSubmit={(data) =>
-            submitHandler({ ...data, milestoneId: milestoneObj.milestoneId, fetchMethod: 'PATCH' })
+            submitHandler({
+              ...data,
+              milestoneId: milestoneObj.milestoneId,
+              fetchMethod: 'PATCH',
+              setterFn: setIsAddTableOpen,
+            })
           }
         />
       ) : (
@@ -53,6 +58,9 @@ export default function MilestoneItem({ milestoneObj, submitHandler, statusHandl
                 statusHandler({
                   isOpen: milestoneObj.isOpen,
                   milestoneId: milestoneObj.milestoneId,
+                  name: milestoneObj.name,
+                  description: milestoneObj.description,
+                  endDate: milestoneObj.endDate,
                 })
               }
               editHandler={() => setIsAddTableOpen(true)}

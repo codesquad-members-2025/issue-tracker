@@ -32,7 +32,14 @@ export default function LabelPage() {
     initLabels(response.data.labels, response.data.count);
   }, [response]);
 
-  async function submitHandler({ name, description, color, fetchMethod, labelId = null }) {
+  async function submitHandler({
+    name,
+    description,
+    color,
+    fetchMethod,
+    setterFn = null,
+    labelId = null,
+  }) {
     const API = fetchMethod === 'PATCH' ? PATCH_LABEL(labelId) : POST_LABEL;
     const fetchOption = {
       method: fetchMethod,
@@ -40,11 +47,13 @@ export default function LabelPage() {
       body: JSON.stringify({ name, description, color }),
     };
     const { ok } = await fetchData(API, getOptionWithToken(fetchOption));
-    console.log('[submitHandler] result:', ok);
     if (ok) {
-      console.log('✅ 성공 - 폼 닫기 실행');
-      setIsAddTableOpen(false); // 이거 실행됨
       reFetchHandler(true);
+      if (setterFn) {
+        setterFn(false);
+      } else {
+        setIsAddTableOpen(false);
+      }
     }
   }
 
