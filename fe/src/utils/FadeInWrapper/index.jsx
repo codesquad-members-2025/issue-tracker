@@ -10,15 +10,13 @@ const Wrapper = styled.div`
   }
 `;
 
-export default function FadeInWrapper({ children, trigger = true }) {
+export default function FadeInWrapper({ children }) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (trigger) {
-      const id = requestAnimationFrame(() => setLoaded(true));
-      return () => cancelAnimationFrame(id);
-    }
-  }, [trigger]);
+    const id = requestAnimationFrame(() => setLoaded(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   return <Wrapper className={loaded ? 'loaded' : ''}>{children}</Wrapper>;
 }
