@@ -93,7 +93,11 @@ export default function MilestoneCreateForm({
 
         <SmallContainerButton
           onClick={() =>
-            onSubmit({ name: nameValue, endDate: dateValue, description: descriptionValue })
+            onSubmit({
+              name: nameValue,
+              endDate: timeZoneCutter(dateValue),
+              description: descriptionValue,
+            })
           }
           disabled={!isValid}
         >
@@ -124,6 +128,12 @@ export default function MilestoneCreateForm({
       </Buttonwrapper>
     </Wrapper>
   );
+}
+
+function timeZoneCutter(rawdate) {
+  const date = new Date(rawdate);
+  const localISOString = date.toISOString().slice(0, 19); // "1111-11-11T00:00:00"
+  return localISOString;
 }
 
 const Wrapper = styled.div`
