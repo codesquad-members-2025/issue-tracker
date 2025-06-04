@@ -1,6 +1,7 @@
 package codesquad.team01.issuetracker.milestone.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -24,4 +25,12 @@ public interface MilestoneRepository extends CrudRepository<Milestone, Integer>,
 		AND state= :state
 		""")
 	List<MilestoneDto.MilestoneRow> findByState(@Param("state") MilestoneState state);
+
+	boolean existsByTitle(String title);
+
+	boolean existsByTitleAndIdNot(String title, int id);
+
+	boolean existsById(int id);
+
+	Optional<Milestone> findById(int id);
 }

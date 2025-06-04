@@ -134,7 +134,6 @@ public class LabelDto {
 	) {
 	}
 
-	// 넣을까 말까 고민... 윤이랑 상의해야 함
 	// 레이블 생성 후 응답하는 dto
 	@Builder
 	public record LabelCreateResponse(
