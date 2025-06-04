@@ -40,8 +40,10 @@ export default function LabelPage() {
       body: JSON.stringify({ name, description, color }),
     };
     const { ok } = await fetchData(API, getOptionWithToken(fetchOption));
+    console.log('[submitHandler] result:', ok);
     if (ok) {
-      setIsAddTableOpen(false);
+      console.log('✅ 성공 - 폼 닫기 실행');
+      setIsAddTableOpen(false); // 이거 실행됨
       reFetchHandler(true);
     }
   }
