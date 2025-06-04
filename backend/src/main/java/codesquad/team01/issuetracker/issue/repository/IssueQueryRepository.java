@@ -6,6 +6,7 @@ import java.util.List;
 import codesquad.team01.issuetracker.common.dto.CursorDto;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
+import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 
 public interface IssueQueryRepository {
 

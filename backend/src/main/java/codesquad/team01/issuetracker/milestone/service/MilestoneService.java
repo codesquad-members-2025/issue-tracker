@@ -19,7 +19,9 @@ import codesquad.team01.issuetracker.milestone.domain.MilestoneState;
 import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.milestone.repository.MilestoneRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class MilestoneService {
@@ -53,12 +55,12 @@ public class MilestoneService {
 		}
 
 		// id 의 리스트로 issueCounts 리스트 불러와서
-		List<MilestoneDto.MilestoneIssueCount> issueCounts = issueRepository.countByMilestoneIds(milestoneIds);
+		List<MilestoneDto.MilestoneIssueCountRow> issueCounts = issueRepository.countByMilestoneIds(milestoneIds);
 
 		// <마일스톤 id, IssueCount> 맵 만든다
-		Map<Integer, MilestoneDto.MilestoneIssueCount> countMap = issueCounts.stream()
+		Map<Integer, MilestoneDto.MilestoneIssueCountRow> countMap = issueCounts.stream()
 			.collect(Collectors.toMap(
-				MilestoneDto.MilestoneIssueCount::milestoneId,
+				MilestoneDto.MilestoneIssueCountRow::milestoneId,
 				Function.identity()
 			));
 
@@ -66,9 +68,9 @@ public class MilestoneService {
 		// row 와 issueCount 로 MilestoneListItem 를 만들고 리스트로 합친다
 		List<MilestoneDto.MilestoneListItem> items = rows.stream()
 			.map(row -> {
-				MilestoneDto.MilestoneIssueCount count = countMap.getOrDefault(row.id(),
-					new MilestoneDto.MilestoneIssueCount(
-						row.id(), 0, 0));
+				MilestoneDto.MilestoneIssueCountRow count = countMap.getOrDefault(row.id(),
+					new MilestoneDto.MilestoneIssueCountRow(
+						row.id(), 0L, 0L));
 				return MilestoneDto.MilestoneListItem.from(row, count);
 			})
 			.toList();
