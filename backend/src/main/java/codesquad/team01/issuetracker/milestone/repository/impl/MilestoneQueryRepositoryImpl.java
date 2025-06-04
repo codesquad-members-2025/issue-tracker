@@ -35,10 +35,26 @@ public class MilestoneQueryRepositoryImpl implements MilestoneQueryRepository {
 		AND deleted_at IS NULL
 		""";
 
+	private static final String FIND_ISSUE_COUNTS_BY_MILESTONE_ID_QUERY = """
+		SELECT 
+			i.state,
+			COUNT(*) as count
+		FROM issue i
+		WHERE i.milestone_id = :milestoneId
+		AND i.deleted_at IS NULL
+		GROUP BY i.state
+		""";
+
 	private final RowMapper<MilestoneDto.MilestoneFilterResponse> filterMilestoneListItemResponseRowMapper =
 		(rs, rowNum) -> MilestoneDto.MilestoneFilterResponse.builder()
 			.id(rs.getInt("milestone_id"))
 			.title(rs.getString("milestone_title"))
+			.build();
+
+	private final RowMapper<MilestoneDto.MilestoneIssueDetailCountRow> milestoneIssueCountRowMapper =
+		(rs, rowNum) -> MilestoneDto.MilestoneIssueDetailCountRow.builder()
+			.state(rs.getString("state"))
+			.count(rs.getInt("count"))
 			.build();
 
 	@Override
@@ -60,6 +76,18 @@ public class MilestoneQueryRepositoryImpl implements MilestoneQueryRepository {
 		} catch (DataAccessException e) {
 			log.warn("마일스톤 존재 여부 확인 중 오류 발생: milestoneId={}, error={}", milestoneId, e.getMessage());
 			return false;
+		}
+	}
+
+	@Override
+	public List<MilestoneDto.MilestoneIssueDetailCountRow> findIssueCountsByMilestoneId(Integer milestoneId) {
+		MapSqlParameterSource params = new MapSqlParameterSource("milestoneId", milestoneId);
+
+		try {
+			return jdbcTemplate.query(FIND_ISSUE_COUNTS_BY_MILESTONE_ID_QUERY, params, milestoneIssueCountRowMapper);
+		} catch (DataAccessException e) {
+			log.warn("마일스톤 이슈 개수 조회 중 오류 발생: milestoneId={}, error={}", milestoneId, e.getMessage());
+			return List.of();
 		}
 	}
 }

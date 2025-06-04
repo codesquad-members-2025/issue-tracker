@@ -488,7 +488,7 @@ public class IssueDto {
 		List<UserDto.IssueDetailUserResponse> assignees,
 		int commentCount
 	) {
-		public IssueDetailsResponse toCreateResponse() {
+		public IssueDetailsResponse toCreateResponse(MilestoneDto.IssueDetailMilestoneResponse milestone) {
 			return IssueDetailsResponse.builder()
 				.id(issue.issueId())
 				.title(issue.issueTitle())
@@ -503,13 +503,7 @@ public class IssueDto {
 					.profileImageUrl(issue.writerProfileImageUrl())
 					.build()
 				)
-				.milestone(issue.milestoneId() != null
-					? MilestoneDto.IssueDetailMilestoneResponse.builder()
-					.id(issue.milestoneId())
-					.title(issue.milestoneTitle())
-					.dueDate(issue.milestoneDueDate())
-					.build()
-					: null)
+				.milestone(milestone)
 				.assignees(assignees)
 				.labels(labels)
 				.commentCount(commentCount)

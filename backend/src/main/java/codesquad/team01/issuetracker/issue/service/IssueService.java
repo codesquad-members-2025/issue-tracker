@@ -22,6 +22,7 @@ import codesquad.team01.issuetracker.issue.exception.ClosedIssueModificationExce
 import codesquad.team01.issuetracker.issue.repository.IssueRepository;
 import codesquad.team01.issuetracker.label.dto.LabelDto;
 import codesquad.team01.issuetracker.label.repository.LabelRepository;
+import codesquad.team01.issuetracker.milestone.dto.MilestoneDto;
 import codesquad.team01.issuetracker.milestone.exception.MilestoneNotFoundException;
 import codesquad.team01.issuetracker.milestone.repository.MilestoneRepository;
 import codesquad.team01.issuetracker.user.dto.UserDto;
@@ -231,8 +232,14 @@ public class IssueService {
 		List<LabelDto.IssueDetailLabelRow> labelRows = labelRepository.findLabelsByIssueId(issueId);
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
 
+		// 마일스톤이 있는 경우 마일스톤별 이슈 개수 조회
+		List<MilestoneDto.MilestoneIssueDetailCountRow> milestoneIssueCountRows = List.of();
+		if (detailBaseRow.milestoneId() != null) {
+			milestoneIssueCountRows = milestoneRepository.findIssueCountsByMilestoneId(detailBaseRow.milestoneId());
+		}
+
 		return issueAssembler.assembleSingleIssueDetails(detailBaseRow, labelRows, assigneeRows,
-			CREATE_ISSUE_COMMENT_COUNT_ZERO);
+			CREATE_ISSUE_COMMENT_COUNT_ZERO, milestoneIssueCountRows);
 	}
 
 	@Transactional
@@ -335,8 +342,14 @@ public class IssueService {
 		List<UserDto.IssueDetailAssigneeRow> assigneeRows = userRepository.findAssigneesByIssueId(issueId);
 		int commentCount = commentRepository.countCommentsByIssueId(issueId);
 
+		// 마일스톤이 있는 경우 마일스톤별 이슈 개수 조회
+		List<MilestoneDto.MilestoneIssueDetailCountRow> milestoneIssueCountRows = List.of();
+		if (detailBaseRow.milestoneId() != null) {
+			milestoneIssueCountRows = milestoneRepository.findIssueCountsByMilestoneId(detailBaseRow.milestoneId());
+		}
+
 		return issueAssembler.assembleSingleIssueDetails(
-			detailBaseRow, labelRows, assigneeRows, commentCount);
+			detailBaseRow, labelRows, assigneeRows, commentCount, milestoneIssueCountRows);
 	}
 
 	private IssueDto.ListQueryRequest applyFilter(IssueDto.ListQueryRequest request, Integer currentUserId) {

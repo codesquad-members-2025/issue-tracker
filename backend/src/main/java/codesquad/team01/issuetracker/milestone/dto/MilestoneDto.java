@@ -29,7 +29,9 @@ public class MilestoneDto {
 	public record IssueDetailMilestoneResponse(
 		int id,
 		String title,
-		LocalDate dueDate
+		LocalDate dueDate,
+		int openCount,
+		int closedCount
 	) {
 	}
 
@@ -176,6 +178,13 @@ public class MilestoneDto {
 		Integer milestoneId,
 		Long openCount,
 		Long closedCount
+	) {
+	}
+
+	@Builder
+	public record MilestoneIssueDetailCountRow(
+		String state,
+		int count
 	) {
 	}
 }

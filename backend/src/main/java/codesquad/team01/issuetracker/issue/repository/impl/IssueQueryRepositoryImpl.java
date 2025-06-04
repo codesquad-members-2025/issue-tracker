@@ -48,6 +48,16 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		AND deleted_at IS NULL
 		""";
 
+	private static final String FIND_ISSUE_COUNTS_BY_MILESTONE_ID_QUERY = """
+		SELECT 
+			i.state,
+			COUNT(*) as count
+		FROM issue i
+		WHERE i.milestone_id = :milestoneId
+		AND i.deleted_at IS NULL
+		GROUP BY i.state
+		""";
+
 	private static final String FIND_SPECIFIC_MILESTONE_ISSUE_COUNT = """
 		SELECT
 			i.milestone_id											AS milestoneId,
