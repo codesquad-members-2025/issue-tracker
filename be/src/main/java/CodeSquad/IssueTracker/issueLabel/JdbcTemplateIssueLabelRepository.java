@@ -106,6 +106,12 @@ public class JdbcTemplateIssueLabelRepository implements IssueLabelRepository {
         return template.query(sql, Map.of("issueId", issueId), summaryLabelDtoRowMapper());
     }
 
+    @Override
+    public void deleteByLabelId(Long labelId) {
+        String sql = "DELETE FROM issue_label WHERE label_id = :labelId";
+        template.update(sql, Map.of("labelId", labelId));
+    }
+
     private RowMapper<SummaryLabelDto> summaryLabelDtoRowMapper(){
         return BeanPropertyRowMapper.newInstance(SummaryLabelDto.class);
     }

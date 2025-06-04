@@ -1,7 +1,6 @@
 package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
-import CodeSquad.IssueTracker.global.exception.NotFoundException;
 import CodeSquad.IssueTracker.issue.dto.IssueCreateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueDetailResponse;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
@@ -14,10 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Optional;
 
+import static CodeSquad.IssueTracker.global.message.SuccessMessage.ISSUE_DELETE_SUCCESS;
 import static CodeSquad.IssueTracker.global.message.SuccessMessage.ISSUE_DETAIL_FETCH_SUCCESS;
 
 @Slf4j
@@ -53,5 +51,10 @@ public class IssueController {
         return issueService.update(issueId, updateParam ,files);
     }
 
+    @DeleteMapping("/{issueId}")
+    public BaseResponseDto<String> deleteIssue(@PathVariable Long issueId) {
+        issueService.deleteIssue(issueId);
+        return BaseResponseDto.success(ISSUE_DELETE_SUCCESS.getMessage(), null);
+    }
 
 }

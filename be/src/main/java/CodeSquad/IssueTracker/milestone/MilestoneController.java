@@ -1,15 +1,14 @@
 package CodeSquad.IssueTracker.milestone;
 
+import CodeSquad.IssueTracker.global.dto.BaseResponseDto;
 import CodeSquad.IssueTracker.milestone.dto.CreateMilestoneRequest;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneListResponse;
-import CodeSquad.IssueTracker.milestone.dto.MilestoneResponse;
 import CodeSquad.IssueTracker.milestone.dto.MilestoneUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
+import static CodeSquad.IssueTracker.global.message.SuccessMessage.MILESTONE_DELETE_SUCCESS;
 
 @RestController
 @Slf4j
@@ -36,5 +35,11 @@ public class MilestoneController {
     public String updateMilestone(@PathVariable Long milestoneId, @RequestBody MilestoneUpdateDto request){
         milestoneService.update(milestoneId,request);
         return "redirect:/milestones";
+    }
+
+    @DeleteMapping("/{milestoneId}")
+    public BaseResponseDto<String> deleteMileStone(@PathVariable Long milestoneId) {
+        milestoneService.deleteById(milestoneId);
+        return BaseResponseDto.success(MILESTONE_DELETE_SUCCESS.getMessage(), null);
     }
 }

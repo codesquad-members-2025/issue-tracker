@@ -4,18 +4,16 @@ import CodeSquad.IssueTracker.comment.dto.CommentRequestDto;
 import CodeSquad.IssueTracker.comment.dto.CommentResponseDto;
 import CodeSquad.IssueTracker.comment.dto.CommentUpdateDto;
 import CodeSquad.IssueTracker.global.exception.NotFoundException;
-import CodeSquad.IssueTracker.global.exception.UserNotFoundException;
 import CodeSquad.IssueTracker.user.User;
-import CodeSquad.IssueTracker.user.UserRepository;
 import CodeSquad.IssueTracker.user.UserService;
 import CodeSquad.IssueTracker.util.Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -81,5 +79,9 @@ public class CommentService {
                 .toList();
     }
 
+    @Transactional
+    public void  deleteAllByIssueId(Long issueId) {
+        commentRepository.deleteByIssueId(issueId);
+    }
 
 }

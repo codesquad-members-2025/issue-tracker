@@ -23,4 +23,8 @@ public interface IssueRepository {
     int countFilteredIssuesByIsOpen(boolean isOpen, IssueFilterCondition condition);
 
     void updateIsOpen(IssueStatusUpdateRequest condition);
+
+    void deleteById(Long issueId);
+
+    void clearMilestoneFromIssues(Long milestoneId);
 }
