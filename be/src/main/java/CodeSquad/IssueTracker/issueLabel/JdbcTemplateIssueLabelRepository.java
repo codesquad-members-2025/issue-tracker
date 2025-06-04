@@ -84,7 +84,13 @@ public class JdbcTemplateIssueLabelRepository implements IssueLabelRepository {
             Map<Long, List<SummaryLabelDto>> result = new HashMap<>();
             while (rs.next()) {
                 long issueId = rs.getLong("issue_id");
-                SummaryLabelDto label = new SummaryLabelDto(rs.getLong("label_id"), rs.getString("name"), rs.getString("color"));
+
+                SummaryLabelDto label = new SummaryLabelDto(
+                        rs.getLong("label_id"),   // 🔧 여기서도 필드명 맞춰줌
+                        rs.getString("name"),
+                        rs.getString("color")
+                );
+
                 result.computeIfAbsent(issueId, k -> new ArrayList<>()).add(label);
             }
             return result;

@@ -3,6 +3,7 @@ package CodeSquad.IssueTracker.issue;
 
 import CodeSquad.IssueTracker.home.dto.IssueFilterCondition;
 import CodeSquad.IssueTracker.issue.dto.FilteredIssueDto;
+import CodeSquad.IssueTracker.issue.dto.GroupedCountDto;
 import CodeSquad.IssueTracker.issue.dto.IssueStatusUpdateRequest;
 import CodeSquad.IssueTracker.issue.dto.IssueUpdateDto;
 import CodeSquad.IssueTracker.milestone.dto.SummaryMilestoneDto;
@@ -181,6 +182,36 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         String sql = "UPDATE issues SET milestone_id = null WHERE milestone_id = :milestoneId";
         template.update(sql, Map.of("milestoneId", milestoneId));
     }
+
+    @Override
+    public GroupedCountDto countGroupedIssues(IssueFilterCondition condition) {
+        String baseSql = """
+        SELECT
+            COUNT(DISTINCT CASE WHEN i.is_open = true THEN i.issue_id END) AS open_count,
+            COUNT(DISTINCT CASE WHEN i.is_open = false THEN i.issue_id END) AS closed_count,
+            COUNT(DISTINCT i.issue_id) AS total_count
+        FROM issues i
+        LEFT JOIN milestones m ON i.milestone_id = m.milestone_id
+        LEFT JOIN users u ON i.author_id = u.id
+        LEFT JOIN issue_assignee ia ON i.issue_id = ia.issue_id
+        LEFT JOIN issue_label il ON i.issue_id = il.issue_id
+        LEFT JOIN comments c ON i.issue_id = c.issue_id
+    """;
+
+        IssueFilterQueryBuilder queryBuilder = new IssueFilterQueryBuilder(null, condition); // isOpen은 전체 조회니까 null
+        String whereClause = queryBuilder.getWhereClause().toString();
+
+        String finalSql = baseSql + whereClause;
+
+        return template.queryForObject(finalSql, queryBuilder.getParams(), (rs, rowNum) ->
+                new GroupedCountDto(
+                        rs.getInt("open_count"),
+                        rs.getInt("closed_count"),
+                        rs.getInt("total_count")
+                )
+        );
+    }
+
 
     private RowMapper<Issue> issueRowMapper() {
         return BeanPropertyRowMapper.newInstance(Issue.class);

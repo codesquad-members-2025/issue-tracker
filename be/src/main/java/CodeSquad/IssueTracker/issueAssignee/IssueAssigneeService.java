@@ -31,7 +31,6 @@ public class IssueAssigneeService {
         }
     }
 
-    @Transactional
     public List<IssueAssigneeResponse> findAssigneeResponsesByIssueId(Long issueId) {
         return issueAssigneeRepository.findAssigneeResponsesByIssueId(issueId);
     }

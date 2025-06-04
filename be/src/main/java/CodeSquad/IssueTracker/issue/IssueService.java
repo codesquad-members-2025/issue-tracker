@@ -124,9 +124,8 @@ public class IssueService {
         response.setLabels(labels);
 
         // ✅ Milestone 정보 조회
-        MilestoneResponse milestone =
-                milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId());
-        response.setMilestone(milestone);
+        milestoneService.findMilestoneResponsesByIssueId(issue.getIssueId())
+                .ifPresent(response::setMilestone);
 
         // ✅ Comments 정보 조회
         List<CommentResponseDto> comments =
@@ -172,5 +171,10 @@ public class IssueService {
         issueLabelService.unassignLabel(issueId);
         issueRepository.deleteById(issueId);
     }
+
+    public GroupedCountDto getGroupedIssueCounts(IssueFilterCondition condition) {
+        return issueRepository.countGroupedIssues(condition);
+    }
+
 }
 
