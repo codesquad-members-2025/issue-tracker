@@ -31,9 +31,9 @@ export default function DefaultSwipeButton() {
 
   return (
     <Wrapper>
-      <PrevButton onClick={PrevSwipeHandler} />
+      <PrevButton onClick={PrevSwipeHandler} disabled={Number(currentPage) === 1} />
       <PageLabel>{currentPage}</PageLabel>
-      <NextButton onClick={NextSwipeHandler} />
+      <NextButton onClick={NextSwipeHandler} disabled={Number(currentPage) === metaData.maxPage} />
     </Wrapper>
   );
 }
