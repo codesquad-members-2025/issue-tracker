@@ -259,7 +259,7 @@ public class IssueService {
 		// 마일스톤 검증
 		if (request.isUpdatingMilestone() && request.getMilestoneId() != null) {
 			if (!milestoneRepository.existsMilestone(request.getMilestoneId())) {
-				throw new MilestoneNotFoundException("존재하지 않는 마일스톤: " + request.getMilestoneId());
+				throw new MilestoneNotFoundException(request.getMilestoneId());
 			}
 		}
 
@@ -325,7 +325,7 @@ public class IssueService {
 		}
 
 		if (!milestoneRepository.existsMilestone(milestoneId)) {
-			throw new MilestoneNotFoundException("존재하지 않는 마일스톤: " + milestoneId);
+			throw new MilestoneNotFoundException(milestoneId);
 		}
 	}
 

@@ -1,11 +1,16 @@
 package codesquad.team01.issuetracker.milestone.exception;
 
 public class MilestoneNotFoundException extends RuntimeException {
-	public MilestoneNotFoundException(String message) {
-		super(message);
+
+	private final int id;
+
+	public MilestoneNotFoundException(int id) {
+		super(id + "를 찾을 수 없습니다.");
+		this.id = id;
 	}
 
-	public MilestoneNotFoundException(String message, Throwable cause) {
-		super(message, cause);
+	public int getId() {
+		return id;
 	}
+
 }
