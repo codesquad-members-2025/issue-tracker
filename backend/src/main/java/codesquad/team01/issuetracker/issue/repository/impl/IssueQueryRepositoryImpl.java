@@ -62,6 +62,27 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		WHERE i.deleted_at IS NULL 
 		""";
 
+	private static final String UPDATE_ISSUE_STATES_BATCH_QUERY = """
+		UPDATE issue
+		SET state = :state,
+			closed_at = CASE
+				WHEN :state = 'CLOSED' THEN :now
+				ELSE NULL
+			END,
+			updated_at = :now
+		WHERE id IN (:issueIds)
+		AND deleted_at IS NULL
+		""";
+
+	private static final String FIND_EXISTING_ISSUES_QUERY = """
+		SELECT 
+			i.id as issue_id,
+			i.state as issue_state
+		FROM issue i
+		WHERE i.id IN (:issueIds)
+		AND i.deleted_at IS NULL
+		""";
+
 	private final RowMapper<IssueDto.BaseRow> issueRowMapper = (rs, rowNum) -> IssueDto.BaseRow.builder()
 		.issueId(rs.getInt("issue_id"))
 
@@ -79,6 +100,18 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		.milestoneId(rs.getInt("milestone_id"))
 		.milestoneTitle(rs.getString("milestone_title"))
 		.build();
+
+	private final RowMapper<IssueDto.StateCountRow> stateCountRowMapper = (rs, rowNum) ->
+		IssueDto.StateCountRow.builder()
+			.state(rs.getString("state"))
+			.count(rs.getInt("count"))
+			.build();
+
+	private final RowMapper<IssueDto.BatchIssueRow> batchIssueRowMapper = (rs, rowNum) ->
+		IssueDto.BatchIssueRow.builder()
+			.issueId(rs.getInt("issue_id"))
+			.currentState(IssueState.fromStateStr(rs.getString("issue_state")))
+			.build();
 
 	public List<MilestoneDto.MilestoneIssueCountRow> countByMilestoneIds(List<Integer> milestoneIds) {
 		StringBuilder sql = new StringBuilder(FIND_SPECIFIC_MILESTONE_ISSUE_COUNT);
@@ -126,12 +159,6 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		return jdbcTemplate.query(sql.toString(), params, issueRowMapper);
 	}
 
-	private final RowMapper<IssueDto.StateCountRow> stateCountRowMapper = (rs, rowNum) ->
-		IssueDto.StateCountRow.builder()
-			.state(rs.getString("state"))
-			.count(rs.getInt("count"))
-			.build();
-
 	@Override
 	public IssueDto.CountResponse countIssuesWithFilters(Integer writerId, Integer milestoneId,
 		List<Integer> labelIds, List<Integer> assigneeIds) {
@@ -155,6 +182,29 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			.open(countByState.getOrDefault(IssueState.OPEN, 0))
 			.closed(countByState.getOrDefault(IssueState.CLOSED, 0))
 			.build();
+	}
+
+	@Override
+	public int batchUpdateIssueStates(List<Integer> issueIds, IssueState action, LocalDateTime now) {
+		if (issueIds.isEmpty()) {
+			return 0;
+		}
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("issueIds", issueIds);
+		params.addValue("action", action.name());
+		params.addValue("now", now);
+
+		return jdbcTemplate.update(UPDATE_ISSUE_STATES_BATCH_QUERY, params);
+	}
+
+	@Override
+	public List<IssueDto.BatchIssueRow> findExistingIssuesByIds(List<Integer> issueIds) {
+		if (issueIds.isEmpty()) {
+			return List.of();
+		}
+		MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
+		return jdbcTemplate.query(FIND_EXISTING_ISSUES_QUERY, params, batchIssueRowMapper);
 	}
 
 	private void appendFilterConditions(StringBuilder sql, MapSqlParameterSource params,
@@ -197,10 +247,4 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 			}
 		}
 	}
-
-/*	@Override
-	public IssueDto.BatchUpdateResponse batchUpdateIssueState(List<Integer> issueIds, IssueState action) {
-
-		return null;
-	}*/
 }
