@@ -21,6 +21,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquad.team01.issuetracker.common.dto.CursorDto;
+import codesquad.team01.issuetracker.common.exception.IssueDeletionException;
 import codesquad.team01.issuetracker.issue.domain.IssueState;
 import codesquad.team01.issuetracker.issue.dto.IssueDto;
 import codesquad.team01.issuetracker.issue.exception.IssueCreationException;
@@ -40,6 +41,13 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 	private final IssueQueryBuilder queryBuilder;
 
+	private static final String SOFT_DELETE_ISSUE_QUERY = """
+		UPDATE issue
+		SET deleted_at = :now, updated_at = :now
+		WHERE id = :issueId
+		AND deleted_at IS NULL
+		""";
+
 	private static final String FIND_SPECIFIC_MILESTONE_ISSUE_COUNT = """
 		SELECT
 			i.milestone_id											AS milestoneId,
@@ -48,33 +56,6 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		FROM issue i
 		WHERE i.milestone_id IN (:milestoneIds)
 		GROUP BY i.milestone_id
-		""";
-
-	private static final String BASE_ISSUE_QUERY = """
-		SELECT
-		    i.id as issue_id,
-		    i.title as issue_title,
-		    i.state as issue_state,
-		    i.created_at as issue_created_at,
-		    i.updated_at as issue_updated_at,
-		    u.id as writer_id,
-		    u.username as writer_username,
-		    u.profile_image_url as writer_profile_image_url,
-		    m.id as milestone_id,
-		    m.title as milestone_title
-		FROM issue i
-		JOIN users u ON i.writer_id = u.id
-		LEFT JOIN milestone m ON i.milestone_id = m.id
-		WHERE i.deleted_at IS NULL
-		    AND i.state = :state 
-		""";
-
-	private static final String BASE_COUNT_ISSUES_QUERY = """
-		SELECT 
-			i.state,
-			COUNT(*) as count
-		FROM issue i
-		WHERE i.deleted_at IS NULL 
 		""";
 
 	private static final String UPDATE_ISSUE_STATES_BATCH_QUERY = """
@@ -143,32 +124,6 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		DELETE FROM issue_assignee WHERE issue_id = :issueId
 		""";
 
-	private static final String UPDATE_ISSUE_TITLE_QUERY = """
-		UPDATE issue
-		SET title = :title, updated_at = :now
-		WHERE id = :issueId AND deleted_at IS NULL
-		""";
-	private static final String UPDATE_ISSUE_CONTENT_QUERY = """
-				UPDATE issue
-				SET content = :content, updated_at :now
-				WHERE id = :issueId AND deleted_at IS NULL
-		""";
-	private static final String UPDATE_ISSUE_MILESTONE_QUERY = """
-				UPDATE issue
-				SET milestone_id = :milestoneId, updated_at = :now
-				WHERE id = :issueId AND deleted_at IS NULL
-		""";
-	private static final String UPDATE_ISSUE_STATE_QUERY = """
-				UPDATE issue
-				SET state = :state,
-					closed_at = CASE
-						WHEN :state = 'CLOSED' THEN :now
-						ELSE NULL
-					END,
-					updated_at = :now
-				WHERE id = :issueId AND deleted_at IS NULL
-		""";
-
 	private static final String FIND_ISSUE_STATE_QUERY = """
 		SELECT 
 			i.state as state
@@ -215,7 +170,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 				.issueState(IssueState.fromStateStr(rs.getString("issue_state")))
 				.issueCreatedAt(rs.getTimestamp("issue_created_at").toLocalDateTime())
 				.issueUpdatedAt(rs.getTimestamp("issue_updated_at").toLocalDateTime())
-				.issueClosedAt(closedAt) // null-safe 처리된 값
+				.issueClosedAt(closedAt)
 				.writerId(rs.getInt("writer_id"))
 				.writerUsername(rs.getString("writer_username"))
 				.writerProfileImageUrl(rs.getString("writer_profile_image_url"))
@@ -484,4 +439,21 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 		}
 	}
 
+	@Override
+	public void deleteIssue(Integer issueId, LocalDateTime now) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("issueId", issueId);
+		params.addValue("now", now);
+
+		try {
+			int updatedRows = jdbcTemplate.update(SOFT_DELETE_ISSUE_QUERY, params);
+			if (updatedRows == 0) {
+				throw new IssueNotFoundException("이슈를 찾을 수 없거나 이미 삭제된 이슈: " + issueId);
+			}
+			log.info("이슈 삭제 완료: issueId={}", issueId);
+		} catch (DataAccessException e) {
+			log.error("이슈 삭제 중 데이터베이스 오류 발생: issueId, error={}", issueId, e.getMessage());
+			throw new IssueDeletionException("이슈 삭제 중 오류 발생", e);
+		}
+	}
 }

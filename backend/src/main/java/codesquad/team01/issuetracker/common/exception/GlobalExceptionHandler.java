@@ -71,14 +71,6 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error(e.getMessage()));
 	}
 
-	@ExceptionHandler(MilestoneNotFoundException.class)
-	public ResponseEntity<ApiResponse<?>> handleMilestoneNotFound(MilestoneNotFoundException e) {
-		int id = e.getId();
-		return ResponseEntity
-			.badRequest()
-			.body(ApiResponse.error("마일스톤 '" + id + "' 을(를) 찾을 수 없습니다."));
-	}
-
 	@ExceptionHandler(DuplicateMilestoneTitleException.class)
 	public ResponseEntity<ApiResponse<?>> handleDuplicateMilestone(DuplicateMilestoneTitleException e) {
 		String title = e.getMilestoneTitle();

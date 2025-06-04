@@ -117,9 +117,9 @@ public class CommentService {
 			.orElseThrow(() -> new CommentNotFoundException(commentId));
 
 		// 작성자 권한 확인
-		if (comment.writerId() != currentUserId) {
-			throw new CommentAccessForbiddenException(commentId, currentUserId);
-		}
+		// if (comment.writerId() != currentUserId) {
+		// 	throw new CommentAccessForbiddenException(commentId, currentUserId);
+		// }
 
 		// 댓글이 속한 이슈 존재 확인
 		validateIssueExists(comment.issueId());
