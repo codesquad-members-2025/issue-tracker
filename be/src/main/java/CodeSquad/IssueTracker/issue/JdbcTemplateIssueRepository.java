@@ -106,7 +106,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
         IssueFilterQueryBuilder queryBuilder = new IssueFilterQueryBuilder(condition.getIsOpen(), condition);
         String sql = """
             SELECT DISTINCT
-            i.issue_id, i.title, i.is_open, i.author_id, u.nick_name, i.milestone_id, m.name AS milestone_name, i.last_modified_at
+            i.issue_id, i.title, i.is_open, i.author_id, u.nick_name, u.profile_image_url, i.milestone_id, m.name AS milestone_name, i.last_modified_at
             FROM issues i
             LEFT JOIN milestones m ON i.milestone_id = m.milestone_id
             LEFT JOIN users u ON i.author_id = u.id
@@ -126,7 +126,7 @@ public class JdbcTemplateIssueRepository implements IssueRepository {
             dto.setIssueId(rs.getLong("issue_id"));
             dto.setTitle(rs.getString("title"));
             dto.setIsOpen(rs.getBoolean("is_open"));
-            dto.setAuthor(new SummaryUserDto(rs.getLong("author_id"), rs.getString("nick_name")));
+            dto.setAuthor(new SummaryUserDto(rs.getLong("author_id"), rs.getString("nick_name"), rs.getString("profile_image_url")));
             dto.setMilestone(new SummaryMilestoneDto(rs.getLong("milestone_id"), rs.getString("milestone_name")));
             dto.setLastModifiedAt(rs.getTimestamp("last_modified_at").toLocalDateTime());
             return dto;

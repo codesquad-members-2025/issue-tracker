@@ -71,9 +71,9 @@ public class JdbcTemplateIssueLabelRepository implements IssueLabelRepository {
     @Override
     public Map<Long, List<SummaryLabelDto>> findSummaryLabelsByIssueIds(List<Long> issueIds) {
         String sql = """
-        SELECT il.issue_id, l.id, l.name, l.color
+        SELECT il.issue_id, l.label_id, l.name, l.color
         FROM issue_label il
-        JOIN labels l ON il.label_id = l.id
+        JOIN labels l ON il.label_id = l.label_id
         WHERE il.issue_id IN (:ids)
     """;
 
@@ -83,7 +83,7 @@ public class JdbcTemplateIssueLabelRepository implements IssueLabelRepository {
             Map<Long, List<SummaryLabelDto>> result = new HashMap<>();
             while (rs.next()) {
                 long issueId = rs.getLong("issue_id");
-                SummaryLabelDto label = new SummaryLabelDto(rs.getLong("id"), rs.getString("name"), rs.getString("color"));
+                SummaryLabelDto label = new SummaryLabelDto(rs.getLong("label_id"), rs.getString("name"), rs.getString("color"));
                 result.computeIfAbsent(issueId, k -> new ArrayList<>()).add(label);
             }
             return result;
