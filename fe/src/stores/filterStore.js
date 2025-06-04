@@ -26,7 +26,11 @@ const useFilterStore = create(
           return;
         }
         if (key in state.selectedFilters) {
-          delete state.selectedFilters[key];
+          if (state.selectedFilters[key] === value) {
+            delete state.selectedFilters[key];
+          } else {
+            state.selectedFilters[key] = value;
+          }
         } else {
           state.selectedFilters[key] = value;
         }
