@@ -243,6 +243,7 @@ app.get('/home', authMiddleware, async (req, res) => {
           currentPage: pageNum,
           openIssueNumber: baseFilteredIssues.filter((i) => i.isOpen === true)?.length,
           closeIssueNumber: baseFilteredIssues.filter((i) => i.isOpen === false)?.length,
+          maxPage: totalPages,
         },
       }),
     );
