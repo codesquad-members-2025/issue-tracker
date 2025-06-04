@@ -2912,7 +2912,7 @@
     },
     {
       "labelId": 8,
-      "name": "테스트",
+      "name": "테스트asd",
       "description": "테스트 입니다",
       "color": "#ed6b39"
     },
@@ -2952,7 +2952,7 @@
       "milestoneId": 5,
       "name": "테스트",
       "description": "111",
-      "endDate": "1111-11-11T00:00:00.000Z",
+      "endDate": "1111-10-22T00:00:00.000Z",
       "isOpen": true,
       "processingRate": 0
     },

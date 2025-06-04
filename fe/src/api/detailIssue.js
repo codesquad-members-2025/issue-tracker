@@ -17,5 +17,5 @@ export function patchCommentInDetailIssueAPI(issueId, commentId) {
 }
 
 export function deleteDetailIssueAPI(id) {
-  return `http://localhost:8080/issues/${id}`;
+  return `${defaultAPI}/${id}`;
 }
