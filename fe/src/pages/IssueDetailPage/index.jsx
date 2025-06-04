@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 export default function IssueDetailPage() {
   const { response, fetchData, isLoading } = useDataFetch({ fetchType: '이슈 상세 페이지' });
   const { id } = useParams();
+  const navigate = useNavigate();
   const shouldRefetch = useRef(false);
   const initIssueDetailStore = useIssueDetailStore((s) => s.initStore);
   const comments = useIssueDetailStore((s) => s.comments);
