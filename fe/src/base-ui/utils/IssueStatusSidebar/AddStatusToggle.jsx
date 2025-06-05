@@ -145,12 +145,10 @@ export default function AddStatusToggle({
     if (context === 'detail') {
       const PATCHoption = {
         method: 'PATCH',
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
         body: getFetchBody(toggleType, selected),
       };
-      issueFetchHandler('PATCH', PATCHoption);
+      const accessToken = localStorage.getItem('token');
+      issueFetchHandler('PATCH', PATCHoption, accessToken);
     }
   }
   function handleToggle() {
@@ -160,7 +158,7 @@ export default function AddStatusToggle({
   const isEmpty = (value) => {
     if (Array.isArray(value)) return value?.length === 0;
     if (value && typeof value === 'object') return Object.keys(value)?.length === 0;
-    return true; // null, undefined, '' 등도 “빈 값”으로 취급
+    return true; // null, undefined, '' 등도 "빈 값"으로 취급
   };
   return (
     <ToggleContainer>

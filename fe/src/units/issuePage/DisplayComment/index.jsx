@@ -85,10 +85,11 @@ export default function DisplayComment({ isMainComment, commentObj, commentPatch
       method: 'PATCH',
       body: getFormData({ content: editingContent }, editingIssueFileUrl),
     };
+    const accessToken = localStorage.getItem('token');
     if (isMainComment) {
-      commentPatchHandler('PATCH', PATCHoptions);
+      commentPatchHandler('PATCH', PATCHoptions, accessToken);
     } else {
-      commentPatchHandler('PATCH', commentId, PATCHoptions);
+      commentPatchHandler('PATCH', commentId, PATCHoptions, accessToken);
     }
     setIsEdit(false);
   }

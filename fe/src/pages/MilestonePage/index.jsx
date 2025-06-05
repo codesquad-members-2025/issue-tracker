@@ -19,6 +19,7 @@ export default function MilestonePage() {
   const milestone = useMilestoneStore((s) => s.milestone);
   const initMilestones = useMilestoneStore((s) => s.initMilestones);
   const reFetch = useRef(true);
+  const accessToken = localStorage.getItem('token');
 
   function reFetchHandler(boolean) {
     reFetch.current = boolean;
@@ -48,7 +49,7 @@ export default function MilestonePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
-    const { ok } = await fetchData(API, getOptionWithToken(fetchOption));
+    const { ok } = await fetchData(API, getOptionWithToken(fetchOption, accessToken));
     if (ok) {
       reFetchHandler(true);
       if (setterFn) {
@@ -60,7 +61,7 @@ export default function MilestonePage() {
   }
 
   function deleteHandler(milestoneId) {
-    fetchData(DELETE_MILESTONE(milestoneId), getOptionWithToken({ method: 'DELETE' }));
+    fetchData(DELETE_MILESTONE(milestoneId), getOptionWithToken({ method: 'DELETE' }, accessToken));
     reFetchHandler(true);
   }
 
@@ -71,7 +72,7 @@ export default function MilestonePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, description, endDate, isOpen: !isOpen }),
     };
-    fetchData(API, getOptionWithToken(fetchOption));
+    fetchData(API, getOptionWithToken(fetchOption, accessToken));
     reFetchHandler(true);
   }
   useEffect(() => {
@@ -82,7 +83,7 @@ export default function MilestonePage() {
     //항상 현재의 쿼리파람을 기준으로 GET 요청
     // 현재의 마일스톤 페이지에서 마일스톤 조작 액션이 일어나면 항상 GET 요청으로 새로운 데이터를 이 스코프에서 받아온다.
     if (!reFetch.current) return;
-    fetchData(`${GET_MILESTONE}?${searchParam.toString()}`, getOptionWithToken(GEToptions));
+    fetchData(`${GET_MILESTONE}?${searchParam.toString()}`, getOptionWithToken(GEToptions, accessToken));
     reFetchHandler(false);
   }, [searchParam, response]);
 

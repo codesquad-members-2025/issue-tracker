@@ -16,6 +16,7 @@ export default function LabelPage() {
   const initLabels = useLabelStore((s) => s.setLabels);
   const count = useLabelStore((s) => s.count);
   const reFetch = useRef(true);
+  const accessToken = localStorage.getItem('token');
 
   function reFetchHandler(bool) {
     reFetch.current = bool;
@@ -23,7 +24,7 @@ export default function LabelPage() {
 
   useEffect(() => {
     if (!reFetch.current) return;
-    fetchData(GET_LABELS, getOptionWithToken({ method: 'GET' }));
+    fetchData(GET_LABELS, getOptionWithToken({ method: 'GET' }, accessToken));
     reFetchHandler(false);
   }, [response]);
 
@@ -46,7 +47,7 @@ export default function LabelPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, description, color }),
     };
-    const { ok } = await fetchData(API, getOptionWithToken(fetchOption));
+    const { ok } = await fetchData(API, getOptionWithToken(fetchOption, accessToken));
     if (ok) {
       reFetchHandler(true);
       if (setterFn) {
@@ -58,7 +59,7 @@ export default function LabelPage() {
   }
 
   function deleteHandler(labelId) {
-    fetchData(DELETE_LABEL(labelId), getOptionWithToken({ method: 'DELETE' }));
+    fetchData(DELETE_LABEL(labelId), getOptionWithToken({ method: 'DELETE' }, accessToken));
     reFetchHandler(true);
   }
 
