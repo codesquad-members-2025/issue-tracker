@@ -39,7 +39,7 @@ export function NavigateTabs() {
       </ButtonWrapper>
       <NewIssueButton
         onClick={() => {
-          navigate('new');
+          navigate('issue/new');
           resetStore();
         }}
       >

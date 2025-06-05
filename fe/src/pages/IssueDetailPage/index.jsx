@@ -69,7 +69,7 @@ export default function IssueDetailPage() {
     const response = await fetchData(deleteDetailIssueAPI(id), getOptionWithToken(fetchOption, accessToken));
 
     if (response.ok) {
-      navigate('/'); // 삭제 성공하면 메인 페이지로 이동
+      navigate('/'); // 메인 페이지로 이동 (이미 올바른 경로)
     } else {
       console.error('이슈 삭제 실패');
     }
