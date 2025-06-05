@@ -24,10 +24,10 @@ export default function AppRouter() {
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<IssueListPage />} />
-            <Route path="new" element={<NewIssuePage />} />
-            <Route path="labels" element={<LabelPage />} />
-            <Route path="milestones" element={<MilestonePage />} />
-            <Route path=":id" element={<IssueDetailPage />} />
+            <Route path="issue/new" element={<NewIssuePage />} />
+            <Route path="issue/labels" element={<LabelPage />} />
+            <Route path="issue/milestones" element={<MilestonePage />} />
+            <Route path="issue/:id" element={<IssueDetailPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Route>
