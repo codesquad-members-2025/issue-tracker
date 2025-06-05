@@ -94,7 +94,7 @@ export default function IssueItem({ issue }) {
         <Main>
           <Header>
             <IssueBadge isOpen={isOpen} />
-            <ClickableTitle onClick={() => navigate(`/${id}`)}>
+            <ClickableTitle onClick={() => navigate(`/issue/${id}`)}>
               <IssueTitle title={title} />
             </ClickableTitle>
             <ItemLabels labels={labels} />

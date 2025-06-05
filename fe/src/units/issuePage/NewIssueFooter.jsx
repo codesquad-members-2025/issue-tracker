@@ -57,7 +57,7 @@ export default function NewIssueFooter({ isValid }) {
 
   useEffect(() => {
     if (!response?.data?.issue?.issueId) return;
-    navigator(`/${response.data.issue.issueId}`);
+    navigator(`/issue/${response.data.issue.issueId}`);
   }, [response]);
   return (
     <Container>
