@@ -203,8 +203,9 @@ public class IssueService {
   private void validateUserOwnsIssue(Long userId, Long issueId) {
     validateIssueExists(issueId);
     validateUserExists(userId);
+    Issue issue = issueRepository.findById(issueId).get();
 
-    if (!issueId.equals(userId)) {
+    if (!issue.getUserId().equals(userId)) {
       throw new NotFoundException(ErrorCode.ISSUE_NOT_FOUND);
     }
   }
