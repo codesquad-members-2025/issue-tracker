@@ -3,14 +3,16 @@ package codesquad.team4.issuetracker.issue;
 import static codesquad.team4.issuetracker.aws.S3FileService.EMPTY_STRING;
 
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
+import codesquad.team4.issuetracker.count.dto.IssueCountDto;
 import codesquad.team4.issuetracker.entity.Issue;
 import codesquad.team4.issuetracker.entity.IssueAssignee;
 import codesquad.team4.issuetracker.entity.IssueLabel;
+import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.exception.notfound.AssigneeNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.LabelNotFoundException;
 import codesquad.team4.issuetracker.exception.notfound.MilestoneNotFoundException;
-import codesquad.team4.issuetracker.count.dto.IssueCountDto;
+import codesquad.team4.issuetracker.exception.unauthorized.NotAuthorException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueUpdateDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
@@ -28,6 +30,7 @@ import codesquad.team4.issuetracker.user.IssueAssigneeRepository;
 import codesquad.team4.issuetracker.user.UserDao;
 import codesquad.team4.issuetracker.user.dto.UserDto;
 import codesquad.team4.issuetracker.user.dto.UserDto.UserInfo;
+import codesquad.team4.issuetracker.util.OpenStatus;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,15 +39,17 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class IssueService {
     private static final String CREATE_ISSUE = "이슈가 생성되었습니다";
@@ -79,20 +84,37 @@ public class IssueService {
             addIssueToMap(row, issueMap, issueId, assigneeMap, labelMap);
         }
 
-        int totalElements = issueDao.countIssuesByOpenStatus(params.getStatus().getState());
-        int totalPages = (int) Math.ceil((double) totalElements / size);
+        Map<String, Integer> countMap = issueDao.countFilteredIssues(params);
+        int openCount = countMap.get("open");
+        int closeCount = countMap.get("close");
+
+        int totalElements = openCount + closeCount;
+        int totalPages = (int) Math.ceil((double) closeCount / size);;
+        if (params.getStatus() == OpenStatus.OPEN)
+            totalPages = (int) Math.ceil((double) openCount / size);
 
         return IssueResponseDto.IssueListDto.builder()
-                .issues(new ArrayList<>(issueMap.values()))
-                .page(page)
-                .size(size)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
-                .build();
+            .issues(new ArrayList<>(issueMap.values()))
+            .openCount(openCount)
+            .closeCount(closeCount)
+            .page(page)
+            .size(size)
+            .totalElements(totalElements)
+            .totalPages(totalPages)
+            .build();
+    }
+
+    private Optional<Integer> getIssueCountByStatus(List<Map<String, Object>> rows, String columnName) {
+        Map<String, Object> row = rows.stream()
+            .findFirst()
+            .orElse(Map.of());
+
+        return Optional.ofNullable((Long) row.get(columnName)).map(Long::intValue);
     }
 
     private void addIssueToMap(Map<String, Object> row, Map<Long, IssueInfo> issueMap, Long issueId,
                                   Map<Long, Set<UserInfo>> assigneeMap, Map<Long, Set<LabelInfo>> labelMap) {
+        Timestamp createdAt = (Timestamp) row.get("created_at");
         issueMap.computeIfAbsent(issueId, id ->
                 IssueInfo.builder()
                         .id(issueId)
@@ -108,7 +130,8 @@ public class IssueService {
                                 .id((Long) row.get("milestone_id"))
                                 .title((String) row.get("milestone_title"))
                                 .build())
-                        .build()
+                    .createdAt(createdAt.toLocalDateTime())
+                .build()
         );
     }
 
@@ -222,7 +245,7 @@ public class IssueService {
 
         String issueContent = (String) issueById.get(0).get("issue_content");
         String issueImage = (String) issueById.get(0).get("issue_file_url");
-
+        Timestamp createdAt = (Timestamp) issueById.get(0).get("created_at");
         List<CommentResponseDto.CommentInfo> comments = issueById.stream()
                 .filter(row -> row.get("comment_id") != null) // 댓글이 없는 경우 필터링
                 .map(row -> CommentResponseDto.CommentInfo.builder()
@@ -241,27 +264,28 @@ public class IssueService {
         return IssueResponseDto.searchIssueDetailDto.builder()
                 .content(issueContent)
                 .contentFileUrl(issueImage)
+                .createdAt(createdAt.toLocalDateTime())
                 .comments(comments)
                 .commentSize(comments.size())
                 .build();
     }
 
     @Transactional
-    public ApiMessageDto updateIssue(Long id, IssueRequestDto.IssueUpdateDto request, String uploadUrl) {
+    public ApiMessageDto updateIssue(Long id, IssueRequestDto.IssueUpdateDto request, String uploadUrl, User user) {
         Issue oldIssue = issueRepository.findById(id)
                 .orElseThrow(() -> new IssueNotFoundException(id));
 
-        if (request.getMilestoneId() != null) {
-            milestoneRepository.findById(request.getMilestoneId())
-                    .orElseThrow(() -> new MilestoneNotFoundException(request.getMilestoneId()));
-        }
+        //작성자 검증
+        validateAuthor(oldIssue.getAuthorId(), user);
+
+        Long milestoneId = determineMilestoneId(request, oldIssue);
 
         boolean oldOpen = oldIssue.isOpen();
 
         //기존 이미지를 삭제하는 것인지 확인
         String newFileUrl = determineNewFileUrl(request, uploadUrl, oldIssue);
 
-        Issue updated = createupdatedIssue(request, oldIssue, newFileUrl);
+        Issue updated = createupdatedIssue(request, oldIssue, newFileUrl, milestoneId);
 
         issueRepository.save(updated);
 
@@ -277,12 +301,12 @@ public class IssueService {
         return createMessageResult(updated.getId(), UPDATE_ISSUE);
     }
 
-    private  Issue createupdatedIssue(IssueUpdateDto request, Issue oldIssue, String newFileUrl) {
+    private  Issue createupdatedIssue(IssueUpdateDto request, Issue oldIssue, String newFileUrl, Long milestoneId) {
         return oldIssue.toBuilder()
                 .title(request.getTitle() != null ? request.getTitle() : oldIssue.getTitle())
                 .content(request.getContent() != null ? request.getContent() : oldIssue.getContent())
                 .FileUrl(newFileUrl)
-                .milestoneId(request.getMilestoneId() != null ? request.getMilestoneId() : oldIssue.getMilestoneId())
+                .milestoneId(milestoneId)
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : oldIssue.isOpen())
                 .build();
     }
@@ -296,6 +320,22 @@ public class IssueService {
             newFileUrl = uploadUrl;
         }
         return newFileUrl;
+    }
+
+    private Long determineMilestoneId(IssueUpdateDto request, Issue oldIssue) {
+        if (Boolean.TRUE.equals(request.getRemoveMilestone())) {
+            return null;
+        }
+
+        Long newMilestoneId = request.getMilestoneId();
+
+        if (newMilestoneId != null) {
+            milestoneRepository.findById(newMilestoneId)
+                .orElseThrow(() -> new MilestoneNotFoundException(newMilestoneId));
+            return newMilestoneId;
+        }
+
+        return oldIssue.getMilestoneId();
     }
 
     @Transactional
@@ -384,12 +424,20 @@ public class IssueService {
     }
 
     @Transactional
-    public void deleteIssue(Long issueId) {
+    public void deleteIssue(Long issueId, User user) {
         Issue issue = issueRepository.findById(issueId)
                 .orElseThrow(() -> new IssueNotFoundException(issueId));
+
+        validateAuthor(issue.getAuthorId(), user);
 
         boolean wasOpen = issue.isOpen();
         issueRepository.deleteById(issueId);
         eventPublisher.publishEvent(new IssueEvent.Deleted(wasOpen));
+    }
+
+    private void validateAuthor (Long authorId, User user) {
+        if (!authorId.equals(user.getId())) {
+            throw new NotAuthorException();
+        }
     }
 }

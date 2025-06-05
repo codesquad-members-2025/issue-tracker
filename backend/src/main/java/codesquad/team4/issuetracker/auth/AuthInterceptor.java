@@ -25,11 +25,24 @@ public class AuthInterceptor implements HandlerInterceptor {
     public static final String USER_ATTRIBUTE = "authenticatedUser";
     private static final String NEED_LOGIN = "로그인이 필요합니다.";
     private static final String NOT_FOUND_USER = "사용자를 찾을 수 없습니다.";
+    private static final String TOKEN_EXPIRED = "토큰이 만료되었습니다.";
+    private static final String TOKEN_INVALID = "토큰이 유효하지않습니다.";
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         Optional<String> token = extractTokenFromCookies(request.getCookies());
-        if (token.isEmpty() || !jwtProvider.isValid(token.get())) {
+        if (token.isEmpty()) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, NEED_LOGIN);
+            return false;
+        }
+
+        TokenValidationResult result = jwtProvider.isValid(token.get());
+        if (result == TokenValidationResult.EXPIRED) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, TOKEN_EXPIRED);
+            return false;
+        }
+
+        if (result == TokenValidationResult.INVALID) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, TOKEN_INVALID);
             return false;
         }
 

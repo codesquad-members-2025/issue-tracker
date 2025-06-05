@@ -66,7 +66,7 @@ public class AuthControllerTest {
         AuthRequestDto.LoginRequestDto loginRequest = new AuthRequestDto.LoginRequestDto("test@example.com", "1234");
         String jwtToken = "mocked-jwt-token";
 
-        given(authService.checkEmailAndPassword(any())).willReturn(dummyUser);
+        given(authService.authenticateUser(any())).willReturn(dummyUser);
         given(jwtProvider.createToken(dummyUser.getId())).willReturn(jwtToken);
 
         // when & then
@@ -89,7 +89,7 @@ public class AuthControllerTest {
         // given
         AuthRequestDto.LoginRequestDto loginRequest = new AuthRequestDto.LoginRequestDto("wrong@example.com", "wrongpw");
 
-        given(authService.checkEmailAndPassword(any()))
+        given(authService.authenticateUser(any()))
             .willThrow(new UserByEmailNotFoundException());
 
         // when & then

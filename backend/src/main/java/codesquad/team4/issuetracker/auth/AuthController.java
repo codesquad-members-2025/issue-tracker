@@ -36,7 +36,7 @@ public class AuthController {
     public ApiResponse<AuthResponseDto.LoginResponseDto> login(
         @RequestBody @Valid AuthRequestDto.LoginRequestDto requestDto,  HttpServletResponse response) {
 
-        User user = authService.checkEmailAndPassword(requestDto);
+        User user = authService.authenticateUser(requestDto);
 
         String token = jwtProvider.createToken(user.getId());
 

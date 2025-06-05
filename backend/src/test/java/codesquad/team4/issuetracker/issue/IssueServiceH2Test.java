@@ -1,10 +1,13 @@
 package codesquad.team4.issuetracker.issue;
 
+import static codesquad.team4.issuetracker.util.IssueFilteringParser.parseFilterCondition;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.count.dto.IssueCountDto;
+import codesquad.team4.issuetracker.exception.notfound.IssueNotFoundException;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto;
 import codesquad.team4.issuetracker.issue.dto.IssueRequestDto.IssueFilterParamDto;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto;
@@ -12,13 +15,15 @@ import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueInfo;
 import codesquad.team4.issuetracker.issue.dto.IssueResponseDto.IssueListDto;
 import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelInfo;
 import codesquad.team4.issuetracker.util.OpenStatus;
-import codesquad.team4.issuetracker.util.IssueFilteringParser;
 import codesquad.team4.issuetracker.util.TestDataHelper;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +45,8 @@ class IssueServiceH2Test {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private User author;
 
     @BeforeEach
     void setUp() {
@@ -78,6 +85,12 @@ class IssueServiceH2Test {
         TestDataHelper.insertComment(jdbcTemplate, 3L, "댓글3", 2L, 3L, null);
         TestDataHelper.insertComment(jdbcTemplate, 4L, "댓글4", 3L, 3L, null);
         TestDataHelper.insertComment(jdbcTemplate, 5L, "댓글5", 3L, 6L, null);
+
+        author = User.builder()
+            .id(1L)
+            .email("user1@test.com")
+            .nickname("사용자1")
+            .build();
     }
 
 
@@ -169,7 +182,7 @@ class IssueServiceH2Test {
         Long issueId = 999L;
 
         //when & then
-        assertThatThrownBy(() -> issueService.deleteIssue(issueId))
+        assertThatThrownBy(() -> issueService.deleteIssue(issueId, author))
             .isInstanceOf(IssueNotFoundException.class);
     }
 
@@ -281,7 +294,7 @@ class IssueServiceH2Test {
         Long milestoneId, Long commentAuthorId, List<Long> labelIds) {
 
         // given
-        IssueRequestDto.IssueFilterParamDto filterDto = IssueFilteringParser.parseFilterCondition(q);
+        IssueRequestDto.IssueFilterParamDto filterDto = parseFilterCondition(q);
 
         // when
         IssueResponseDto.IssueListDto result = issueService.getIssues(filterDto, 0, 10);
@@ -311,5 +324,39 @@ class IssueServiceH2Test {
                 assertThat(issueLabelIds).containsAll(labelIds);
             }
         });
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideIssueFilterDtosWithCounts")
+    @DisplayName("이슈를 필터링하는경우 필터링된 열린 이슈 갯수와 닫힌 이슈 갯수를 함께 응답한다")
+    void testFilteredIssueCounts(IssueFilterParamDto filterDto, int expectedOpen, int expectedClose) {
+        IssueResponseDto.IssueListDto result = issueService.getIssues(filterDto, 0, 10);
+
+        assertThat(result.getOpenCount()).isEqualTo(expectedOpen);
+        assertThat(result.getCloseCount()).isEqualTo(expectedClose);
+    }
+
+    private static Stream<Arguments> provideIssueFilterDtosWithCounts() {
+        return Stream.of(
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.OPEN).build(), 4, 2),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.CLOSE).build(), 4, 2),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.OPEN).authorId(3L).build(), 0, 0),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.OPEN).assigneeId(2L).build(), 1, 1),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.CLOSE).commentAuthorId(3L).build(), 0, 2),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.OPEN).commentAuthorId(3L).build(), 0, 2),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.CLOSE).commentAuthorId(2L).build(), 1, 1),
+            Arguments.of(
+                IssueFilterParamDto.builder().status(OpenStatus.OPEN).authorId(3L).labelIds(Set.of(1L)).build(), 0, 0),
+            Arguments.of(
+                IssueFilterParamDto.builder().status(OpenStatus.OPEN).authorId(3L).labelIds(Set.of(1L, 2L)).build(), 0, 0),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.OPEN).authorId(3L).milestoneId(1L).build(), 0, 0),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.OPEN).labelIds(Set.of(1L, 2L, 3L)).build(), 0, 0),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.CLOSE).authorId(3L).assigneeId(4L).build(), 0, 0),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.OPEN).milestoneId(2L).build(), 0, 0),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.CLOSE).labelIds(Set.of(5L)).build(), 0, 0),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.OPEN).commentAuthorId(2L).build(), 1, 1),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.CLOSE).build(), 4, 2),
+            Arguments.of(IssueFilterParamDto.builder().status(OpenStatus.CLOSE).labelIds(Set.of(1L)).build(), 2, 0)
+        );
     }
 }

@@ -46,6 +46,7 @@ public class IssueRequestDto {
         private Long milestoneId;
         private Boolean isOpen;
         private Boolean removeImage;
+        private Boolean removeMilestone;
     }
 
     @AllArgsConstructor
@@ -71,6 +72,6 @@ public class IssueRequestDto {
         private Long commentAuthorId;
         private Long milestoneId;
         private OpenStatus status;
-        private List<Long> labelIds;
+        private Set<Long> labelIds;
     }
 }

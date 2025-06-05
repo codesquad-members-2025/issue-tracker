@@ -20,4 +20,5 @@ public class ExceptionMessage {
     public static final String NOT_FOUND_EMAIL = "이메일을 공개로 전환해주세요.";
     public static final String INVALID_LOGINTYPE_GITHUB = "이메일로 로그인해 주세요.";
     public static final String INVALID_LOGINTYPE_LOCAL = "깃허브로 로그인해 주세요.";
+    public static final String NOT_AUTHOR = "작성자만 접근할 수 있습니다.";
 }

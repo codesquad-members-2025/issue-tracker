@@ -74,7 +74,7 @@ public class AuthServiceTest {
         given(userRepository.findByEmail("test@example.com"))
             .willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> authService.checkEmailAndPassword(request))
+        assertThatThrownBy(() -> authService.authenticateUser(request))
             .isInstanceOf(UserByEmailNotFoundException.class);
     }
 
@@ -93,7 +93,7 @@ public class AuthServiceTest {
         given(userRepository.findByEmail("test@example.com"))
             .willReturn(Optional.of(existingUser));
 
-        assertThatThrownBy(() -> authService.checkEmailAndPassword(request))
+        assertThatThrownBy(() -> authService.authenticateUser(request))
             .isInstanceOf(PasswordNotEqualException.class);
     }
 
@@ -112,7 +112,7 @@ public class AuthServiceTest {
         given(userRepository.findByEmail("test@example.com"))
             .willReturn(Optional.of(existingUser));
 
-        assertThatThrownBy(() -> authService.checkEmailAndPassword(request))
+        assertThatThrownBy(() -> authService.authenticateUser(request))
             .isInstanceOf(InvalidLoginTypeException.class)
             .hasMessageContaining("깃허브로 로그인해 주세요.");
     }

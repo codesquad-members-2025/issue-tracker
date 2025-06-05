@@ -46,7 +46,7 @@ CREATE TABLE issue (
                        FOREIGN KEY (author_id) REFERENCES user(user_id),
                        FOREIGN KEY (milestone_id) REFERENCES milestone(milestone_id) ON DELETE SET NULL
 );
-
+CREATE INDEX idx_issue_created_open ON issue (created_at DESC, is_open);
 -- COMMENT
 CREATE TABLE comment (
                          comment_id BIGINT PRIMARY KEY AUTO_INCREMENT,

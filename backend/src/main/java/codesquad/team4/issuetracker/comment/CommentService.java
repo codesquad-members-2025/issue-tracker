@@ -3,8 +3,10 @@ package codesquad.team4.issuetracker.comment;
 import codesquad.team4.issuetracker.comment.dto.CommentRequestDto;
 import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.entity.Comment;
+import codesquad.team4.issuetracker.entity.User;
 import codesquad.team4.issuetracker.exception.badrequest.InvalidCommentAccessException;
 import codesquad.team4.issuetracker.exception.notfound.CommentNotFoundException;
+import codesquad.team4.issuetracker.exception.unauthorized.NotAuthorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +41,12 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto.UpdateCommentDto updateComment(Long commentId, CommentRequestDto.UpdateCommentDto request, String uploadUrl) {
+    public CommentResponseDto.UpdateCommentDto updateComment(Long commentId, CommentRequestDto.UpdateCommentDto request, String uploadUrl, User user) {
         //댓글 조회
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
+
+        validateAuthor(comment.getAuthorId(), user);
 
         comment.updateContent(request.getContent());
         comment.updateFileUrl(uploadUrl);
@@ -56,7 +60,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long issueId, Long commentId) {
+    public void deleteComment(Long issueId, Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
 
@@ -64,6 +68,14 @@ public class CommentService {
             throw new InvalidCommentAccessException();
         }
 
+        validateAuthor(comment.getAuthorId(), user);
+
         commentRepository.deleteById(commentId);
+    }
+
+    private void validateAuthor(Long authorId, User user) {
+        if (!authorId.equals(user.getId())) {
+            throw new NotAuthorException();
+        }
     }
 }

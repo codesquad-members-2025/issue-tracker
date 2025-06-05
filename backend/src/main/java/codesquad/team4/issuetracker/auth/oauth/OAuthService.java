@@ -42,11 +42,7 @@ public class OAuthService {
     private static final String GITHUB_USER_EMAIL_API_URL = "https://api.github.com/user/emails";
 
 
-    public OAuthResponseDto.OAuthLoginUrl createGithubAuthorizeUrl(HttpSession session) {
-        //state 생성 및 세션에 저장
-        String state = UUID.randomUUID().toString();
-        session.setAttribute("oauth_state", state);
-
+    public OAuthResponseDto.OAuthLoginUrl buildGithubAuthorizeUrl(String state) {
         //Github 인증 URL 구성
         String githubUrl = UriComponentsBuilder.fromHttpUrl(GITHUB_AUTHORIZE_URL)
             .queryParam("client_id", clientId)
@@ -61,20 +57,18 @@ public class OAuthService {
             .build();
     }
 
-    public User handleCallback(OAuthRequestDto.GitHubCallback callback, HttpSession session) {
-        //state 값 비교
-        String savedState = (String) session.getAttribute("oauth_state");
-        if (!callback.getState().equals(savedState)) {
-            throw new InvalidOAuthStateException();
-        }
+    public String createGithubAuthorizeState() {
+        //state 생성
+        return UUID.randomUUID().toString();
+    }
 
+    public User handleCallback(OAuthRequestDto.GitHubCallback callback) {
         //access tocken 요청
         String accessToken = requestAccessToken(callback.getCode());
         //Github 사용자 정보 요청
         OAuthResponseDto.GitHubUserResponse userInfo = fetchGitHubUser(accessToken);
         //회원가입/로그인 처리
         Optional<User> optionalUser = userRepository.findByEmail(userInfo.getEmail());
-
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             validateLoginType(user);
