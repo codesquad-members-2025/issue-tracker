@@ -23,6 +23,7 @@ export default function DetailIssueHeader({ issueFetchHandler }) {
   const [editTitle, setEditTitle] = useState(issue.title);
   const commentCount = useIssueDetailStore((s) => s.comments)?.length;
   const { isValid, setCurrentInput } = useValidation({ existedString: issue.title });
+  const accessToken = localStorage.getItem('token');
 
   function getTitleComponent() {
     if (isEdit) {
@@ -64,17 +65,13 @@ export default function DetailIssueHeader({ issueFetchHandler }) {
     if (isEdit) {
       const PATCHoptions = {
         method: 'PATCH',
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // }, -> 멀티파트 데이터로 보내주면서 사용하지 않음.
         body: getFormData({ title: editTitle }),
-        // body: JSON.stringify({ title: editTitle }),
       };
 
       return (
         <CompleteEditBtn
           onClick={() => {
-            issueFetchHandler('PATCH', PATCHoptions);
+            issueFetchHandler('PATCH', PATCHoptions, accessToken);
             setIsEdit(false);
           }}
           isValid={isValid}
@@ -84,17 +81,13 @@ export default function DetailIssueHeader({ issueFetchHandler }) {
       function getPATCHoptions(isOpen) {
         return {
           method: 'PATCH',
-          // headers: {
-          //   'Content-Type': 'application/json',
-          // },
           body: getFormData({ isOpen }),
-          // JSON.stringify({ isOpen }),
         };
       }
       return issue.isOpen ? (
-        <CloseIssueBtn onClick={() => issueFetchHandler('PATCH', getPATCHoptions(false))} />
+        <CloseIssueBtn onClick={() => issueFetchHandler('PATCH', getPATCHoptions(false), accessToken)} />
       ) : (
-        <OpenIssueBtn onClick={() => issueFetchHandler('PATCH', getPATCHoptions(true))} />
+        <OpenIssueBtn onClick={() => issueFetchHandler('PATCH', getPATCHoptions(true), accessToken)} />
       );
     }
   }
