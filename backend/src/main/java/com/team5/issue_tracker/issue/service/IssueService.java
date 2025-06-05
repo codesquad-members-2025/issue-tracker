@@ -204,7 +204,7 @@ public class IssueService {
     validateIssueExists(issueId);
     validateUserExists(userId);
 
-    if (issueId.equals(userId)) {
+    if (!issueId.equals(userId)) {
       throw new NotFoundException(ErrorCode.ISSUE_NOT_FOUND);
     }
   }
