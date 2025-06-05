@@ -12,7 +12,6 @@
 
 - [🍡 프로젝트 사이트](https://www.issue-tracker.online)
 - [🐈‍⬛ Github 링크](https://github.com/codesquad-masters2025-team05/issue-tracker.git)
-- [🫆  Jira 링크](https://jqk1797.atlassian.net/jira/software/projects/CS/summary?atlOrigin=eyJpIjoiZWNkM2RjNjUyMmJlNDcyMjkwYjFhNTAxOGViMDk1NTciLCJwIjoiaiJ9)  
 - [📖  Notion 링크](https://flowery-unicorn-313.notion.site/CodeSquard-team05-1909003424f180438a2dd668361f3bf4?pvs=4)
 
 ## 브랜치 구조
@@ -39,8 +38,11 @@ main                ← 최종 배포 브랜치
 
 ### 📁 시스템 아키텍처
 
-![Image](https://github.com/user-attachments/assets/0c016136-279c-4937-9a52-4d660fd0b93c)
+<img src="https://github.com/user-attachments/assets/0c016136-279c-4937-9a52-4d660fd0b93c" width="600" />
 
+
+### 🍎 ERD
+<img src="https://github.com/user-attachments/assets/eb231848-16ef-49fa-b854-95650fae9e03" width="600" />
 
 ---
 
