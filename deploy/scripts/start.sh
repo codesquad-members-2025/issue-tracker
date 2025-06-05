@@ -1,20 +1,16 @@
 #!/bin/bash
 
-echo "🚀 Starting Spring Boot app..."
+cd /home/ubuntu/app
+source application.env
 
-# .env 파일 로드
-if [ -f /home/ubuntu/.env ]; then
-  echo "📦 Loading environment variables from .env"
-  source /home/ubuntu/.env
-else
-  echo "❌ .env file not found!"
-  exit 1
+# 기존 프로세스 종료
+PID=$(pgrep -f 'java -jar')
+if [ -n "$PID" ]; then
+  kill -9 $PID
+  echo "✅ 이전 프로세스 종료됨: $PID"
 fi
 
-# 애플리케이션 실행
-cd /home/ubuntu
-JAR_NAME=app.jar
-
+# 새로 실행
 nohup java \
   -Dspring.profiles.active=dev \
   -DJWT_ACCESS_KEY=$JWT_ACCESS_KEY \
@@ -26,4 +22,4 @@ nohup java \
   -Dcloud.aws.s3.bucket=$S3_BUCKET_NAME \
   -Dcloud.aws.s3.url=$S3_URL_NAME \
   -Dspring.datasource.password=$DB_PASSWORD \
-  -jar "$JAR_NAME" > app.log 2>&1 &
+  -jar app.jar > /home/ubuntu/app.log 2>&1 &
