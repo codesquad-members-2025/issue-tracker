@@ -33,7 +33,6 @@ public class IssueQueryRepository {
                 i.created_at,
                 i.updated_at
             FROM issue i
-            WHERE 1 = 1 
         """);
 
     FilterSql filterSql = buildFilterSql(searchCondition);
@@ -71,7 +70,6 @@ public class IssueQueryRepository {
                COALESCE(SUM(CASE WHEN i.is_open THEN 1 ELSE 0 END), 0) AS open_count,
                COALESCE(SUM(CASE WHEN NOT i.is_open THEN 1 ELSE 0 END), 0) AS closed_count
             FROM issue i
-            WHERE 1 = 1 
         """);
 
     FilterSql filterSql = buildFilterSql(searchCondition);
@@ -132,6 +130,25 @@ public class IssueQueryRepository {
   private FilterSql buildFilterSql(IssueSearchCondition searchCondition) {
     List<String> whereClauses = new ArrayList<>();
     MapSqlParameterSource params = new MapSqlParameterSource();
+    StringBuilder sql = new StringBuilder();
+
+    // 동적으로 JOIN 추가해야하므로 WHERE 절 이전에 추가
+    if (searchCondition.getLabelIds() != null && !searchCondition.getLabelIds().isEmpty()) {
+      sql.append("""
+          INNER JOIN (
+              SELECT issue_id
+              FROM issue_label
+              WHERE label_id IN (:labelIds)
+              GROUP BY issue_id
+              HAVING COUNT(DISTINCT label_id) = :labelCount
+          ) as filtered on i.id = filtered.issue_id
+          """);
+      params.addValue("labelIds", searchCondition.getLabelIds());
+      params.addValue("labelCount", searchCondition.getLabelIds().size());
+    }
+
+    // 동적으로 WHERE 추가하기 위한 기본 조건
+    sql.append("WHERE 1 = 1");
 
     if (searchCondition.getAssigneeId() != null) {
       whereClauses.add("""
@@ -145,20 +162,6 @@ public class IssueQueryRepository {
       params.addValue("assigneeId", searchCondition.getAssigneeId());
     }
 
-    if (searchCondition.getLabelIds() != null && !searchCondition.getLabelIds().isEmpty()) {
-      whereClauses.add("""
-          i.id IN (
-            SELECT issue_id
-            FROM issue_label
-            WHERE label_id IN (:labelIds)
-            GROUP BY issue_id
-            HAVING COUNT(DISTINCT label_id) = :labelCount
-          )
-          """);
-      params.addValue("labelIds", searchCondition.getLabelIds());
-      params.addValue("labelCount", searchCondition.getLabelIds().size());
-    }
-
     if (searchCondition.getMilestoneId() != null) {
       whereClauses.add("i.milestone_id = :milestoneId");
       params.addValue("milestoneId", searchCondition.getMilestoneId());
@@ -169,7 +172,6 @@ public class IssueQueryRepository {
       params.addValue("authorId", searchCondition.getAuthorId());
     }
 
-    StringBuilder sql = new StringBuilder();
     for (String clause : whereClauses) {
       sql.append(" AND ").append(clause);
     }

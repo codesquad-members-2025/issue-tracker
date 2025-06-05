@@ -42,7 +42,7 @@ public class LabelQueryRepository {
 
   public List<LabelResponse> findLabels(Integer page, Integer perPage) {
     String lableSql =
-        "SELECT id, name, description, text_color, background_color FROM label LIMIT :limit OFFSET :offset";
+        "SELECT id, name, description, text_color, background_color FROM label ORDER BY name LIMIT :limit OFFSET :offset";
 
     MapSqlParameterSource params = new MapSqlParameterSource();
 
