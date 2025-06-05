@@ -16,7 +16,7 @@ public interface LabelRepository extends CrudRepository<Label, Integer>, LabelQu
 			name,
 			description,
 			color,
-			text_color
+			text_color AS textColor
 		FROM label
 		WHERE deleted_at IS NULL
 		""")
