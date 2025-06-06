@@ -2,6 +2,7 @@ package codesquad.team01.issuetracker.common.exception;
 
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -59,14 +60,6 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.error(e.getMessage()));
 	}
 
-	@ExceptionHandler(MilestoneNotFoundException.class)
-	public ResponseEntity<ApiResponse<?>> handleMilestoneNotFound(MilestoneNotFoundException e) {
-		int id = e.getId();
-		return ResponseEntity
-			.badRequest()
-			.body(ApiResponse.error("마일스톤 '" + id + "' 을(를) 찾을 수 없습니다."));
-	}
-
 	@ExceptionHandler(DuplicateMilestoneTitleException.class)
 	public ResponseEntity<ApiResponse<?>> handleDuplicateMilestone(DuplicateMilestoneTitleException e) {
 		String title = e.getMilestoneTitle();
@@ -75,23 +68,138 @@ public class GlobalExceptionHandler {
 			body(ApiResponse.error("마일스톤 이름 '" + title + "'은(는) 이미 존재합니다."));
 	}
 
+	// 아이디가 존재하지 않는 경우
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleUserNotFound(UserNotFoundException e) {
+		Integer userId = e.getUserId();
+		return ResponseEntity
+			.status(HttpStatus.NOT_FOUND)
+			.body(ApiResponse.error(userId + "는 존재하지 않는 사용자 입니다"));
+	}
+
+	// 패스워드가 틀린 경우
+	@ExceptionHandler(InvalidPasswordException.class)
+	public ResponseEntity<ApiResponse<?>> handleInvalidPassword(InvalidPasswordException e) {
+		String wrongPassword = e.getWrongPassword();
+		return ResponseEntity
+			.badRequest()
+			.body(ApiResponse.error("입력한" + wrongPassword + "와 비밀번호가 일치하지 않습니다"));
+	}
+
+	//자체 로그인 시 loginId가 존재하지 않는 경우
+	@ExceptionHandler(UserLoginIdNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleLoginNotFound(UserLoginIdNotFoundException e) {
+		String loginId = e.getLoginId();
+		return ResponseEntity
+			.badRequest()
+			.body(ApiResponse.error(loginId + "는 존재하지 않는 loginId 입니다"));
+	}
+
+	// 주석 처리된 부분은 체리픽 할 때 에러가 발생하여 임시 처리 해놓았습니다!
+	// 이슈 생성 실패 에러
+	/*
+	@ExceptionHandler(IssueCreationException.class)
+	public ResponseEntity<ApiResponse<?>> handleIssueCreationException(IssueCreationException e) {
+		log.error("IssueCreationException: {}", e.getMessage());
+		return ResponseEntity
+			.status(HttpStatus.BAD_REQUEST)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+	*/
+	// 마일스톤 없음 에러
+	@ExceptionHandler(MilestoneNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleMilestoneNotFoundException(MilestoneNotFoundException e) {
+		log.error("MilestoneNotFoundException: {}", e.getMessage());
+		return ResponseEntity
+			.status(HttpStatus.NOT_FOUND)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+
+	// 이슈 없음 에러
+	/*
+	@ExceptionHandler(IssueNotFoundException.class)
+	public ResponseEntity<ApiResponse<?>> handleIssueNotFoundException(IssueNotFoundException e) {
+		log.error("IssueNotFoundException: {}", e.getMessage());
+		return ResponseEntity
+			.status(HttpStatus.NOT_FOUND)
+			.body(ApiResponse.error(e.getMessage()));
+	}
+	*/
+	@ExceptionHandler(DataAccessException.class)
+	public ResponseEntity<ApiResponse<?>> handleDataAccessException(DataAccessException e) {
+		log.error("Database error occurred", e);
+		return ResponseEntity
+			.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			.body(ApiResponse.error("데이터베이스 오류가 발생했습니다."));
+	}
+
+	/*
+		@ExceptionHandler(IssueStateException.class)
+		public ResponseEntity<ApiResponse<?>> handleIssueStateException(IssueStateException e) {
+			log.error("IssueStateException: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(ApiResponse.error(e.getMessage()));
+		}
+
+		@ExceptionHandler(IssueUpdateException.class)
+		public ResponseEntity<ApiResponse<?>> handleDatabaseAccessException(IssueUpdateException e) {
+			log.error("DatabaseAccessException: {}", e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(ApiResponse.error("일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."));
+		}
+
+		@ExceptionHandler(IssueAccessForbiddenException.class)
+		public ResponseEntity<ApiResponse<?>> handleIssueAccessForbiddenException(IssueAccessForbiddenException e) {
+			log.warn("IssueAccessForbiddenException: {}", e.getMessage()); // error가 아닌 warn
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+				.body(ApiResponse.error("해당 이슈를 수정할 권한이 없습니다."));
+		}
+
+		@ExceptionHandler(IssueDeletionException.class)
+		public ResponseEntity<ApiResponse<?>> handleIssueAccessForbiddenException(IssueDeletionException e) {
+			log.warn("IssueDeletionException: {}", e.getMessage()); // error가 아닌 warn
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(ApiResponse.error(e.getMessage()));
+		}
+
+		@ExceptionHandler(ImageValidationException.class)
+		public ResponseEntity<ApiResponse<?>> handleImageValidationException(ImageValidationException e) {
+			log.warn("ImageValidationException: {}", e.getMessage());
+			return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+		}
+
+		@ExceptionHandler(ImageUploadException.class)
+		public ResponseEntity<ApiResponse<?>> handleImageUploadException(ImageUploadException e) {
+			log.error("ImageUploadException: {}", e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(ApiResponse.error("이미지 업로드 중 오류가 발생했습니다."));
+		}
+
+		@ExceptionHandler(CommentNotFoundException.class)
+		public ResponseEntity<ApiResponse<?>> handleCommentNotFoundException(CommentNotFoundException e) {
+			log.error("CommentNotFoundException: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(ApiResponse.error(e.getMessage()));
+		}
+
+		@ExceptionHandler(CommentAccessForbiddenException.class)
+		public ResponseEntity<ApiResponse<?>> handleCommentAccessForbiddenException(CommentAccessForbiddenException e) {
+			log.warn("CommentAccessForbiddenException: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+				.body(ApiResponse.error("해당 댓글을 수정/삭제할 권한이 없습니다."));
+		}
+
+		@ExceptionHandler(CommentCreationException.class)
+		public ResponseEntity<ApiResponse<?>> handleCommentCreationException(CommentCreationException e) {
+			log.error("CommentCreationException: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(ApiResponse.error("댓글 처리 중 오류가 발생했습니다."));
+		}
+	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<?>> handleExceptions(Exception e) {
 		log.error("Unhandled exception", e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("서버 내부 오류가 발생했습니다."));
 	}
 
-	// 아이디가 존재하지 않는 경우
-	@ExceptionHandler(UserNotFoundException.class)
-	public ResponseEntity<ApiResponse<?>> handleUserNotFound(UserNotFoundException e) {
-		log.info("UserNotFoundException : {}", e.getMessage());
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("존재하지 않는 ID 입니다"));
-	}
-
-	// 패스워드가 틀린 경우
-	@ExceptionHandler(InvalidPasswordException.class)
-	public ResponseEntity<ApiResponse<?>> handleInvalidPassword(InvalidPasswordException e) {
-		log.info("InvalidPasswordException : {}", e.getMessage());
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("비밀번호가 일치하지 않습니다"));
-	}
 }
