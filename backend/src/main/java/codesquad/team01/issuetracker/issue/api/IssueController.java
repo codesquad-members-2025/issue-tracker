@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import codesquad.team01.issuetracker.common.annotation.CurrentUserId;
 import codesquad.team01.issuetracker.common.annotation.CursorParam;
@@ -49,13 +49,14 @@ public class IssueController {
 
 	@GetMapping("/v1/issues/count")
 	public ResponseEntity<ApiResponse<IssueDto.CountResponse>> getIssuesCount(
-		@Valid IssueDto.CountQueryRequest request) {
+		@Valid IssueDto.CountQueryRequest request,
+		@CurrentUserId Integer currentUserId) {
 
-		log.info(request.toString());
+		log.info("이슈 개수 조회 요청: {}", request);
 
-		IssueDto.CountResponse response = issueService.countIssues(request);
+		IssueDto.CountResponse response = issueService.countIssues(request, currentUserId);
 
-		log.info(response.toString());
+		log.info("이슈 개수 조회 응답: {}", response);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
