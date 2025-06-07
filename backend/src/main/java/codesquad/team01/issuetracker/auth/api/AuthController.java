@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@RequestMapping("/api")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -47,6 +49,7 @@ public class AuthController {
 	// Redirect(Callback) endpoint
 	@GetMapping("/v1/oauth/callback")
 	public AuthDto.LoginResponse githubCallback(@RequestParam("code") String code, @RequestParam("state") String state,
+
 		HttpSession session) {
 		String savedState = (String)session.getAttribute("oauth_state");
 		if (savedState == null || !savedState.equals(state)) {
@@ -59,7 +62,7 @@ public class AuthController {
 		AuthDto.LoginResponse tokens = tokenService.createTokens(oauthUser.getId(), oauthUser.getProfileImageUrl(),
 			oauthUser.getUsername());
 
-		return tokens;
+		return ApiResponse.success(tokens);
 	}
 
 	//자체 로그인
@@ -77,10 +80,12 @@ public class AuthController {
 	// 인증한 사용자 username, profileImageUrl
 	@GetMapping("/v1/auth/me")
 	public ApiResponse<?> getUsernameAndProfileImage(HttpServletRequest request) {
+
 		String username = (String)request.getAttribute("username");
 		String profileImage = (String)request.getAttribute("profileImageUrl");
 
 		return ApiResponse.success(Map.of("username", username, "profileImage", profileImage));
+
 	}
 
 	//로그아웃

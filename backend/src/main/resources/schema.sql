@@ -113,3 +113,4 @@ CREATE INDEX idx_issue_deleted_state_created_id ON issue(deleted_at, state, crea
 
 -- 댓글 기본 조회 인덱스
 CREATE INDEX idx_comment_deleted_issue_created_id ON comment(deleted_at, issue_id, created_at DESC, id DESC);
+
