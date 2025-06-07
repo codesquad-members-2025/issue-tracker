@@ -14,7 +14,7 @@ public class MilestoneDto {
 	private MilestoneDto() {
 	}
 
-	/*
+	/**
 	 * 응답 DTO
 	 */
 	// 이슈 목록 - 마일스톤 응답 DTO
@@ -22,6 +22,16 @@ public class MilestoneDto {
 	public record ListItemResponse(
 		int id,
 		String title
+	) {
+	}
+
+	@Builder
+	public record IssueDetailMilestoneResponse(
+		int id,
+		String title,
+		LocalDate dueDate,
+		int openCount,
+		int closedCount
 	) {
 	}
 
@@ -168,6 +178,13 @@ public class MilestoneDto {
 		Integer milestoneId,
 		Long openCount,
 		Long closedCount
+	) {
+	}
+
+	@Builder
+	public record MilestoneIssueDetailCountRow(
+		String state,
+		int count
 	) {
 	}
 }

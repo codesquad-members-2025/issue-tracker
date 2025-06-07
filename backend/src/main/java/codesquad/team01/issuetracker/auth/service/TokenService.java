@@ -60,6 +60,7 @@ public class TokenService {
 		return new AuthDto.LoginResponse(accessToken, refreshToken);
 	}
 
+
 	public Map<String, String> getClaims(HttpServletRequest request) {
 		String token = JwtAccessTokenExtractor.extractJwtAccessToken(request);
 		Claims claims = userAuthorizationJwtManager.parseClaims(token);
@@ -70,5 +71,6 @@ public class TokenService {
 		claimMap.put("profileImageUrl", profileImageUrl);
 		return claimMap;
 	}
+
 
 }

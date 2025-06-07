@@ -28,6 +28,16 @@ public class LabelDto {
 
 	// 레이블 리스트를 구성하는 레이블
 	@Builder
+	public record IssueDetailLabelResponse(
+		int id,
+		String name,
+		String color,
+		String textColor
+	) {
+	}
+
+	// 레이블 리스트를 구성하는 레이블
+	@Builder
 	public record ListItemResponse(
 		int id,
 		String name,
@@ -64,11 +74,19 @@ public class LabelDto {
 	) {
 	}
 
+	@Builder
+	public record IssueDetailLabelRow(
+		int id,
+		String name,
+		String color,
+		String textColor
+	) {
+	}
+
 	// 필터용 레이블 응답 Dto
 	@Builder
 	public record LabelFilterResponse(
 		int id,
-
 		String name,
 		String color
 	) {
@@ -177,4 +195,5 @@ public class LabelDto {
 			);
 		}
 	}
+
 }

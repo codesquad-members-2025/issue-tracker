@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.team01.issuetracker.auth.filter.JwtAccessTokenAuthenticationFilter;
+
 import codesquad.team01.issuetracker.auth.filter.JwtExceptionFilter;
 import codesquad.team01.issuetracker.auth.util.UserAuthorizationJwtManager;
 import codesquad.team01.issuetracker.user.repository.UserRepository;
@@ -24,6 +25,7 @@ public class FilterConfig {
 	}
 
 	@Bean
+
 	public FilterRegistrationBean<JwtAccessTokenAuthenticationFilter> jwtAuthenticationFilter(
 		UserAuthorizationJwtManager jwtManager,
 		UserRepository userRepository) {

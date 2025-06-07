@@ -48,8 +48,8 @@ public class AuthController {
 
 	// Redirect(Callback) endpoint
 	@GetMapping("/v1/oauth/callback")
-	public ApiResponse<AuthDto.LoginResponse> githubCallback(@RequestParam("code") String code,
-		@RequestParam("state") String state,
+	public AuthDto.LoginResponse githubCallback(@RequestParam("code") String code, @RequestParam("state") String state,
+
 		HttpSession session) {
 		String savedState = (String)session.getAttribute("oauth_state");
 		if (savedState == null || !savedState.equals(state)) {
@@ -81,9 +81,11 @@ public class AuthController {
 	@GetMapping("/v1/auth/me")
 	public ApiResponse<?> getUsernameAndProfileImage(HttpServletRequest request) {
 
-		Map<String, String> userInfo = tokenService.getClaims(request);
+		String username = (String)request.getAttribute("username");
+		String profileImage = (String)request.getAttribute("profileImageUrl");
 
-		return ApiResponse.success(userInfo);
+		return ApiResponse.success(Map.of("username", username, "profileImage", profileImage));
+
 	}
 
 	//로그아웃
