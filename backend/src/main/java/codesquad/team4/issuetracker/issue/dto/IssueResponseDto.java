@@ -4,6 +4,7 @@ import codesquad.team4.issuetracker.comment.dto.CommentResponseDto;
 import codesquad.team4.issuetracker.label.dto.LabelResponseDto.LabelInfo;
 import codesquad.team4.issuetracker.milestone.dto.MilestoneResponseDto;
 import codesquad.team4.issuetracker.user.dto.UserDto;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,8 @@ public class IssueResponseDto {
     @Builder
     public static class IssueListDto {
         private List<IssueInfo> issues;
+        private Integer openCount;
+        private Integer closeCount;
         private Integer page;
         private Integer size;
         private Integer totalPages;
@@ -34,7 +37,7 @@ public class IssueResponseDto {
         private Set<LabelInfo> labels;
         private Set<UserDto.UserInfo> assignees;
         private MilestoneResponseDto.MilestoneInfo milestone;
-        private String createdAt;
+        private LocalDateTime createdAt;
     }
 
     @AllArgsConstructor
@@ -59,6 +62,7 @@ public class IssueResponseDto {
     public static class searchIssueDetailDto {
         private String content;
         private String contentFileUrl;
+        private LocalDateTime createdAt;
         private List<CommentResponseDto.CommentInfo> comments;
         private Integer commentSize;
     }

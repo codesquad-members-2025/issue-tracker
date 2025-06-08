@@ -8,6 +8,7 @@
     import java.util.HashMap;
     import java.util.List;
     import java.util.Map;
+    import java.util.Set;
     import java.util.stream.Collectors;
     import lombok.RequiredArgsConstructor;
     import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,7 @@
                 SELECT
                     i.issue_id AS issue_id,
                     i.title,
+                    i.created_at,
                     u.user_id AS author_id,
                     u.nickname AS author_nickname,
                     u.profile_image AS author_profile,
@@ -78,6 +80,34 @@
             params.put("isOpen", dto.getStatus().getState());
 
             // 작성자 필터
+            addfilteringConditionDynamic(dto, params, sql);
+
+            return sql.toString();
+        }
+
+        public Integer countIssuesByOpenStatus(boolean isOpen) {
+            String sql = "SELECT COUNT(*) FROM issue WHERE is_open = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, isOpen);
+        }
+        public Map<String, Integer> countFilteredIssues(IssueFilterParamDto dto) {
+            StringBuilder sql = new StringBuilder("WITH filtered_issues AS (\n");
+            Map<String, Object> params = new HashMap<>();
+
+            sql.append("SELECT is_open FROM issue WHERE 1=1\n");
+
+            // 동적 필터링
+            addfilteringConditionDynamic(dto, params, sql);
+
+            sql.append(")\n");
+            sql.append("SELECT is_open, COUNT(*) as count FROM filtered_issues GROUP BY is_open");
+
+            List<Map<String, Object>> result = namedParameterJdbcTemplate.queryForList(sql.toString(), params);
+
+            return getCountMap(result);
+        }
+
+        private void addfilteringConditionDynamic(IssueFilterParamDto dto, Map<String, Object> params, StringBuilder sql) {
+            // 작성자 필터
             addAuthorCondition(dto.getAuthorId(), params, sql);
             // 담당자 필터
             addAssigneeCondition(dto.getAssigneeId(), params, sql);
@@ -87,21 +117,20 @@
             addMilestoneCondition(dto.getMilestoneId(), params, sql);
             // 라벨 필터
             addLabelConditions(dto.getLabelIds(), params, sql);
-
-            return sql.toString();
         }
 
-        private void addLabelConditions(List<Long> labelIds, Map<String, Object> params, StringBuilder sql) {
+        private void addLabelConditions(Set<Long> labelIds, Map<String, Object> params, StringBuilder sql) {
             // 라벨 필터링 - IN + GROUP BY + HAVING
             if (labelIds != null && !labelIds.isEmpty()) {
                 sql.append(" AND issue_id IN (\n");
                 sql.append("SELECT il.issue_id \nFROM issue_label il \nWHERE il.label_id IN (");
 
+                List<Long> labelList = new ArrayList<>(labelIds);
                 List<String> labelParamNames = new ArrayList<>();
                 for (int i = 0; i < labelIds.size(); i++) {
                     String paramName = "label" + i;
                     labelParamNames.add(":" + paramName);
-                    params.put(paramName, labelIds.get(i));
+                    params.put(paramName, labelList.get(i));
                 }
 
                 sql.append(String.join(", ", labelParamNames));
@@ -149,9 +178,22 @@
             }
         }
 
-        public Integer countIssuesByOpenStatus(boolean isOpen) {
-            String sql = "SELECT COUNT(*) FROM issue WHERE is_open = ?";
-            return jdbcTemplate.queryForObject(sql, Integer.class, isOpen);
+        private Map<String, Integer> getCountMap(List<Map<String, Object>> result) {
+            int open = 0, close = 0;
+            for (Map<String, Object> row : result) {
+                Boolean isOpen = (Boolean) row.get("is_open");
+                int count = ((Number) row.get("count")).intValue();
+                if (Boolean.TRUE.equals(isOpen)) {
+                    open = count;
+                } else {
+                    close = count;
+                }
+            }
+
+            Map<String, Integer> counts = new HashMap<>();
+            counts.put("open", open);
+            counts.put("close", close);
+            return counts;
         }
 
         public int updateIssueStatusByIds(boolean isOpen, List<Long> issueIds) {
@@ -170,6 +212,7 @@
                 SELECT
                     i.content AS issue_content,
                     i.file_url AS issue_file_url,
+                    i.created_at AS created_at,
                     c.comment_id AS comment_id,
                     c.content AS comment_content,
                     c.file_url AS comment_file_url,
