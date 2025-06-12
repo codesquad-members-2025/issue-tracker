@@ -3,12 +3,14 @@ package elbin_bank.issue_tracker.issue.domain;
 import elbin_bank.issue_tracker.common.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("issue")
 @AllArgsConstructor
 @Getter
+@Setter
 public class Issue extends BaseEntity {
 
     @Id
@@ -27,36 +29,8 @@ public class Issue extends BaseEntity {
         return new Issue(null, authorId, title, contents, milestoneId, isClosed);
     }
 
-    public void changeState(boolean targetClosed) {
-        if (this.isClosed == targetClosed) {
-            return;
-        }
-
-        this.isClosed = targetClosed;
-    }
-
-    public void changeTitle(String title) {
-        if (this.title.equals(title)) {
-            return;
-        }
-
-        this.title = title;
-    }
-
-    public void changeContents(String contents) {
-        if (this.contents.equals(contents)) {
-            return;
-        }
-
-        this.contents = contents;
-    }
-
-    public void changeMilestone(Long milestoneId) {
-        if (this.milestoneId != null && this.milestoneId.equals(milestoneId)) {
-            return;
-        }
-
-        this.milestoneId = milestoneId;
+    public void changeState(boolean isClosed) {
+        this.isClosed = isClosed;
     }
 
 }

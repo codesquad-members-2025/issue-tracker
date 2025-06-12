@@ -74,6 +74,9 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                 SELECT
                   m.id            AS id,
                   m.title         AS title,
+                    m.description   AS description,
+                  m.expired_at    AS expiredAt,
+                  m.is_closed     AS isClosed,
                   m.total_issues  AS totalIssueCount,
                   m.closed_issues AS closedIssueCount
                 FROM milestone m
@@ -87,6 +90,9 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                 (rs, rn) -> new MilestoneProjection(
                         rs.getLong("id"),
                         rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getString("expiredAt"),
+                        rs.getBoolean("isClosed"),
                         rs.getLong("totalIssueCount"),
                         rs.getLong("closedIssueCount")
                 )
@@ -99,6 +105,9 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                 SELECT
                   m.id            AS id,
                   m.title         AS title,
+                    m.description   AS description,
+                  m.expired_at    AS expiredAt,
+                  m.is_closed     AS isClosed,
                   m.total_issues  AS totalIssueCount,
                   m.closed_issues AS closedIssueCount
                 FROM milestone m
@@ -116,6 +125,9 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                     (rs, rowNum) -> new MilestoneProjection(
                             rs.getLong("id"),
                             rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getString("expiredAt"),
+                            rs.getBoolean("isClosed"),
                             rs.getLong("totalIssueCount"),
                             rs.getLong("closedIssueCount")
                     )

@@ -7,6 +7,7 @@ import elbin_bank.issue_tracker.milestone.exception.MilestoneNotFoundException;
 import elbin_bank.issue_tracker.milestone.infrastructure.query.projection.MilestoneUpdateProjection;
 import elbin_bank.issue_tracker.milestone.presentation.command.dto.request.MilestoneCreateRequestDto;
 import elbin_bank.issue_tracker.milestone.presentation.command.dto.request.MilestoneUpdateRequestDto;
+import elbin_bank.issue_tracker.milestone.presentation.command.dto.request.MilestoneUpdateStateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,4 +42,13 @@ public class MilestoneCommandService {
     public void deleteMilestone(Long id) {
         milestoneCommandRepository.deleteById(id);
     }
+
+    @Transactional
+    public void changeMilestoneState(Long id, MilestoneUpdateStateRequestDto milestoneUpdateStateRequestDto) {
+        Milestone milestone = milestoneCommandRepository.findById(id)
+                .orElseThrow(() -> new MilestoneNotFoundException(id));
+
+        milestoneCommandRepository.updateState(milestone.getId(), milestoneUpdateStateRequestDto.targetClosed());
+    }
+
 }

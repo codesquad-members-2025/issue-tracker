@@ -3,6 +3,7 @@ package elbin_bank.issue_tracker.label.application.command;
 import elbin_bank.issue_tracker.label.application.query.repository.LabelQueryRepository;
 import elbin_bank.issue_tracker.label.domain.Label;
 import elbin_bank.issue_tracker.label.domain.LabelCommandRepository;
+import elbin_bank.issue_tracker.label.exception.LabelNameDuplicateException;
 import elbin_bank.issue_tracker.label.exception.LabelNotFoundException;
 import elbin_bank.issue_tracker.label.infrastructure.query.projection.LabelProjection;
 import elbin_bank.issue_tracker.label.presentation.command.dto.request.LabelCreateRequestDto;
@@ -22,6 +23,11 @@ public class LabelCommandService {
 
     @Transactional
     public void createLabel(LabelCreateRequestDto labelCreateRequestDto) {
+        Optional<Label> existingLabel = labelCommandRepository.findByName(labelCreateRequestDto.name());
+        if (existingLabel.isPresent()) {
+            throw new LabelNameDuplicateException(labelCreateRequestDto.name());
+        }
+
         Label label = Label.of(labelCreateRequestDto.name(), labelCreateRequestDto.description(), labelCreateRequestDto.color());
 
         labelCommandRepository.save(label);

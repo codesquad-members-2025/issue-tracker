@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,11 +69,8 @@ public class IssueQueryService {
     }
 
     @Transactional(readOnly = true)
-    public MilestoneResponseDto getMilestoneForIssue(long id) {
-        MilestoneProjection milestone = milestoneQueryRepository.findByIssueId(id)
-                .orElseThrow(() -> new MilestoneForIssueNotFoundException());
-
-        return issueDtoMapper.toMilestoneResponseDto(milestone);
+    public Optional<MilestoneResponseDto> getMilestoneForIssue(long id) {
+        return Optional.ofNullable(issueDtoMapper.toMilestoneResponseDto(milestoneQueryRepository.findByIssueId(id)));
     }
 
 }

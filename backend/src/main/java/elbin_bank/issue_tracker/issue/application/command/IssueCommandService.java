@@ -2,6 +2,10 @@ package elbin_bank.issue_tracker.issue.application.command;
 
 import elbin_bank.issue_tracker.common.exception.ForbiddenException;
 import elbin_bank.issue_tracker.issue.application.command.dto.IssueCreateResponseDto;
+import elbin_bank.issue_tracker.issue.application.command.event.IssueMilestoneChangedEvent;
+import elbin_bank.issue_tracker.issue.application.command.event.IssueMilestoneCreateEvent;
+import elbin_bank.issue_tracker.issue.application.command.event.IssueMilestoneDeleteEvent;
+import elbin_bank.issue_tracker.issue.application.command.event.IssueMilestoneStateEvent;
 import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRepository;
 import elbin_bank.issue_tracker.issue.domain.Issue;
 import elbin_bank.issue_tracker.issue.domain.IssueCommandRepository;
@@ -12,11 +16,11 @@ import elbin_bank.issue_tracker.label.application.query.repository.LabelQueryRep
 import elbin_bank.issue_tracker.label.domain.LabelCommandRepository;
 import elbin_bank.issue_tracker.user.domain.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class IssueCommandService {
     private final LabelQueryRepository labelQueryRepository;
     private final LabelCommandRepository labelCommandRepository;
     private final UserCommandRepository userCommandRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public IssueCreateResponseDto createIssue(IssueCreateRequestDto requestDto, Long userId) {
@@ -40,6 +45,10 @@ public class IssueCommandService {
         Issue newIssue = issueCommandRepository.save(issue);
         labelCommandRepository.saveLabelsToIssue(newIssue.getId(), requestDto.labels());
         userCommandRepository.saveAssigneesToIssue(newIssue.getId(), requestDto.assignees());
+
+        applicationEventPublisher.publishEvent(new IssueMilestoneCreateEvent(
+                newIssue.getMilestoneId()
+        ));
 
         return new IssueCreateResponseDto(newIssue.getId());
     }
@@ -58,6 +67,11 @@ public class IssueCommandService {
         }
 
         issueCommandRepository.updateState(issueId, targetClosed);
+
+        applicationEventPublisher.publishEvent(new IssueMilestoneStateEvent(
+                issue.getMilestoneId(),
+                targetClosed
+        ));
     }
 
     @Transactional
@@ -65,7 +79,11 @@ public class IssueCommandService {
         Issue issue = issueCommandRepository.findById(issueId)
                 .orElseThrow(() -> new IssueDetailNotFoundException(issueId));
 
-        issue.changeTitle(dto.title());
+        if (issue.getTitle().equals(dto.title())) {
+            return;
+        }
+
+        issue.setTitle(dto.title());
         issueCommandRepository.save(issue);
     }
 
@@ -74,7 +92,11 @@ public class IssueCommandService {
         Issue issue = issueCommandRepository.findById(issueId)
                 .orElseThrow(() -> new IssueDetailNotFoundException(issueId));
 
-        issue.changeContents(dto.content());
+        if (issue.getContents().equals(dto.content())) {
+            return;
+        }
+
+        issue.setContents(dto.content());
         issueCommandRepository.save(issue);
     }
 
@@ -83,8 +105,29 @@ public class IssueCommandService {
         Issue issue = issueCommandRepository.findById(issueId)
                 .orElseThrow(() -> new IssueDetailNotFoundException(issueId));
 
-        issue.changeMilestone(dto.id());
+        Long beforeMilestoneId = issue.getMilestoneId();
+        if (beforeMilestoneId != null && beforeMilestoneId.equals(dto.id())) {
+            return;
+        }
+
+        issue.setMilestoneId(dto.id());
         issueCommandRepository.save(issue);
+
+        if (dto.id() == null) {
+            applicationEventPublisher.publishEvent(new IssueMilestoneDeleteEvent(
+                    beforeMilestoneId,
+                    issue.isClosed()
+            ));
+            return;
+        }
+
+        applicationEventPublisher.publishEvent(
+                new IssueMilestoneChangedEvent(
+                        beforeMilestoneId,
+                        issue.getMilestoneId(),
+                        issue.isClosed()
+                )
+        );
     }
 
     @Transactional
@@ -94,6 +137,9 @@ public class IssueCommandService {
                 .toList();
 
         List<Long> assignees = dto.assignees();
+        if (assignees.equals(existingUserIds)) {
+            return;
+        }
 
         List<Long> toRemove = existingUserIds.stream()
                 .filter(id -> !assignees.contains(id))
@@ -111,6 +157,9 @@ public class IssueCommandService {
         List<Long> existingLabels = labelQueryRepository.findLabelIdsByIssueId(issueId);
 
         List<Long> labels = dto.labels();
+        if (labels.equals(existingLabels)) {
+            return;
+        }
 
         List<Long> toRemove = existingLabels.stream()
                 .filter(id -> !labels.contains(id))
@@ -132,6 +181,11 @@ public class IssueCommandService {
         }
 
         issueCommandRepository.deleteById(issueId);
+
+        applicationEventPublisher.publishEvent(new IssueMilestoneDeleteEvent(
+                issue.getMilestoneId(),
+                issue.isClosed()
+        ));
     }
 
 }

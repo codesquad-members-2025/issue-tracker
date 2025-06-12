@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class IssueDtoMapper {
@@ -35,13 +36,14 @@ public class IssueDtoMapper {
         // 첫 번째 프로젝션에서 open/closed count 꺼내기 (null-safe)
         long openCount = issueProjections.stream()
                 .findFirst()
-                // IssueProjection.openCount() 가 Long wrapper 라면 null 체크
-                .map(p -> p.openCount() != null ? p.openCount() : 0L)
+                .filter(p -> p.openCount() != null)
+                .map(IssueProjection::openCount)
                 .orElse(0L);
 
         long closedCount = issueProjections.stream()
                 .findFirst()
-                .map(p -> p.closedCount() != null ? p.closedCount() : 0L)
+                .filter(p -> p.closedCount() != null)
+                .map(IssueProjection::closedCount)
                 .orElse(0L);
 
         return new IssuesResponseDto(issueDtos, openCount, closedCount);
@@ -79,13 +81,18 @@ public class IssueDtoMapper {
         );
     }
 
-    public MilestoneResponseDto toMilestoneResponseDto(MilestoneProjection milestoneProjection) {
-        int progressRate = ProgressRateCalculator.calculate(milestoneProjection.totalIssueCount(),
-                milestoneProjection.closedIssueCount());
+    public MilestoneResponseDto toMilestoneResponseDto(Optional<MilestoneProjection> milestoneProjection) {
+        if (milestoneProjection.isEmpty()) {
+            return null;
+        }
+
+        MilestoneProjection milestone = milestoneProjection.get();
+        int progressRate = ProgressRateCalculator.calculate(milestone.totalIssueCount(),
+                milestone.closedIssueCount());
 
         return new MilestoneResponseDto(
-                milestoneProjection.id(),
-                milestoneProjection.title(),
+                milestone.id(),
+                milestone.title(),
                 progressRate
         );
     }
